@@ -15,7 +15,7 @@ services:
         build:
             context: ./server
             dockerfile: Dockerfile
-        args:
+        entrypoint:
             - MYSQL_HOST=$MYSQL_HOST
             - MYSQL_PORT=$MYSQL_PORT
             - MYSQL_USER=$MYSQL_USER
@@ -30,15 +30,15 @@ services:
             - nestjs-react
     mysql:
         build:
-        context: ./db
-        args:
+            context: ./db
+        environment:
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
         ports:
-        - "3306:3306"
+            - "3306:3306"
         networks:
             - nestjs-react
 networks:
-    nestjs-react
+    nestjs-react:
