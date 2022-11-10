@@ -7,7 +7,7 @@ services:
             dockerfile: Dockerfile
         image: react
         ports:
-            - "3000:3000"
+            - "3001:3000"
         volumes:
             - ./client:/app
     backend:
@@ -23,7 +23,7 @@ services:
             - MYSQL_DATABASE=$MYSQL_DATABASE
         image: server
         ports:
-            - "5000:5000"
+            - "3000:3000"
         volumes:
             - ./server:/app
         networks:
