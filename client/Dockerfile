@@ -2,7 +2,11 @@ FROM node:14.16.1
 
 WORKDIR /app
 
+RUN ls
+
 COPY package.json ./ 
+
+RUN ls
 
 RUN npm install
 
