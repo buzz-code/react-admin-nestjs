@@ -5,6 +5,8 @@ services:
         build:
             context: ./client
             dockerfile: Dockerfile
+        environment:
+            - API_URL=$API_URL
         image: client
         ports:
             - "3001:3000"
