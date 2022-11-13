@@ -5,13 +5,14 @@ WORKDIR /app
 RUN ls
 
 COPY package.json ./ 
+COPY yarn.lock ./ 
 
 RUN ls
 
-RUN npm install
+RUN yarn
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
