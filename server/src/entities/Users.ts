@@ -21,6 +21,14 @@ export class Users {
   @Column("varchar", { name: "email", nullable: true, length: 500 })
   email: string | null;
 
+  // @BeforeInsert()
+  // async hashPassword() {
+  //     this.password = await bcrypt.hash(this.password, 10);
+  // }
+  // @ApiProperty()
+  // @Column()//({select: false})
+  // @Exclude()
+  // password: string;
   @Column("varchar", { name: "password", nullable: true, length: 500 })
   password: string | null;
 
