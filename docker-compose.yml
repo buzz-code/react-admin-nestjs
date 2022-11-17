@@ -8,7 +8,7 @@ services:
         build:
             context: ./client
         environment:
-            - REACT_APP_API_URL=${BACKEND_URL}:${BACKEND_PORT}
+            REACT_APP_API_URL: "${BACKEND_URL}:${BACKEND_PORT}"
         ports:
             - "${FRONTEND_PORT}:3000"
         volumes:
@@ -22,10 +22,11 @@ services:
         build:
             context: ./server
         environment:
-            - MYSQL_HOST=$MYSQL_HOST
-            - MYSQL_USER=$MYSQL_USER
-            - MYSQL_PASSWORD=$MYSQL_PASSWORD
-            - MYSQL_DATABASE=$MYSQL_DATABASE
+            MYSQL_HOST: $MYSQL_HOST
+            MYSQL_USER: $MYSQL_USER
+            MYSQL_PASSWORD: $MYSQL_PASSWORD
+            MYSQL_DATABASE: $MYSQL_DATABASE
+            JWT_SECRET: $JWT_SECRET
         depends_on:
             - mysql
         ports:
@@ -44,10 +45,10 @@ services:
             - SYS_NICE
         command: --default-authentication-plugin=mysql_native_password
         environment:
-            - MYSQL_DATABASE=${MYSQL_DATABASE}
-            - MYSQL_USER=${MYSQL_USER}
-            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: $MYSQL_DATABASE
+            MYSQL_USER: $MYSQL_USER
+            MYSQL_PASSWORD: $MYSQL_PASSWORD
+            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
         volumes:
             - "db_data:/var/lib/mysql"
 
