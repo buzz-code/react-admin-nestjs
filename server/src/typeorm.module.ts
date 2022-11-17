@@ -22,5 +22,5 @@ export default TypeOrmModule.forRoot({
     entities: [AttReports, Grades, Klasses, KlassTypes, KnownAbsences, Lessons, StudentKlasses, Students, Teachers, Texts, Users, StudentKlassesReport],
     // synchronize: true,
     logging: "all",
-    logger:"debug"
+    // logger:"debug"
 });

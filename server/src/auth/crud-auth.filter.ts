@@ -3,7 +3,7 @@ import { Users } from "src/entities/Users";
 export const CrudAuthFilter = {
     property: 'user',
     filter: (user: Users) => ({
-        userId: user.id,
+        // userId: user.id,
     })
 };
 

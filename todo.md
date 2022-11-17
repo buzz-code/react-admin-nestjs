@@ -13,7 +13,6 @@
 * add permissions
 * add admin role
 * add domain name to site
-* add list & edit for every entity
 * add base components for list, edit & create
 * check docker security issues
 * add unit testing
