@@ -1,5 +1,7 @@
-import { Controller } from "@nestjs/common";
-import { Crud, CrudController } from "@nestjsx/crud";
+import { Controller, UseGuards } from "@nestjs/common";
+import { Crud, CrudController, CrudAuth } from "@nestjsx/crud";
+import { CrudAuthFilter } from "src/auth/crud-auth.filter";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 
 import { Klasses } from "../entities/Klasses";
 import { KlassesService } from "./klasses.service";
@@ -9,6 +11,8 @@ import { KlassesService } from "./klasses.service";
     type: Klasses,
   },
 })
+@UseGuards(JwtAuthGuard)
+@CrudAuth(CrudAuthFilter)
 @Controller("klasses")
 export class KlassesController implements CrudController<Klasses> {
   constructor(public service: KlassesService) {}
