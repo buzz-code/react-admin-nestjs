@@ -7,6 +7,7 @@
 * create a copy of the db for the docker
 
 # todo
+* add auth
 * add domain name to site
 * add list, edit & show for every entity
 * check docker security issues
