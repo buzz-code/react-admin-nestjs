@@ -1,13 +1,12 @@
-import { Datagrid, List, ReferenceField, TextField } from 'react-admin';
+import { ReferenceField, TextField } from 'react-admin';
+import { CommonList } from '../../common/CommonList';
 
 export const TextList = (props) => (
-    <List {...props}>
-        <Datagrid rowClick="edit">
-            <TextField source="id" />
-            <ReferenceField source="userId" reference="users" />
-            <TextField source="name" />
-            <TextField source="description" />
-            <TextField source="value" />
-        </Datagrid>
-    </List>
+    <CommonList {...props}>
+        <TextField source="id" />
+        <ReferenceField source="userId" reference="users" />
+        <TextField source="name" />
+        <TextField source="description" />
+        <TextField source="value" />
+    </CommonList>
 );

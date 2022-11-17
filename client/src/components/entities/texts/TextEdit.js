@@ -1,13 +1,12 @@
-import { Edit, ReferenceInput, SimpleForm, TextInput } from 'react-admin';
+import { ReferenceInput, TextInput } from 'react-admin';
+import { CommonEdit } from '../../common/CommonEdit';
 
-export const TextEdit = () => (
-    <Edit>
-        <SimpleForm>
-            <TextInput source="id" />
-            <ReferenceInput source="userId" reference="users" />
-            <TextInput source="name" />
-            <TextInput source="description" />
-            <TextInput source="value" />
-        </SimpleForm>
-    </Edit>
+export const TextEdit = (props) => (
+    <CommonEdit {...props}>
+        <TextInput source="id" />
+        <ReferenceInput source="userId" reference="users" />
+        <TextInput source="name" />
+        <TextInput source="description" />
+        <TextInput source="value" />
+    </CommonEdit>
 );
