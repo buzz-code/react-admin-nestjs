@@ -6,6 +6,7 @@ import i18nProvider from "./providers/i18nProvider";
 import theme from "./providers/themeProvider";
 
 import { UserEdit, UserList, UserRepresentation, UserShow } from "./components/users";
+import { TextEdit, TextList, TextShow } from "./components/texts";
 
 
 const App = () => (
@@ -19,7 +20,7 @@ const App = () => (
     <Resource name="student_klasses" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
     <Resource name="students" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
     <Resource name="teachers" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
-    <Resource name="texts" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
+    <Resource name="texts" list={TextList} edit={TextEdit} show={TextShow} />
     <Resource name="users" list={UserList} edit={UserEdit} show={UserShow} recordRepresentation={UserRepresentation} />
   </Admin>
 );
