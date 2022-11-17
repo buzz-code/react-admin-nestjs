@@ -6,7 +6,7 @@ const translations = { en, he };
 
 const i18nProvider = polyglotI18nProvider(
     locale => translations[locale],
-    'he', // default locale
+    'en', // default locale
     [{ locale: 'en', name: 'English' }, { locale: 'he', name: 'עברית' }],
 );
 
