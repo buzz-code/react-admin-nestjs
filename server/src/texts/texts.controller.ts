@@ -1,5 +1,7 @@
-import { Controller } from "@nestjs/common";
-import { Crud, CrudController } from "@nestjsx/crud";
+import { Controller, UseGuards } from "@nestjs/common";
+import { Crud, CrudController, CrudAuth } from "@nestjsx/crud";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { Users } from "src/entities/Users";
 
 import { Texts } from "../entities/Texts";
 import { TextsService } from "./texts.service";
@@ -9,7 +11,14 @@ import { TextsService } from "./texts.service";
     type: Texts,
   },
 })
+@UseGuards(JwtAuthGuard)
+@CrudAuth({
+  property: "user",
+  filter: (user: Users) => ({
+    userId: user.id,
+  }),
+})
 @Controller("texts")
 export class TextsController implements CrudController<Texts> {
-  constructor(public service: TextsService) {}
+  constructor(public service: TextsService) { }
 }

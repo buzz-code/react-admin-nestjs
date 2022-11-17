@@ -15,9 +15,10 @@ const authProvider = {
                 return response.json();
             })
             .then(auth => {
-                localStorage.setItem('auth', JSON.stringify(auth));
+                localStorage.setItem('auth', auth.access_token);
             })
-            .catch(() => {
+            .catch((error) => {
+                console.log(error)
                 throw new Error('Network error')
             });
     },
