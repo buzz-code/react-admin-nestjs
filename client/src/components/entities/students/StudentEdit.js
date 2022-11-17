@@ -1,7 +1,7 @@
 import { DateInput, ReferenceInput, TextInput } from 'react-admin';
 import { CommonEdit } from '../../common/CommonEdit';
 
-export const StudentEdit = () => (
+export const StudentEdit = (props) => (
     <CommonEdit {...props}>
         <TextInput source="id" />
         <ReferenceInput source="userId" reference="users" />

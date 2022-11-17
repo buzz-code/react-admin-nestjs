@@ -8,12 +8,12 @@
 * add auth
 * auth - https://www.codemag.com/Article/2001081/Nest.js-Step-by-Step-Part-3-Users-and-Authentication
 * remove show components
+* add base components for list, edit & create
 
 # todo
 * add permissions
 * add admin role
 * add domain name to site
-* add base components for list, edit & create
 * check docker security issues
 * add unit testing
 * add complex queries
