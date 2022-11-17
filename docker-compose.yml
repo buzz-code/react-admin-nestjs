@@ -2,6 +2,7 @@ version: "3"
 services:
     frontend:
         container_name: frontend
+        restart: unless-stopped
         depends_on:
             - backend
         build:
@@ -17,6 +18,7 @@ services:
 
     backend:
         container_name: backend
+        restart: unless-stopped
         build:
             context: ./server
         environment:
@@ -35,6 +37,7 @@ services:
 
     mysql:
         container_name: mysql
+        restart: unless-stopped
         build:
             context: ./db
         cap_add:
@@ -50,6 +53,7 @@ services:
 
     phpmyadmin:
         container_name: php-myadmin
+        restart: unless-stopped
         depends_on:
             - mysql
         image: phpmyadmin
