@@ -3,6 +3,7 @@ import { Admin, Resource, ListGuesser, EditGuesser, ShowGuesser } from 'react-ad
 
 import dataProvider from "./providers/dataProvider";
 import i18nProvider from "./providers/i18nProvider";
+import authProvider from "./providers/authProvider";
 import theme from "./providers/themeProvider";
 
 import { UserEdit, UserList, UserRepresentation, UserShow } from "./components/entities/users";
@@ -10,7 +11,7 @@ import { TextEdit, TextList, TextShow } from "./components/entities/texts";
 
 
 const App = () => (
-  <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} theme={theme}>
+  <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme}>
     <Resource name="att_reports" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
     <Resource name="grades" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
     <Resource name="klasses" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />

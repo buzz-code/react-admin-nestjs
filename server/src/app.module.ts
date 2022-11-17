@@ -14,6 +14,7 @@ import { StudentsModule } from './students/students.module';
 import { TeachersModule } from './teachers/teachers.module';
 import { TextsModule } from './texts/texts.module';
 import { StudentKlassesReportModule } from './student_klasses_report/student_klasses_report.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -30,7 +31,8 @@ import { StudentKlassesReportModule } from './student_klasses_report/student_kla
     StudentsModule,
     TeachersModule,
     TextsModule,
-    StudentKlassesReportModule
+    StudentKlassesReportModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
