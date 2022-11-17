@@ -5,9 +5,11 @@
 * add docker compose
 * push to new server
 * create a copy of the db for the docker
+* add auth
 
 # todo
-* add auth
+* add permission
+* add admin role
 * add domain name to site
 * add list, edit & show for every entity
 * check docker security issues
