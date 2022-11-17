@@ -5,8 +5,8 @@ import dataProvider from "./providers/dataProvider";
 import i18nProvider from "./providers/i18nProvider";
 import theme from "./providers/themeProvider";
 
-import { UserEdit, UserList, UserRepresentation, UserShow } from "./components/users";
-import { TextEdit, TextList, TextShow } from "./components/texts";
+import { UserEdit, UserList, UserRepresentation, UserShow } from "./components/entities/users";
+import { TextEdit, TextList, TextShow } from "./components/entities/texts";
 
 
 const App = () => (
