@@ -2,7 +2,7 @@
 // import crudProvider from 'ra-data-nestjsx-crud'
 import crudProvider from '@fusionworks/ra-data-nest-crud';
 
-const dataUrl = process.env.API_URL || 'http://localhost:3000';
+const dataUrl = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
 // const dataProvider = jsonServerProvider('http://localhost:3000');
 // const dataProvider = jsonServerProvider('https://jsonplaceholder.typicode.com');

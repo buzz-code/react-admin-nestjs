@@ -2,47 +2,64 @@ version: "3"
 services:
     frontend:
         container_name: frontend
+        depends_on:
+            - backend
         build:
             context: ./client
-            dockerfile: Dockerfile
         environment:
-            - API_URL=$API_URL
-        image: client
+            - REACT_APP_API_URL=${BACKEND_URL}:${BACKEND_PORT}
         ports:
-            - "3001:3000"
+            - "${FRONTEND_PORT}:3000"
         volumes:
-            - ${PWD-.}/client:/usr/src/app
-            - /usr/src/app/node_modules
+            - ./client:/app
+            - /app/node_modules
+            - /app/dist
+
     backend:
         container_name: backend
         build:
             context: ./server
-            dockerfile: Dockerfile
         environment:
             - MYSQL_HOST=$MYSQL_HOST
-            - MYSQL_PORT=$MYSQL_PORT
             - MYSQL_USER=$MYSQL_USER
             - MYSQL_PASSWORD=$MYSQL_PASSWORD
             - MYSQL_DATABASE=$MYSQL_DATABASE
-        image: server
+        depends_on:
+            - mysql
         ports:
-            - "3000:3000"
-        volumes:
-            - ${PWD-.}/server:/usr/src/app
-            - /usr/src/app/node_modules
-        networks:
-            - nestjs-react
+            - "${BACKEND_PORT}:3000"
+        volumes: 
+            - ./server:/app
+            - /app/node_modules
+            - /app/dist
+
     mysql:
+        container_name: mysql
         build:
             context: ./db
+        cap_add:
+            - SYS_NICE
+        command: --default-authentication-plugin=mysql_native_password
         environment:
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        volumes:
+            - "db_data:/var/lib/mysql"
+            - "./db/data.sql:/docker-entrypoint-initdb.d/data.sql"
+
+    phpmyadmin:
+        container_name: php-myadmin
+        depends_on:
+            - mysql
+        image: phpmyadmin
         ports:
-            - "3306:3306"
-        networks:
-            - nestjs-react
-networks:
-    nestjs-react:
+            - "8090:80"
+        environment:
+            PMA_HOST: mysql
+            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+
+
+volumes:
+    db_data:
