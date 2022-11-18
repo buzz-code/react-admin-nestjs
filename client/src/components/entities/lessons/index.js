@@ -1,2 +1,2 @@
 export {LessonList} from './LessonList';
-export {LessonEdit} from './LessonEdit';
+export {LessonEdit, LessonCreate} from './LessonEdit';

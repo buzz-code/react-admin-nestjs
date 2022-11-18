@@ -1,8 +1,9 @@
 import { DateInput, TextInput } from 'react-admin';
 import { CommonEdit } from '../../common/CommonEdit';
+import { CommonCreate } from '../../common/CommonCreate';
 
-export const UserEdit = (props) => (
-    <CommonEdit {...props}>
+const Fields = ({ isCreate }) => (
+    <>
         <TextInput source="id" />
         <TextInput source="name" />
         <TextInput source="email" />
@@ -13,5 +14,17 @@ export const UserEdit = (props) => (
         <DateInput source="updatedAt" />
         <TextInput source="fromEmail" />
         <TextInput source="replyToEmail" />
+    </>
+)
+
+export const UserEdit = (props) => (
+    <CommonEdit {...props}>
+        <Fields isCreate={false} />
     </CommonEdit>
+);
+
+export const UserCreate = (props) => (
+    <CommonCreate {...props}>
+        <Fields isCreate={true} />
+    </CommonCreate>
 );

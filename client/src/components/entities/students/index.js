@@ -1,2 +1,2 @@
 export {StudentList} from './StudentList';
-export {StudentEdit} from './StudentEdit';
+export {StudentEdit, StudentCreate} from './StudentEdit';

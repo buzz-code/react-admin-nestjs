@@ -1,2 +1,2 @@
 export {KnownAbsenceList} from './KnownAbsenceList';
-export {KnownAbsenceEdit} from './KnownAbsenceEdit';
+export {KnownAbsenceEdit, KnownAbsenceCreate} from './KnownAbsenceEdit';

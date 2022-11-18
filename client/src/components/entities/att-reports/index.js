@@ -1,2 +1,2 @@
 export {AttReportList} from './AttReportList';
-export {AttReportEdit} from './AttReportEdit';
+export {AttReportEdit, AttReportCreate} from './AttReportEdit';

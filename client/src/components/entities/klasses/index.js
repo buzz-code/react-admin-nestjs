@@ -1,2 +1,2 @@
 export {KlassList} from './KlassList';
-export {KlassEdit} from './KlassEdit';
+export {KlassEdit, KlassCreate} from './KlassEdit';

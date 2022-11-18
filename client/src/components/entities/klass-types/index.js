@@ -1,2 +1,2 @@
 export {KlassTypeList} from './KlassTypeList';
-export {KlassTypeEdit} from './KlassTypeEdit';
+export {KlassTypeEdit, KlassTypeCreate} from './KlassTypeEdit';
