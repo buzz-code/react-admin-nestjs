@@ -1,5 +1,6 @@
-import { DateField, NumberField, ReferenceField, TextField } from 'react-admin';
+import { DateField, NumberField, TextField } from 'react-admin';
 import { CommonList } from '../../common/CommonList';
+import { CustomReferenceField } from '../../common/CustomReferenceField';
 import { UserReferenceField } from '../../common/UserReferenceField';
 
 export const KlassList = (props) => (
@@ -8,8 +9,8 @@ export const KlassList = (props) => (
         <UserReferenceField />
         <NumberField source="key" />
         <TextField source="name" />
-        <ReferenceField source="klassTypeId" reference="klassTypes" />
-        <ReferenceField source="teacherId" reference="teachers" />
+        <CustomReferenceField source="klassTypeId" reference="klass_types" target="id" />
+        <CustomReferenceField source="teacherId" reference="teachers" target="tz" />
         <DateField source="createdAt" />
         <DateField source="updatedAt" />
     </CommonList>
