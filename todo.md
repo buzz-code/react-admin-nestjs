@@ -9,18 +9,19 @@
 * auth - https://www.codemag.com/Article/2001081/Nest.js-Step-by-Step-Part-3-Users-and-Authentication
 * remove show components
 * add base components for list, edit & create
+* fix custom referencing tables
 
 # todo
+* rtl support
+* hebrew translation
+* add filters
 * add permissions
 * add admin role
 * add domain name to site
 * check docker security issues
 * add unit testing
 * add complex queries
-* add filters
 * add export to csv & pdf
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * add csv import
-* rtl support
-* hebrew translation
 * 
