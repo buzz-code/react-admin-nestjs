@@ -37,10 +37,21 @@ const authProvider = {
         // other error code (404, 500, etc): no need to log out
         return Promise.resolve();
     },
-    getIdentity: () => {
+    getIdentity: async () => {
         try {
-            const { id, fullName, avatar } = JSON.parse(localStorage.getItem('auth'));
-            return Promise.resolve({ id, fullName, avatar });
+            const token = localStorage.getItem('auth')
+
+            const response = await fetch(apiUrl + '/profile', {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+
+            const { name } = await response.json();
+
+            return Promise.resolve({ fullName: name });
         } catch (error) {
             return Promise.reject(error);
         }
