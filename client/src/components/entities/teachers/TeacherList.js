@@ -1,10 +1,11 @@
-import { DateField, EmailField, ReferenceField, TextField } from 'react-admin';
+import { DateField, EmailField, TextField } from 'react-admin';
 import { CommonList } from '../../common/CommonList';
+import { UserReferenceField } from '../../common/UserReferenceField';
 
 export const TeacherList = (props) => (
     <CommonList {...props}>
         <TextField source="id" />
-        <ReferenceField source="userId" reference="users" />
+        <UserReferenceField />
         <TextField source="tz" />
         <TextField source="name" />
         <TextField source="phone" />

@@ -56,7 +56,10 @@ const authProvider = {
             return Promise.reject(error);
         }
     },
-    getPermissions: () => Promise.resolve(''),
+    getPermissions: () => {
+        const permissions = localStorage.getItem('permissions') || '[]';
+        return Promise.resolve(JSON.parse(permissions));
+    },
 };
 
 export default authProvider;

@@ -1,10 +1,11 @@
 import { DateField, NumberField, ReferenceField, TextField } from 'react-admin';
 import { CommonList } from '../../common/CommonList';
+import { UserReferenceField } from '../../common/UserReferenceField';
 
 export const AttReportList = (props) => (
     <CommonList {...props}>
         <TextField source="id" />
-        <ReferenceField source="userId" reference="users" />
+        <UserReferenceField />
         <TextField source="studentTz" />
         <ReferenceField source="teacherId" reference="teachers" />
         <ReferenceField source="klassId" reference="klasses" />
