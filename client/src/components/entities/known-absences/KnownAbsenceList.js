@@ -1,12 +1,12 @@
 import { DateField, NumberField, TextField } from 'react-admin';
+import { AdminDateField, AdminReferenceField, AdminTextField } from '../../common/AdminRestricted';
 import { CommonList } from '../../common/CommonList';
 import { CustomReferenceField } from '../../common/CustomReferenceField';
-import { UserReferenceField } from '../../common/UserReferenceField';
 
 export const KnownAbsenceList = (props) => (
     <CommonList {...props}>
-        <TextField source="id" />
-        <UserReferenceField />
+        <AdminTextField source="id" />
+        <AdminReferenceField source="userId" reference="users" />
         <CustomReferenceField source="studentTz" reference="students" target="tz" />
         <DateField source="reportDate" />
         <NumberField source="absnceCount" />
@@ -14,7 +14,7 @@ export const KnownAbsenceList = (props) => (
         <TextField source="senderName" />
         <TextField source="reason" />
         <TextField source="comment" />
-        <DateField source="createdAt" />
-        <DateField source="idCopy1" />
+        <AdminDateField source="createdAt" />
+        <AdminDateField source="idCopy1" />
     </CommonList>
 );
