@@ -82,6 +82,7 @@ const domainTranslation = {
                 absCount: 'חיסורים',
                 approvedAbsCount: 'חיסורים מאושרים',
                 comments: 'הערה',
+                sheetName: 'חודש דיווח',
             }
         },
         grades: {
@@ -176,7 +177,7 @@ const translations = { en, he: deepMerge(he, domainTranslation) };
 
 const i18nProvider = polyglotI18nProvider(
     locale => translations[locale],
-    'en', // default locale
+    'he', // default locale
     [{ locale: 'en', name: 'English' }, { locale: 'he', name: 'עברית' }],
 );
 
