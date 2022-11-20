@@ -8,6 +8,6 @@ export const UserReferenceField = () => {
     }
 
     return (
-        <ReferenceField source="userId" reference="users" />
+        <ReferenceField source="userId" reference="users" label="userId" />
     );
 }

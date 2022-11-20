@@ -10,13 +10,16 @@
 * remove show components
 * add base components for list, edit & create
 * fix custom referencing tables
+* hebrew translation
 
 # todo
-* rtl support
-* hebrew translation
-* add filters
+* use vite for client & server
+* rtl support - https://marmelab.com/react-admin/Theming.html
+* add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * add permissions
 * add admin role
+* add admin wrapper
+* add compace ui - https://github.com/ValentinnDimitroff/ra-compact-ui
 * add domain name to site
 * check docker security issues
 * add unit testing
