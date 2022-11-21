@@ -1,14 +1,17 @@
-import { NumberField, TextField } from 'react-admin';
-import { AdminDateField, AdminReferenceField, AdminTextField } from '../../common/AdminRestricted';
+import { NumberField, TextField, ReferenceField, DateField } from 'react-admin';
+import { useIsAdmin } from '../../common/AdminRestricted';
 import { CommonList } from '../../common/CommonList';
 
-export const KlassTypeList = (props) => (
-    <CommonList {...props}>
-        <AdminTextField source="id" />
-        <AdminReferenceField source="userId" reference="users" />
-        <NumberField source="key" />
-        <TextField source="name" />
-        <AdminDateField source="createdAt" />
-        <AdminDateField source="updatedAt" />
-    </CommonList>
-);
+export const KlassTypeList = (props) => {
+    const isAdmin = useIsAdmin();
+    return (
+        <CommonList {...props}>
+            {isAdmin && <TextField source="id" />}
+            {isAdmin && <ReferenceField source="userId" reference="users" />}
+            <NumberField source="key" />
+            <TextField source="name" />
+            {isAdmin && <DateField source="createdAt" />}
+            {isAdmin && <DateField source="updatedAt" />}
+        </CommonList>
+    );
+}
