@@ -13,11 +13,11 @@
 * hebrew translation
 * add admin role
 * add admin wrapper
+* rtl support - https://marmelab.com/react-admin/Theming.html
 
 # todo
 * fix crud auth filter
 * use vite for client & server
-* rtl support - https://marmelab.com/react-admin/Theming.html
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * add permissions
 * add compace ui - https://github.com/ValentinnDimitroff/ra-compact-ui
