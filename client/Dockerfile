@@ -1,12 +1,40 @@
-FROM node:16
+FROM node:16-alpine as development
 
 WORKDIR /app
 
 COPY package*.json /app/
 COPY yarn.lock /app/
 
-RUN yarn
+RUN yarn install
 
-COPY . ./
+COPY . .
 
 CMD ["yarn", "start"]
+
+
+FROM node:16-alpine AS builder
+
+ENV NODE_ENV production
+
+WORKDIR /app
+
+COPY package*.json /app/
+COPY yarn.lock /app/
+
+RUN yarn install --production
+
+COPY . .
+
+RUN yarn build
+
+
+FROM nginx:alpine as production
+
+WORKDIR /usr/share/nginx/html
+
+RUN rm -rf *
+
+COPY --from=builder /app/build .
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
