@@ -7953,7 +7953,7 @@ ra-core@^3.9.6:
     query-string "^5.1.1"
     reselect "~3.0.0"
 
-ra-core@^4.5.0:
+ra-core@^4.5.0, ra-core@^4.5.2:
   version "4.5.2"
   resolved "https://registry.npmjs.org/ra-core/-/ra-core-4.5.2.tgz"
   integrity sha512-3Oehkh8F73QDm0v8rNXKoa7EoWunoqUlFWAbPF7/p7vRmLTxgAE/+6PhpItkUU42ro6Oh2lC+MSe3zHANhivhQ==
@@ -7977,29 +7977,28 @@ ra-data-json-server@^4.5.0:
     query-string "^7.1.1"
     ra-core "^4.5.0"
 
-ra-data-nestjsx-crud@^1.3.1:
+"ra-data-nestjsx-crud@https://github.com/ababra/ra-data-nestjsx-crud.git":
   version "1.3.1"
-  resolved "https://registry.npmjs.org/ra-data-nestjsx-crud/-/ra-data-nestjsx-crud-1.3.1.tgz"
-  integrity sha512-NuF9vxilXlZRem/Jma92IwLOke0UP/Io97UAfNVSOUT0Z5q131AYAdh2zxvN0X11l6csPajmHZAaFGt3Bv/g1Q==
+  resolved "https://github.com/ababra/ra-data-nestjsx-crud.git#9801f6f9d2aae29324d10bb0f3b05226c20cc00f"
   dependencies:
     "@nestjsx/crud-request" "^4.1.0"
     lodash.omitby "^4.6.0"
     query-string "^7.1.1"
 
-ra-i18n-polyglot@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.npmjs.org/ra-i18n-polyglot/-/ra-i18n-polyglot-4.5.0.tgz"
-  integrity sha512-YISIXzQwnqI9Z+zKYqTH0FiXhq2j5KuBj1MuP38WMRnHCw2G0H4hlu4aILGWKxKt5bejSCtrvrc4gfhUyo00kA==
+ra-i18n-polyglot@^4.5.2:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/ra-i18n-polyglot/-/ra-i18n-polyglot-4.5.2.tgz#ae6dac7d9dd290698e07f541552e282d2346659d"
+  integrity sha512-EgfaVkGe23m1KqJWVbhSqEzX3zvWp1caVqOiUJZy/HD9w93zeu+VXd69d3dVWkoh5a5nQfN0B6RcL2USpas9lQ==
   dependencies:
     node-polyglot "^2.2.2"
-    ra-core "^4.5.0"
+    ra-core "^4.5.2"
 
-ra-language-english@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.npmjs.org/ra-language-english/-/ra-language-english-4.5.0.tgz"
-  integrity sha512-7lhrWfuOnDhxOaqJ2QXLDBDQ24q5+TElbk3Ys4JmsRXzchM5eWH0R0q5hCpmneYdg3bGYORvm7e4EbEmj7y+jQ==
+ra-language-english@^4.5.2:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/ra-language-english/-/ra-language-english-4.5.2.tgz#464a9077c088588e8d265e5acd7f21182d1a0b8f"
+  integrity sha512-k3rBLFotQuvwG7vZYiHlVjU/OGieo8udIgGrnSzXJ12rkHuc3y75wtWlrv7DwQYINUClVRASbBpcVu8v7eqakg==
   dependencies:
-    ra-core "^4.5.0"
+    ra-core "^4.5.2"
 
 ra-language-hebrew-il@^3.9.6:
   version "3.9.6"
@@ -8008,9 +8007,9 @@ ra-language-hebrew-il@^3.9.6:
   dependencies:
     ra-core "^3.9.6"
 
-ra-ui-materialui@^4.5.1:
+ra-ui-materialui@^4.5.2:
   version "4.5.2"
-  resolved "https://registry.npmjs.org/ra-ui-materialui/-/ra-ui-materialui-4.5.2.tgz"
+  resolved "https://registry.yarnpkg.com/ra-ui-materialui/-/ra-ui-materialui-4.5.2.tgz#708c7540f37fef341fa6d906e594c913386a6105"
   integrity sha512-zpAWMouy7YROuCK2M6CuZHITzR0VWVN6GsFqYYNhyYV4CaOP6Sw6kJs3b7IDgqShgoEwlCc85FKemxzVT7vCGw==
   dependencies:
     autosuggest-highlight "^3.1.1"
@@ -8055,20 +8054,20 @@ raw-body@2.5.1:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-react-admin@^4.5.1:
-  version "4.5.1"
-  resolved "https://registry.npmjs.org/react-admin/-/react-admin-4.5.1.tgz"
-  integrity sha512-taB3agQayMpIZVfcdQSVLeYATIm6F7v4VGUnO2szEZdoPZzk3XJnARlatk1J5fLISYGqsbtrLY9MfqFs4Fu5YQ==
+react-admin@^4.5.2:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/react-admin/-/react-admin-4.5.2.tgz#fa57c1d32a5211fcd5560e6813a6eaa002802155"
+  integrity sha512-ClZvMlO2ak7vQ+LzDrbx2u8O75PJ3IyHubhfwZCgK5BYzKg3p8OfhTytO0ajGNk4nmNAzcT0e9Wimf0e1iG4mQ==
   dependencies:
     "@emotion/react" "^11.4.1"
     "@emotion/styled" "^11.3.0"
     "@mui/icons-material" "^5.0.1"
     "@mui/material" "^5.0.2"
     history "^5.1.0"
-    ra-core "^4.5.0"
-    ra-i18n-polyglot "^4.5.0"
-    ra-language-english "^4.5.0"
-    ra-ui-materialui "^4.5.1"
+    ra-core "^4.5.2"
+    ra-i18n-polyglot "^4.5.2"
+    ra-language-english "^4.5.2"
+    ra-ui-materialui "^4.5.2"
     react-hook-form "^7.34.2"
     react-router "^6.1.0"
     react-router-dom "^6.1.0"

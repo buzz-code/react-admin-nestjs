@@ -1,5 +1,7 @@
 FROM node:16-alpine as development
 
+RUN apk add git
+
 WORKDIR /app
 
 COPY package*.json /app/
@@ -13,6 +15,8 @@ CMD ["yarn", "start"]
 
 
 FROM node:16-alpine AS builder
+
+RUN apk add git
 
 ENV NODE_ENV production
 
