@@ -23,7 +23,7 @@ export class StudentsService extends TypeOrmCrudService<Students> {
       const [data, total] = await builder.getManyAndCount();
       const limit = builder.expressionMap.take;
       const offset = builder.expressionMap.skip;
-      await this.populatePivotData(data);
+      // await this.populatePivotData(data);
       return this.createPageInfo(data, total, limit || total, offset || 0);
     }
     return builder.getMany();
