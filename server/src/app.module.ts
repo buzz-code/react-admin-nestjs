@@ -3,17 +3,17 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import TypeOrmModule from './typeorm.module';
 import { UsersModule } from './users/users.module';
-import { AttReportsModule } from './att_reports/att_reports.module';
-import { GradesModule } from './grades/grades.module';
-import { KlassesModule } from './klasses/klasses.module';
-import { KlassTypesModule } from './klass_types/klass_types.module';
-import { KnownAbsencesModule } from './known_absences/known_absences.module';
-import { LessonsModule } from './lessons/lessons.module';
-import { StudentKlassesModule } from './student_klasses/student_klasses.module';
-import { StudentsModule } from './students/students.module';
-import { TeachersModule } from './teachers/teachers.module';
-import { TextsModule } from './texts/texts.module';
-import { StudentKlassesReportModule } from './student_klasses_report/student_klasses_report.module';
+import { AttReportsModule } from './entity-modules/att_reports.module';
+import { GradesModule } from './entity-modules/grades.module';
+import { KlassesModule } from './entity-modules/klasses.module';
+import { KlassTypesModule } from './entity-modules/klass_types.module';
+import { KnownAbsencesModule } from './entity-modules/known_absences.module';
+import { LessonsModule } from './entity-modules/lessons.module';
+import { StudentKlassesModule } from './entity-modules/student_klasses.module';
+import { StudentsModule } from './entity-modules/students.module';
+import { TeachersModule } from './entity-modules/teachers.module';
+import { TextsModule } from './entity-modules/texts.module';
+import { StudentKlassesReportModule } from './entity-modules/student_klasses_report.module';
 import { AuthModule } from './auth/auth.module';
 
 
