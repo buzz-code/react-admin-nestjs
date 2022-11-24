@@ -20,8 +20,9 @@
 * use vite for client & server
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * add permissions
-* add compace ui - https://github.com/ValentinnDimitroff/ra-compact-ui
+* add compact ui - https://github.com/ValentinnDimitroff/ra-compact-ui
 * add domain name to site
+* fix rtl - https://mui.com/material-ui/guides/right-to-left/
 * check docker security issues
 * add unit testing
 * add complex queries
