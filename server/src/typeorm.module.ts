@@ -20,7 +20,7 @@ export default TypeOrmModule.forRoot({
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
     entities: [AttReports, Grades, Klasses, KlassTypes, KnownAbsences, Lessons, StudentKlasses, Students, Teachers, Texts, Users, StudentKlassesReport],
-    synchronize: true,
+    // synchronize: true,
     logging: "all",
     // logger:"debug"
 });
