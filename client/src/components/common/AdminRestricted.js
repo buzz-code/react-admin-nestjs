@@ -6,5 +6,5 @@ export const useIsAdmin = () => {
 }
 
 export function isAdmin(permissions) {
-    return permissions.includes('admin');
+    return !!permissions.admin;
 }

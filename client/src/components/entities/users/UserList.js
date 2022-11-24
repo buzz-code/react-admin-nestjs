@@ -21,5 +21,6 @@ export const UserList = (props) => (
         <DateField source="updatedAt" />
         <TextField source="fromEmail" />
         <TextField source="replyToEmail" />
+        <TextField source="permissions" />
     </CommonList>
 );

@@ -56,6 +56,9 @@ export class Users {
   @Column("varchar", { name: "reply_to_email", nullable: true, length: 500 })
   replyToEmail: string | null;
 
+  @Column("varchar", { name: "permissions", nullable: true, length: 5000 })
+  permissions: any;
+
   @OneToMany(() => AttReports, (attReports) => attReports.user)
   attReports: AttReports[];
 

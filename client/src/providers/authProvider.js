@@ -49,16 +49,16 @@ const authProvider = {
                 }
             });
 
-            const { name } = await response.json();
+            const { name, permissions } = await response.json();
 
-            return Promise.resolve({ fullName: name });
+            return Promise.resolve({ fullName: name, permissions });
         } catch (error) {
             return Promise.reject(error);
         }
     },
-    getPermissions: () => {
-        const permissions = localStorage.getItem('permissions') || '[]';
-        return Promise.resolve(JSON.parse(permissions));
+    getPermissions: async () => {
+        const identity = await authProvider.getIdentity()
+        return Promise.resolve(identity.permissions);
     },
 };
 

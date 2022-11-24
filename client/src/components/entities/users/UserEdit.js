@@ -14,6 +14,7 @@ const Fields = ({ isCreate }) => (
         <DateInput source="updatedAt" />
         <TextInput source="fromEmail" />
         <TextInput source="replyToEmail" />
+        <TextInput source="permissions" multiline />
     </>
 )
 
