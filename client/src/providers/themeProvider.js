@@ -3,6 +3,8 @@ import { defaultTheme } from 'react-admin';
 
 const theme = {
     ...defaultTheme,
+    direction: 'rtl',
+    isRtl: true,
     components: {
         ...defaultTheme.components,
         RaUserMenu: {
