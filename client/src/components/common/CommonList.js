@@ -15,7 +15,7 @@ const BulkActionButtons = () => (
 
 
 export const CommonList = ({ children, ...props }) => (
-    <List actions={<ListActions />} {...props}>
+    <List {...props}>
         <Datagrid rowClick="edit" bulkActionButtons={<BulkActionButtons />}>
             {children}
         </Datagrid>
