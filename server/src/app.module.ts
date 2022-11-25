@@ -15,6 +15,7 @@ import { TeachersModule } from './entity-modules/teachers.module';
 import { TextsModule } from './entity-modules/texts.module';
 import { StudentKlassesReportModule } from './entity-modules/student_klasses_report.module';
 import { AuthModule } from './auth/auth.module';
+import { YemotCallModule } from './common/yemot-call.module';
 
 
 @Module({
@@ -32,7 +33,8 @@ import { AuthModule } from './auth/auth.module';
     TeachersModule,
     TextsModule,
     StudentKlassesReportModule,
-    AuthModule
+    AuthModule,
+    YemotCallModule
   ],
   controllers: [AppController],
   providers: [AppService],
