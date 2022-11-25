@@ -14,9 +14,10 @@
 * add admin role
 * add admin wrapper
 * rtl support - https://marmelab.com/react-admin/Theming.html
+* fix crud auth filter
 
 # todo
-* fix crud auth filter
+* add yemot controller
 * use vite for client & server
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * add permissions
