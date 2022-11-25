@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import TypeOrmModule from './typeorm.module';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './entity-modules/users.module';
 import { AttReportsModule } from './entity-modules/att_reports.module';
 import { GradesModule } from './entity-modules/grades.module';
 import { KlassesModule } from './entity-modules/klasses.module';
