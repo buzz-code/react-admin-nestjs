@@ -4,20 +4,20 @@ import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router';
 
 
-const BackButton = props => {
+const BackButton = ({ children }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-       navigate(-1);
+        navigate(-1);
     };
 
     return (
-        <Button 
+        <Button
             startIcon={<ArrowBack />}
             color="primary"
             onClick={handleClick}
         >
-            {props.children}
+            {children}
         </Button>
     );
 }

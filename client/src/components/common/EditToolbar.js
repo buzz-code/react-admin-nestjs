@@ -1,7 +1,7 @@
 import { Toolbar, SaveButton, DeleteButton } from 'react-admin'
 import BackButton from './BackButton'
 
-const EditToolbar = props => (
+const EditToolbar = (props) => (
   <Toolbar {...props}>
     <SaveButton />
     <BackButton

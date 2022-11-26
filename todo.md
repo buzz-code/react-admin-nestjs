@@ -18,6 +18,9 @@
 
 # todo
 * add yemot controller
+* add yemot simulator
+* add multi login for same user support - by add a column of 'effective user id' and using it to filter the results
+* logs - https://wanago.io/2021/10/04/api-nestjs-logging-typeorm/
 * use vite for client & server
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * add permissions
