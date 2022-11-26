@@ -29,6 +29,7 @@ services:
             MYSQL_PASSWORD: $MYSQL_PASSWORD
             MYSQL_DATABASE: $MYSQL_DATABASE
             JWT_SECRET: $JWT_SECRET
+            ADMIN_USER: $ADMIN_USER
         depends_on:
             - mysql
         ports:

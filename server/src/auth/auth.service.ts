@@ -11,6 +11,7 @@ export class AuthService {
   ) { }
 
   async validateUser(username: string, pass: string): Promise<any> {
+    console.log(Object.keys(process.env).filter(item=>!item.includes('npm')))
     if (`${username}:${pass}` === process.env.ADMIN_USER) {
       return {
         id: -1,
