@@ -5,11 +5,11 @@ import { CustomReferenceField } from '../common/CustomReferenceField';
 import { CommonEdit } from '../common/CommonEdit';
 import { CommonCreate } from '../common/CommonCreate';
 
-export const KnownAbsenceList = (props) => {
+export const KnownAbsenceList = () => {
     const isAdmin = useIsAdmin();
 
     return (
-        <CommonList {...props}>
+        <CommonList>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="users" />}
             <CustomReferenceField source="studentTz" reference="students" target="tz" />
@@ -41,14 +41,14 @@ const Fields = ({ isCreate }) => (
     </>
 )
 
-export const KnownAbsenceEdit = (props) => (
-    <CommonEdit {...props}>
+export const KnownAbsenceEdit = () => (
+    <CommonEdit>
         <Fields isCreate={false} />
     </CommonEdit>
 );
 
-export const KnownAbsenceCreate = (props) => (
-    <CommonCreate {...props}>
+export const KnownAbsenceCreate = () => (
+    <CommonCreate>
         <Fields isCreate={true} />
     </CommonCreate>
 );

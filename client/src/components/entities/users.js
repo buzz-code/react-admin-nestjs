@@ -11,8 +11,8 @@ const filters = [
     <QuickFilter source="fromEmail" defaultValue="gmail"/>
 ];
 
-export const UserList = (props) => (
-    <CommonList {...props} filters={filters}>
+export const UserList = () => (
+    <CommonList filters={filters}>
         <TextField source="id" />
         <TextField source="name" />
         <EmailField source="email" />
@@ -43,14 +43,14 @@ const Fields = ({ isCreate }) => (
     </>
 )
 
-export const UserEdit = (props) => (
-    <CommonEdit {...props}>
+export const UserEdit = () => (
+    <CommonEdit>
         <Fields isCreate={false} />
     </CommonEdit>
 );
 
-export const UserCreate = (props) => (
-    <CommonCreate {...props}>
+export const UserCreate = () => (
+    <CommonCreate>
         <Fields isCreate={true} />
     </CommonCreate>
 );

@@ -6,11 +6,11 @@ import { CommonEdit } from '../common/CommonEdit';
 import { CommonCreate } from '../common/CommonCreate';
 
 
-export const KlassList = (props) => {
+export const KlassList = () => {
     const isAdmin = useIsAdmin();
 
     return (
-        <CommonList {...props}>
+        <CommonList>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="users" />}
             <TextField source="key" />
@@ -36,14 +36,14 @@ const Fields = ({ isCreate }) => (
     </>
 )
 
-export const KlassEdit = (props) => (
-    <CommonEdit {...props}>
+export const KlassEdit = () => (
+    <CommonEdit>
         <Fields isCreate={false} />
     </CommonEdit>
 );
 
-export const KlassCreate = (props) => (
-    <CommonCreate {...props}>
+export const KlassCreate = () => (
+    <CommonCreate>
         <Fields isCreate={true} />
     </CommonCreate>
 );

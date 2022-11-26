@@ -12,11 +12,11 @@ const filters = [
     <ReferenceInput source="teacherId" reference="teachers" />
 ];
 
-export const AttReportList = (props) => {
+export const AttReportList = () => {
     const isAdmin = useIsAdmin();
 
     return (
-        <CommonList {...props} filters={filters}>
+        <CommonList filters={filters}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="users" />}
             <CustomReferenceField source="studentTz" reference="students" target="tz" />
@@ -54,14 +54,14 @@ const Fields = ({ isCreate }) => (
     </>
 )
 
-export const AttReportEdit = (props) => (
-    <CommonEdit {...props}>
+export const AttReportEdit = () => (
+    <CommonEdit>
         <Fields isCreate={false} />
     </CommonEdit>
 );
 
-export const AttReportCreate = (props) => (
-    <CommonCreate {...props}>
+export const AttReportCreate = () => (
+    <CommonCreate>
         <Fields isCreate={true} />
     </CommonCreate>
 );
