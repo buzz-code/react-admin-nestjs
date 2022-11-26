@@ -22,11 +22,11 @@ import { UserEdit, UserCreate, UserList } from "./components/entities/users";
 import { isAdmin } from "./components/common/AdminRestricted";
 import { CommonRepresentation } from "./components/common/CommonRepresentation";
 
-const Layout = (props) => <Layout {...props} menu={Menu} />
+const MyLayout = (props) => <Layout {...props} menu={Menu} />
 
 const App = () => (
   <BrowserRouter>
-    <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={Dashboard} layout={Layout} requireAuth>
+    <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={Dashboard} layout={MyLayout} requireAuth>
       {permissions => (
         <>
           <Resource name="att_reports" list={AttReportList} edit={AttReportEdit} create={AttReportCreate} />
