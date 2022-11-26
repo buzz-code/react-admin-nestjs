@@ -1,4 +1,4 @@
-import { StudentKlassesReport as Entity } from "../viewEntities/StudentKlassesReport";
+import { StudentKlassesReport as Entity } from "../view-entities/StudentKlassesReport";
 import { snakeCase } from "snake-case";
 
 // sevice

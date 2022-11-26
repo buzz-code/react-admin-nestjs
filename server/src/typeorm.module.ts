@@ -10,7 +10,7 @@ import { StudentKlasses } from "./entities/StudentKlasses";
 import { Students } from "./entities/Students";
 import { Teachers } from "./entities/Teachers";
 import { Texts } from "./entities/Texts";
-import { StudentKlassesReport } from "./viewEntities/StudentKlassesReport";
+import { StudentKlassesReport } from "./view-entities/StudentKlassesReport";
 
 export default TypeOrmModule.forRoot({
     type: 'mysql',
