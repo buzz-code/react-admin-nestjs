@@ -11,12 +11,11 @@ export class AuthService {
   ) { }
 
   async validateUser(username: string, pass: string): Promise<any> {
-    console.log(Object.keys(process.env).filter(item=>!item.includes('npm')))
     if (`${username}:${pass}` === process.env.ADMIN_USER) {
       return {
         id: -1,
         name: 'admin',
-        permissions: { admin: true }
+        permissions: JSON.stringify({ admin: true })
       }
     }
 
@@ -31,9 +30,10 @@ export class AuthService {
   async login(user: any) {
     const payload = {
       username: user.email,
-      sub: user.id,
+      id: user.id,
+      effective_id: user.effective_id,
       name: user.name,
-      permissions: user.permissions
+      permissions: JSON.parse(user.permissions || '{}')
     };
     return {
       access_token: this.jwtService.sign(payload),
