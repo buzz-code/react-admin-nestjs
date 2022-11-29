@@ -1,25 +1,31 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { Users } from "./Users";
 
 @Entity()
 export class YemotCall {
     @PrimaryGeneratedColumn()
-    id: Number;
+    id: number;
 
     @Column()
-    userId: Number;
+    userId: number;
 
     @ManyToOne(() => Users)
     user: Users;
 
     @Column()
-    phone: String;
-
-    @Column('simple-json')
-    params: YemotParams;
+    apiCallId: string;
 
     @Column()
-    currentStep: String;
+    phone: string;
+
+    @Column('simple-json')
+    history: YemotStep[];
+
+    @Column()
+    currentStep: string;
+
+    @Column('simple-json')
+    data: any;
 
     @Column()
     isOpen: Boolean;
@@ -28,10 +34,28 @@ export class YemotCall {
     hasError: Boolean;
 
     @Column()
-    errorMessage: String;
+    errorMessage: string;
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 }
 
-interface YemotParams {
-    teacherId: string;
+interface YemotStep {
+    time: Date;
+    params: any;
+    response: any;
+}
 
+export interface YemotParams {
+    ApiCallId: string;
+    ApiYFCallId:string;
+    ApiDID:string;
+    ApiRealDID:string;
+    ApiPhone:string;
+    ApiExtension:string;
+    ApiTime:string;
+    [key: string]: string;
 }
