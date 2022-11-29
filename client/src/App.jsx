@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Admin, Resource, ListGuesser, EditGuesser } from 'react-admin';
+import { Admin, Resource, ListGuesser, EditGuesser, Layout } from 'react-admin';
 import { BrowserRouter } from 'react-router-dom';
 
 import dataProvider from "./providers/dataProvider";

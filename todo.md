@@ -17,12 +17,13 @@
 * fix crud auth filter
 * add permissions
 * add multi login for same user support - by add a column of 'effective user id' and using it to filter the results
+* use vite for client
 
 # todo
 * add yemot controller
 * add yemot simulator
 * logs - https://wanago.io/2021/10/04/api-nestjs-logging-typeorm/
-* use vite for client & server
+* use vite for server
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * add compact ui - https://github.com/ValentinnDimitroff/ra-compact-ui
 * add domain name to site
