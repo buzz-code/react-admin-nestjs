@@ -15,6 +15,11 @@ const fetchJson = (url, options = {}) => {
 
 const dataProvider = crudProvider(apiUrl, fetchJson);
 
-dataProvider.simulateYemotCall = async (body) => fetchJson(apiUrl + '/yemot-call/handleCall', { method: 'POST', body })
+dataProvider.simulateYemotCall = async (body) => fetchJson(
+    apiUrl + '/yemot_call/handle-call',
+    {
+        method: 'POST',
+        body: JSON.stringify(body)
+    })
 
 export default dataProvider;

@@ -24,16 +24,16 @@ export class YemotCall {
     @Column()
     currentStep: string;
 
-    @Column('simple-json')
+    @Column('simple-json', { nullable: true })
     data: any;
 
     @Column()
     isOpen: Boolean;
 
-    @Column()
+    @Column({ default: false })
     hasError: Boolean;
 
-    @Column()
+    @Column({ nullable: true })
     errorMessage: string;
 
     @CreateDateColumn()
@@ -51,11 +51,11 @@ interface YemotStep {
 
 export interface YemotParams {
     ApiCallId: string;
-    ApiYFCallId:string;
-    ApiDID:string;
-    ApiRealDID:string;
-    ApiPhone:string;
-    ApiExtension:string;
-    ApiTime:string;
+    ApiYFCallId: string;
+    ApiDID: string;
+    ApiRealDID: string;
+    ApiPhone: string;
+    ApiExtension: string;
+    ApiTime: string;
     [key: string]: string;
 }

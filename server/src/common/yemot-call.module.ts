@@ -55,7 +55,8 @@ export class EntityService extends TypeOrmCrudService<Entity> {
       phone: body.ApiPhone,
       isOpen: true,
       history: [],
-      currentStep: 'initial'
+      currentStep: 'initial',
+      data: {},
     })
   }
   private async processCall(activeCall: Entity, body: any): Promise<{ response: string; nextStep: string; }> {

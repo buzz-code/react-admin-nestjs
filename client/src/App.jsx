@@ -1,6 +1,5 @@
-import * as React from "react";
-import { Admin, Resource, ListGuesser, EditGuesser, Layout } from 'react-admin';
-import { BrowserRouter } from 'react-router-dom';
+import { Admin, Resource, ListGuesser, EditGuesser, CustomRoutes, Layout } from 'react-admin';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 import dataProvider from "./providers/dataProvider";
 import i18nProvider from "./providers/i18nProvider";
@@ -21,6 +20,7 @@ import { TextEdit, TextCreate, TextList } from "./components/entities/texts";
 import { UserEdit, UserCreate, UserList } from "./components/entities/users";
 import { isAdmin } from "./components/common/AdminRestricted";
 import { CommonRepresentation } from "./components/common/CommonRepresentation";
+import YemotSimulator from "./components/common/YemotSimulator";
 
 const MyLayout = (props) => <Layout {...props} menu={Menu} />
 
@@ -42,6 +42,10 @@ const App = () => (
           {isAdmin(permissions) && (
             <Resource name="users" list={UserList} edit={UserEdit} create={UserCreate} recordRepresentation={CommonRepresentation} />
           )}
+
+          <CustomRoutes>
+            <Route path="/yemot-simulator" element={<YemotSimulator />} />
+          </CustomRoutes>
         </>
       )}
     </Admin>
