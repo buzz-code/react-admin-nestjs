@@ -7,6 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { Repository } from "typeorm";
 import { Users } from "src/entities/Users";
+import yemotUtil from "./yemot.util";
 
 @Injectable()
 export class EntityService extends TypeOrmCrudService<Entity> {
@@ -14,13 +15,21 @@ export class EntityService extends TypeOrmCrudService<Entity> {
     super(repo);
   }
 
-// {"ApiCallId":"754b9ce7c434ea952f2ed99671c274fee143165a","ApiYFCallId":"9da82d44-c071-4c61-877b-1680d75968e6","ApiDID":"035586526","ApiRealDID":"035586526","ApiPhone":"0527609942","ApiExtension":"","ApiTime":"1669485562","reportDateType":"2","reportDate":"10112022","reportDateConfirm":"1","questionAnswer":"1","howManyLessons":"2","howManyWatchOrIndividual":"1","howManyTeachedOrInterfering":"0","wasKamal":"0","howManyDiscussingLessons":"1"}
+  // {"ApiCallId":"754b9ce7c434ea952f2ed99671c274fee143165a","ApiYFCallId":"9da82d44-c071-4c61-877b-1680d75968e6","ApiDID":"035586526","ApiRealDID":"035586526","ApiPhone":"0527609942","ApiExtension":"","ApiTime":"1669485562","reportDateType":"2","reportDate":"10112022","reportDateConfirm":"1","questionAnswer":"1","howManyLessons":"2","howManyWatchOrIndividual":"1","howManyTeachedOrInterfering":"0","wasKamal":"0","howManyDiscussingLessons":"1"}
   async handleCall(body: YemotParams) {
     const activeCall = await this.getActiveCall(body);
     try {
-      const { response, nextStep } = await this.processCall(activeCall, body);
-      this.saveStep(activeCall, body, response, nextStep);
-      return response;
+      if (body.hangup) {
+        if (activeCall.currentStep != 'hangup') {
+          throw new Error('Unexpected hangup');
+        } else {
+          this.closeCall(activeCall, body);
+        }
+      } else {
+        const { response, nextStep } = await this.processCall(activeCall, body);
+        this.saveStep(activeCall, body, response, nextStep);
+        return response;
+      }
     }
     catch (e) {
       activeCall.isOpen = false;
@@ -28,13 +37,13 @@ export class EntityService extends TypeOrmCrudService<Entity> {
       activeCall.errorMessage = e.message;
       this.repo.save(activeCall);
 
-      return 'error';
+      return yemotUtil.hangup();
     }
   }
 
   private async getText(textKey: string, ...args): Promise<string> {
     // use cache
-    return 'text' + textKey;
+    return 'text: ' + textKey;
   }
   private async getActiveCall(body: YemotParams) {
     const userFilter = {
@@ -63,30 +72,46 @@ export class EntityService extends TypeOrmCrudService<Entity> {
     switch (activeCall.currentStep) {
       case 'initial': {
         return {
-          response: 'welcome, type teacher id',
+          response: yemotUtil.send(
+            yemotUtil.id_list_message_v2(await this.getText('welcome')),
+            yemotUtil.read_v2(await this.getText('type teacher id'), 'teacherId', { min: 1, max: 9 })
+          ),
           nextStep: 'got-teacher-id'
         }
       }
       case 'got-teacher-id': {
         // const teacher = await this.teacherRepo.findOneBy({id: body.teacherId});
         return {
-          response: 'great' + body.teacherId,
+          response: yemotUtil.send(
+            yemotUtil.read_v2('great ' + body.teacherId, 'nothing')
+          ),
           nextStep: 'end-call',
         }
       }
       default: {
         return {
-          response: 'hangup',
+          response: yemotUtil.send(
+            yemotUtil.hangup()
+          ),
           nextStep: 'error-not-impl-step'
         }
       }
     }
   }
-  private saveStep(activeCall: Entity, body: any, response: string, nextStep: string) {
+  private saveStep(activeCall: Entity, body: YemotParams, response: string, nextStep: string) {
     activeCall.currentStep = nextStep;
     activeCall.history.push({
       params: body,
       response,
+      time: new Date(),
+    })
+    this.repo.save(activeCall);
+  }
+  private closeCall(activeCall: Entity, body: YemotParams) {
+    activeCall.isOpen = false;
+    activeCall.history.push({
+      params: body,
+      response: 'hangup',
       time: new Date(),
     })
     this.repo.save(activeCall);

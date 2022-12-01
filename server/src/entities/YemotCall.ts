@@ -57,5 +57,6 @@ export interface YemotParams {
     ApiPhone: string;
     ApiExtension: string;
     ApiTime: string;
+    hangup: string;
     [key: string]: string;
 }

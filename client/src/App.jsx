@@ -39,9 +39,10 @@ const App = () => (
           <Resource name="students" list={StudentList} edit={StudentEdit} create={StudentCreate} recordRepresentation={CommonRepresentation} />
           <Resource name="teachers" list={TeacherList} edit={TeacherEdit} create={TeacherCreate} recordRepresentation={CommonRepresentation} />
           <Resource name="texts" list={TextList} edit={TextEdit} create={TextCreate} />
-          {isAdmin(permissions) && (
+          {isAdmin(permissions) && <>
+            <Resource name="yemot_call" list={ListGuesser} edit={EditGuesser} />
             <Resource name="users" list={UserList} edit={UserEdit} create={UserCreate} recordRepresentation={CommonRepresentation} />
-          )}
+          </>}
 
           <CustomRoutes>
             <Route path="/yemot-simulator" element={<YemotSimulator />} />
