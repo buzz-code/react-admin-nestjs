@@ -18,20 +18,23 @@
 * add permissions
 * add multi login for same user support - by add a column of 'effective user id' and using it to filter the results
 * use vite for client
-
-# todo
 * add yemot controller
 * add yemot simulator
-* logs - https://wanago.io/2021/10/04/api-nestjs-logging-typeorm/
-* use vite for server
+
+# todo
+* split yemot common & specific logic
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
-* add compact ui - https://github.com/ValentinnDimitroff/ra-compact-ui
-* add domain name to site
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
+* k3s
+* improve nestjs = https://wanago.io/2021/05/03/api-nestjs-cpu-intensive-tasks-queues/
+* logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
+* add export to csv & pdf
+* add csv import
 * check docker security issues
+* add domain name to site
+* use vite for server
+* add compact ui - https://github.com/ValentinnDimitroff/ra-compact-ui
 * add unit testing
 * add complex queries
-* add export to csv & pdf
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
-* add csv import
 * 
