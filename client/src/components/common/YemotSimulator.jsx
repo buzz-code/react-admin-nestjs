@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SimpleForm, TextInput, Title, useDataProvider, useNotify, Toolbar, SaveButton, RefreshButton } from 'react-admin';
 import { useMutation } from 'react-query';
 import { useFormContext } from 'react-hook-form';
@@ -63,7 +63,7 @@ const YemotSimulator = () => {
         <Toolbar>
             <SaveButton disabled={isHangup} />
             <RefreshButton onClick={handleReload} />
-            {!isHangup && <HangupButton params={params} />}
+            <HangupButton params={params} isHangup={isHangup} handleSubmit={handleSubmit} />
         </Toolbar>
     )
 
@@ -79,7 +79,7 @@ const YemotSimulator = () => {
                         <TextInput source={param} validate={required()} disabled={isHangup} />
                     ))}
                 </SimpleForm>
-                {history.map(item => <HistoryStep lines={item} />)}
+                {history.map(item => <HistoryStep key={item} lines={item} />)}
                 {isHangup && 'hangup'}
             </CardContent>
         </Card>
@@ -96,13 +96,24 @@ const HistoryStep = ({ lines }) => {
     )
 }
 
-const HangupButton = ({ params }) => {
+const HangupButton = ({ params, isHangup, handleSubmit }) => {
     const form = useFormContext();
 
     const handleClick = useCallback(() => {
         form.setValue('hangup', true);
     }, [form]);
 
+    useEffect(() => {
+        if (isHangup) {
+            form.setValue('hangup', true);
+            form.handleSubmit(handleSubmit);
+        }
+    }, [isHangup]);
+
+    if (isHangup) {
+        return null;
+    }
+    
     return <SaveButton onClick={handleClick} icon={<CallEnd />} disabled={!params.length} />
 }
 export default YemotSimulator;
