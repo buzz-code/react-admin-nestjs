@@ -19,27 +19,27 @@ export const UserList = () => (
         <TextField source="password" />
         <TextField source="phoneNumber" />
         <TextField source="active" />
-        <DateField source="createdAt" />
-        <DateField source="updatedAt" />
         <TextField source="fromEmail" />
         <TextField source="replyToEmail" />
         <TextField source="permissions" />
+        <DateField source="createdAt" />
+        <DateField source="updatedAt" />
     </CommonList>
 );
 
 const Fields = ({ isCreate }) => (
     <>
-        <TextInput source="id" />
+        {!isCreate && <TextInput source="id" disabled />}
         <TextInput source="name" />
         <TextInput source="email" />
         <TextInput source="password" />
         <TextInput source="phoneNumber" />
         <TextInput source="active" />
-        <DateInput source="createdAt" />
-        <DateInput source="updatedAt" />
         <TextInput source="fromEmail" />
         <TextInput source="replyToEmail" />
         <TextInput source="permissions" multiline />
+        {!isCreate && <DateInput source="createdAt" disabled />}
+        {!isCreate && <DateInput source="updatedAt" disabled />}
     </>
 )
 

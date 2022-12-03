@@ -28,16 +28,18 @@ export const AttReportList = () => {
             <DateField source="absCount" />
             <DateField source="approvedAbsCount" />
             <TextField source="comments" />
-            <TextField source="sheetName" />פ
+            <TextField source="sheetName" />
             {isAdmin && <DateField source="createdAt" />}
             {isAdmin && <DateField source="updatedAt" />}
         </CommonList>
     );
 }
 
-const Fields = ({ isCreate }) => (
-    <>
-        <TextInput source="id" />
+const Fields = ({ isCreate }) => {
+    const isAdmin = useIsAdmin();
+
+    return <>
+        {!isCreate && isAdmin && <TextInput source="id" disabled />}
         <ReferenceInput source="userId" reference="users" />
         <TextInput source="studentTz" />
         <ReferenceInput source="teacherId" reference="teachers" />
@@ -48,11 +50,11 @@ const Fields = ({ isCreate }) => (
         <DateInput source="absCount" />
         <DateInput source="approvedAbsCount" />
         <TextInput source="comments" />
-        <DateInput source="createdAt" />
-        <DateInput source="updatedAt" />
         <TextInput source="sheetName" />
+        {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
+        {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
     </>
-)
+}
 
 export const AttReportEdit = () => (
     <CommonEdit>

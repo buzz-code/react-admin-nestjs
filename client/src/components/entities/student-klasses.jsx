@@ -21,16 +21,18 @@ export const StudentKlassList = () => {
     );
 }
 
-const Fields = ({ isCreate }) => (
-    <>
-        <TextInput source="id" />
+const Fields = ({ isCreate }) => {
+    const isAdmin = useIsAdmin();
+
+    return <>
+        {!isCreate && isAdmin && <TextInput source="id" disabled />}
         <ReferenceInput source="userId" reference="users" />
         <TextInput source="studentTz" />
         <ReferenceInput source="klassId" reference="klasses" />
-        <DateInput source="createdAt" />
-        <DateInput source="updatedAt" />
+        {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
+        {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
     </>
-)
+}
 
 export const StudentKlassEdit = () => (
     <CommonEdit>

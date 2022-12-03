@@ -45,7 +45,7 @@ export class KnownAbsences {
   createdAt: Date;
 
   @Column("timestamp", { name: "id_copy1", default: () => "CURRENT_TIMESTAMP" })
-  idCopy1: Date;
+  updatedAt: Date;
 
   @ManyToOne(() => Users, (users) => users.knownAbsences, {
     onDelete: "NO ACTION",

@@ -26,6 +26,18 @@ export class Texts {
   @Column("varchar", { name: "value", length: 10000 })
   value: string;
 
+  @Column("timestamp", {
+    name: "created_at",
+    default: () => "CURRENT_TIMESTAMP",
+  })
+  createdAt: Date;
+
+  @Column("timestamp", {
+    name: "updated_at",
+    default: () => "CURRENT_TIMESTAMP",
+  })
+  updatedAt: Date;
+
   @ManyToOne(() => Users, (users) => users.texts, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",

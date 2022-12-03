@@ -25,9 +25,11 @@ export const KnownAbsenceList = () => {
     );
 }
 
-const Fields = ({ isCreate }) => (
-    <>
-        <TextInput source="id" />
+const Fields = ({ isCreate }) => {
+    const isAdmin = useIsAdmin();
+
+    return <>
+        {!isCreate && isAdmin && <TextInput source="id" disabled />}
         <ReferenceInput source="userId" reference="users" />
         <TextInput source="studentTz" />
         <DateInput source="reportDate" />
@@ -36,10 +38,10 @@ const Fields = ({ isCreate }) => (
         <TextInput source="senderName" />
         <TextInput source="reason" />
         <TextInput source="comment" />
-        <DateInput source="createdAt" />
-        <DateInput source="idCopy1" />
+        {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
+        {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
     </>
-)
+}
 
 export const KnownAbsenceEdit = () => (
     <CommonEdit>
