@@ -16,6 +16,7 @@ import { TextsModule } from './entity-modules/texts.module';
 import { StudentKlassesReportModule } from './entity-modules/student_klasses_report.module';
 import { AuthModule } from './auth/auth.module';
 import { YemotCallModule } from './common/yemot-call.module';
+import { YemotProccessorImpl } from './yemot.proccessor';
 
 
 @Module({
@@ -34,7 +35,7 @@ import { YemotCallModule } from './common/yemot-call.module';
     TextsModule,
     StudentKlassesReportModule,
     AuthModule,
-    YemotCallModule
+    YemotCallModule.register(new YemotProccessorImpl())
   ],
   controllers: [AppController],
   providers: [AppService],

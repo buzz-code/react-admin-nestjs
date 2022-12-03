@@ -1,8 +1,15 @@
-import { YemotCall as Entity, YemotParams } from "../entities/YemotCall";
+import { YemotCall, YemotParams } from "../entities/YemotCall";
 import { snakeCase } from "snake-case";
 
+export const YEMOT_PROCCESSOR = 'yemot_processor';
+export const YEMOT_HANGUP_STEP = 'hangup';
+export abstract class YemotProccessor {
+  steps: string[];
+  abstract processCall(activeCall: YemotCall, body: YemotParams): Promise<{ response: string; nextStep: string; }>;
+}
+
 // sevice
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { Repository } from "typeorm";
@@ -10,8 +17,10 @@ import { Users } from "src/entities/Users";
 import yemotUtil from "./yemot.util";
 
 @Injectable()
-export class EntityService extends TypeOrmCrudService<Entity> {
-  constructor(@InjectRepository(Entity) repo, @InjectRepository(Users) private userRepo: Repository<Users>) {
+export class YemotCallService extends TypeOrmCrudService<YemotCall> {
+  constructor(@InjectRepository(YemotCall) repo,
+    @InjectRepository(Users) private userRepo: Repository<Users>,
+    @Inject(YEMOT_PROCCESSOR) private yemotProccessor: YemotProccessor) {
     super(repo);
   }
 
@@ -20,13 +29,13 @@ export class EntityService extends TypeOrmCrudService<Entity> {
     const activeCall = await this.getActiveCall(body);
     try {
       if (body.hangup) {
-        if (activeCall.currentStep != 'hangup') {
+        if (activeCall.currentStep !== YEMOT_HANGUP_STEP) {
           throw new Error('Unexpected hangup');
         } else {
           this.closeCall(activeCall, body);
         }
       } else {
-        const { response, nextStep } = await this.processCall(activeCall, body);
+        const { response, nextStep } = await this.yemotProccessor.processCall(activeCall, body);
         this.saveStep(activeCall, body, response, nextStep);
         return response;
       }
@@ -41,10 +50,6 @@ export class EntityService extends TypeOrmCrudService<Entity> {
     }
   }
 
-  private async getText(textKey: string, ...args): Promise<string> {
-    // use cache
-    return 'text: ' + textKey;
-  }
   private async getActiveCall(body: YemotParams) {
     const userFilter = {
       phoneNumber: body.ApiDID
@@ -68,37 +73,7 @@ export class EntityService extends TypeOrmCrudService<Entity> {
       data: {},
     })
   }
-  private async processCall(activeCall: Entity, body: any): Promise<{ response: string; nextStep: string; }> {
-    switch (activeCall.currentStep) {
-      case 'initial': {
-        return {
-          response: yemotUtil.send(
-            yemotUtil.id_list_message_v2(await this.getText('welcome')),
-            yemotUtil.read_v2(await this.getText('type teacher id'), 'teacherId', { min: 1, max: 9 })
-          ),
-          nextStep: 'got-teacher-id'
-        }
-      }
-      case 'got-teacher-id': {
-        // const teacher = await this.teacherRepo.findOneBy({id: body.teacherId});
-        return {
-          response: yemotUtil.send(
-            yemotUtil.read_v2('great ' + body.teacherId, 'nothing')
-          ),
-          nextStep: 'end-call',
-        }
-      }
-      default: {
-        return {
-          response: yemotUtil.send(
-            yemotUtil.hangup()
-          ),
-          nextStep: 'error-not-impl-step'
-        }
-      }
-    }
-  }
-  private saveStep(activeCall: Entity, body: YemotParams, response: string, nextStep: string) {
+  private saveStep(activeCall: YemotCall, body: YemotParams, response: string, nextStep: string) {
     activeCall.currentStep = nextStep;
     activeCall.history.push({
       params: body,
@@ -107,7 +82,7 @@ export class EntityService extends TypeOrmCrudService<Entity> {
     })
     this.repo.save(activeCall);
   }
-  private closeCall(activeCall: Entity, body: YemotParams) {
+  private closeCall(activeCall: YemotCall, body: YemotParams) {
     activeCall.isOpen = false;
     activeCall.history.push({
       params: body,
@@ -127,14 +102,14 @@ import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 
 @Crud({
   model: {
-    type: Entity,
+    type: YemotCall,
   },
 })
 // @UseGuards(JwtAuthGuard)
 // @CrudAuth(CrudAuthFilter)
-@Controller(snakeCase(Entity.name))
-export class EntityController implements CrudController<Entity> {
-  constructor(public service: EntityService) { }
+@Controller(snakeCase(YemotCall.name))
+export class YemotCallController implements CrudController<YemotCall> {
+  constructor(public service: YemotCallService) { }
 
   @Post('handle-call')
   async handleCall(@Request() req, @Body() body) {
@@ -144,13 +119,23 @@ export class EntityController implements CrudController<Entity> {
 
 
 // module
-import { Module } from "@nestjs/common";
+import { Module, DynamicModule } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-@Module({
-  imports: [TypeOrmModule.forFeature([Entity, Users])],
-  providers: [EntityService],
-  exports: [EntityService],
-  controllers: [EntityController],
-})
-export class YemotCallModule { }
+@Module({})
+export class YemotCallModule {
+  static register(yemotProccessor: YemotProccessor): DynamicModule {
+    return {
+      module: YemotCallModule,
+      imports: [TypeOrmModule.forFeature([YemotCall, Users])],
+      providers: [
+        {
+          provide: YEMOT_PROCCESSOR,
+          useValue: yemotProccessor,
+        },
+        YemotCallService],
+      exports: [YemotCallService],
+      controllers: [YemotCallController],
+    }
+  }
+}
