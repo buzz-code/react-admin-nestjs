@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { AttReports } from "./AttReports";
 import { Grades } from "./Grades";
 import { KlassTypes } from "./KlassTypes";
@@ -9,6 +9,7 @@ import { StudentKlasses } from "./StudentKlasses";
 import { Students } from "./Students";
 import { Teachers } from "./Teachers";
 import { Texts } from "./Texts";
+import * as bcrypt from 'bcrypt';
 
 @Entity("users")
 export class Users {
@@ -21,10 +22,10 @@ export class Users {
   @Column("varchar", { name: "email", nullable: true, length: 500 })
   email: string | null;
 
-  // @BeforeInsert()
-  // async hashPassword() {
-  //     this.password = await bcrypt.hash(this.password, 10);
-  // }
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
   // @ApiProperty()
   // @Column()//({select: false})
   // @Exclude()
@@ -56,7 +57,7 @@ export class Users {
   @Column("varchar", { name: "reply_to_email", nullable: true, length: 500 })
   replyToEmail: string | null;
 
-  @Column({ name: "id" })
+  @Column({nullable: true})
   effective_id: number;
 
   @Column("varchar", { name: "permissions", nullable: true, length: 5000 })

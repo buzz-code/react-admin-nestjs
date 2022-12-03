@@ -21,6 +21,7 @@ export const UserList = () => (
         <TextField source="active" />
         <TextField source="fromEmail" />
         <TextField source="replyToEmail" />
+        <TextField source="effective_id" />
         <TextField source="permissions" />
         <DateField source="createdAt" />
         <DateField source="updatedAt" />
@@ -37,6 +38,7 @@ const Fields = ({ isCreate }) => (
         <TextInput source="active" />
         <TextInput source="fromEmail" />
         <TextInput source="replyToEmail" />
+        <TextInput source="effective_id" />
         <TextInput source="permissions" multiline />
         {!isCreate && <DateInput source="createdAt" disabled />}
         {!isCreate && <DateInput source="updatedAt" disabled />}
