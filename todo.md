@@ -20,9 +20,12 @@
 * use vite for client
 * add yemot controller
 * add yemot simulator
+* split yemot common & specific logic
 
 # todo
-* split yemot common & specific logic
+* hangup a simulator after finish
+* test user add
+* test all table edit & add
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
 * k3s

@@ -62,7 +62,7 @@ export class Users {
   @Column("varchar", { name: "permissions", nullable: true, length: 5000 })
   permissions: any;
 
-  @Column('simple-json')
+  @Column("varchar", { nullable: true, length: 5000 })
   additionalData: any;
 
   @OneToMany(() => AttReports, (attReports) => attReports.user)
