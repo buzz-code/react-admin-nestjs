@@ -7,6 +7,16 @@ const theme = {
     isRtl: true,
     components: {
         ...defaultTheme.components,
+        RaLayout: {
+            styleOverrides: {
+                root: {
+                    "& .RaLayout-appFrame": {
+                        maxWidth: '100vw',
+                        overflow: 'auto',
+                    },
+                }
+            }
+        },
         RaUserMenu: {
             styleOverrides: {
                 root: {
@@ -17,9 +27,9 @@ const theme = {
                 }
             }
         },
-        MuiTableCell:{
-            styleOverrides:{
-                root:{
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
                     textAlign: 'right'
                 }
             }
