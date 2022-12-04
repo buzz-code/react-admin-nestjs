@@ -21,13 +21,14 @@
 * add yemot controller
 * add yemot simulator
 * split yemot common & specific logic
+* test user add
+* test all table edit & add
 
 # todo
 * hangup a simulator after finish
-* test user add
-* test all table edit & add
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
+* add mail server - https://docs.postalserver.io/
 * k3s
 * improve nestjs = https://wanago.io/2021/05/03/api-nestjs-cpu-intensive-tasks-queues/
 * logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash

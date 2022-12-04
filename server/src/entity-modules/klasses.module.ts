@@ -4,10 +4,10 @@ import { snakeCase } from "snake-case";
 // sevice
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
+import { BaseEntityService } from "../common/base-entity.service";
 
 @Injectable()
-export class EntityService extends TypeOrmCrudService<Entity> {
+export class EntityService extends BaseEntityService<Entity> {
   constructor(@InjectRepository(Entity) repo) {
     super(repo);
   }
