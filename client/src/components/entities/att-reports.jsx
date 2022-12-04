@@ -5,11 +5,13 @@ import { CommonEdit } from '../common/CommonEdit';
 import { CommonCreate } from '../common/CommonCreate';
 import { CustomReferenceField } from '../common/CustomReferenceField';
 
-
 const filters = [
-    <DateInput source="reportDate:$lte" label="reportDate:$lte" alwaysOn />,
-    <DateInput source="reportDate:$gte" label="reportDate:$gte" alwaysOn />,
-    <ReferenceInput source="teacherId" reference="teachers" />
+    <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
+    <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
+    <ReferenceInput source="teacherId" reference="teachers" />,
+    <ReferenceInput source="studentTz" reference="students" />,
+    <ReferenceInput source="klassId" reference="klasses" />,
+    <ReferenceInput source="lessonId" reference="lessons" />,
 ];
 
 export const AttReportList = () => {

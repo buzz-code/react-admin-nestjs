@@ -15,8 +15,8 @@ export class EntityService extends BaseEntityService<Entity> {
 
 
 // controller
-import { Controller, UseGuards } from "@nestjs/common";
-import { Crud, CrudAuth } from "@nestjsx/crud";
+import { Controller, UseGuards, Get, UseInterceptors } from "@nestjs/common";
+import { Crud, CrudAuth, CrudRequestInterceptor, CrudRequest, ParsedRequest } from "@nestjsx/crud";
 import { CrudAuthFilter } from "src/auth/crud-auth.filter";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { BaseEntityController } from "src/common/base-entity.controller";
@@ -32,6 +32,12 @@ import { BaseEntityController } from "src/common/base-entity.controller";
 export class EntityController extends BaseEntityController<Entity> {
   constructor(public service: EntityService) {
     super(service);
+  }
+  
+  @Get('/get-count')
+  @UseInterceptors(CrudRequestInterceptor)
+  getCount(@ParsedRequest() req: CrudRequest) {
+      return super.getCount(req);
   }
 }
 

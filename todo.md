@@ -25,8 +25,10 @@
 * test all table edit & add
 * hangup a simulator after finish
 * add dashboard stats
+* check dashboard error
 
 # todo
+* update dashboard ui
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * test filter by student base klass
 * add typeorm migration - all foreign keys are using id

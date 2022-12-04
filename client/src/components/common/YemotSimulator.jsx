@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { SimpleForm, TextInput, Title, useDataProvider, useNotify, Toolbar, SaveButton, RefreshButton } from 'react-admin';
 import { useMutation } from 'react-query';
 import { useFormContext } from 'react-hook-form';
-import CallEnd from '@mui/icons-material/CallEnd'
+import CallEndIcon from '@mui/icons-material/CallEnd'
 
 const defaultValues = {
     ApiCallId: String(Math.random()),
@@ -114,6 +114,6 @@ const HangupButton = ({ params, isHangup, handleSubmit }) => {
         return null;
     }
     
-    return <SaveButton onClick={handleClick} icon={<CallEnd />} disabled={!params.length} />
+    return <SaveButton onClick={handleClick} icon={<CallEndIcon />} disabled={!params.length} />
 }
 export default YemotSimulator;
