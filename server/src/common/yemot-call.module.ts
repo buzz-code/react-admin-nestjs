@@ -3,8 +3,9 @@ import { snakeCase } from "snake-case";
 
 export const YEMOT_PROCCESSOR = 'yemot_processor';
 export const YEMOT_HANGUP_STEP = 'hangup';
+export const YEMOT_NOT_IMPL_STEP = 'error-not-impl-step';
 export abstract class YemotProccessor {
-  steps: string[];
+  steps: { [key: string]: string };
   abstract processCall(activeCall: YemotCall, body: YemotParams): Promise<{ response: string; nextStep: string; }>;
 }
 

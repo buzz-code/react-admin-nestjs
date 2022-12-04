@@ -1,11 +1,14 @@
-import { YemotProccessor, YEMOT_HANGUP_STEP } from "./common/yemot-call.module";
+import { YemotProccessor, YEMOT_HANGUP_STEP, YEMOT_NOT_IMPL_STEP } from "./common/yemot-call.module";
 import { YemotCall, YemotParams } from "./entities/YemotCall";
 import yemotUtil from "./common/yemot.util";
 
 export class YemotProccessorImpl extends YemotProccessor {
-    steps = [
-        YEMOT_HANGUP_STEP
-    ];
+    steps = {
+        initial: 'initial',
+        getTeacherId: 'got-teacher-id',
+        [YEMOT_HANGUP_STEP]: YEMOT_HANGUP_STEP,
+        [YEMOT_NOT_IMPL_STEP]: YEMOT_NOT_IMPL_STEP,
+    };
 
     private async getText(textKey: string, ...args): Promise<string> {
         // use cache
@@ -14,22 +17,22 @@ export class YemotProccessorImpl extends YemotProccessor {
 
     async processCall(activeCall: YemotCall, body: YemotParams): Promise<{ response: string; nextStep: string; }> {
         switch (activeCall.currentStep) {
-            case 'initial': {
+            case this.steps.initial: {
                 return {
                     response: yemotUtil.send(
                         yemotUtil.id_list_message_v2(await this.getText('welcome')),
                         yemotUtil.read_v2(await this.getText('type teacher id'), 'teacherId', { min: 1, max: 9 })
                     ),
-                    nextStep: 'got-teacher-id'
+                    nextStep: this.steps.getTeacherId,
                 }
             }
-            case 'got-teacher-id': {
+            case this.steps.getTeacherId: {
                 // const teacher = await this.teacherRepo.findOneBy({id: body.teacherId});
                 return {
                     response: yemotUtil.send(
                         yemotUtil.read_v2('great ' + body.teacherId, 'nothing')
                     ),
-                    nextStep: YEMOT_HANGUP_STEP,
+                    nextStep: this.steps[YEMOT_HANGUP_STEP],
                 }
             }
             default: {
@@ -37,7 +40,7 @@ export class YemotProccessorImpl extends YemotProccessor {
                     response: yemotUtil.send(
                         yemotUtil.hangup()
                     ),
-                    nextStep: 'error-not-impl-step'
+                    nextStep: this.steps[YEMOT_NOT_IMPL_STEP],
                 }
             }
         }
