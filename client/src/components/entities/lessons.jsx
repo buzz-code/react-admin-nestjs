@@ -37,7 +37,7 @@ const Fields = ({ isCreate }) => {
 
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        <ReferenceInput source="userId" reference="users" />
+        {isAdmin && <ReferenceInput source="userId" reference="users" />}
         <NumberInput source="key" />
         <TextInput source="name" />
         <DateInput source="klasses" />

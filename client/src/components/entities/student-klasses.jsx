@@ -26,7 +26,7 @@ const Fields = ({ isCreate }) => {
 
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        <ReferenceInput source="userId" reference="users" />
+        {isAdmin && <ReferenceInput source="userId" reference="users" />}
         <TextInput source="studentTz" />
         <ReferenceInput source="klassId" reference="klasses" />
         {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
