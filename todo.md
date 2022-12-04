@@ -24,9 +24,12 @@
 * test user add
 * test all table edit & add
 * hangup a simulator after finish
+* add dashboard stats
 
 # todo
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
+* test filter by student base klass
+* add typeorm migration - all foreign keys are using id
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
 * add mail server - https://docs.postalserver.io/
 * k3s

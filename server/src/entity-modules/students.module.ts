@@ -16,9 +16,10 @@ export class EntityService extends BaseEntityService<Entity> {
 
 // controller
 import { Controller, UseGuards } from "@nestjs/common";
-import { Crud, CrudController, CrudAuth } from "@nestjsx/crud";
+import { Crud, CrudAuth } from "@nestjsx/crud";
 import { CrudAuthFilter } from "src/auth/crud-auth.filter";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { BaseEntityController } from "src/common/base-entity.controller";
 
 @Crud({
   model: {
@@ -28,8 +29,10 @@ import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 @UseGuards(JwtAuthGuard)
 @CrudAuth(CrudAuthFilter)
 @Controller(snakeCase(Entity.name))
-export class EntityController implements CrudController<Entity> {
-  constructor(public service: EntityService) {}
+export class EntityController extends BaseEntityController<Entity> {
+  constructor(public service: EntityService) {
+    super(service);
+  }
 }
 
 

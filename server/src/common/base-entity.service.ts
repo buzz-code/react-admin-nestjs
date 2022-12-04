@@ -3,7 +3,7 @@ import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { DeepPartial } from "typeorm";
 import { RequestContext } from "nestjs-request-context";
 
-interface IHasUserId {
+export interface IHasUserId {
     userId: number;
 }
 
@@ -22,6 +22,13 @@ export class BaseEntityService<T extends IHasUserId> extends TypeOrmCrudService<
     createMany(req: CrudRequest, dto: CreateManyDto<DeepPartial<T>>): Promise<T[]> {
         dto.bulk.forEach(item => this.insertUserDataBeforeCreate(item));
         return super.createMany(req, dto);
+    }
+
+    async getCount(req: CrudRequest): Promise<{ count: number }> {
+        const { parsed, options } = req;
+        const builder = await this.createBuilder(parsed, options);
+        const count = await builder.getCount();
+        return { count };
     }
 
     insertUserDataBeforeCreate(dto: DeepPartial<T>) {
