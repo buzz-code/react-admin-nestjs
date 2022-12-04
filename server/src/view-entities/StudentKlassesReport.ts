@@ -22,6 +22,9 @@ export class StudentKlassesReport {
   @Column()
   id: string;
 
+  @Column("int", { name: "user_id" })
+  userId: number;
+
   @Column("varchar", { name: "student_tz", length: 10 })
   studentTz: string;
 
