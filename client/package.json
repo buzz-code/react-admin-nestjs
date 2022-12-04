@@ -14,7 +14,7 @@
     "ra-data-nestjsx-crud": "https://github.com/ababra/ra-data-nestjsx-crud.git",
     "ra-language-hebrew-il": "^3.9.6",
     "react": "^18.2.0",
-    "react-admin": "^4.5.2",
+    "react-admin": "^4.6.0",
     "react-dom": "^18.2.0",
     "web-vitals": "^2.1.0"
   },
