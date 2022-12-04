@@ -80,6 +80,9 @@ export class YemotCallService extends TypeOrmCrudService<YemotCall> {
       response,
       time: new Date(),
     })
+    if (nextStep === YEMOT_HANGUP_STEP) {
+      activeCall.isOpen = false;
+    }
     this.repo.save(activeCall);
   }
   private closeCall(activeCall: YemotCall, body: YemotParams) {

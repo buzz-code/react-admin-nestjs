@@ -23,9 +23,9 @@
 * split yemot common & specific logic
 * test user add
 * test all table edit & add
+* hangup a simulator after finish
 
 # todo
-* hangup a simulator after finish
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
 * add mail server - https://docs.postalserver.io/
