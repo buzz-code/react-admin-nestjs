@@ -1,7 +1,7 @@
 import { DateField, DateInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
 import { useIsAdmin } from '../common/AdminRestricted';
 import { CommonList } from '../common/CommonList';
-import { CustomReferenceField } from '../common/CustomReferenceField';
+import { CommonReferenceField } from '../common/CommonReferenceField';
 import { CommonEdit } from '../common/CommonEdit';
 import { CommonCreate } from '../common/CommonCreate';
 import { CommonReferenceInput } from '../common/CommonRefenceInput';
@@ -14,8 +14,8 @@ export const StudentKlassList = () => {
         <CommonList>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="users" />}
-            <CustomReferenceField source="studentTz" reference="students" target="tz" />
-            <CustomReferenceField source="klassId" reference="klasses" target="key" />
+            <CommonReferenceField source="studentTz" reference="students" target="tz" />
+            <CommonReferenceField source="klassId" reference="klasses" target="key" />
             {isAdmin && <DateField source="createdAt" />}
             {isAdmin && <DateField source="updatedAt" />}
         </CommonList>

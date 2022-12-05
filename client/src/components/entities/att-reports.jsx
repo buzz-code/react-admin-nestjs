@@ -3,7 +3,7 @@ import { useIsAdmin } from '../common/AdminRestricted';
 import { CommonList } from '../common/CommonList';
 import { CommonEdit } from '../common/CommonEdit';
 import { CommonCreate } from '../common/CommonCreate';
-import { CustomReferenceField } from '../common/CustomReferenceField';
+import { CommonReferenceField } from '../common/CommonReferenceField';
 import { CommonReferenceInput } from '../common/CommonRefenceInput';
 
 const filters = [
@@ -22,10 +22,10 @@ export const AttReportList = () => {
         <CommonList filters={filters}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="users" />}
-            <CustomReferenceField source="studentTz" reference="students" target="tz" />
-            <CustomReferenceField source="teacherId" reference="teachers" target="tz" />
-            <CustomReferenceField source="klassId" reference="klasses" target="key" />
-            <CustomReferenceField source="lessonId" reference="lessons" target="key" />
+            <CommonReferenceField source="studentTz" reference="students" target="tz" />
+            <CommonReferenceField source="teacherId" reference="teachers" target="tz" />
+            <CommonReferenceField source="klassId" reference="klasses" target="key" />
+            <CommonReferenceField source="lessonId" reference="lessons" target="key" />
             <DateField source="reportDate" />
             <NumberField source="howManyLessons" />
             <DateField source="absCount" />

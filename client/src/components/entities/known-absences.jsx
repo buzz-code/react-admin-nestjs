@@ -1,7 +1,7 @@
 import { DateField, DateInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
 import { useIsAdmin } from '../common/AdminRestricted';
 import { CommonList } from '../common/CommonList';
-import { CustomReferenceField } from '../common/CustomReferenceField';
+import { CommonReferenceField } from '../common/CommonReferenceField';
 import { CommonEdit } from '../common/CommonEdit';
 import { CommonCreate } from '../common/CommonCreate';
 
@@ -12,7 +12,7 @@ export const KnownAbsenceList = () => {
         <CommonList>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="users" />}
-            <CustomReferenceField source="studentTz" reference="students" target="tz" />
+            <CommonReferenceField source="studentTz" reference="students" target="tz" />
             <DateField source="reportDate" />
             <NumberField source="absnceCount" />
             <NumberField source="absnceCode" />

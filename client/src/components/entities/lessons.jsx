@@ -1,7 +1,7 @@
 import { AutocompleteInput, DateField, DateInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
 import { useIsAdmin } from '../common/AdminRestricted';
 import { CommonList } from '../common/CommonList';
-import { CustomReferenceField } from '../common/CustomReferenceField';
+import { CommonReferenceField } from '../common/CommonReferenceField';
 import { CommonEdit } from '../common/CommonEdit';
 import { CommonCreate } from '../common/CommonCreate';
 import { CommonReferenceInput } from '../common/CommonRefenceInput';
@@ -20,7 +20,7 @@ export const LessonList = () => {
             <NumberField source="key" />
             <TextField source="name" />
             <TextField source="klasses" />
-            <CustomReferenceField source="teacherId" reference="teachers" target="tz" />
+            <CommonReferenceField source="teacherId" reference="teachers" target="tz" />
             <DateField source="startDate" />
             <DateField source="endDate" />
             {isAdmin && <DateField source="createdAt" />}
