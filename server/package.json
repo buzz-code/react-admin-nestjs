@@ -26,6 +26,7 @@
     "typeorm:revert": "npm run typeorm:cli -- migration:revert"
   },
   "dependencies": {
+    "@buzz-code/crud-nestjs-react-admin": "0.0.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^9.0.0",
