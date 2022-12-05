@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import TypeOrmModule from './typeorm.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmModuleConfig } from './config/typeorm.config';
 import { RequestContextModule } from 'nestjs-request-context';
 import { UsersModule } from './entity-modules/users.module';
 import { AttReportsModule } from './entity-modules/att_reports.module';
@@ -22,7 +23,7 @@ import { YemotProccessorImpl } from './yemot.proccessor';
 
 @Module({
   imports: [
-    TypeOrmModule,
+    TypeOrmModule.forRoot(typeOrmModuleConfig),
     RequestContextModule,
     UsersModule,
     AttReportsModule,
