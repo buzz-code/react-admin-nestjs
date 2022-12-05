@@ -27,11 +27,11 @@ export default () => {
         <Grid item xs={12}>
             <Title title={"לוח המחוונים"} />
         </Grid>
-        <Grid item xs={6} md={3}>
-            {dashboardItems.map(item => (
-                <DashboardItem key={item.title} {...item} />
-            ))}
-        </Grid>
+        {dashboardItems.map((item, index) => (
+            <Grid item xs={6} md={3} key={index}>
+                <DashboardItem {...item} />
+            </Grid>
+        ))}
     </Grid>
 }
 
