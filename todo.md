@@ -29,6 +29,7 @@
 * fix reference input
 
 # todo
+* use id column for relation everywhere
 * use cookie instead of auth bearer
 * import - https://stackoverflow.com/questions/72488424/upload-excel-data-into-database-using-nestjs
 * export excel - use joins
