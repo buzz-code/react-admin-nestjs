@@ -4,14 +4,15 @@ import { CommonList } from '../common/CommonList';
 import { CommonEdit } from '../common/CommonEdit';
 import { CommonCreate } from '../common/CommonCreate';
 import { CustomReferenceField } from '../common/CustomReferenceField';
+import { CommonReferenceInput } from '../common/CommonRefenceInput';
 
 const filters = [
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
-    <ReferenceInput source="teacherId" reference="teachers" />,
-    <ReferenceInput source="studentTz" reference="students" />,
-    <ReferenceInput source="klassId" reference="klasses" />,
-    <ReferenceInput source="lessonId" reference="lessons" />,
+    <CommonReferenceInput source="studentTz" reference="students" optionValue="tz" />,
+    <CommonReferenceInput source="teacherId" reference="teachers" optionValue="tz" />,
+    <CommonReferenceInput source="klassId" reference="klasses" optionValue="key" />,
+    <CommonReferenceInput source="lessonId" reference="lessons" optionValue="key" />,
 ];
 
 export const AttReportList = () => {
@@ -42,11 +43,11 @@ const Fields = ({ isCreate }) => {
 
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <ReferenceInput source="userId" reference="users" />}
-        <TextInput source="studentTz" />
-        <ReferenceInput source="teacherId" reference="teachers" />
-        <ReferenceInput source="klassId" reference="klasses" />
-        <ReferenceInput source="lessonId" reference="lessons" />
+        {isAdmin && <CommonReferenceInput source="userId" reference="users" />}
+        <CommonReferenceInput source="studentTz" reference="students" optionValue="tz" />
+        <CommonReferenceInput source="teacherId" reference="teachers" optionValue="tz" />
+        <CommonReferenceInput source="klassId" reference="klasses" optionValue="key" />
+        <CommonReferenceInput source="lessonId" reference="lessons" optionValue="key" />
         <DateInput source="reportDate" />
         <NumberInput source="howManyLessons" />
         <DateInput source="absCount" />

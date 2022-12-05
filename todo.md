@@ -26,8 +26,16 @@
 * hangup a simulator after finish
 * add dashboard stats
 * check dashboard error
+* fix reference input
 
 # todo
+* use cookie instead of auth bearer
+* import - https://stackoverflow.com/questions/72488424/upload-excel-data-into-database-using-nestjs
+* export excel - use joins
+* export pdf - https://stackoverflow.com/questions/64964827/nestjs-exporting-library-to-pdf-or-excel
+https://github.com/tinovyatkin/nest-puppeteer
+* import email
+* add custom prefix to common components
 * update dashboard ui
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * test filter by student base klass

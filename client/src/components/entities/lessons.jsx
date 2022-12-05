@@ -4,13 +4,10 @@ import { CommonList } from '../common/CommonList';
 import { CustomReferenceField } from '../common/CustomReferenceField';
 import { CommonEdit } from '../common/CommonEdit';
 import { CommonCreate } from '../common/CommonCreate';
-
-const filterToQuery = searchText => ({ 'name:cont': `${searchText}` });
+import { CommonReferenceInput } from '../common/CommonRefenceInput';
 
 const filters = [
-    <ReferenceInput source="teacherId" reference="teachers" filter={{ userId: 1 }} alwaysOn>
-        <AutocompleteInput filterToQuery={filterToQuery} optionValue="tz" />
-    </ReferenceInput>,
+    <CommonReferenceInput source="teacherId" reference="teachers" alwaysOn optionValue="tz" />
 ];
 
 export const LessonList = () => {
@@ -41,7 +38,7 @@ const Fields = ({ isCreate }) => {
         <NumberInput source="key" />
         <TextInput source="name" />
         <DateInput source="klasses" />
-        <ReferenceInput source="teacherId" reference="teachers" />
+        <CommonReferenceInput source="teacherId" reference="teachers" optionValue="tz" />
         <DateInput source="startDate" />
         <DateInput source="endDate" />
         {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}

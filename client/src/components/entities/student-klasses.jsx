@@ -4,6 +4,7 @@ import { CommonList } from '../common/CommonList';
 import { CustomReferenceField } from '../common/CustomReferenceField';
 import { CommonEdit } from '../common/CommonEdit';
 import { CommonCreate } from '../common/CommonCreate';
+import { CommonReferenceInput } from '../common/CommonRefenceInput';
 
 
 export const StudentKlassList = () => {
@@ -27,8 +28,8 @@ const Fields = ({ isCreate }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <ReferenceInput source="userId" reference="users" />}
-        <TextInput source="studentTz" />
-        <ReferenceInput source="klassId" reference="klasses" />
+        <CommonReferenceInput source="studentTz" reference="students" optionValue="tz" />,
+        <CommonReferenceInput source="klassId" reference="klasses" optionValue="key" />,
         {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
     </>
