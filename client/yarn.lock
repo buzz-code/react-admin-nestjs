@@ -2195,9 +2195,10 @@ ra-data-json-server@^4.5.0:
     query-string "^7.1.1"
     ra-core "^4.5.0"
 
-"ra-data-nestjsx-crud@https://github.com/ababra/ra-data-nestjsx-crud.git":
-  version "1.3.1"
-  resolved "https://github.com/ababra/ra-data-nestjsx-crud.git#9801f6f9d2aae29324d10bb0f3b05226c20cc00f"
+ra-data-nestjsx-crud@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/ra-data-nestjsx-crud/-/ra-data-nestjsx-crud-1.3.2.tgz#b92fdb2b88c9f5f5cb88541eb1dd1b09e8f99c4a"
+  integrity sha512-Duzzu+1x2KomIphKD7eHr66sAAXylYJaqCH4DMado8xf0J8wiVv8diO73SDAL8GglDc1GcFNmZqFH8IaY3NiUw==
   dependencies:
     "@nestjsx/crud-request" "^4.1.0"
     lodash.omitby "^4.6.0"
@@ -2243,7 +2244,7 @@ ra-ui-materialui@^4.6.0:
     react-query "^3.32.1"
     react-transition-group "^4.4.1"
 
-react-admin@4.6:
+react-admin@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/react-admin/-/react-admin-4.6.0.tgz#588bd4eaae0f42c6949da59b1c34c504a5b5b1ed"
   integrity sha512-eTC0vI6F7ghHbJ/vZQuyD8AAx3lDBhb8oxud7/l6n2ttc8YorgyVw9SnhcnTmnV5bh6vrCDsQI8GMxjKDskIrA==
