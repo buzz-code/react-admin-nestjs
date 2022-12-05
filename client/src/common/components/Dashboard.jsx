@@ -7,27 +7,14 @@ import Loading from '@mui/material/LinearProgress';
 import { createElement, useEffect } from 'react';
 import { Title, useDataProvider, useGetResourceLabel } from 'react-admin';
 import { Link } from 'react-router-dom';
-import DollarIcon from '@mui/icons-material/AttachMoney';
 import { useMutation } from 'react-query';
 
-const dashboardItems = [
-    {
-        resource: 'att_reports',
-        icon: DollarIcon,
-    },
-    {
-        resource: 'students',
-        icon: DollarIcon,
-    }
-]
-
-export default () => {
-
+export default ({items}) => {
     return <Grid container spacing={2} mt={1}>
         <Grid item xs={12}>
             <Title title={"לוח המחוונים"} />
         </Grid>
-        {dashboardItems.map((item, index) => (
+        {items.map((item, index) => (
             <Grid item xs={6} md={3} key={index}>
                 <DashboardItem {...item} />
             </Grid>

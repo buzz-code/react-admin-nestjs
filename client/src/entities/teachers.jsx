@@ -1,17 +1,21 @@
-import { NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, DateField,DateInput } from 'react-admin';
-import { useIsAdmin } from '../common/AdminRestricted';
-import { CommonList } from '../common/CommonList';
-import { CommonEdit } from '../common/CommonEdit';
-import { CommonCreate } from '../common/CommonCreate';
+import { DateField, DateInput, EmailField, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
+import { useIsAdmin } from '../common/components/AdminRestricted';
+import { CommonList } from '../common/components/CommonList';
+import { CommonEdit } from '../common/components/CommonEdit';
+import { CommonCreate } from '../common/components/CommonCreate';
 
-export const KlassTypeList = () => {
+export const TeacherList = () => {
     const isAdmin = useIsAdmin();
+
     return (
         <CommonList>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="users" />}
-            <NumberField source="key" />
+            <TextField source="tz" />
             <TextField source="name" />
+            <TextField source="phone" />
+            <TextField source="phone2" />
+            <EmailField source="email" />
             {isAdmin && <DateField source="createdAt" />}
             {isAdmin && <DateField source="updatedAt" />}
         </CommonList>
@@ -24,20 +28,23 @@ const Fields = ({ isCreate }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <ReferenceInput source="userId" reference="users" />}
-        <NumberInput source="key" />
+        <TextInput source="tz" />
         <TextInput source="name" />
+        <TextInput source="phone" />
+        <TextInput source="phone2" />
+        <TextInput source="email" />
         {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
     </>
 }
 
-export const KlassTypeEdit = () => (
+export const TeacherEdit = () => (
     <CommonEdit>
         <Fields isCreate={false} />
     </CommonEdit>
 );
 
-export const KlassTypeCreate = () => (
+export const TeacherCreate = () => (
     <CommonCreate>
         <Fields isCreate={true} />
     </CommonCreate>

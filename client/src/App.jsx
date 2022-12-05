@@ -1,32 +1,37 @@
 import { Admin, Resource, ListGuesser, EditGuesser, CustomRoutes, Layout } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
+import DollarIcon from '@mui/icons-material/AttachMoney';
 
-import dataProvider from "./providers/dataProvider";
-import i18nProvider from "./providers/i18nProvider";
-import authProvider from "./providers/authProvider";
-import theme from "./providers/themeProvider";
-import Dashboard from "./components/common/Dashboard";
-import Menu from "./components/common/Menu";
+import domainTranslations from './domainTranslations';
+import dataProvider from "./common/providers/dataProvider";
+import {getI18nProvider} from "./common/providers/i18nProvider";
+import authProvider from "./common/providers/authProvider";
+import theme from "./common/providers/themeProvider";
+import Dashboard from "./common/components/Dashboard";
+import Menu from "./common/components/Menu";
 
-import { AttReportEdit, AttReportCreate, AttReportList } from "./components/entities/att-reports";
-import { KlassEdit, KlassCreate, KlassList } from "./components/entities/klasses";
-import { KlassTypeEdit, KlassTypeCreate, KlassTypeList } from "./components/entities/klass-types";
-import { KnownAbsenceEdit, KnownAbsenceCreate, KnownAbsenceList } from "./components/entities/known-absences";
-import { LessonEdit, LessonCreate, LessonList } from "./components/entities/lessons";
-import { StudentKlassEdit, StudentKlassCreate, StudentKlassList } from "./components/entities/student-klasses";
-import { StudentList, StudentCreate, StudentEdit } from "./components/entities/students";
-import { TeacherList, TeacherCreate, TeacherEdit } from "./components/entities/teachers";
-import { TextEdit, TextCreate, TextList } from "./components/entities/texts";
-import { UserEdit, UserCreate, UserList } from "./components/entities/users";
-import { isAdmin } from "./components/common/AdminRestricted";
-import { CommonRepresentation } from "./components/common/CommonRepresentation";
-import YemotSimulator from "./components/common/YemotSimulator";
+import { AttReportEdit, AttReportCreate, AttReportList } from "./entities/att-reports";
+import { KlassEdit, KlassCreate, KlassList } from "./entities/klasses";
+import { KlassTypeEdit, KlassTypeCreate, KlassTypeList } from "./entities/klass-types";
+import { KnownAbsenceEdit, KnownAbsenceCreate, KnownAbsenceList } from "./entities/known-absences";
+import { LessonEdit, LessonCreate, LessonList } from "./entities/lessons";
+import { StudentKlassEdit, StudentKlassCreate, StudentKlassList } from "./entities/student-klasses";
+import { StudentList, StudentCreate, StudentEdit } from "./entities/students";
+import { TeacherList, TeacherCreate, TeacherEdit } from "./entities/teachers";
+import { TextEdit, TextCreate, TextList } from "./entities/texts";
+import { UserEdit, UserCreate, UserList } from "./entities/users";
+import { isAdmin } from "./common/components/AdminRestricted";
+import { CommonRepresentation } from "./common/components/CommonRepresentation";
+import YemotSimulator from "./common/components/YemotSimulator";
 
 const MyLayout = (props) => <Layout {...props} menu={Menu} />
+const MyDashboard = () => <Dashboard items={[{ resource: 'att_reports', icon: DollarIcon }, { resource: 'students', icon: DollarIcon }]} />
+
+const i18nProvider = getI18nProvider(domainTranslations);
 
 const App = () => (
   <BrowserRouter>
-    <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={Dashboard} layout={MyLayout} requireAuth>
+    <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={MyDashboard} layout={MyLayout} requireAuth>
       {permissions => (
         <>
           <Resource name="att_reports" list={AttReportList} edit={AttReportEdit} create={AttReportCreate} />

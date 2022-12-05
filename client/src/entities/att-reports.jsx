@@ -1,10 +1,10 @@
 import { DateField, DateInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput } from 'react-admin';
-import { useIsAdmin } from '../common/AdminRestricted';
-import { CommonList } from '../common/CommonList';
-import { CommonEdit } from '../common/CommonEdit';
-import { CommonCreate } from '../common/CommonCreate';
-import { CommonReferenceField } from '../common/CommonReferenceField';
-import { CommonReferenceInput } from '../common/CommonRefenceInput';
+import { useIsAdmin } from '../common/components/AdminRestricted';
+import { CommonList } from '../common/components/CommonList';
+import { CommonEdit } from '../common/components/CommonEdit';
+import { CommonCreate } from '../common/components/CommonCreate';
+import { CommonReferenceField } from '../common/components/CommonReferenceField';
+import { CommonReferenceInput } from '../common/components/CommonRefenceInput';
 
 const filters = [
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,

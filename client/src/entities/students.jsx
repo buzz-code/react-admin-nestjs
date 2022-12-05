@@ -1,19 +1,18 @@
-import { ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
-import { useIsAdmin } from '../common/AdminRestricted';
-import { CommonList } from '../common/CommonList';
-import { CommonEdit } from '../common/CommonEdit';
-import { CommonCreate } from '../common/CommonCreate';
+import { DateField, DateInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
+import { useIsAdmin } from '../common/components/AdminRestricted';
+import { CommonList } from '../common/components/CommonList';
+import { CommonEdit } from '../common/components/CommonEdit';
+import { CommonCreate } from '../common/components/CommonCreate';
 
-export const TextList = () => {
+export const StudentList = () => {
     const isAdmin = useIsAdmin();
 
     return (
         <CommonList>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="users" />}
+            <TextField source="tz" />
             <TextField source="name" />
-            <TextField source="description" />
-            <TextField source="value" />
             {isAdmin && <DateField source="createdAt" />}
             {isAdmin && <DateField source="updatedAt" />}
         </CommonList>
@@ -26,21 +25,20 @@ const Fields = ({ isCreate }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <ReferenceInput source="userId" reference="users" />}
+        <TextInput source="tz" />
         <TextInput source="name" />
-        <TextInput source="description" />
-        <TextInput source="value" />
         {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
     </>
 }
 
-export const TextEdit = () => (
+export const StudentEdit = () => (
     <CommonEdit>
         <Fields isCreate={false} />
     </CommonEdit>
 );
 
-export const TextCreate = () => (
+export const StudentCreate = () => (
     <CommonCreate>
         <Fields isCreate={true} />
     </CommonCreate>

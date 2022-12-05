@@ -7,7 +7,7 @@ import CallEndIcon from '@mui/icons-material/CallEnd'
 
 const defaultValues = {
     ApiCallId: String(Math.random()),
-    ApiDID: '0774311257',
+    ApiDID: '', //0774311257
     ApiPhone: '', //0527609942
 };
 const TEXT_REGEX = /\=t-([^,=\.]*)/
@@ -69,7 +69,7 @@ const YemotSimulator = () => {
 
     return (
         <Card>
-            <Title title="Yemot Simulator" />
+            <Title title="סימולטור" />
             <CardContent>
                 <SimpleForm onSubmit={handleSubmit} defaultValues={defaultValues} toolbar={toolbar}>
                     <TextInput source="ApiCallId" validate={required()} disabled />

@@ -1,9 +1,9 @@
 import { DateField, DateInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
-import { useIsAdmin } from '../common/AdminRestricted';
-import { CommonList } from '../common/CommonList';
-import { CommonReferenceField } from '../common/CommonReferenceField';
-import { CommonEdit } from '../common/CommonEdit';
-import { CommonCreate } from '../common/CommonCreate';
+import { useIsAdmin } from '../common/components/AdminRestricted';
+import { CommonList } from '../common/components/CommonList';
+import { CommonReferenceField } from '../common/components/CommonReferenceField';
+import { CommonEdit } from '../common/components/CommonEdit';
+import { CommonCreate } from '../common/components/CommonCreate';
 
 export const KnownAbsenceList = () => {
     const isAdmin = useIsAdmin();

@@ -1,8 +1,8 @@
 import { DateField, DateInput, EmailField, TextField, TextInput } from 'react-admin';
-import { CommonList } from '../common/CommonList';
-import { QuickFilter } from '../common/QuickFilter';
-import { CommonEdit } from '../common/CommonEdit';
-import { CommonCreate } from '../common/CommonCreate';
+import { CommonList } from '../common/components/CommonList';
+import { QuickFilter } from '../common/components/QuickFilter';
+import { CommonEdit } from '../common/components/CommonEdit';
+import { CommonCreate } from '../common/components/CommonCreate';
 
 const filters = [
     <TextInput source="name" alwaysOn />,
