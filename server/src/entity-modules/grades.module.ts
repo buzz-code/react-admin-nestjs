@@ -1,4 +1,4 @@
-import { Grades as Entity } from "../entities/Grades";
+import { Grades as Entity } from "../entities/Grades.entity";
 import { snakeCase } from "snake-case";
 
 // sevice

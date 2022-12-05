@@ -1,14 +1,14 @@
 import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { AttReports } from "./AttReports";
-import { Grades } from "./Grades";
-import { KlassTypes } from "./KlassTypes";
-import { Klasses } from "./Klasses";
-import { KnownAbsences } from "./KnownAbsences";
-import { Lessons } from "./Lessons";
-import { StudentKlasses } from "./StudentKlasses";
-import { Students } from "./Students";
-import { Teachers } from "./Teachers";
-import { Texts } from "./Texts";
+import { AttReports } from "./AttReports.entity";
+import { Grades } from "./Grades.entity";
+import { KlassTypes } from "./KlassTypes.entity";
+import { Klasses } from "./Klasses.entity";
+import { KnownAbsences } from "./KnownAbsences.entity";
+import { Lessons } from "./Lessons.entity";
+import { StudentKlasses } from "./StudentKlasses.entity";
+import { Students } from "./Students.entity";
+import { Teachers } from "./Teachers.entity";
+import { Texts } from "./Texts.entity";
 import * as bcrypt from 'bcrypt';
 
 @Entity("users")

@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { Users } from "./Users";
+import { Users } from "./Users.entity";
 
 @Entity()
 export class YemotCall {

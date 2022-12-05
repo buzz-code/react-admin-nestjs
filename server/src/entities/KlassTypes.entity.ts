@@ -6,31 +6,22 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Users } from "./Users";
+import { Users } from "./Users.entity";
 
-@Index("teachers_users_idx", ["userId"], {})
-@Entity("teachers")
-export class Teachers {
+@Index("klass_types_users_idx", ["userId"], {})
+@Entity("klass_types")
+export class KlassTypes {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
   @Column("int", { name: "user_id" })
   userId: number;
 
-  @Column("varchar", { name: "tz", length: 10 })
-  tz: string;
+  @Column("int", { name: "key" })
+  key: number;
 
   @Column("varchar", { name: "name", length: 500 })
   name: string;
-
-  @Column("varchar", { name: "phone", nullable: true, length: 10 })
-  phone: string | null;
-
-  @Column("varchar", { name: "phone2", nullable: true, length: 10 })
-  phone2: string | null;
-
-  @Column("varchar", { name: "email", nullable: true, length: 500 })
-  email: string | null;
 
   @Column("timestamp", {
     name: "created_at",
@@ -44,7 +35,7 @@ export class Teachers {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Users, (users) => users.teachers, {
+  @ManyToOne(() => Users, (users) => users.klassTypes, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })

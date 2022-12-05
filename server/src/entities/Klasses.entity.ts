@@ -6,11 +6,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Users } from "./Users";
+import { Users } from "./Users.entity";
 
-@Index("lessons_users_idx", ["userId"], {})
-@Entity("lessons")
-export class Lessons {
+@Index("klasses_users_idx", ["userId"], {})
+@Entity("klasses")
+export class Klasses {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -23,17 +23,11 @@ export class Lessons {
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
-  @Column("varchar", { name: "klasses", nullable: true, length: 450 })
-  klasses: string | null;
+  @Column("int", { name: "klass_type_id", nullable: true })
+  klassTypeId: number | null;
 
-  @Column("varchar", { name: "teacher_id", length: 10 })
-  teacherId: string;
-
-  @Column("date", { name: "start_date", nullable: true })
-  startDate: string | null;
-
-  @Column("date", { name: "end_date", nullable: true })
-  endDate: string | null;
+  @Column("varchar", { name: "teacher_id", nullable: true, length: 45 })
+  teacherId: string | null;
 
   @Column("timestamp", {
     name: "created_at",
@@ -47,7 +41,7 @@ export class Lessons {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Users, (users) => users.lessons, {
+  @ManyToOne(() => Users, (users) => users.klasses, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })

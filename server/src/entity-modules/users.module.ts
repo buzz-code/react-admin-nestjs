@@ -1,4 +1,4 @@
-import { Users as Entity } from "../entities/Users";
+import { Users as Entity } from "../entities/Users.entity";
 import { snakeCase } from "snake-case";
 
 // sevice

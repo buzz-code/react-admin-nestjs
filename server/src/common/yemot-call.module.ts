@@ -1,4 +1,4 @@
-import { YemotCall, YemotParams } from "../entities/YemotCall";
+import { YemotCall, YemotParams } from "../entities/YemotCall.entity";
 import { snakeCase } from "snake-case";
 
 export const YEMOT_PROCCESSOR = 'yemot_processor';
@@ -14,7 +14,7 @@ import { Injectable, Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { Repository } from "typeorm";
-import { Users } from "src/entities/Users";
+import { Users } from "src/entities/Users.entity";
 import yemotUtil from "./yemot.util";
 
 @Injectable()
