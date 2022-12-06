@@ -39,6 +39,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * import email
 * add custom prefix to common components
 * update dashboard ui
+* date-time inputs https://www.npmjs.com/package/react-admin-date-inputs-refactor?activeTab=readme https://www.npmjs.com/package/@mpampin/react-admin-date-inputs https://www.npmjs.com/package/@sklinet/react-admin-date-inputs?activeTab=readme https://www.npmjs.com/package/react-admin-date-picker?activeTab=readme https://www.npmjs.com/package/react-admin-material-datepicker?activeTab=readme
+* json-viewer https://www.npmjs.com/package/react-admin-json-view?activeTab=readme
+* permissions - https://www.npmjs.com/package/@blackbox-vision/ra-rbac
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * test filter by student base klass
 * add typeorm migration - all foreign keys are using id
@@ -56,4 +59,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add unit testing
 * add complex queries
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
+* import csv - https://www.npmjs.com/package/react-admin-import-csv?activeTab=readme https://www.npmjs.com/package/ra-import-csv
+* rich text editor - https://www.npmjs.com/package/ra-richtext-tiptap https://www.npmjs.com/package/ra-input-rich-text?activeTab=readme
+* clipboard - https://www.npmjs.com/package/react-admin-clipboard-list-field
 * 
