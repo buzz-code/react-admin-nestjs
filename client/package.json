@@ -5,7 +5,6 @@
   "dependencies": {
     "@buzz-code/crud-nestjs-react-admin": "0.0.1",
     "@fusionworks/ra-data-nest-crud": "^1.0.8",
-    "@material-ui/core": "^4.12.4",
     "@nestjsx/crud-request": "^5.0.0-alpha.3",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
