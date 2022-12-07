@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@buzz-code/crud-nestjs-react-admin": "0.0.1",
+    "@buzz-code/crud-nestjs-react-admin": "0.0.13",
     "@fusionworks/ra-data-nest-crud": "^1.0.8",
     "@nestjsx/crud-request": "^5.0.0-alpha.3",
     "@testing-library/jest-dom": "^5.14.1",

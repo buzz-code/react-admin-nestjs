@@ -3,12 +3,12 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import DollarIcon from '@mui/icons-material/AttachMoney';
 
 import domainTranslations from './domainTranslations';
-import dataProvider from "./common/providers/dataProvider";
-import {getI18nProvider} from "./common/providers/i18nProvider";
-import authProvider from "./common/providers/authProvider";
-import theme from "./common/providers/themeProvider";
-import Dashboard from "./common/components/Dashboard";
-import Menu from "./common/components/Menu";
+import dataProvider from "@buzz-code/crud-nestjs-react-admin/client/providers/dataProvider";
+import { getI18nProvider } from "@buzz-code/crud-nestjs-react-admin/client/providers/i18nProvider";
+import authProvider from "@buzz-code/crud-nestjs-react-admin/client/providers/authProvider";
+import theme from "@buzz-code/crud-nestjs-react-admin/client/providers/themeProvider";
+import Dashboard from "@buzz-code/crud-nestjs-react-admin/client/components/Dashboard";
+import Menu from "@buzz-code/crud-nestjs-react-admin/client/components/Menu";
 
 import { AttReportEdit, AttReportCreate, AttReportList } from "./entities/att-reports";
 import { KlassEdit, KlassCreate, KlassList } from "./entities/klasses";
@@ -20,9 +20,9 @@ import { StudentList, StudentCreate, StudentEdit } from "./entities/students";
 import { TeacherList, TeacherCreate, TeacherEdit } from "./entities/teachers";
 import { TextEdit, TextCreate, TextList } from "./entities/texts";
 import { UserEdit, UserCreate, UserList } from "./entities/users";
-import { isAdmin } from "./common/components/AdminRestricted";
-import { CommonRepresentation } from "./common/components/CommonRepresentation";
-import YemotSimulator from "./common/components/YemotSimulator";
+import { isAdmin } from "@buzz-code/crud-nestjs-react-admin/client/components/AdminRestricted";
+import { CommonRepresentation } from "@buzz-code/crud-nestjs-react-admin/client/components/CommonRepresentation";
+import YemotSimulator from "@buzz-code/crud-nestjs-react-admin/client/components/YemotSimulator";
 
 const MyLayout = (props) => <Layout {...props} menu={Menu} />
 const MyDashboard = () => <Dashboard items={[{ resource: 'att_reports', icon: DollarIcon }, { resource: 'students', icon: DollarIcon }]} />

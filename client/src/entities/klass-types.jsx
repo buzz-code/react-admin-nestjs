@@ -1,8 +1,8 @@
 import { NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, DateField,DateInput } from 'react-admin';
-import { useIsAdmin } from '../common/components/AdminRestricted';
-import { CommonList } from '../common/components/CommonList';
-import { CommonEdit } from '../common/components/CommonEdit';
-import { CommonCreate } from '../common/components/CommonCreate';
+import { useIsAdmin } from '@buzz-code/crud-nestjs-react-admin/client/components/AdminRestricted';
+import { CommonList } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonList';
+import { CommonEdit } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonEdit';
+import { CommonCreate } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonCreate';
 
 export const KlassTypeList = () => {
     const isAdmin = useIsAdmin();

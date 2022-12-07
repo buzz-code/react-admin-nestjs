@@ -1,14 +1,14 @@
 import { DateField, DateInput, EmailField, TextField, TextInput } from 'react-admin';
-import { CommonList } from '../common/components/CommonList';
-import { QuickFilter } from '../common/components/QuickFilter';
-import { CommonEdit } from '../common/components/CommonEdit';
-import { CommonCreate } from '../common/components/CommonCreate';
+import { CommonList } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonList';
+// import { QuickFilter } from '@buzz-code/crud-nestjs-react-admin/client/components/QuickFilter';
+import { CommonEdit } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonEdit';
+import { CommonCreate } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonCreate';
 
 const filters = [
     <TextInput source="name" alwaysOn />,
     <TextInput source="email" alwaysOn />,
     <TextInput source="phoneNumber" />,
-    <QuickFilter source="fromEmail" defaultValue="gmail"/>
+    // <QuickFilter source="fromEmail" defaultValue="gmail"/>
 ];
 
 export const UserList = () => (

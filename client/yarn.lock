@@ -268,10 +268,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@buzz-code/crud-nestjs-react-admin@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@buzz-code/crud-nestjs-react-admin/-/crud-nestjs-react-admin-0.0.1.tgz#cc418814a0a4cbb3cf943daf303281e9dc65f52b"
-  integrity sha512-hyyL/4WolGlo9Eftzyqn/T8vn1JAiztL6vASWfPKfXteI61MCsCBe4muNgA8PqzH9nsvEimi/JTI1l0jAmQNfw==
+"@buzz-code/crud-nestjs-react-admin@0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@buzz-code/crud-nestjs-react-admin/-/crud-nestjs-react-admin-0.0.13.tgz#0c6634cd0b480cac5cece18d817898b8a88ed7fb"
+  integrity sha512-nRoPEyOa5TkeBPvxreWKYPBQTufYM6gh7Y4INUE3/+jVEbXogYxjXnLLYOF3dFxtGzV3EDwUTGKatXN7MDanLw==
 
 "@emotion/babel-plugin@^11.10.5":
   version "11.10.5"

@@ -1,4 +1,4 @@
-import { generalResourceFieldsTranslation } from "./common/providers/i18nProvider"
+import { generalResourceFieldsTranslation } from "@buzz-code/crud-nestjs-react-admin/client/providers/i18nProvider"
 
 export default {
     resources: {

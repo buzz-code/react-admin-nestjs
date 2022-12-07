@@ -27,11 +27,13 @@
 * add dashboard stats
 * check dashboard error
 * fix reference input
+* use npm package for common logic in client
 
 # todo
+* fix quick filter
 * use id column for relation everywhere
 * use cookie instead of auth bearer
-* use npm package for common logic
+* use npm package for common logic in server
 * import - https://stackoverflow.com/questions/72488424/upload-excel-data-into-database-using-nestjs
 * export excel - use joins
 * export pdf - https://stackoverflow.com/questions/64964827/nestjs-exporting-library-to-pdf-or-excel
