@@ -1,4 +1,4 @@
-import { KlassType as Entity } from "../entities/KlassType.entity";
+import { StudentKlassReport as Entity } from "../view-entities/StudentKlassReport.entity";
 import { snakeCase } from "snake-case";
 
 // sevice
@@ -52,4 +52,4 @@ import { TypeOrmModule } from "@nestjs/typeorm";
   exports: [EntityService],
   controllers: [EntityController],
 })
-export class KlassTypesModule {}
+export class StudentKlassReportModule {}

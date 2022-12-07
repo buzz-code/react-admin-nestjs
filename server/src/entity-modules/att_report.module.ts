@@ -52,4 +52,4 @@ import { TypeOrmModule } from "@nestjs/typeorm";
   exports: [EntityService],
   controllers: [EntityController],
 })
-export class AttReportsModule {}
+export class AttReportModule {}

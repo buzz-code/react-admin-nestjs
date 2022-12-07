@@ -43,4 +43,4 @@ import { TypeOrmModule } from "@nestjs/typeorm";
   exports: [EntityService],
   controllers: [EntityController],
 })
-export class UsersModule {}
+export class UserModule {}

@@ -4,18 +4,18 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleConfig } from './common/config/typeorm.config';
 import { RequestContextModule } from 'nestjs-request-context';
-import { UsersModule } from './entity-modules/users.module';
-import { AttReportsModule } from './entity-modules/att_reports.module';
-import { GradesModule } from './entity-modules/grades.module';
-import { KlassesModule } from './entity-modules/klasses.module';
-import { KlassTypesModule } from './entity-modules/klass_types.module';
-import { KnownAbsencesModule } from './entity-modules/known_absences.module';
-import { LessonsModule } from './entity-modules/lessons.module';
-import { StudentKlassesModule } from './entity-modules/student_klasses.module';
-import { StudentsModule } from './entity-modules/students.module';
-import { TeachersModule } from './entity-modules/teachers.module';
-import { TextsModule } from './entity-modules/texts.module';
-import { StudentKlassesReportModule } from './entity-modules/student_klasses_report.module';
+import { UserModule } from './entity-modules/user.module';
+import { AttReportModule } from './entity-modules/att_report.module';
+import { GradeModule } from './entity-modules/grade.module';
+import { KlassModule } from './entity-modules/klass.module';
+import { KlassTypeModule } from './entity-modules/klass_type.module';
+import { KnownAbsenceModule } from './entity-modules/known_absence.module';
+import { LessonModule } from './entity-modules/lesson.module';
+import { StudentKlassModule } from './entity-modules/student_klass.module';
+import { StudentModule } from './entity-modules/student.module';
+import { TeacherModule } from './entity-modules/teacher.module';
+import { TextModule } from './entity-modules/text.module';
+import { StudentKlassReportModule } from './entity-modules/student_klass_report.module';
 import { AuthModule } from './common/auth/auth.module';
 import { YemotCallModule } from './common/yemot/yemot-call.module';
 import { YemotProccessorImpl } from './yemot.proccessor';
@@ -25,18 +25,18 @@ import { YemotProccessorImpl } from './yemot.proccessor';
   imports: [
     TypeOrmModule.forRoot(typeOrmModuleConfig),
     RequestContextModule,
-    UsersModule,
-    AttReportsModule,
-    GradesModule,
-    KlassesModule,
-    KlassTypesModule,
-    KnownAbsencesModule,
-    LessonsModule,
-    StudentKlassesModule,
-    StudentsModule,
-    TeachersModule,
-    TextsModule,
-    StudentKlassesReportModule,
+    UserModule,
+    AttReportModule,
+    GradeModule,
+    KlassModule,
+    KlassTypeModule,
+    KnownAbsenceModule,
+    LessonModule,
+    StudentKlassModule,
+    StudentModule,
+    TeacherModule,
+    TextModule,
+    StudentKlassReportModule,
     AuthModule,
     YemotCallModule.register(new YemotProccessorImpl())
   ],
