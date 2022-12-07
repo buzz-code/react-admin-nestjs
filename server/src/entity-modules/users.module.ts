@@ -17,8 +17,8 @@ export class EntityService extends TypeOrmCrudService<Entity> {
 // controller
 import { Controller, UseGuards } from "@nestjs/common";
 import { Crud, CrudController, CrudAuth } from "@nestjsx/crud";
-import { CrudAuthAdminFilter } from "src/auth/crud-auth.filter";
-import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { CrudAuthAdminFilter } from "src/common/auth/crud-auth.filter";
+import { JwtAuthGuard } from "src/common/auth/jwt-auth.guard";
 
 @Crud({
   model: {

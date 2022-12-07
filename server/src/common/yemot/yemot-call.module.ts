@@ -1,4 +1,4 @@
-import { YemotCall, YemotParams } from "../entities/YemotCall.entity";
+import { YemotCall, YemotParams } from "../../entities/YemotCall.entity";
 import { snakeCase } from "snake-case";
 
 export const YEMOT_PROCCESSOR = 'yemot_processor';
@@ -101,8 +101,8 @@ export class YemotCallService extends TypeOrmCrudService<YemotCall> {
 // controller
 import { Controller, UseGuards, Post, Request, Body } from "@nestjs/common";
 import { Crud, CrudController, CrudAuth } from "@nestjsx/crud";
-import { CrudAuthFilter } from "src/auth/crud-auth.filter";
-import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { CrudAuthFilter } from "src/common/auth/crud-auth.filter";
+import { JwtAuthGuard } from "src/common/auth/jwt-auth.guard";
 
 @Crud({
   model: {
