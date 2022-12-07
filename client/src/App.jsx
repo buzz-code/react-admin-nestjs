@@ -1,14 +1,13 @@
-import { Admin, Resource, ListGuesser, EditGuesser, CustomRoutes, Layout } from 'react-admin';
+import { Admin, Resource, ListGuesser, EditGuesser, CustomRoutes } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
-import DollarIcon from '@mui/icons-material/AttachMoney';
 
 import domainTranslations from './domainTranslations';
 import dataProvider from "@buzz-code/crud-nestjs-react-admin/client/providers/dataProvider";
 import { getI18nProvider } from "@buzz-code/crud-nestjs-react-admin/client/providers/i18nProvider";
 import authProvider from "@buzz-code/crud-nestjs-react-admin/client/providers/authProvider";
 import theme from "@buzz-code/crud-nestjs-react-admin/client/providers/themeProvider";
-import Dashboard from "@buzz-code/crud-nestjs-react-admin/client/components/Dashboard";
-import Menu from "@buzz-code/crud-nestjs-react-admin/client/components/Menu";
+
+import { Dashboard, Layout } from './generalLayout';
 
 import { AttReportEdit, AttReportCreate, AttReportList } from "./entities/att-report";
 import { KlassEdit, KlassCreate, KlassList } from "./entities/klass";
@@ -24,14 +23,11 @@ import { isAdmin } from "@buzz-code/crud-nestjs-react-admin/client/components/Ad
 import { CommonRepresentation } from "@buzz-code/crud-nestjs-react-admin/client/components/CommonRepresentation";
 import YemotSimulator from "@buzz-code/crud-nestjs-react-admin/client/components/YemotSimulator";
 
-const MyLayout = (props) => <Layout {...props} menu={Menu} />
-const MyDashboard = () => <Dashboard items={[{ resource: 'att_report', icon: DollarIcon }, { resource: 'student', icon: DollarIcon }]} />
-
 const i18nProvider = getI18nProvider(domainTranslations);
 
 const App = () => (
   <BrowserRouter>
-    <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={MyDashboard} layout={MyLayout} requireAuth>
+    <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={Dashboard} layout={Layout} requireAuth>
       {permissions => (
         <>
           <Resource name="att_report" list={AttReportList} edit={AttReportEdit} create={AttReportCreate} />
