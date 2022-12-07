@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { Users } from "./Users.entity";
+import { User } from "./User.entity";
 
 @Entity()
 export class YemotCall {
@@ -9,8 +9,8 @@ export class YemotCall {
     @Column()
     userId: number;
 
-    @ManyToOne(() => Users)
-    user: Users;
+    @ManyToOne(() => User)
+    user: User;
 
     @Column()
     apiCallId: string;

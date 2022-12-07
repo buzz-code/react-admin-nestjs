@@ -6,11 +6,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Users } from "../common/entities/Users.entity";
+import { User } from "../common/entities/User.entity";
 
 @Index("known_users_idx", ["userId"], {})
 @Entity("known_absences")
-export class KnownAbsences {
+export class KnownAbsence {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -47,10 +47,10 @@ export class KnownAbsences {
   @Column("timestamp", { name: "id_copy1", default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date;
 
-  @ManyToOne(() => Users, (users) => users.knownAbsences, {
+  @ManyToOne(() => User, (users) => users.knownAbsences, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
-  user: Users;
+  user: User;
 }

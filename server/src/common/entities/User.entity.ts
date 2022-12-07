@@ -1,18 +1,18 @@
 import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { AttReports } from "../../entities/AttReports.entity";
-import { Grades } from "../../entities/Grades.entity";
-import { KlassTypes } from "../../entities/KlassTypes.entity";
-import { Klasses } from "../../entities/Klasses.entity";
-import { KnownAbsences } from "../../entities/KnownAbsences.entity";
-import { Lessons } from "../../entities/Lessons.entity";
-import { StudentKlasses } from "../../entities/StudentKlasses.entity";
-import { Students } from "../../entities/Students.entity";
-import { Teachers } from "../../entities/Teachers.entity";
-import { Texts } from "../../entities/Texts.entity";
+import { AttReport } from "../../entities/AttReport.entity";
+import { Grade } from "../../entities/Grade.entity";
+import { KlassType } from "../../entities/KlassType.entity";
+import { Klass } from "../../entities/Klass.entity";
+import { KnownAbsence } from "../../entities/KnownAbsence.entity";
+import { Lesson } from "../../entities/Lesson.entity";
+import { StudentKlass } from "../../entities/StudentKlass.entity";
+import { Student } from "../../entities/Student.entity";
+import { Teacher } from "../../entities/Teacher.entity";
+import { Text } from "../../entities/Text.entity";
 import * as bcrypt from 'bcrypt';
 
 @Entity("users")
-export class Users {
+export class User {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -66,33 +66,33 @@ export class Users {
   @Column("varchar", { nullable: true, length: 5000 })
   additionalData: any;
 
-  @OneToMany(() => AttReports, (attReports) => attReports.user)
-  attReports: AttReports[];
+  @OneToMany(() => AttReport, (attReports) => attReports.user)
+  attReports: AttReport[];
 
-  @OneToMany(() => Grades, (grades) => grades.user)
-  grades: Grades[];
+  @OneToMany(() => Grade, (grades) => grades.user)
+  grades: Grade[];
 
-  @OneToMany(() => KlassTypes, (klassTypes) => klassTypes.user)
-  klassTypes: KlassTypes[];
+  @OneToMany(() => KlassType, (klassTypes) => klassTypes.user)
+  klassTypes: KlassType[];
 
-  @OneToMany(() => Klasses, (klasses) => klasses.user)
-  klasses: Klasses[];
+  @OneToMany(() => Klass, (klasses) => klasses.user)
+  klasses: Klass[];
 
-  @OneToMany(() => KnownAbsences, (knownAbsences) => knownAbsences.user)
-  knownAbsences: KnownAbsences[];
+  @OneToMany(() => KnownAbsence, (knownAbsences) => knownAbsences.user)
+  knownAbsences: KnownAbsence[];
 
-  @OneToMany(() => Lessons, (lessons) => lessons.user)
-  lessons: Lessons[];
+  @OneToMany(() => Lesson, (lessons) => lessons.user)
+  lessons: Lesson[];
 
-  @OneToMany(() => StudentKlasses, (studentKlasses) => studentKlasses.user)
-  studentKlasses: StudentKlasses[];
+  @OneToMany(() => StudentKlass, (studentKlasses) => studentKlasses.user)
+  studentKlasses: StudentKlass[];
 
-  @OneToMany(() => Students, (students) => students.user)
-  students: Students[];
+  @OneToMany(() => Student, (students) => students.user)
+  students: Student[];
 
-  @OneToMany(() => Teachers, (teachers) => teachers.user)
-  teachers: Teachers[];
+  @OneToMany(() => Teacher, (teachers) => teachers.user)
+  teachers: Teacher[];
 
-  @OneToMany(() => Texts, (texts) => texts.user)
-  texts: Texts[];
+  @OneToMany(() => Text, (texts) => texts.user)
+  texts: Text[];
 }

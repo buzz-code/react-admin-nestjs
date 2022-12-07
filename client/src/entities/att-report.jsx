@@ -9,10 +9,10 @@ import { CommonReferenceInput } from '@buzz-code/crud-nestjs-react-admin/client/
 const filters = [
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
-    <CommonReferenceInput source="studentTz" reference="students" optionValue="tz" />,
-    <CommonReferenceInput source="teacherId" reference="teachers" optionValue="tz" />,
-    <CommonReferenceInput source="klassId" reference="klasses" optionValue="key" />,
-    <CommonReferenceInput source="lessonId" reference="lessons" optionValue="key" />,
+    <CommonReferenceInput source="studentTz" reference="student" optionValue="tz" />,
+    <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />,
+    <CommonReferenceInput source="klassId" reference="klass" optionValue="key" />,
+    <CommonReferenceInput source="lessonId" reference="lesson" optionValue="key" />,
 ];
 
 export const AttReportList = () => {
@@ -21,11 +21,11 @@ export const AttReportList = () => {
     return (
         <CommonList filters={filters}>
             {isAdmin && <TextField source="id" />}
-            {isAdmin && <ReferenceField source="userId" reference="users" />}
-            <CommonReferenceField source="studentTz" reference="students" target="tz" />
-            <CommonReferenceField source="teacherId" reference="teachers" target="tz" />
-            <CommonReferenceField source="klassId" reference="klasses" target="key" />
-            <CommonReferenceField source="lessonId" reference="lessons" target="key" />
+            {isAdmin && <ReferenceField source="userId" reference="user" />}
+            <CommonReferenceField source="studentTz" reference="student" target="tz" />
+            <CommonReferenceField source="teacherId" reference="teacher" target="tz" />
+            <CommonReferenceField source="klassId" reference="klass" target="key" />
+            <CommonReferenceField source="lessonId" reference="lesson" target="key" />
             <DateField source="reportDate" />
             <NumberField source="howManyLessons" />
             <DateField source="absCount" />
@@ -43,11 +43,11 @@ const Fields = ({ isCreate }) => {
 
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <CommonReferenceInput source="userId" reference="users" />}
-        <CommonReferenceInput source="studentTz" reference="students" optionValue="tz" />
-        <CommonReferenceInput source="teacherId" reference="teachers" optionValue="tz" />
-        <CommonReferenceInput source="klassId" reference="klasses" optionValue="key" />
-        <CommonReferenceInput source="lessonId" reference="lessons" optionValue="key" />
+        {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
+        <CommonReferenceInput source="studentTz" reference="student" optionValue="tz" />
+        <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />
+        <CommonReferenceInput source="klassId" reference="klasse" optionValue="key" />
+        <CommonReferenceInput source="lessonId" reference="lesson" optionValue="key" />
         <DateInput source="reportDate" />
         <NumberInput source="howManyLessons" />
         <DateInput source="absCount" />

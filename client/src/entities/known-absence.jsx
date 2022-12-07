@@ -11,8 +11,8 @@ export const KnownAbsenceList = () => {
     return (
         <CommonList>
             {isAdmin && <TextField source="id" />}
-            {isAdmin && <ReferenceField source="userId" reference="users" />}
-            <CommonReferenceField source="studentTz" reference="students" target="tz" />
+            {isAdmin && <ReferenceField source="userId" reference="user" />}
+            <CommonReferenceField source="studentTz" reference="student" target="tz" />
             <DateField source="reportDate" />
             <NumberField source="absnceCount" />
             <NumberField source="absnceCode" />
@@ -30,7 +30,7 @@ const Fields = ({ isCreate }) => {
 
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <ReferenceInput source="userId" reference="users" />}
+        {isAdmin && <ReferenceInput source="userId" reference="user" />}
         <TextInput source="studentTz" />
         <DateInput source="reportDate" />
         <NumberInput source="absnceCount" />

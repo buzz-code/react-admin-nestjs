@@ -6,31 +6,34 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Users } from "../common/entities/Users.entity";
+import { User } from "../common/entities/User.entity";
 
-@Index("teachers_users_idx", ["userId"], {})
-@Entity("teachers")
-export class Teachers {
+@Index("lessons_users_idx", ["userId"], {})
+@Entity("lessons")
+export class Lesson {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
   @Column("int", { name: "user_id" })
   userId: number;
 
-  @Column("varchar", { name: "tz", length: 10 })
-  tz: string;
+  @Column("int", { name: "key" })
+  key: number;
 
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
-  @Column("varchar", { name: "phone", nullable: true, length: 10 })
-  phone: string | null;
+  @Column("varchar", { name: "klasses", nullable: true, length: 450 })
+  klasses: string | null;
 
-  @Column("varchar", { name: "phone2", nullable: true, length: 10 })
-  phone2: string | null;
+  @Column("varchar", { name: "teacher_id", length: 10 })
+  teacherId: string;
 
-  @Column("varchar", { name: "email", nullable: true, length: 500 })
-  email: string | null;
+  @Column("date", { name: "start_date", nullable: true })
+  startDate: string | null;
+
+  @Column("date", { name: "end_date", nullable: true })
+  endDate: string | null;
 
   @Column("timestamp", {
     name: "created_at",
@@ -44,10 +47,10 @@ export class Teachers {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Users, (users) => users.teachers, {
+  @ManyToOne(() => User, (users) => users.lessons, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
-  user: Users;
+  user: User;
 }

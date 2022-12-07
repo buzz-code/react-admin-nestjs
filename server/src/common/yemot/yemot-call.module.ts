@@ -14,13 +14,13 @@ import { Injectable, Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { Repository } from "typeorm";
-import { Users } from "src/common/entities/Users.entity";
+import { User } from "src/common/entities/User.entity";
 import yemotUtil from "./yemot.util";
 
 @Injectable()
 export class YemotCallService extends TypeOrmCrudService<YemotCall> {
   constructor(@InjectRepository(YemotCall) repo,
-    @InjectRepository(Users) private userRepo: Repository<Users>,
+    @InjectRepository(User) private userRepo: Repository<User>,
     @Inject(YEMOT_PROCCESSOR) private yemotProccessor: YemotProccessor) {
     super(repo);
   }
@@ -131,7 +131,7 @@ export class YemotCallModule {
   static register(yemotProccessor: YemotProccessor): DynamicModule {
     return {
       module: YemotCallModule,
-      imports: [TypeOrmModule.forFeature([YemotCall, Users])],
+      imports: [TypeOrmModule.forFeature([YemotCall, User])],
       providers: [
         {
           provide: YEMOT_PROCCESSOR,

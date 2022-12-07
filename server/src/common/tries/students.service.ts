@@ -3,14 +3,14 @@ import { InjectRepository, InjectDataSource } from "@nestjs/typeorm";
 import { CrudRequestOptions, GetManyDefaultResponse, Override } from "@nestjsx/crud";
 import { ParsedRequestParams } from "@nestjsx/crud-request";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
-import { AttReports } from "src/entities/AttReports.entity";
+import { AttReport } from "src/entities/AttReport.entity";
 import { DataSource, SelectQueryBuilder } from "typeorm";
 
-import { Students } from "../../entities/Students.entity";
+import { Student } from "../../entities/Student.entity";
 
 @Injectable()
-export class StudentsService extends TypeOrmCrudService<Students> {
-  constructor(@InjectRepository(Students) repo) {
+export class StudentsService extends TypeOrmCrudService<Student> {
+  constructor(@InjectRepository(Student) repo) {
     super(repo);
   }
 
@@ -18,7 +18,7 @@ export class StudentsService extends TypeOrmCrudService<Students> {
   private dataSource: DataSource;
 
   @Override()
-  protected async doGetMany(builder: SelectQueryBuilder<Students>, query: ParsedRequestParams, options: CrudRequestOptions): Promise<Students[] | GetManyDefaultResponse<Students>> {
+  protected async doGetMany(builder: SelectQueryBuilder<Student>, query: ParsedRequestParams, options: CrudRequestOptions): Promise<Student[] | GetManyDefaultResponse<Student>> {
     if (this.decidePagination(query, options)) {
       const [data, total] = await builder.getManyAndCount();
       const limit = builder.expressionMap.take;
@@ -29,12 +29,12 @@ export class StudentsService extends TypeOrmCrudService<Students> {
     return builder.getMany();
   }
 
-  private async populatePivotData(data: Students[]) {
+  private async populatePivotData(data: Student[]) {
     const studentTzs = data.map(item => item.tz);
     const studentMap = data.reduce((a, b) => ({ ...a, [b.tz]: b }), {});
 
     const pivotData = await this.dataSource
-      .getRepository(AttReports)
+      .getRepository(AttReport)
       .createQueryBuilder('att_reports')
       .where('user_id = :userId', { userId: data[0].userId })
       .andWhere('student_tz in (:...studentTzs)', { studentTzs })

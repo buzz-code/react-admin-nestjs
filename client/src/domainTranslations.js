@@ -2,7 +2,7 @@ import { generalResourceFieldsTranslation } from "@buzz-code/crud-nestjs-react-a
 
 export default {
     resources: {
-        att_reports: {
+        att_report: {
             name: 'רשומת נוכחות |||| נוכחות',
             fields: {
                 ...generalResourceFieldsTranslation,
@@ -18,13 +18,13 @@ export default {
                 sheetName: 'חודש דיווח',
             }
         },
-        grades: {
+        grade: {
             name: 'רשומת ציונים |||| ציונים',
             fields: {
                 ...generalResourceFieldsTranslation,
             }
         },
-        klasses: {
+        klass: {
             name: 'כיתה |||| כיתות',
             fields: {
                 ...generalResourceFieldsTranslation,
@@ -32,13 +32,13 @@ export default {
                 teacherId: 'מורה',
             }
         },
-        klass_types: {
+        klass_type: {
             name: 'סוג כיתה |||| סוגי כיתה',
             fields: {
                 ...generalResourceFieldsTranslation,
             }
         },
-        known_absences: {
+        known_absence: {
             name: 'חיסור מאושר |||| חיסורים מאושרים',
             fields: {
                 ...generalResourceFieldsTranslation,
@@ -51,7 +51,7 @@ export default {
                 comment: 'הערה',
             }
         },
-        lessons: {
+        lesson: {
             name: 'שיעור |||| שיעורים',
             fields: {
                 ...generalResourceFieldsTranslation,
@@ -61,7 +61,7 @@ export default {
                 endDate: 'תאריך סיום',
             }
         },
-        student_klasses: {
+        student_klass: {
             name: 'רשומת שיוך תלמידות לכיתות |||| שיוך תלמידות לכיתות',
             fields: {
                 ...generalResourceFieldsTranslation,
@@ -69,14 +69,14 @@ export default {
                 klassId: 'כיתה',
             }
         },
-        students: {
+        student: {
             name: 'תלמידה |||| תלמידות',
             fields: {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
             }
         },
-        teachers: {
+        teacher: {
             name: 'מורה |||| מורות',
             fields: {
                 ...generalResourceFieldsTranslation,
@@ -86,7 +86,7 @@ export default {
                 email: 'כתובת מייל',
             }
         },
-        texts: {
+        text: {
             name: 'הודעה |||| הודעות',
             fields: {
                 ...generalResourceFieldsTranslation,
@@ -94,7 +94,7 @@ export default {
                 value: 'ערך',
             }
         },
-        users: {
+        user: {
             name: 'משתמש |||| משתמשים',
             fields: {
                 ...generalResourceFieldsTranslation,

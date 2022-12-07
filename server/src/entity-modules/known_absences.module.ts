@@ -1,4 +1,4 @@
-import { KnownAbsences as Entity } from "../entities/KnownAbsences.entity";
+import { KnownAbsence as Entity } from "../entities/KnownAbsence.entity";
 import { snakeCase } from "snake-case";
 
 // sevice

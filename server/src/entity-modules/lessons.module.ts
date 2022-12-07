@@ -1,4 +1,4 @@
-import { Lessons as Entity } from "../entities/Lessons.entity";
+import { Lesson as Entity } from "../entities/Lesson.entity";
 import { snakeCase } from "snake-case";
 
 // sevice

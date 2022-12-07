@@ -6,11 +6,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Users } from "../common/entities/Users.entity";
+import { User } from "../common/entities/User.entity";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")
-export class AttReports {
+export class AttReport {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -59,10 +59,10 @@ export class AttReports {
   @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
   sheetName: string | null;
 
-  @ManyToOne(() => Users, (users) => users.attReports, {
+  @ManyToOne(() => User, (users) => users.attReports, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
-  user: Users;
+  user: User;
 }

@@ -6,11 +6,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Users } from "../common/entities/Users.entity";
+import { User } from "../common/entities/User.entity";
 
-@Index("students_users_idx", ["userId"], {})
-@Entity("students")
-export class Students {
+@Index("teachers_users_idx", ["userId"], {})
+@Entity("teachers")
+export class Teacher {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -22,6 +22,15 @@ export class Students {
 
   @Column("varchar", { name: "name", length: 500 })
   name: string;
+
+  @Column("varchar", { name: "phone", nullable: true, length: 10 })
+  phone: string | null;
+
+  @Column("varchar", { name: "phone2", nullable: true, length: 10 })
+  phone2: string | null;
+
+  @Column("varchar", { name: "email", nullable: true, length: 500 })
+  email: string | null;
 
   @Column("timestamp", {
     name: "created_at",
@@ -35,10 +44,10 @@ export class Students {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Users, (users) => users.students, {
+  @ManyToOne(() => User, (users) => users.teachers, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
-  user: Users;
+  user: User;
 }

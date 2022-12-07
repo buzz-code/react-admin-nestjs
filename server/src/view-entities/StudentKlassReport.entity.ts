@@ -1,14 +1,14 @@
-import { Klasses } from "src/entities/Klasses.entity";
-import { StudentKlasses } from "src/entities/StudentKlasses.entity";
-import { Users } from "src/common/entities/Users.entity";
+import { Klass } from "src/entities/Klass.entity";
+import { StudentKlass } from "src/entities/StudentKlass.entity";
+import { User } from "src/common/entities/User.entity";
 import { Column, DataSource, JoinColumn, ViewEntity } from "typeorm";
 
 @ViewEntity("student_klasses_report", {
   expression: (dataSource: DataSource) => dataSource
-    .getRepository(StudentKlasses)
+    .getRepository(StudentKlass)
     .createQueryBuilder('student_klasses')
     .groupBy('student_tz')
-    .leftJoin(Klasses, 'klasses', 'klasses.key = student_klasses.klass_id AND klasses.user_id = student_klasses.user_id')
+    .leftJoin(Klass, 'klasses', 'klasses.key = student_klasses.klass_id AND klasses.user_id = student_klasses.user_id')
     .select('student_tz')
     .addSelect('student_tz', 'id')
     .addSelect('student_klasses.user_id', 'user_id')
@@ -18,7 +18,7 @@ import { Column, DataSource, JoinColumn, ViewEntity } from "typeorm";
     .addSelect(`GROUP_CONCAT(if(klasses.klass_type_id not in (21, 22, 23, 24, 25, 26), klasses.name, null) SEPARATOR ', ')`, 'klasses_null')
     .where('student_klasses.user_id = 2')
 })
-export class StudentKlassesReport {
+export class StudentKlassReport {
   @Column()
   id: string;
 
@@ -41,5 +41,5 @@ export class StudentKlassesReport {
   klassesNull: string;
 
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
-  user: Users;
+  user: User;
 }

@@ -1,21 +1,21 @@
-import { DateField, DateInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
+import { DateField, DateInput, EmailField, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
 import { useIsAdmin } from '@buzz-code/crud-nestjs-react-admin/client/components/AdminRestricted';
 import { CommonList } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonList';
-import { CommonReferenceField } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonReferenceField';
 import { CommonEdit } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonEdit';
 import { CommonCreate } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonCreate';
-import { CommonReferenceInput } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonRefenceInput';
 
-
-export const StudentKlassList = () => {
+export const TeacherList = () => {
     const isAdmin = useIsAdmin();
 
     return (
         <CommonList>
             {isAdmin && <TextField source="id" />}
-            {isAdmin && <ReferenceField source="userId" reference="users" />}
-            <CommonReferenceField source="studentTz" reference="students" target="tz" />
-            <CommonReferenceField source="klassId" reference="klasses" target="key" />
+            {isAdmin && <ReferenceField source="userId" reference="user" />}
+            <TextField source="tz" />
+            <TextField source="name" />
+            <TextField source="phone" />
+            <TextField source="phone2" />
+            <EmailField source="email" />
             {isAdmin && <DateField source="createdAt" />}
             {isAdmin && <DateField source="updatedAt" />}
         </CommonList>
@@ -27,21 +27,24 @@ const Fields = ({ isCreate }) => {
 
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <ReferenceInput source="userId" reference="users" />}
-        <CommonReferenceInput source="studentTz" reference="students" optionValue="tz" />,
-        <CommonReferenceInput source="klassId" reference="klasses" optionValue="key" />,
+        {isAdmin && <ReferenceInput source="userId" reference="user" />}
+        <TextInput source="tz" />
+        <TextInput source="name" />
+        <TextInput source="phone" />
+        <TextInput source="phone2" />
+        <TextInput source="email" />
         {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
     </>
 }
 
-export const StudentKlassEdit = () => (
+export const TeacherEdit = () => (
     <CommonEdit>
         <Fields isCreate={false} />
     </CommonEdit>
 );
 
-export const StudentKlassCreate = () => (
+export const TeacherCreate = () => (
     <CommonCreate>
         <Fields isCreate={true} />
     </CommonCreate>

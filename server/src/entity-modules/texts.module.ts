@@ -1,4 +1,4 @@
-import { Texts as Entity } from "../entities/Texts.entity";
+import { Text as Entity } from "../entities/Text.entity";
 import { snakeCase } from "snake-case";
 
 // sevice

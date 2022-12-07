@@ -1,4 +1,4 @@
-import { AttReports as Entity } from "../entities/AttReports.entity";
+import { AttReport as Entity } from "../entities/AttReport.entity";
 import { snakeCase } from "snake-case";
 
 // sevice
