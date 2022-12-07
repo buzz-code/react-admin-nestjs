@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { User } from "../common/entities/User.entity";
+import { User } from "./User.entity";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Entity("student_klasses")
@@ -35,7 +35,7 @@ export class StudentKlass {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (users) => users.studentKlasses, {
+  @ManyToOne(() => User, (user) => user.studentKlasses, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })

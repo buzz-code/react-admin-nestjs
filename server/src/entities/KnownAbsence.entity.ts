@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { User } from "../common/entities/User.entity";
+import { User } from "./User.entity";
 
 @Index("known_users_idx", ["userId"], {})
 @Entity("known_absences")
@@ -47,7 +47,7 @@ export class KnownAbsence {
   @Column("timestamp", { name: "id_copy1", default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (users) => users.knownAbsences, {
+  @ManyToOne(() => User, (user) => user.knownAbsences, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })

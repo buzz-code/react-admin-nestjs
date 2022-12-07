@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { User } from "../common/entities/User.entity";
+import { User } from "./User.entity";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")
@@ -59,7 +59,7 @@ export class AttReport {
   @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
   sheetName: string | null;
 
-  @ManyToOne(() => User, (users) => users.attReports, {
+  @ManyToOne(() => User, (user) => user.attReports, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
