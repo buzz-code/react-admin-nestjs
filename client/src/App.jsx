@@ -7,7 +7,7 @@ import { getI18nProvider } from "@buzz-code/crud-nestjs-react-admin/client/provi
 import authProvider from "@buzz-code/crud-nestjs-react-admin/client/providers/authProvider";
 import theme from "@buzz-code/crud-nestjs-react-admin/client/providers/themeProvider";
 
-import { Dashboard, Layout } from './generalLayout';
+import { Dashboard, Layout } from './GeneralLayout';
 
 import { AttReportEdit, AttReportCreate, AttReportList } from "./entities/att-report";
 import { KlassEdit, KlassCreate, KlassList } from "./entities/klass";

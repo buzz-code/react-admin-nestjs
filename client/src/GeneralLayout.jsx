@@ -1,12 +1,12 @@
 import { MenuItemLink } from 'react-admin';
-import DollarIcon from '@mui/icons-material/AttachMoney';
+import ListIcon from '@mui/icons-material/List';
 import LabelIcon from '@mui/icons-material/Label';
 
-import Dashboard from "@buzz-code/crud-nestjs-react-admin/client/components/Dashboard";
 import BaseLayout from "@buzz-code/crud-nestjs-react-admin/client/components/Layout";
+import BaseDashboard from '@buzz-code/crud-nestjs-react-admin/client/components/Dashboard';
 
 const customMenuItems = [
-    <MenuItemLink to="/yemot-simulator" primaryText="סימולטור" leftIcon={<LabelIcon />} />,
+    <MenuItemLink key="yemot-simulator" to="/yemot-simulator" primaryText="סימולטור" leftIcon={<LabelIcon />} />,
 ];
 
 export const Layout = (props) => (
@@ -14,10 +14,10 @@ export const Layout = (props) => (
 );
 
 const dashboardItems = [
-    { resource: 'att_report', icon: DollarIcon },
-    { resource: 'student', icon: DollarIcon },
+    { resource: 'att_report', icon: ListIcon },
+    { resource: 'student', icon: ListIcon },
 ];
 
-export const MyDashboard = () => (
-    <Dashboard items={dashboardItems} />
+export const Dashboard = () => (
+    <BaseDashboard items={dashboardItems} />
 );
