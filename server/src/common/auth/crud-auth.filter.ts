@@ -1,4 +1,4 @@
-import { Users } from "src/entities/Users.entity";
+import { Users } from "src/common/entities/Users.entity";
 
 export const CrudAuthFilter = {
     property: 'user',

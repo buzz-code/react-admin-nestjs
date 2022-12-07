@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Users } from "./Users.entity";
+import { Users } from "../common/entities/Users.entity";
 
 @Index("known_users_idx", ["userId"], {})
 @Entity("known_absences")
