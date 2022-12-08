@@ -1,4 +1,4 @@
-import { ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
+import { DateField, DateInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
 import { useIsAdmin } from '@buzz-code/crud-nestjs-react-admin/client/components/AdminRestricted';
 import { CommonList } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonList';
 import { CommonEdit } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonEdit';
