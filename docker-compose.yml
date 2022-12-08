@@ -8,6 +8,7 @@ services:
         build:
             context: ./client
             target: production
+        pull_policy: build
         environment:
             REACT_APP_API_URL: "${BACKEND_URL}:${BACKEND_PORT}"
         ports:
@@ -16,6 +17,9 @@ services:
             - ./client:/app
             - /app/node_modules
             - /app/dist
+        networks:
+            private-network
+
 
     backend:
         container_name: backend
@@ -23,6 +27,7 @@ services:
         build:
             context: ./server
             target: production
+        pull_policy: build
         environment:
             MYSQL_HOST: $MYSQL_HOST
             MYSQL_USER: $MYSQL_USER
@@ -38,6 +43,8 @@ services:
             - ./server:/app
             - /app/node_modules
             - /app/dist
+        networks:
+            private-network
 
     mysql:
         container_name: mysql
@@ -54,6 +61,8 @@ services:
             MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
         volumes:
             - "db_data:/var/lib/mysql"
+        networks:
+            private-network
 
     phpmyadmin:
         container_name: php-myadmin
@@ -66,7 +75,12 @@ services:
         environment:
             PMA_HOST: mysql
             MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+        networks:
+            private-network
 
 
 volumes:
     db_data:
+
+networks:
+    private-network:
