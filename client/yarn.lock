@@ -381,13 +381,6 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.3.0.tgz#ea89004119dc42db2e1dba0f97d553f7372f6fcb"
   integrity sha512-AHPmaAx+RYfZz0eYu6Gviiagpmiyw98ySSlQvCUhVGDRtDFe4DBS0x1bSjdF3gqUDYOczB+yYvBTtEylYSdRhg==
 
-"@fusionworks/ra-data-nest-crud@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@fusionworks/ra-data-nest-crud/-/ra-data-nest-crud-1.0.8.tgz#f85ef3d0b143a595038e7c9e58614887b1910c77"
-  integrity sha512-O4yv5nGqjLIApEsu0ni7jfVOGvv1uzv1CBxv4vfLpNQK3lk0/9qZwAUfJyHldgNh7D+PFs+UABiszFdsjGlxeA==
-  dependencies:
-    "@nestjsx/crud-request" "^4.1.0"
-
 "@jest/expect-utils@^29.3.1":
   version "29.3.1"
   resolved "https://registry.npmjs.org/@jest/expect-utils/-/expect-utils-29.3.1.tgz"

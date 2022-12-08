@@ -4,12 +4,10 @@
   "private": true,
   "dependencies": {
     "@buzz-code/crud-nestjs-react-admin": "^0.0.20",
-    "@fusionworks/ra-data-nest-crud": "^1.0.8",
     "@nestjsx/crud-request": "^5.0.0-alpha.3",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
-    "prop-types": "^15.8.1",
     "ra-data-json-server": "^4.5.0",
     "ra-data-nestjsx-crud": "^1.3.2",
     "ra-language-hebrew-il": "^3.9.6",
