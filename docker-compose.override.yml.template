@@ -1,4 +1,5 @@
 version: "3"
+name: react-admin-nestjs-dev
 services:
     frontend:
         container_name: frontend-dev
