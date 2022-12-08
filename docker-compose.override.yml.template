@@ -1,0 +1,17 @@
+version: "3"
+services:
+    frontend:
+        container_name: frontend-dev
+        build:
+            target: development
+
+    backend:
+        container_name: backend-dev
+        build:
+            target: development
+
+    mysql:
+        container_name: mysql-dev
+
+    phpmyadmin:
+        container_name: php-myadmin-dev
