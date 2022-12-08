@@ -4,14 +4,31 @@ services:
         container_name: frontend-dev
         build:
             target: development
+        networks:
+            - private-network-dev
 
     backend:
         container_name: backend-dev
         build:
             target: development
+        networks:
+            - private-network-dev
 
     mysql:
         container_name: mysql-dev
+        volumes:
+            - "db_data-dev:/var/lib/mysql"
+        networks:
+            - private-network-dev
 
     phpmyadmin:
         container_name: php-myadmin-dev
+        networks:
+            - private-network-dev
+
+
+volumes:
+    db_data-dev:
+
+networks:
+    private-network-dev:
