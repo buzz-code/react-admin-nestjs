@@ -7,7 +7,7 @@ import { getI18nProvider } from "@shared/providers/i18nProvider";
 import authProvider from "@shared/providers/authProvider";
 import theme from "@shared/providers/themeProvider";
 
-// import { Dashboard, Layout } from './GeneralLayout';
+import { Dashboard, Layout } from './GeneralLayout';
 
 import { AttReportEdit, AttReportCreate, AttReportList } from "./entities/att-report";
 import { KlassEdit, KlassCreate, KlassList } from "./entities/klass";
@@ -21,13 +21,13 @@ import { TextEdit, TextCreate, TextList } from "./entities/text";
 import { UserEdit, UserCreate, UserList } from "./entities/user";
 import { isAdmin } from "@shared/components/AdminRestricted";
 import { CommonRepresentation } from "@shared/components/CommonRepresentation";
-// import YemotSimulator from "@shared/components/YemotSimulator";
+import YemotSimulator from "@shared/components/YemotSimulator";
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
 const App = () => (
   <BrowserRouter>
-    <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} requireAuth>
+    <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={Dashboard} layout={Layout} requireAuth>
       {permissions => (
         <>
           <Resource name="att_report" list={AttReportList} edit={AttReportEdit} create={AttReportCreate} />
@@ -46,7 +46,7 @@ const App = () => (
           </>}
 
           <CustomRoutes>
-            {/* <Route path="/yemot-simulator" element={<YemotSimulator />} /> */}
+            <Route path="/yemot-simulator" element={<YemotSimulator />} />
           </CustomRoutes>
         </>
       )}

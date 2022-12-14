@@ -1,6 +1,6 @@
 import { DateField, DateInput, EmailField, TextField, TextInput } from 'react-admin';
 import { CommonList } from '@shared/components/CommonList';
-// import { QuickFilter } from '@shared/components/QuickFilter';
+import { QuickFilter } from '@shared/components/QuickFilter';
 import { CommonEdit } from '@shared/components/CommonEdit';
 import { CommonCreate } from '@shared/components/CommonCreate';
 
@@ -8,7 +8,7 @@ const filters = [
     <TextInput source="name" alwaysOn />,
     <TextInput source="email" alwaysOn />,
     <TextInput source="phoneNumber" />,
-    // <QuickFilter source="fromEmail" defaultValue="gmail"/>
+    <QuickFilter source="fromEmail" defaultValue="gmail"/>
 ];
 
 export const UserList = () => (
