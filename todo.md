@@ -30,6 +30,7 @@
 * use npm package for common logic in client
 
 # todo
+* move to git sub modules
 * fix quick filter
 * use id column for relation everywhere
 * use cookie instead of auth bearer
