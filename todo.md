@@ -35,6 +35,8 @@
 
 # todo
 * use cookie instead of auth bearer
+* don't use path ../ anywhere, use src/ instead
+* rate limit backend requests
 * import - https://stackoverflow.com/questions/72488424/upload-excel-data-into-database-using-nestjs
 * import csv - https://www.npmjs.com/package/react-admin-import-csv?activeTab=readme https://www.npmjs.com/package/ra-import-csv
 * add csv import
