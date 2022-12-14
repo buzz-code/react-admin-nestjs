@@ -1,10 +1,10 @@
 import { DateField, DateInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput } from 'react-admin';
-import { useIsAdmin } from '@buzz-code/crud-nestjs-react-admin/client/components/AdminRestricted';
-import { CommonList } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonList';
-import { CommonEdit } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonEdit';
-import { CommonCreate } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonCreate';
-import { CommonReferenceField } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonReferenceField';
-import { CommonReferenceInput } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonRefenceInput';
+import { useIsAdmin } from '@shared/components/AdminRestricted';
+import { CommonList } from '@shared/components/CommonList';
+import { CommonEdit } from '@shared/components/CommonEdit';
+import { CommonCreate } from '@shared/components/CommonCreate';
+import { CommonReferenceField } from '@shared/components/CommonReferenceField';
+import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
 
 const filters = [
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,

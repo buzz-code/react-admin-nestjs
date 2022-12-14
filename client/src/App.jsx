@@ -2,10 +2,10 @@ import { Admin, Resource, ListGuesser, EditGuesser, CustomRoutes } from 'react-a
 import { BrowserRouter, Route } from 'react-router-dom';
 
 import domainTranslations from './domainTranslations';
-import dataProvider from "@buzz-code/crud-nestjs-react-admin/client/providers/dataProvider";
-import { getI18nProvider } from "@buzz-code/crud-nestjs-react-admin/client/providers/i18nProvider";
-import authProvider from "@buzz-code/crud-nestjs-react-admin/client/providers/authProvider";
-import theme from "@buzz-code/crud-nestjs-react-admin/client/providers/themeProvider";
+import dataProvider from "@shared/providers/dataProvider";
+import { getI18nProvider } from "@shared/providers/i18nProvider";
+import authProvider from "@shared/providers/authProvider";
+import theme from "@shared/providers/themeProvider";
 
 // import { Dashboard, Layout } from './GeneralLayout';
 
@@ -19,9 +19,9 @@ import { StudentList, StudentCreate, StudentEdit } from "./entities/student";
 import { TeacherList, TeacherCreate, TeacherEdit } from "./entities/teacher";
 import { TextEdit, TextCreate, TextList } from "./entities/text";
 import { UserEdit, UserCreate, UserList } from "./entities/user";
-import { isAdmin } from "@buzz-code/crud-nestjs-react-admin/client/components/AdminRestricted";
-import { CommonRepresentation } from "@buzz-code/crud-nestjs-react-admin/client/components/CommonRepresentation";
-// import YemotSimulator from "@buzz-code/crud-nestjs-react-admin/client/components/YemotSimulator";
+import { isAdmin } from "@shared/components/AdminRestricted";
+import { CommonRepresentation } from "@shared/components/CommonRepresentation";
+// import YemotSimulator from "@shared/components/YemotSimulator";
 
 const i18nProvider = getI18nProvider(domainTranslations);
 

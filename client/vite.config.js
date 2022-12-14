@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from 'path';
 
 export default ({ mode }) => {
     return defineConfig({
@@ -11,6 +12,12 @@ export default ({ mode }) => {
         define: {
             "process.env.NODE_ENV": `"${mode}"`,
             "process.env.REACT_APP_API_URL": `"${process.env.REACT_APP_API_URL}"`,
+        },
+        resolve: {
+            alias: {
+                '@shared': path.resolve(__dirname, './shared'),
+                'src': path.resolve(__dirname, './src')
+            },
         },
     })
 }

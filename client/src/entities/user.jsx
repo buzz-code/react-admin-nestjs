@@ -1,8 +1,8 @@
 import { DateField, DateInput, EmailField, TextField, TextInput } from 'react-admin';
-import { CommonList } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonList';
-// import { QuickFilter } from '@buzz-code/crud-nestjs-react-admin/client/components/QuickFilter';
-import { CommonEdit } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonEdit';
-import { CommonCreate } from '@buzz-code/crud-nestjs-react-admin/client/components/CommonCreate';
+import { CommonList } from '@shared/components/CommonList';
+// import { QuickFilter } from '@shared/components/QuickFilter';
+import { CommonEdit } from '@shared/components/CommonEdit';
+import { CommonCreate } from '@shared/components/CommonCreate';
 
 const filters = [
     <TextInput source="name" alwaysOn />,

@@ -2,8 +2,8 @@ import { MenuItemLink } from 'react-admin';
 import ListIcon from '@mui/icons-material/List';
 import LabelIcon from '@mui/icons-material/Label';
 
-import BaseLayout from "@buzz-code/crud-nestjs-react-admin/client/components/Layout";
-import BaseDashboard from '@buzz-code/crud-nestjs-react-admin/client/components/Dashboard';
+import BaseLayout from "@shared/components/Layout";
+import BaseDashboard from '@shared/components/Dashboard';
 
 const customMenuItems = [
     <MenuItemLink key="yemot-simulator" to="/yemot-simulator" primaryText="סימולטור" leftIcon={<LabelIcon />} />,
