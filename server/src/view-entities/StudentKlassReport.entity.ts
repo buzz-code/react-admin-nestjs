@@ -1,6 +1,6 @@
 import { Klass } from "src/entities/Klass.entity";
 import { StudentKlass } from "src/entities/StudentKlass.entity";
-import { User } from "src/common/entities/User.entity";
+import { User } from "@shared/entities/User.entity";
 import { Column, DataSource, JoinColumn, ViewEntity } from "typeorm";
 
 @ViewEntity("student_klasses_report", {

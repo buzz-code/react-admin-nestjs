@@ -14,7 +14,7 @@ import { Injectable, Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { Repository } from "typeorm";
-import { User } from "src/common/entities/User.entity";
+import { User } from "@shared//entities/User.entity";
 import yemotUtil from "./yemot.util";
 
 @Injectable()
@@ -101,8 +101,8 @@ export class YemotCallService extends TypeOrmCrudService<YemotCall> {
 // controller
 import { Controller, UseGuards, Post, Request, Body } from "@nestjs/common";
 import { Crud, CrudController, CrudAuth } from "@nestjsx/crud";
-import { CrudAuthFilter } from "src/common/auth/crud-auth.filter";
-import { JwtAuthGuard } from "src/common/auth/jwt-auth.guard";
+import { CrudAuthFilter } from "@shared//auth/crud-auth.filter";
+import { JwtAuthGuard } from "@shared//auth/jwt-auth.guard";
 
 @Crud({
   model: {

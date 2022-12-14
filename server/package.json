@@ -19,14 +19,13 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d src/common/config/migration.config.ts",
+    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d shared/config/migration.config.ts",
     "typeorm:run": "npm run typeorm:cli -- migration:run",
     "typeorm:generate": "npm run typeorm:cli -- migration:generate",
     "typeorm:create": "npm run typeorm:cli -- migration:create",
     "typeorm:revert": "npm run typeorm:cli -- migration:revert"
   },
   "dependencies": {
-    "@buzz-code/crud-nestjs-react-admin": "0.0.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^9.0.0",

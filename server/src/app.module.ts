@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeOrmModuleConfig } from './common/config/typeorm.config';
+import { typeOrmModuleConfig } from '@shared/config/typeorm.config';
 import { RequestContextModule } from 'nestjs-request-context';
 import { UserModule } from './entity-modules/user.module';
 import { AttReportModule } from './entity-modules/att_report.module';
@@ -16,8 +16,8 @@ import { StudentModule } from './entity-modules/student.module';
 import { TeacherModule } from './entity-modules/teacher.module';
 import { TextModule } from './entity-modules/text.module';
 import { StudentKlassReportModule } from './entity-modules/student_klass_report.module';
-import { AuthModule } from './common/auth/auth.module';
-import { YemotCallModule } from './common/yemot/yemot-call.module';
+import { AuthModule } from '@shared/auth/auth.module';
+import { YemotCallModule } from '@shared/yemot/yemot-call.module';
 import { YemotProccessorImpl } from './yemot.proccessor';
 
 

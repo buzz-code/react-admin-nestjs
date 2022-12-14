@@ -1,5 +1,5 @@
 import { Entity, OneToMany } from "typeorm";
-import { User as BaseUser } from "src/common/entities/User.entity";
+import { User as BaseUser } from "@shared/entities/User.entity";
 import { AttReport } from "./AttReport.entity";
 import { Grade } from "./Grade.entity";
 import { KlassType } from "./KlassType.entity";

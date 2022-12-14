@@ -4,7 +4,7 @@ import { snakeCase } from "snake-case";
 // sevice
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BaseEntityService } from "../common/base-entity/base-entity.service";
+import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 
 @Injectable()
 export class EntityService extends BaseEntityService<Entity> {
@@ -17,9 +17,9 @@ export class EntityService extends BaseEntityService<Entity> {
 // controller
 import { Controller, UseGuards, Get, UseInterceptors } from "@nestjs/common";
 import { Crud, CrudAuth, CrudRequestInterceptor, CrudRequest, ParsedRequest } from "@nestjsx/crud";
-import { CrudAuthFilter } from "src/common/auth/crud-auth.filter";
-import { JwtAuthGuard } from "src/common/auth/jwt-auth.guard";
-import { BaseEntityController } from "src/common/base-entity/base-entity.controller";
+import { CrudAuthFilter } from "@shared/auth/crud-auth.filter";
+import { JwtAuthGuard } from "@shared/auth/jwt-auth.guard";
+import { BaseEntityController } from "@shared/base-entity/base-entity.controller";
 
 @Crud({
   model: {
