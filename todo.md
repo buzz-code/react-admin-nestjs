@@ -32,9 +32,9 @@
 * fix quick filter
 * use git submodule for common logic in server
 * update dashboard ui
+* use cookie instead of auth bearer
 
 # todo
-* use cookie instead of auth bearer
 * don't use path ../ anywhere, use src/ instead
 * rate limit backend requests
 * import - https://stackoverflow.com/questions/72488424/upload-excel-data-into-database-using-nestjs
