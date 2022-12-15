@@ -1,6 +1,6 @@
 import '@shared/config/crud.config';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from 'src/app.module';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {

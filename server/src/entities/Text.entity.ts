@@ -6,7 +6,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { User } from "./User.entity";
+import { User } from "src/entities/User.entity";
+
 
 @Index("texts_users_idx", ["userId"], {})
 @Entity("texts")

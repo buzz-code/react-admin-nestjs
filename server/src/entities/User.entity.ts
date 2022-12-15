@@ -1,15 +1,15 @@
 import { Entity, OneToMany } from "typeorm";
 import { User as BaseUser } from "@shared/entities/User.entity";
-import { AttReport } from "./AttReport.entity";
-import { Grade } from "./Grade.entity";
-import { KlassType } from "./KlassType.entity";
-import { Klass } from "./Klass.entity";
-import { KnownAbsence } from "./KnownAbsence.entity";
-import { Lesson } from "./Lesson.entity";
-import { StudentKlass } from "./StudentKlass.entity";
-import { Student } from "./Student.entity";
-import { Teacher } from "./Teacher.entity";
-import { Text } from "./Text.entity";
+import { AttReport } from "src/entities/AttReport.entity";
+import { Grade } from "src/entities/Grade.entity";
+import { KlassType } from "src/entities/KlassType.entity";
+import { Klass } from "src/entities/Klass.entity";
+import { KnownAbsence } from "src/entities/KnownAbsence.entity";
+import { Lesson } from "src/entities/Lesson.entity";
+import { StudentKlass } from "src/entities/StudentKlass.entity";
+import { Student } from "src/entities/Student.entity";
+import { Teacher } from "src/entities/Teacher.entity";
+import { Text } from "src/entities/Text.entity";
 
 @Entity("users")
 export class User extends BaseUser {

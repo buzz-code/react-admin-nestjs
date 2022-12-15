@@ -1,4 +1,4 @@
-import { User as Entity } from "../entities/User.entity";
+import { User as Entity } from "src/entities/User.entity";
 import { snakeCase } from "snake-case";
 
 // sevice

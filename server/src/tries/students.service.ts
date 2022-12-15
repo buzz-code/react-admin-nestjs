@@ -6,7 +6,7 @@ import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { AttReport } from "src/entities/AttReport.entity";
 import { DataSource, SelectQueryBuilder } from "typeorm";
 
-import { Student } from "../entities/Student.entity";
+import { Student } from "src/entities/Student.entity";
 
 @Injectable()
 export class StudentsService extends TypeOrmCrudService<Student> {

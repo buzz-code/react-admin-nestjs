@@ -1,24 +1,24 @@
 import { Admin, Resource, ListGuesser, EditGuesser, CustomRoutes } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
 
-import domainTranslations from './domainTranslations';
+import domainTranslations from 'src/domainTranslations';
 import dataProvider from "@shared/providers/dataProvider";
 import { getI18nProvider } from "@shared/providers/i18nProvider";
 import authProvider from "@shared/providers/authProvider";
 import theme from "@shared/providers/themeProvider";
 
-import { Dashboard, Layout } from './GeneralLayout';
+import { Dashboard, Layout } from 'src/GeneralLayout';
 
-import { AttReportEdit, AttReportCreate, AttReportList } from "./entities/att-report";
-import { KlassEdit, KlassCreate, KlassList } from "./entities/klass";
-import { KlassTypeEdit, KlassTypeCreate, KlassTypeList } from "./entities/klass-type";
-import { KnownAbsenceEdit, KnownAbsenceCreate, KnownAbsenceList } from "./entities/known-absence";
-import { LessonEdit, LessonCreate, LessonList } from "./entities/lesson";
-import { StudentKlassEdit, StudentKlassCreate, StudentKlassList } from "./entities/student-klass";
-import { StudentList, StudentCreate, StudentEdit } from "./entities/student";
-import { TeacherList, TeacherCreate, TeacherEdit } from "./entities/teacher";
-import { TextEdit, TextCreate, TextList } from "./entities/text";
-import { UserEdit, UserCreate, UserList } from "./entities/user";
+import { AttReportEdit, AttReportCreate, AttReportList } from "src/entities/att-report";
+import { KlassEdit, KlassCreate, KlassList } from "src/entities/klass";
+import { KlassTypeEdit, KlassTypeCreate, KlassTypeList } from "src/entities/klass-type";
+import { KnownAbsenceEdit, KnownAbsenceCreate, KnownAbsenceList } from "src/entities/known-absence";
+import { LessonEdit, LessonCreate, LessonList } from "src/entities/lesson";
+import { StudentKlassEdit, StudentKlassCreate, StudentKlassList } from "src/entities/student-klass";
+import { StudentList, StudentCreate, StudentEdit } from "src/entities/student";
+import { TeacherList, TeacherCreate, TeacherEdit } from "src/entities/teacher";
+import { TextEdit, TextCreate, TextList } from "src/entities/text";
+import { UserEdit, UserCreate, UserList } from "src/entities/user";
 import { isAdmin } from "@shared/components/AdminRestricted";
 import { CommonRepresentation } from "@shared/components/CommonRepresentation";
 import YemotSimulator from "@shared/components/YemotSimulator";

@@ -1,4 +1,4 @@
-import { KlassType as Entity } from "../entities/KlassType.entity";
+import { KlassType as Entity } from "src/entities/KlassType.entity";
 import { snakeCase } from "snake-case";
 
 // sevice
