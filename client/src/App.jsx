@@ -1,4 +1,4 @@
-import { Admin, Resource, ListGuesser, EditGuesser, CustomRoutes } from 'react-admin';
+import { Admin, Resource, CustomRoutes } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
 
 import domainTranslations from 'src/domainTranslations';
@@ -9,18 +9,18 @@ import theme from "@shared/providers/themeProvider";
 
 import { Dashboard, Layout } from 'src/GeneralLayout';
 
-import { AttReportEdit, AttReportCreate, AttReportList } from "src/entities/att-report";
-import { KlassEdit, KlassCreate, KlassList } from "src/entities/klass";
-import { KlassTypeEdit, KlassTypeCreate, KlassTypeList } from "src/entities/klass-type";
-import { KnownAbsenceEdit, KnownAbsenceCreate, KnownAbsenceList } from "src/entities/known-absence";
-import { LessonEdit, LessonCreate, LessonList } from "src/entities/lesson";
-import { StudentKlassEdit, StudentKlassCreate, StudentKlassList } from "src/entities/student-klass";
-import { StudentList, StudentCreate, StudentEdit } from "src/entities/student";
-import { TeacherList, TeacherCreate, TeacherEdit } from "src/entities/teacher";
-import { TextEdit, TextCreate, TextList } from "src/entities/text";
-import { UserEdit, UserCreate, UserList } from "src/entities/user";
+import { resourceEntityGuesser } from '@shared/components/EntityGuesser';
+import attReport from "src/entities/att-report";
+import klass from "src/entities/klass";
+import klassType from "src/entities/klass-type";
+import knownAbsence from "src/entities/known-absence";
+import lesson from "src/entities/lesson";
+import studentKlass from "src/entities/student-klass";
+import student from "src/entities/student";
+import teacher from "src/entities/teacher";
+import text from "src/entities/text";
+import user from "src/entities/user";
 import { isAdmin } from "@shared/components/AdminRestricted";
-import { CommonRepresentation } from "@shared/components/CommonRepresentation";
 import YemotSimulator from "@shared/components/YemotSimulator";
 
 const i18nProvider = getI18nProvider(domainTranslations);
@@ -30,19 +30,19 @@ const App = () => (
     <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={Dashboard} layout={Layout} requireAuth>
       {permissions => (
         <>
-          <Resource name="att_report" list={AttReportList} edit={AttReportEdit} create={AttReportCreate} />
-          <Resource name="grade" list={ListGuesser} edit={EditGuesser} create={EditGuesser} />
-          <Resource name="klass" list={KlassList} edit={KlassEdit} create={KlassCreate} recordRepresentation={CommonRepresentation} />
-          <Resource name="klass_type" list={KlassTypeList} edit={KlassTypeEdit} create={KlassTypeCreate} recordRepresentation={CommonRepresentation} />
-          <Resource name="known_absence" list={KnownAbsenceList} edit={KnownAbsenceEdit} create={KnownAbsenceCreate} />
-          <Resource name="lesson" list={LessonList} edit={LessonEdit} create={LessonCreate} recordRepresentation={CommonRepresentation} />
-          <Resource name="student_klass" list={StudentKlassList} edit={StudentKlassEdit} create={StudentKlassCreate} />
-          <Resource name="student" list={StudentList} edit={StudentEdit} create={StudentCreate} recordRepresentation={CommonRepresentation} />
-          <Resource name="teacher" list={TeacherList} edit={TeacherEdit} create={TeacherCreate} recordRepresentation={CommonRepresentation} />
-          <Resource name="text" list={TextList} edit={TextEdit} create={TextCreate} />
+          <Resource name="att_report" {...attReport} />
+          <Resource name="grade" {...resourceEntityGuesser} />
+          <Resource name="klass" {...klass} />
+          <Resource name="klass_type" {...klassType} />
+          <Resource name="known_absence" {...knownAbsence} />
+          <Resource name="lesson" {...lesson} />
+          <Resource name="student_klass" {...studentKlass} />
+          <Resource name="student" {...student} />
+          <Resource name="teacher" {...teacher} />
+          <Resource name="text" {...text} />
           {isAdmin(permissions) && <>
-            <Resource name="yemot_call" list={ListGuesser} edit={EditGuesser} />
-            <Resource name="user" list={UserList} edit={UserEdit} create={UserCreate} recordRepresentation={CommonRepresentation} />
+            <Resource name="yemot_call" {...resourceEntityGuesser} />
+            <Resource name="user" {...user} />
           </>}
 
           <CustomRoutes>

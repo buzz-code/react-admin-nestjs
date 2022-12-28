@@ -1,20 +1,17 @@
-import { AutocompleteInput, DateField, DateInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
-import { useIsAdmin } from '@shared/components/AdminRestricted';
-import { CommonList } from '@shared/components/CommonList';
+import { DateField, DateInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
+import { CommonDatagrid } from '@shared/components/CommonList';
 import { CommonReferenceField } from '@shared/components/CommonReferenceField';
-import { CommonEdit } from '@shared/components/CommonEdit';
-import { CommonCreate } from '@shared/components/CommonCreate';
 import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
+import { CommonRepresentation } from '@shared/components/CommonRepresentation';
+import { getResourceComponents } from '@shared/components/CommonEntity';
 
 const filters = [
     <CommonReferenceInput source="teacherId" reference="teacher" alwaysOn optionValue="tz" />
 ];
 
-export const LessonList = () => {
-    const isAdmin = useIsAdmin();
-
+const Datagrid = ({ isAdmin }) => {
     return (
-        <CommonList filters={filters}>
+        <CommonDatagrid>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <NumberField source="key" />
@@ -25,13 +22,11 @@ export const LessonList = () => {
             <DateField source="endDate" />
             {isAdmin && <DateField source="createdAt" />}
             {isAdmin && <DateField source="updatedAt" />}
-        </CommonList>
+        </CommonDatagrid>
     );
 }
 
-const Fields = ({ isCreate }) => {
-    const isAdmin = useIsAdmin();
-
+const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <ReferenceInput source="userId" reference="user" />}
@@ -46,14 +41,13 @@ const Fields = ({ isCreate }) => {
     </>
 }
 
-export const LessonEdit = () => (
-    <CommonEdit>
-        <Fields isCreate={false} />
-    </CommonEdit>
-);
+const Representation = CommonRepresentation;
 
-export const LessonCreate = () => (
-    <CommonCreate>
-        <Fields isCreate={true} />
-    </CommonCreate>
-);
+const entity = {
+    Datagrid,
+    Inputs,
+    Representation,
+    filters,
+};
+
+export default getResourceComponents(entity);

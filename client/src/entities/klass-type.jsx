@@ -1,26 +1,22 @@
-import { NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, DateField,DateInput } from 'react-admin';
-import { useIsAdmin } from '@shared/components/AdminRestricted';
-import { CommonList } from '@shared/components/CommonList';
-import { CommonEdit } from '@shared/components/CommonEdit';
-import { CommonCreate } from '@shared/components/CommonCreate';
+import { NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateInput } from 'react-admin';
+import { CommonDatagrid } from '@shared/components/CommonList';
+import { CommonRepresentation } from '@shared/components/CommonRepresentation';
+import { getResourceComponents } from '@shared/components/CommonEntity';
 
-export const KlassTypeList = () => {
-    const isAdmin = useIsAdmin();
+const Datagrid = ({ isAdmin }) => {
     return (
-        <CommonList>
+        <CommonDatagrid>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <NumberField source="key" />
             <TextField source="name" />
             {isAdmin && <DateField source="createdAt" />}
             {isAdmin && <DateField source="updatedAt" />}
-        </CommonList>
+        </CommonDatagrid>
     );
 }
 
-const Fields = ({ isCreate }) => {
-    const isAdmin = useIsAdmin();
-
+const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <ReferenceInput source="userId" reference="user" />}
@@ -31,14 +27,12 @@ const Fields = ({ isCreate }) => {
     </>
 }
 
-export const KlassTypeEdit = () => (
-    <CommonEdit>
-        <Fields isCreate={false} />
-    </CommonEdit>
-);
+const Representation = CommonRepresentation;
 
-export const KlassTypeCreate = () => (
-    <CommonCreate>
-        <Fields isCreate={true} />
-    </CommonCreate>
-);
+const entity = {
+    Datagrid,
+    Inputs,
+    Representation,
+};
+
+export default getResourceComponents(entity);

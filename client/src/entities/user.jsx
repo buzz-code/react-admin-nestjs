@@ -1,18 +1,18 @@
 import { DateField, DateInput, EmailField, TextField, TextInput } from 'react-admin';
-import { CommonList } from '@shared/components/CommonList';
+import { CommonDatagrid } from '@shared/components/CommonList';
 import { QuickFilter } from '@shared/components/QuickFilter';
-import { CommonEdit } from '@shared/components/CommonEdit';
-import { CommonCreate } from '@shared/components/CommonCreate';
+import { CommonRepresentation } from '@shared/components/CommonRepresentation';
+import { getResourceComponents } from '@shared/components/CommonEntity';
 
 const filters = [
     <TextInput source="name" alwaysOn />,
     <TextInput source="email" alwaysOn />,
     <TextInput source="phoneNumber" />,
-    <QuickFilter source="fromEmail" defaultValue="gmail"/>
+    <QuickFilter source="fromEmail" defaultValue="gmail" />
 ];
 
-export const UserList = () => (
-    <CommonList filters={filters}>
+const Datagrid = ({ isAdmin }) => (
+    <CommonDatagrid>
         <TextField source="id" />
         <TextField source="name" />
         <EmailField source="email" />
@@ -25,10 +25,10 @@ export const UserList = () => (
         <TextField source="permissions" />
         <DateField source="createdAt" />
         <DateField source="updatedAt" />
-    </CommonList>
+    </CommonDatagrid>
 );
 
-const Fields = ({ isCreate }) => (
+const Inputs = ({ isCreate, isAdmin }) => (
     <>
         {!isCreate && <TextInput source="id" disabled />}
         <TextInput source="name" />
@@ -45,14 +45,13 @@ const Fields = ({ isCreate }) => (
     </>
 )
 
-export const UserEdit = () => (
-    <CommonEdit>
-        <Fields isCreate={false} />
-    </CommonEdit>
-);
+const Representation = CommonRepresentation;
 
-export const UserCreate = () => (
-    <CommonCreate>
-        <Fields isCreate={true} />
-    </CommonCreate>
-);
+const entity = {
+    Datagrid,
+    Inputs,
+    Representation,
+    filters,
+};
+
+export default getResourceComponents(entity);

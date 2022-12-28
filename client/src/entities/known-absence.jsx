@@ -1,15 +1,11 @@
 import { DateField, DateInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
-import { useIsAdmin } from '@shared/components/AdminRestricted';
-import { CommonList } from '@shared/components/CommonList';
+import { CommonDatagrid } from '@shared/components/CommonList';
 import { CommonReferenceField } from '@shared/components/CommonReferenceField';
-import { CommonEdit } from '@shared/components/CommonEdit';
-import { CommonCreate } from '@shared/components/CommonCreate';
+import { getResourceComponents } from '@shared/components/CommonEntity';
 
-export const KnownAbsenceList = () => {
-    const isAdmin = useIsAdmin();
-
+const Datagrid = ({ isAdmin }) => {
     return (
-        <CommonList>
+        <CommonDatagrid>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <CommonReferenceField source="studentTz" reference="student" target="tz" />
@@ -21,13 +17,11 @@ export const KnownAbsenceList = () => {
             <TextField source="comment" />
             {isAdmin && <DateField source="createdAt" />}
             {isAdmin && <DateField source="idCopy1" />}
-        </CommonList>
+        </CommonDatagrid>
     );
 }
 
-const Fields = ({ isCreate }) => {
-    const isAdmin = useIsAdmin();
-
+const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <ReferenceInput source="userId" reference="user" />}
@@ -43,14 +37,9 @@ const Fields = ({ isCreate }) => {
     </>
 }
 
-export const KnownAbsenceEdit = () => (
-    <CommonEdit>
-        <Fields isCreate={false} />
-    </CommonEdit>
-);
+const entity = {
+    Datagrid,
+    Inputs,
+};
 
-export const KnownAbsenceCreate = () => (
-    <CommonCreate>
-        <Fields isCreate={true} />
-    </CommonCreate>
-);
+export default getResourceComponents(entity);
