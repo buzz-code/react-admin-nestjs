@@ -46,6 +46,8 @@
 https://github.com/tinovyatkin/nest-puppeteer
 * add export to csv & pdf
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
+* check if use https://feathersjs.com/comparison.html
+* soft delete - https://github.com/nestjsx/crud/issues/433
 * add domain name to site
 * logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
 * check docker security issues
