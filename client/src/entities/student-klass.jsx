@@ -5,7 +5,7 @@ import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
 import { getResourceComponents } from '@shared/components/CommonEntity';
 
 
-const Datagrid = ({ isAdmin }) => {
+const Datagrid = ({ isAdmin, ...props }) => {
     return (
         <CommonDatagrid>
             {isAdmin && <TextField source="id" />}

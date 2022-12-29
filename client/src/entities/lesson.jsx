@@ -9,7 +9,7 @@ const filters = [
     <CommonReferenceInput source="teacherId" reference="teacher" alwaysOn optionValue="tz" />
 ];
 
-const Datagrid = ({ isAdmin }) => {
+const Datagrid = ({ isAdmin, ...props }) => {
     return (
         <CommonDatagrid>
             {isAdmin && <TextField source="id" />}

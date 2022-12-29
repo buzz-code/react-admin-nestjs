@@ -11,8 +11,9 @@ const filters = [
     <QuickFilter source="fromEmail" defaultValue="gmail" />
 ];
 
-const Datagrid = ({ isAdmin }) => (
-    <CommonDatagrid>
+const Datagrid = ({ isAdmin, ...props }) => {
+return(
+        <CommonDatagrid>
         <TextField source="id" />
         <TextField source="name" />
         <EmailField source="email" />
@@ -27,9 +28,10 @@ const Datagrid = ({ isAdmin }) => (
         <DateField source="updatedAt" />
     </CommonDatagrid>
 );
+}
 
-const Inputs = ({ isCreate, isAdmin }) => (
-    <>
+const Inputs = ({ isCreate, isAdmin }) => {
+    return <>
         {!isCreate && <TextInput source="id" disabled />}
         <TextInput source="name" />
         <TextInput source="email" />
@@ -43,7 +45,7 @@ const Inputs = ({ isCreate, isAdmin }) => (
         {!isCreate && <DateInput source="createdAt" disabled />}
         {!isCreate && <DateInput source="updatedAt" disabled />}
     </>
-)
+}
 
 const Representation = CommonRepresentation;
 

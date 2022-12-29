@@ -13,7 +13,7 @@ const filters = [
     <CommonReferenceInput source="lessonId" reference="lesson" optionValue="key" />,
 ];
 
-const Datagrid = ({ isAdmin }) => {
+const Datagrid = ({ isAdmin, ...props }) => {
     return (
         <CommonDatagrid >
             {isAdmin && <TextField source="id" />}

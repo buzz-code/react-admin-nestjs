@@ -3,9 +3,9 @@ import { CommonDatagrid } from '@shared/components/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/CommonEntity';
 
-const Datagrid = ({ isAdmin }) => {
+const Datagrid = ({ isAdmin, ...props }) => {
     return (
-        <CommonDatagrid>
+        <CommonDatagrid {...props}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <NumberField source="key" />
