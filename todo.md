@@ -34,18 +34,21 @@
 * update dashboard ui
 * use cookie instead of auth bearer
 * don't use path ../ anywhere, use src/ instead
-
-# todo
-* rate limit backend requests
 * import - https://stackoverflow.com/questions/72488424/upload-excel-data-into-database-using-nestjs
 * import csv - https://www.npmjs.com/package/react-admin-import-csv?activeTab=readme https://www.npmjs.com/package/ra-import-csv
 * add csv import
+
+# todo
+* rate limit backend requests
+* save file data in a table & enable reverting
+* organize client shared components folder
 * import email
 * export excel - use joins
 * export pdf - https://stackoverflow.com/questions/64964827/nestjs-exporting-library-to-pdf-or-excel
 https://github.com/tinovyatkin/nest-puppeteer
 * add export to csv & pdf
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
+* rtl in autocomplete
 * check if use https://feathersjs.com/comparison.html
 * soft delete - https://github.com/nestjsx/crud/issues/433
 * add domain name to site
