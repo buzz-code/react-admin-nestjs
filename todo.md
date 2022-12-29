@@ -40,7 +40,7 @@
 
 # todo
 * rate limit backend requests
-* save file data in a table & enable reverting
+* save file data in a table & enable reverting - use response from bulk create api
 * organize client shared components folder
 * import email
 * export excel - use joins
@@ -60,6 +60,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * 
 
 # todo later
+* https://github.com/bigbasket/ra-components
 * date-time inputs https://www.npmjs.com/package/react-admin-date-inputs-refactor?activeTab=readme https://www.npmjs.com/package/@mpampin/react-admin-date-inputs https://www.npmjs.com/package/@sklinet/react-admin-date-inputs?activeTab=readme https://www.npmjs.com/package/react-admin-date-picker?activeTab=readme https://www.npmjs.com/package/react-admin-material-datepicker?activeTab=readme
 * json-viewer for user permission & additional data - https://www.npmjs.com/package/react-admin-json-view?activeTab=readme
 * add custom prefix to common components
