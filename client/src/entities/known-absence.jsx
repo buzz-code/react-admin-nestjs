@@ -2,6 +2,7 @@ import { DateField, DateInput, NumberField, NumberInput, ReferenceField, Referen
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonReferenceField } from '@shared/components/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
+
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
         <CommonDatagrid {...props}>
