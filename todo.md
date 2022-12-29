@@ -37,11 +37,11 @@
 * import - https://stackoverflow.com/questions/72488424/upload-excel-data-into-database-using-nestjs
 * import csv - https://www.npmjs.com/package/react-admin-import-csv?activeTab=readme https://www.npmjs.com/package/ra-import-csv
 * add csv import
+* organize client shared components folder
 
 # todo
 * rate limit backend requests
 * save file data in a table & enable reverting - use response from bulk create api
-* organize client shared components folder
 * import email
 * export excel - use joins
 * export pdf - https://stackoverflow.com/questions/64964827/nestjs-exporting-library-to-pdf-or-excel
