@@ -29,10 +29,15 @@ const Inputs = ({ isCreate, isAdmin }) => {
 
 const Representation = CommonRepresentation;
 
+const importer = {
+    fields: ['key', 'name'],
+}
+
 const entity = {
     Datagrid,
     Inputs,
     Representation,
+    importer,
 };
 
 export default getResourceComponents(entity);

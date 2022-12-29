@@ -12,22 +12,22 @@ const filters = [
 ];
 
 const Datagrid = ({ isAdmin, ...props }) => {
-return(
-        <CommonDatagrid>
-        <TextField source="id" />
-        <TextField source="name" />
-        <EmailField source="email" />
-        <TextField source="password" />
-        <TextField source="phoneNumber" />
-        <TextField source="active" />
-        <TextField source="fromEmail" />
-        <TextField source="replyToEmail" />
-        <TextField source="effective_id" />
-        <TextField source="permissions" />
-        <DateField source="createdAt" />
-        <DateField source="updatedAt" />
-    </CommonDatagrid>
-);
+    return (
+        <CommonDatagrid {...props}>
+            <TextField source="id" />
+            <TextField source="name" />
+            <EmailField source="email" />
+            <TextField source="password" />
+            <TextField source="phoneNumber" />
+            <TextField source="active" />
+            <TextField source="fromEmail" />
+            <TextField source="replyToEmail" />
+            <TextField source="effective_id" />
+            <TextField source="permissions" />
+            <DateField source="createdAt" />
+            <DateField source="updatedAt" />
+        </CommonDatagrid>
+    );
 }
 
 const Inputs = ({ isCreate, isAdmin }) => {

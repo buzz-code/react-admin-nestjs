@@ -8,7 +8,7 @@ import { getResourceComponents } from '@shared/components/CommonEntity';
 
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
-        <CommonDatagrid>
+        <CommonDatagrid {...props}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <TextField source="key" />
@@ -36,10 +36,15 @@ const Inputs = ({ isCreate, isAdmin }) => {
 
 const Representation = CommonRepresentation;
 
+const importer = {
+    fields: ['key', 'name', 'klassTypeId', 'teacherId'],
+}
+
 const entity = {
     Datagrid,
     Inputs,
     Representation,
+    importer,
 };
 
 export default getResourceComponents(entity);

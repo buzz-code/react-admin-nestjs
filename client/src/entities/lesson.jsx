@@ -11,7 +11,7 @@ const filters = [
 
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
-        <CommonDatagrid>
+        <CommonDatagrid {...props}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <NumberField source="key" />
@@ -43,11 +43,16 @@ const Inputs = ({ isCreate, isAdmin }) => {
 
 const Representation = CommonRepresentation;
 
+const importer = {
+    fields: ['key', 'name', 'klasses', 'teacherId'],
+}
+
 const entity = {
     Datagrid,
     Inputs,
     Representation,
     filters,
+    importer,
 };
 
 export default getResourceComponents(entity);
