@@ -9,7 +9,7 @@ import theme from "@shared/providers/themeProvider";
 
 import { Dashboard, Layout } from 'src/GeneralLayout';
 
-import { resourceEntityGuesser } from '@shared/components/EntityGuesser';
+import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityGuesser';
 import attReport from "src/entities/att-report";
 import klass from "src/entities/klass";
 import klassType from "src/entities/klass-type";
@@ -20,8 +20,8 @@ import student from "src/entities/student";
 import teacher from "src/entities/teacher";
 import text from "src/entities/text";
 import user from "src/entities/user";
-import { isAdmin } from "@shared/components/AdminRestricted";
-import YemotSimulator from "@shared/components/YemotSimulator";
+import { isAdmin } from "@shared/utils/permissionsUtil";
+import YemotSimulator from "@shared/components/views/YemotSimulator";
 
 const i18nProvider = getI18nProvider(domainTranslations);
 

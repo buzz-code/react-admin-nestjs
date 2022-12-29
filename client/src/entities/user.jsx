@@ -1,9 +1,8 @@
 import { DateField, DateInput, EmailField, TextField, TextInput } from 'react-admin';
-import { CommonDatagrid } from '@shared/components/CommonList';
+import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { QuickFilter } from '@shared/components/QuickFilter';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
-import { getResourceComponents } from '@shared/components/CommonEntity';
-
+import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 const filters = [
     <TextInput source="name" alwaysOn />,
     <TextInput source="email" alwaysOn />,

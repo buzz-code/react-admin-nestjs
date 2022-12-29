@@ -1,8 +1,7 @@
 import { DateField, DateInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
-import { CommonDatagrid } from '@shared/components/CommonList';
+import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonReferenceField } from '@shared/components/CommonReferenceField';
-import { getResourceComponents } from '@shared/components/CommonEntity';
-
+import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
         <CommonDatagrid {...props}>

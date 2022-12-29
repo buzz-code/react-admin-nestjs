@@ -1,8 +1,8 @@
 import { DateField, DateInput, NumberField, NumberInput, TextField, TextInput, ReferenceField } from 'react-admin';
-import { CommonDatagrid } from '@shared/components/CommonList';
+import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonReferenceField } from '@shared/components/CommonReferenceField';
 import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
-import { getResourceComponents } from '@shared/components/CommonEntity';
+import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 
 const filters = [
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
@@ -15,7 +15,7 @@ const filters = [
 
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
-        <CommonDatagrid >
+        <CommonDatagrid {...props}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <CommonReferenceField source="studentTz" reference="student" target="tz" />

@@ -2,8 +2,8 @@ import { MenuItemLink } from 'react-admin';
 import ListIcon from '@mui/icons-material/List';
 import LabelIcon from '@mui/icons-material/Label';
 
-import BaseLayout from "@shared/components/Layout";
-import BaseDashboard from '@shared/components/Dashboard';
+import BaseLayout from "@shared/components/layout/Layout";
+import BaseDashboard from '@shared/components/views/Dashboard';
 
 const customMenuItems = [
     <MenuItemLink key="yemot-simulator" to="/yemot-simulator" primaryText="סימולטור" leftIcon={<LabelIcon />} />,

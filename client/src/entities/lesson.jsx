@@ -1,10 +1,9 @@
 import { DateField, DateInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
-import { CommonDatagrid } from '@shared/components/CommonList';
+import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonReferenceField } from '@shared/components/CommonReferenceField';
 import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
-import { getResourceComponents } from '@shared/components/CommonEntity';
-
+import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 const filters = [
     <CommonReferenceInput source="teacherId" reference="teacher" alwaysOn optionValue="tz" />
 ];
