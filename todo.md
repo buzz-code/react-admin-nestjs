@@ -38,6 +38,7 @@
 * import csv - https://www.npmjs.com/package/react-admin-import-csv?activeTab=readme https://www.npmjs.com/package/ra-import-csv
 * add csv import
 * organize client shared components folder
+* join limitaion -  https://github.com/typeorm/typeorm/issues/1668
 
 # todo
 * export - try to add joins
@@ -78,4 +79,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add complex queries
 * rich text editor - https://www.npmjs.com/package/ra-richtext-tiptap https://www.npmjs.com/package/ra-input-rich-text?activeTab=readme
 * clipboard - https://www.npmjs.com/package/react-admin-clipboard-list-field
+* https://www.npmjs.com/package/@dataui/crud
+* https://www.npmjs.com/package/@rewiko/crud?activeTab=readme
 * 
