@@ -40,6 +40,8 @@
 * organize client shared components folder
 
 # todo
+* export - try to add joins
+* export - implement pdf export
 * rate limit backend requests
 * save file data in a table & enable reverting - use response from bulk create api
 * import email
