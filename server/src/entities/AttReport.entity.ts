@@ -6,6 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
 import { Student } from "./Student.entity";
 import { Teacher } from "./Teacher.entity";
@@ -46,6 +47,9 @@ export class AttReport {
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;
 
+  @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
+  sheetName: string | null;
+
   @Column("timestamp", {
     name: "created_at",
     default: () => "CURRENT_TIMESTAMP",
@@ -57,9 +61,6 @@ export class AttReport {
     default: () => "CURRENT_TIMESTAMP",
   })
   updatedAt: Date;
-
-  @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
-  sheetName: string | null;
 
   @ManyToOne(() => Student)
   @JoinColumn([
@@ -81,4 +82,11 @@ export class AttReport {
     { name: "lesson_id", referencedColumnName: "key" }
   ])
   lesson: Lesson;
+
+  @ManyToOne(() => Klass)
+  @JoinColumn([
+    { name: "user_id", referencedColumnName: "userId" },
+    { name: "klass_id", referencedColumnName: "key" }
+  ])
+  klass: Klass;
 }

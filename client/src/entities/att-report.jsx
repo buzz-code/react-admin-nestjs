@@ -24,8 +24,8 @@ const Datagrid = ({ isAdmin, ...props }) => {
             <CommonReferenceField source="lessonId" reference="lesson" target="key" />
             <DateField source="reportDate" />
             <NumberField source="howManyLessons" />
-            <DateField source="absCount" />
-            <DateField source="approvedAbsCount" />
+            <NumberField source="absCount" />
+            <NumberField source="approvedAbsCount" />
             <TextField source="comments" />
             <TextField source="sheetName" />
             {isAdmin && <DateField source="createdAt" />}
@@ -40,7 +40,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
         <CommonReferenceInput source="studentTz" reference="student" optionValue="tz" />
         <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />
-        <CommonReferenceInput source="klassId" reference="klasse" optionValue="key" />
+        <CommonReferenceInput source="klassId" reference="klass" optionValue="key" />
         <CommonReferenceInput source="lessonId" reference="lesson" optionValue="key" />
         <DateInput source="reportDate" />
         <NumberInput source="howManyLessons" />
