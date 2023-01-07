@@ -5,11 +5,38 @@ import { snakeCase } from "snake-case";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
+import { IHeader } from "@shared/exporter/types";
 
 @Injectable()
 export class EntityService extends BaseEntityService<Entity> {
   constructor(@InjectRepository(Entity) repo) {
     super(repo);
+  }
+
+  async getDataForExport(req: CrudRequest): Promise<Entity[]> {
+    req.options.query.join = {
+      student: { eager: true },
+      teacher: { eager: true },
+      klass: { eager: true },
+      lesson: { eager: true }
+    };
+    return super.getDataForExport(req);
+  }
+
+  getExportHeaders(): IHeader[] {
+    return [
+      { value: 'id', label: 'מזהה' },
+      { value: 'teacher.name', label: 'שם המורה' },
+      { value: 'student.name', label: 'שם התלמידה' },
+      { value: 'klass.name', label: 'כיתה' },
+      { value: 'lesson.name', label: 'שיעור' },
+      { value: 'reportDate', label: 'תאריך דיווח' },
+      { value: 'howManyLessons', label: 'מספר שיעורים' },
+      { value: 'absCount', label: 'מספר חיסורים' },
+      { value: 'approvedAbsCount', label: 'מספר חיסורים מאושרים' },
+      { value: 'sheetName', label: 'חודש דיווח' },
+      { value: 'comments', label: 'הערות' },
+    ];
   }
 }
 
