@@ -6,7 +6,9 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { User } from "src/entities/User.entity";
+import { Lesson } from "./Lesson.entity";
+import { Student } from "./Student.entity";
+import { Teacher } from "./Teacher.entity";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")
@@ -59,10 +61,24 @@ export class AttReport {
   @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
   sheetName: string | null;
 
-  @ManyToOne(() => User, (user) => user.attReports, {
-    onDelete: "NO ACTION",
-    onUpdate: "NO ACTION",
-  })
-  @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
-  user: User;
+  @ManyToOne(() => Student)
+  @JoinColumn([
+    { name: "user_id", referencedColumnName: "userId" },
+    { name: "student_tz", referencedColumnName: "tz" }
+  ])
+  student: Student;
+
+  @ManyToOne(() => Teacher)
+  @JoinColumn([
+    { name: "user_id", referencedColumnName: "userId" },
+    { name: "teacher_id", referencedColumnName: "tz" }
+  ])
+  teacher: Teacher;
+
+  @ManyToOne(() => Lesson)
+  @JoinColumn([
+    { name: "user_id", referencedColumnName: "userId" },
+    { name: "lesson_id", referencedColumnName: "key" }
+  ])
+  lesson: Lesson;
 }

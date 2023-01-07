@@ -1,6 +1,5 @@
 import { Entity, OneToMany } from "typeorm";
 import { User as BaseUser } from "@shared/entities/User.entity";
-import { AttReport } from "src/entities/AttReport.entity";
 import { Grade } from "src/entities/Grade.entity";
 import { KlassType } from "src/entities/KlassType.entity";
 import { Klass } from "src/entities/Klass.entity";
@@ -13,9 +12,6 @@ import { Text } from "src/entities/Text.entity";
 
 @Entity("users")
 export class User extends BaseUser {
-    @OneToMany(() => AttReport, (attReports) => attReports.user)
-    attReports: AttReport[];
-  
     @OneToMany(() => Grade, (grades) => grades.user)
     grades: Grade[];
   
