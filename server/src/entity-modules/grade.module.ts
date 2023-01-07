@@ -16,10 +16,11 @@ export class EntityService extends BaseEntityService<Entity> {
 
 // controller
 import { Controller, UseGuards, Get, UseInterceptors } from "@nestjs/common";
-import { Crud, CrudAuth, CrudRequestInterceptor, CrudRequest, ParsedRequest } from "@nestjsx/crud";
+import { Crud, CrudAuth, CrudRequestInterceptor, CrudRequest, ParsedRequest } from "@dataui/crud";
 import { CrudAuthFilter } from "@shared/auth/crud-auth.filter";
 import { JwtAuthGuard } from "@shared/auth/jwt-auth.guard";
 import { BaseEntityController } from "@shared/base-entity/base-entity.controller";
+import { ExportFormats } from "@shared/exporter/types";
 
 @Crud({
   model: {
@@ -33,11 +34,23 @@ export class EntityController extends BaseEntityController<Entity> {
   constructor(public service: EntityService) {
     super(service);
   }
-  
+
   @Get('/get-count')
   @UseInterceptors(CrudRequestInterceptor)
   getCount(@ParsedRequest() req: CrudRequest) {
-      return super.getCount(req);
+    return super.getCount(req);
+  }
+
+  @Get('/export/excel')
+  @UseInterceptors(CrudRequestInterceptor)
+  async exportExcel(@ParsedRequest() req: CrudRequest) {
+    return await this.exportFile(req, ExportFormats.Excel);
+  }
+
+  @Get('/export/pdf')
+  @UseInterceptors(CrudRequestInterceptor)
+  exportPdf(@ParsedRequest() req: CrudRequest) {
+    return this.exportFile(req, ExportFormats.Pdf);
   }
 }
 
