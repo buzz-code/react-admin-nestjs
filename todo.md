@@ -39,14 +39,15 @@
 * add csv import
 * organize client shared components folder
 * join limitaion -  https://github.com/typeorm/typeorm/issues/1668
+* export - try to add joins
 
 # todo
-* export - try to add joins
+* make excel file look better
+* check how to download excel from response & use fetchJson func
 * export - implement pdf export
 * rate limit backend requests
 * save file data in a table & enable reverting - use response from bulk create api
 * import email
-* export excel - use joins
 * export pdf - https://stackoverflow.com/questions/64964827/nestjs-exporting-library-to-pdf-or-excel
 https://github.com/tinovyatkin/nest-puppeteer
 * add export to csv & pdf
