@@ -42,6 +42,7 @@
 * export - try to add joins
 
 # todo
+* translate excel file
 * make excel file look better
 * check how to download excel from response & use fetchJson func
 * export - implement pdf export
