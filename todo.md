@@ -42,33 +42,38 @@
 * export - try to add joins
 
 # todo
-* translate excel file
+* translate excel file name
 * make excel file look better
-* check how to download excel from response & use fetchJson func
-* export - implement pdf export
-* rate limit backend requests
+* check how to download excel from response & use fetchJson func - use blob maybe
+* export - implement pdf export - copy template from old website and use it to render pdf
+* fix rtl - https://mui.com/material-ui/guides/right-to-left/
+* rtl in autocomplete
 * save file data in a table & enable reverting - use response from bulk create api
 * import email
 * export pdf - https://stackoverflow.com/questions/64964827/nestjs-exporting-library-to-pdf-or-excel
 https://github.com/tinovyatkin/nest-puppeteer
 * add export to csv & pdf
-* fix rtl - https://mui.com/material-ui/guides/right-to-left/
-* rtl in autocomplete
-* check if use https://feathersjs.com/comparison.html
-* soft delete - https://github.com/nestjsx/crud/issues/433
+* maybe use dynamic modules or some other thing so we won't need to override every single function
+* validate dns is pointing to ip address
 * add domain name to site
+* try to use caddy-docker-proxy - https://hub.docker.com/r/lucaslorentz/caddy-docker-proxy
+* change to typescript on client side
+* rate limit backend requests
+* check if use https://feathersjs.com/comparison.html
+* add audit log - full preview of item instead of soft delete
+* soft delete - https://github.com/nestjsx/crud/issues/433
 * logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
 * check docker security issues
 * test filter by student base klass
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
-* add mail server - https://docs.postalserver.io/
+* add mail server for sending & receiving - https://docs.postalserver.io/
 * 
 
 # todo later
-* https://github.com/bigbasket/ra-components
-* date-time inputs https://www.npmjs.com/package/react-admin-date-inputs-refactor?activeTab=readme https://www.npmjs.com/package/@mpampin/react-admin-date-inputs https://www.npmjs.com/package/@sklinet/react-admin-date-inputs?activeTab=readme https://www.npmjs.com/package/react-admin-date-picker?activeTab=readme https://www.npmjs.com/package/react-admin-material-datepicker?activeTab=readme
 * json-viewer for user permission & additional data - https://www.npmjs.com/package/react-admin-json-view?activeTab=readme
 * add custom prefix to common components
+* https://github.com/bigbasket/ra-components
+* date-time inputs https://www.npmjs.com/package/react-admin-date-inputs-refactor?activeTab=readme https://www.npmjs.com/package/@mpampin/react-admin-date-inputs https://www.npmjs.com/package/@sklinet/react-admin-date-inputs?activeTab=readme https://www.npmjs.com/package/react-admin-date-picker?activeTab=readme https://www.npmjs.com/package/react-admin-material-datepicker?activeTab=readme
 * permissions - https://www.npmjs.com/package/@blackbox-vision/ra-rbac
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * use id column for relation everywhere
