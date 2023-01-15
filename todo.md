@@ -40,11 +40,11 @@
 * organize client shared components folder
 * join limitaion -  https://github.com/typeorm/typeorm/issues/1668
 * export - try to add joins
+* translate excel file name
+* check how to download excel from response & use fetchJson func - use blob maybe
 
 # todo
-* translate excel file name
 * make excel file look better
-* check how to download excel from response & use fetchJson func - use blob maybe
 * export - implement pdf export - copy template from old website and use it to render pdf
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
 * rtl in autocomplete
