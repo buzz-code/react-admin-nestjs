@@ -42,17 +42,21 @@
 * export - try to add joins
 * translate excel file name
 * check how to download excel from response & use fetchJson func - use blob maybe
+* export - implement pdf export - copy template from old website and use it to render pdf
 
 # todo
-* make excel file look better
-* export - implement pdf export - copy template from old website and use it to render pdf
-* fix rtl - https://mui.com/material-ui/guides/right-to-left/
-* rtl in autocomplete
-* save file data in a table & enable reverting - use response from bulk create api
-* import email
 * export pdf - https://stackoverflow.com/questions/64964827/nestjs-exporting-library-to-pdf-or-excel
 https://github.com/tinovyatkin/nest-puppeteer
 * add export to csv & pdf
+* add csv & pdf options to export button
+* make excel file look better
+* make pdf file look better
+* export with base64 to fix netfree errors
+* add a loader to export button
+* fix rtl - https://mui.com/material-ui/guides/right-to-left/
+* rtl in autocomplete
+* save import file data in a table & enable reverting - use response from bulk create api
+* import email
 * maybe use dynamic modules or some other thing so we won't need to override every single function
 * validate dns is pointing to ip address
 * add domain name to site
