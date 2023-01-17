@@ -4,7 +4,6 @@ RUN apk add --no-cache \
     udev \
     ttf-freefont \
     chromium
-
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 WORKDIR /app
@@ -51,6 +50,12 @@ RUN rm -rf node_modules/swagger-ui-dist/*.map
 FROM node:16-alpine as production
 
 ENV NODE_ENV production
+
+RUN apk add --no-cache \
+    udev \
+    ttf-freefont \
+    chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 WORKDIR /app
 
