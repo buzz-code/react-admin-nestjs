@@ -6,14 +6,12 @@ services:
         depends_on:
             - backend
         build:
-            context: ./client/shared
+            context: ./client
             target: production
         pull_policy: build
         environment:
             REACT_APP_API_URL: https://api.$DOMAIN_NAME
             PORT: 80
-        ports:
-            - "3002:80"
         labels:
             caddy: $DOMAIN_NAME
             caddy.reverse_proxy: "{{upstreams 80}}"
@@ -30,7 +28,7 @@ services:
         container_name: backend
         restart: unless-stopped
         build:
-            context: ./server/shared
+            context: ./server
             target: production
         pull_policy: build
         environment:
