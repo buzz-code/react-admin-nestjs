@@ -46,8 +46,12 @@
 * export pdf - https://stackoverflow.com/questions/64964827/nestjs-exporting-library-to-pdf-or-excel
 https://github.com/tinovyatkin/nest-puppeteer
 * add export to csv & pdf
+* validate dns is pointing to ip address
+* add domain name to site
+* try to use caddy-docker-proxy - https://hub.docker.com/r/lucaslorentz/caddy-docker-proxy
 
 # todo
+* simplify docker compose file - why override domain everywhere?
 * add gzip to caddy
 * export base64 string to support netfree
 * add csv & pdf options to export button
@@ -60,9 +64,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * save import file data in a table & enable reverting - use response from bulk create api
 * import email
 * maybe use dynamic modules or some other thing so we won't need to override every single function
-* validate dns is pointing to ip address
-* add domain name to site
-* try to use caddy-docker-proxy - https://hub.docker.com/r/lucaslorentz/caddy-docker-proxy
 * change to typescript on client side
 * add tailwind css
 * rate limit backend requests
