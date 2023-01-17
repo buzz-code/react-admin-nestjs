@@ -48,6 +48,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add export to csv & pdf
 
 # todo
+* add gzip to caddy
 * export base64 string to support netfree
 * add csv & pdf options to export button
 * make excel file look better
@@ -63,6 +64,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add domain name to site
 * try to use caddy-docker-proxy - https://hub.docker.com/r/lucaslorentz/caddy-docker-proxy
 * change to typescript on client side
+* add tailwind css
 * rate limit backend requests
 * check if use https://feathersjs.com/comparison.html
 * add audit log - full preview of item instead of soft delete
