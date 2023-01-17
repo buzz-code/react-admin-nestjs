@@ -6,7 +6,7 @@ services:
         depends_on:
             - backend
         build:
-            context: ./client
+            context: ./client/shared
             target: production
         pull_policy: build
         environment:
@@ -30,7 +30,7 @@ services:
         container_name: backend
         restart: unless-stopped
         build:
-            context: ./server
+            context: ./server/shared
             target: production
         pull_policy: build
         environment:
