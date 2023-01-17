@@ -43,11 +43,12 @@
 * translate excel file name
 * check how to download excel from response & use fetchJson func - use blob maybe
 * export - implement pdf export - copy template from old website and use it to render pdf
-
-# todo
 * export pdf - https://stackoverflow.com/questions/64964827/nestjs-exporting-library-to-pdf-or-excel
 https://github.com/tinovyatkin/nest-puppeteer
 * add export to csv & pdf
+
+# todo
+* export base64 string to support netfree
 * add csv & pdf options to export button
 * make excel file look better
 * make pdf file look better
