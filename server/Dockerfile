@@ -1,12 +1,9 @@
 FROM node:16-alpine as development
 
 RUN apk add --no-cache \
-      chromium \
-      nss \
-      freetype \
-      harfbuzz \
-      ca-certificates \
-      ttf-freefont
+    udev \
+    ttf-freefont \
+    chromium
 
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
