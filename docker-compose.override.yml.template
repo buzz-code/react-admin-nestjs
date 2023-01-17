@@ -5,48 +5,15 @@ services:
         container_name: frontend-dev
         build:
             target: development
-        environment:
-            REACT_APP_API_URL: https://api.dev.$DOMAIN_NAME
-            PORT: 80
-        labels:
-            caddy: dev.$DOMAIN_NAME
-            caddy.reverse_proxy: "{{upstreams 80}}"
-        networks:
-            - private-network-dev
-            - caddy
 
     backend:
         container_name: backend-dev
         build:
             target: development
-        labels:
-            caddy: api.dev.$DOMAIN_NAME
-            caddy.reverse_proxy: "{{upstreams 3000}}"
-        networks:
-            - private-network-dev
-            - caddy
 
     mysql:
         container_name: mysql-dev
-        volumes:
-            - "db_data-dev:/var/lib/mysql"
-        networks:
-            - private-network-dev
 
     phpmyadmin:
         container_name: php-myadmin-dev
-        labels:
-            caddy: sql.dev.$DOMAIN_NAME
-            caddy.reverse_proxy: "{{upstreams 80}}"
-        networks:
-            - private-network-dev
-            - caddy
 
-
-volumes:
-    db_data-dev:
-
-networks:
-    private-network-dev:
-    caddy:
-        external: true
