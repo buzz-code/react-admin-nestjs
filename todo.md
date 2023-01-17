@@ -49,9 +49,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * validate dns is pointing to ip address
 * add domain name to site
 * try to use caddy-docker-proxy - https://hub.docker.com/r/lucaslorentz/caddy-docker-proxy
+* simplify docker compose file - why override domain everywhere?
 
 # todo
-* simplify docker compose file - why override domain everywhere?
 * add gzip to caddy
 * export base64 string to support netfree
 * add csv & pdf options to export button
