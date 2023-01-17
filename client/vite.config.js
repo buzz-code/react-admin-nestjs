@@ -7,7 +7,11 @@ export default ({ mode }) => {
         envPrefix: 'REACT_APP',
         plugins: [react()],
         server: {
-            port: Number(process.env.PORT || 3000)
+            port: Number(process.env.PORT || 3000),
+            hmr: {
+                port: 443,
+                protocol: 'wss',
+            },
         },
         define: {
             "process.env.NODE_ENV": `"${mode}"`,
