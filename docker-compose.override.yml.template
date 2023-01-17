@@ -5,6 +5,9 @@ services:
         container_name: frontend-dev
         build:
             target: development
+        labels:
+            caddy: dev.$DOMAIN_NAME
+            caddy.reverse_proxy: "{{upstreams 80}}"
         networks:
             - private-network-dev
             - caddy
@@ -13,6 +16,9 @@ services:
         container_name: backend-dev
         build:
             target: development
+        labels:
+            caddy: api.dev.$DOMAIN_NAME
+            caddy.reverse_proxy: "{{upstreams 3000}}"
         networks:
             - private-network-dev
             - caddy
