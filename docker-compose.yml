@@ -10,16 +10,18 @@ services:
             target: production
         pull_policy: build
         environment:
-            REACT_APP_API_URL: "${BACKEND_URL}:${BACKEND_PORT}"
-            PORT: $FRONTEND_PORT
-        ports:
-            - "${FRONTEND_PORT}:80"
+            REACT_APP_API_URL: api.$DOMAIN_NAME
+            PORT: 80
+        labels:
+            caddy: $DOMAIN_NAME
+            caddy.reverse_proxy: "{{upstreams 80}}"
         volumes:
             - ./client:/app
             - /app/node_modules
             - /app/dist
         networks:
             - private-network
+            - caddy
 
 
     backend:
@@ -38,14 +40,16 @@ services:
             ADMIN_USER: $ADMIN_USER
         depends_on:
             - mysql
-        ports:
-            - "${BACKEND_PORT}:3000"
+        labels:
+            caddy: api.$DOMAIN_NAME
+            caddy.reverse_proxy: "{{upstreams 3000}}"
         volumes: 
             - ./server:/app
             - /app/node_modules
             - /app/dist
         networks:
             - private-network
+            - caddy
 
     mysql:
         container_name: mysql
@@ -71,13 +75,15 @@ services:
         depends_on:
             - mysql
         image: phpmyadmin
-        ports:
-            - "${PHP_MYADMIN_PORT}:80"
+        labels:
+            caddy: sql.$DOMAIN_NAME
+            caddy.reverse_proxy: "{{upstreams 80}}"
         environment:
             PMA_HOST: mysql
             MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
         networks:
             - private-network
+            - caddy
 
 
 volumes:
@@ -85,3 +91,5 @@ volumes:
 
 networks:
     private-network:
+    caddy:
+        external: true

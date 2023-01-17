@@ -7,6 +7,7 @@ services:
             target: development
         networks:
             - private-network-dev
+            - caddy
 
     backend:
         container_name: backend-dev
@@ -14,6 +15,7 @@ services:
             target: development
         networks:
             - private-network-dev
+            - caddy
 
     mysql:
         container_name: mysql-dev
@@ -24,8 +26,12 @@ services:
 
     phpmyadmin:
         container_name: php-myadmin-dev
+        labels:
+            caddy: sql.dev.$DOMAIN_NAME
+            caddy.reverse_proxy: "{{upstreams 80}}"
         networks:
             - private-network-dev
+            - caddy
 
 
 volumes:
@@ -33,3 +39,5 @@ volumes:
 
 networks:
     private-network-dev:
+    caddy:
+        external: true
