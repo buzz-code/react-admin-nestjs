@@ -32,6 +32,7 @@ services:
             target: production
         pull_policy: build
         environment:
+            DOMAIN_NAME: $DOMAIN_NAME
             MYSQL_HOST: $MYSQL_HOST
             MYSQL_USER: $MYSQL_USER
             MYSQL_PASSWORD: $MYSQL_PASSWORD
