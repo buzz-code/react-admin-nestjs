@@ -50,14 +50,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add domain name to site
 * try to use caddy-docker-proxy - https://hub.docker.com/r/lucaslorentz/caddy-docker-proxy
 * simplify docker compose file - why override domain everywhere?
+* export base64 string to support netfree
 
 # todo
-* add gzip to caddy
-* export base64 string to support netfree
+* handle date format in export
 * add csv & pdf options to export button
 * make excel file look better
 * make pdf file look better
-* export with base64 to fix netfree errors
 * add a loader to export button
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
 * rtl in autocomplete
@@ -75,6 +74,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * test filter by student base klass
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * add mail server for sending & receiving - https://docs.postalserver.io/
+* add gzip to caddy
 * 
 
 # todo later
