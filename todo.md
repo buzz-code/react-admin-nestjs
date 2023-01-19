@@ -51,10 +51,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * try to use caddy-docker-proxy - https://hub.docker.com/r/lucaslorentz/caddy-docker-proxy
 * simplify docker compose file - why override domain everywhere?
 * export base64 string to support netfree
+* add csv & pdf options to export button
 
 # todo
 * handle date format in export
-* add csv & pdf options to export button
 * make excel file look better
 * make pdf file look better
 * add a loader to export button
