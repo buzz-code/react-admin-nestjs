@@ -52,11 +52,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * simplify docker compose file - why override domain everywhere?
 * export base64 string to support netfree
 * add csv & pdf options to export button
-
-# todo
 * handle date format in export
 * make excel file look better
 * make pdf file look better
+
+# todo
+* add years in all tables
 * add a loader to export button
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
 * rtl in autocomplete
