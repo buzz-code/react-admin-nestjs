@@ -1,4 +1,5 @@
 import { DateField, DateInput, EmailField, TextField, TextInput } from 'react-admin';
+import { JsonField, JsonInput } from "react-admin-json-view";
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { QuickFilter } from '@shared/components/QuickFilter';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
@@ -11,19 +12,31 @@ const filters = [
     <QuickFilter source="fromEmail" defaultValue="gmail" />
 ];
 
+const reactJsonEditOptions = {
+    name: null,
+    style: {
+        direction: 'ltr',
+        textAlign: 'left',
+    },
+};
+const reactJsonViewOptions = {
+    ...reactJsonEditOptions,
+    collapsed: true,
+    collapseStringsAfterLength: 15,
+    enableClipboard: false,
+};
+
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
         <CommonDatagrid {...props}>
             <TextField source="id" />
             <TextField source="name" />
             <EmailField source="email" />
-            <TextField source="password" />
             <TextField source="phoneNumber" />
             <TextField source="active" />
-            <TextField source="fromEmail" />
-            <TextField source="replyToEmail" />
             <TextField source="effective_id" />
-            <TextField source="permissions" />
+            <JsonField source="permissions" reactJsonOptions={reactJsonViewOptions} />
+            <JsonField source="additionalData" reactJsonOptions={reactJsonViewOptions} />
             <DateField source="createdAt" />
             <DateField source="updatedAt" />
         </CommonDatagrid>
@@ -41,7 +54,8 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <TextInput source="fromEmail" />
         <TextInput source="replyToEmail" />
         <TextInput source="effective_id" />
-        <TextInput source="permissions" multiline />
+        <JsonInput source="permissions" reactJsonOptions={reactJsonEditOptions} />
+        <JsonInput source="additionalData" reactJsonOptions={reactJsonEditOptions} />
         {!isCreate && <DateInput source="createdAt" disabled />}
         {!isCreate && <DateInput source="updatedAt" disabled />}
     </>

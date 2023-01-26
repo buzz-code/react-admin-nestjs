@@ -59,10 +59,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
 * rtl in autocomplete
 * maybe use dynamic modules or some other thing so we won't need to override every single function
+* json-viewer for user permission & additional data - https://www.npmjs.com/package/react-admin-json-view?activeTab=readme
 
 # todo
 * add yemot call module to dynamic modules
-* json-viewer for user permission & additional data - https://www.npmjs.com/package/react-admin-json-view?activeTab=readme - after this is fixed - https://github.com/typestack/class-transformer/pull/1440
 * https://marmelab.com/react-admin/Admin.html#title
 * add years in all tables
 * save import file data in a table & enable reverting - use response from bulk create api
