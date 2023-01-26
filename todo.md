@@ -60,10 +60,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * rtl in autocomplete
 * maybe use dynamic modules or some other thing so we won't need to override every single function
 * json-viewer for user permission & additional data - https://www.npmjs.com/package/react-admin-json-view?activeTab=readme
+* https://marmelab.com/react-admin/Admin.html#title
 
 # todo
 * add yemot call module to dynamic modules
-* https://marmelab.com/react-admin/Admin.html#title
 * add years in all tables
 * save import file data in a table & enable reverting - use response from bulk create api
 * import email

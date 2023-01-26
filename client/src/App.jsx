@@ -29,7 +29,8 @@ const i18nProvider = getI18nProvider(domainTranslations);
 const App = () => (
   <BrowserRouter>
     <RTLStyle>
-      <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={Dashboard} layout={Layout} requireAuth>
+      <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} 
+      theme={theme} title='נוכחות' dashboard={Dashboard} layout={Layout} requireAuth>
         {permissions => (
           <>
             <Resource name="att_report" {...attReport} />
