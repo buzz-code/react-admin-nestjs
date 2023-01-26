@@ -55,12 +55,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * handle date format in export
 * make excel file look better
 * make pdf file look better
-
-# todo
-* add years in all tables
 * add a loader to export button
 * fix rtl - https://mui.com/material-ui/guides/right-to-left/
 * rtl in autocomplete
+
+# todo
+* add years in all tables
 * save import file data in a table & enable reverting - use response from bulk create api
 * import email
 * maybe use dynamic modules or some other thing so we won't need to override every single function
@@ -79,6 +79,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * 
 
 # todo later
+* implement todos in dashboard item
 * json-viewer for user permission & additional data - https://www.npmjs.com/package/react-admin-json-view?activeTab=readme
 * add custom prefix to common components
 * https://github.com/bigbasket/ra-components

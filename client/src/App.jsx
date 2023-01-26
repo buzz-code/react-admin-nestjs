@@ -6,6 +6,7 @@ import dataProvider from "@shared/providers/dataProvider";
 import { getI18nProvider } from "@shared/providers/i18nProvider";
 import authProvider from "@shared/providers/authProvider";
 import theme from "@shared/providers/themeProvider";
+import RTLStyle from "@shared/components/layout/RTLStyle";
 
 import { Dashboard, Layout } from 'src/GeneralLayout';
 
@@ -27,30 +28,32 @@ const i18nProvider = getI18nProvider(domainTranslations);
 
 const App = () => (
   <BrowserRouter>
-    <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={Dashboard} layout={Layout} requireAuth>
-      {permissions => (
-        <>
-          <Resource name="att_report" {...attReport} />
-          <Resource name="grade" {...resourceEntityGuesser} />
-          <Resource name="klass" {...klass} />
-          <Resource name="klass_type" {...klassType} />
-          <Resource name="known_absence" {...knownAbsence} />
-          <Resource name="lesson" {...lesson} />
-          <Resource name="student_klass" {...studentKlass} />
-          <Resource name="student" {...student} />
-          <Resource name="teacher" {...teacher} />
-          <Resource name="text" {...text} />
-          {isAdmin(permissions) && <>
-            <Resource name="yemot_call" {...resourceEntityGuesser} />
-            <Resource name="user" {...user} />
-          </>}
+    <RTLStyle>
+      <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider} theme={theme} dashboard={Dashboard} layout={Layout} requireAuth>
+        {permissions => (
+          <>
+            <Resource name="att_report" {...attReport} />
+            <Resource name="grade" {...resourceEntityGuesser} />
+            <Resource name="klass" {...klass} />
+            <Resource name="klass_type" {...klassType} />
+            <Resource name="known_absence" {...knownAbsence} />
+            <Resource name="lesson" {...lesson} />
+            <Resource name="student_klass" {...studentKlass} />
+            <Resource name="student" {...student} />
+            <Resource name="teacher" {...teacher} />
+            <Resource name="text" {...text} />
+            {isAdmin(permissions) && <>
+              <Resource name="yemot_call" {...resourceEntityGuesser} />
+              <Resource name="user" {...user} />
+            </>}
 
-          <CustomRoutes>
-            <Route path="/yemot-simulator" element={<YemotSimulator />} />
-          </CustomRoutes>
-        </>
-      )}
-    </Admin>
+            <CustomRoutes>
+              <Route path="/yemot-simulator" element={<YemotSimulator />} />
+            </CustomRoutes>
+          </>
+        )}
+      </Admin>
+    </RTLStyle>
   </BrowserRouter>
 );
 
