@@ -1,7 +1,8 @@
+import { Column, DataSource, JoinColumn, ViewEntity } from "typeorm";
+import { IHasUserId } from "@shared/base-entity/interface";
 import { Klass } from "src/entities/Klass.entity";
 import { StudentKlass } from "src/entities/StudentKlass.entity";
 import { User } from "@shared/entities/User.entity";
-import { Column, DataSource, JoinColumn, ViewEntity } from "typeorm";
 
 @ViewEntity("student_klasses_report", {
   expression: (dataSource: DataSource) => dataSource
@@ -18,7 +19,7 @@ import { Column, DataSource, JoinColumn, ViewEntity } from "typeorm";
     .addSelect(`GROUP_CONCAT(if(klasses.klass_type_id not in (21, 22, 23, 24, 25, 26), klasses.name, null) SEPARATOR ', ')`, 'klasses_null')
     .where('student_klasses.user_id = 2')
 })
-export class StudentKlassReport {
+export class StudentKlassReport implements IHasUserId {
   @Column()
   id: string;
 

@@ -6,11 +6,12 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/entities/User.entity";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Entity("lessons")
-export class Lesson {
+export class Lesson implements IHasUserId {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 

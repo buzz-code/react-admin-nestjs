@@ -6,6 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { IHasUserId } from "@shared/base-entity/interface";
 import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
 import { Student } from "./Student.entity";
@@ -13,7 +14,7 @@ import { Teacher } from "./Teacher.entity";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")
-export class AttReport {
+export class AttReport implements IHasUserId {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
