@@ -65,9 +65,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * import email
 * maybe use dynamic modules or some other thing so we won't need to override every single function
 * change to typescript on client side
-* add tailwind css
 * rate limit backend requests
-* check if use https://feathersjs.com/comparison.html
 * add audit log - full preview of item instead of soft delete
 * soft delete - https://github.com/nestjsx/crud/issues/433
 * logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
