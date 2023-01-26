@@ -63,21 +63,21 @@ https://github.com/tinovyatkin/nest-puppeteer
 * https://marmelab.com/react-admin/Admin.html#title
 
 # todo
-* add yemot call module to dynamic modules
 * add years in all tables
 * save import file data in a table & enable reverting - use response from bulk create api
 * import email
 * fix lessons.klasses text-align
 * change to typescript on client side
 * rate limit backend requests
-* add audit log - full preview of item instead of soft delete
-* soft delete - https://github.com/nestjsx/crud/issues/433
-* logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
-* check docker security issues
 * test filter by student base klass
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * add mail server for sending & receiving - https://docs.postalserver.io/
 * add gzip to caddy
+* add yemot call module to dynamic modules
+* add audit log - full preview of item instead of soft delete
+* soft delete - https://github.com/nestjsx/crud/issues/433
+* logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
+* check docker security issues
 * 
 
 # todo later
