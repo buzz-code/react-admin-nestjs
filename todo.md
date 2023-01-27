@@ -61,11 +61,14 @@ https://github.com/tinovyatkin/nest-puppeteer
 * maybe use dynamic modules or some other thing so we won't need to override every single function
 * json-viewer for user permission & additional data - https://www.npmjs.com/package/react-admin-json-view?activeTab=readme
 * https://marmelab.com/react-admin/Admin.html#title
+* add export header names to all tables
 
 # todo
+* student klass report - QueryFailedError: Access denied for user 'user'@'%' (using password: YES)
 * add years in all tables
 * save import file data in a table & enable reverting - use response from bulk create api
 * import email
+* better text management in db - no need to daclare each text so many times
 * fix lessons.klasses text-align
 * change to typescript on client side
 * rate limit backend requests
