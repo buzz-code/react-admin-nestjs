@@ -18,17 +18,8 @@ export class User extends BaseUser {
     @OneToMany(() => KlassType, (klassTypes) => klassTypes.user)
     klassTypes: KlassType[];
   
-    @OneToMany(() => Klass, (klasses) => klasses.user)
-    klasses: Klass[];
-  
     @OneToMany(() => KnownAbsence, (knownAbsences) => knownAbsences.user)
     knownAbsences: KnownAbsence[];
-  
-    @OneToMany(() => Lesson, (lessons) => lessons.user)
-    lessons: Lesson[];
-  
-    @OneToMany(() => StudentKlass, (studentKlasses) => studentKlasses.user)
-    studentKlasses: StudentKlass[];
   
     @OneToMany(() => Student, (students) => students.user)
     students: Student[];

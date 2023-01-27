@@ -7,7 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
-import { User } from "src/entities/User.entity";
+import { Student } from "./Student.entity";
+import { Klass } from "./Klass.entity";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Entity("student_klasses")
@@ -36,10 +37,17 @@ export class StudentKlass implements IHasUserId {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.studentKlasses, {
-    onDelete: "NO ACTION",
-    onUpdate: "NO ACTION",
-  })
-  @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
-  user: User;
+  @ManyToOne(() => Student)
+  @JoinColumn([
+    { name: "user_id", referencedColumnName: "userId" },
+    { name: "student_tz", referencedColumnName: "tz" }
+  ])
+  student: Student;
+
+  @ManyToOne(() => Klass)
+  @JoinColumn([
+    { name: "user_id", referencedColumnName: "userId" },
+    { name: "klass_id", referencedColumnName: "key" }
+  ])
+  klass: Klass;
 }
