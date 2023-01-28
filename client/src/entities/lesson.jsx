@@ -35,7 +35,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {isAdmin && <ReferenceInput source="userId" reference="user" />}
         <NumberInput source="key" />
         <TextInput source="name" />
-        <DateInput source="klasses" />
+        <TextInput source="klasses" />
         <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />
         <DateInput source="startDate" />
         <DateInput source="endDate" />

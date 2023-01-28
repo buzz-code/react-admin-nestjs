@@ -65,13 +65,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * student klass report - QueryFailedError: Access denied for user 'user'@'%' (using password: YES)
 * fix joining errors
+* fix lessons.klasses text-align
 
 # todo
 * add years in all tables
 * save import file data in a table & enable reverting - use response from bulk create api
 * import email
 * better text management in db - no need to daclare each text so many times
-* fix lessons.klasses text-align
 * change to typescript on client side
 * rate limit backend requests
 * test filter by student base klass
