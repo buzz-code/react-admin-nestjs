@@ -2,6 +2,17 @@ import { DateField, DateInput, NumberField, NumberInput, ReferenceField, Referen
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonReferenceField } from '@shared/components/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
+import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
+
+const filters = [
+    <CommonReferenceInput source="studentTz" reference="student" optionValue="tz" />,
+    <DateInput source="reportDate" />,
+    <NumberInput source="absnceCount" />,
+    <NumberInput source="absnceCode" />,
+    <TextInput source="senderName:$cont" label="שולחת" />,
+    <TextInput source="reason:$cont" label="סיבה" />,
+    <TextInput source="comment:$cont" label="הערות" />,
+];
 
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
@@ -40,6 +51,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const entity = {
     Datagrid,
     Inputs,
+    filters,
 };
 
 export default getResourceComponents(entity);

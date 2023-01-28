@@ -5,6 +5,13 @@ import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 
+const filters = [
+    <NumberInput source="key" />,
+    <TextInput source="name:$cont" alwaysOn />,
+    <CommonReferenceInput source="klassTypeId" reference="klassType" />,
+    <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />,
+];
+
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
         <CommonDatagrid {...props}>
@@ -26,7 +33,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {isAdmin && <ReferenceInput source="userId" reference="user" />}
         <NumberInput source="key" />
         <TextInput source="name" />
-        <CommonReferenceInput source="klassTypeId" reference="klassType" />
+        <CommonReferenceInput source="klassTypeId" reference="klass_type" />
         <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />
         {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
@@ -43,6 +50,7 @@ const entity = {
     Datagrid,
     Inputs,
     Representation,
+    filters,
     importer,
 };
 

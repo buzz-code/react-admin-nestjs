@@ -6,6 +6,9 @@ import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 
 const filters = [
+    <NumberInput source="key" />,
+    <TextInput source="name:$cont" alwaysOn />,
+    <TextInput source="klasses:$cont" label="קוד כיתה" />,
     <CommonReferenceInput source="teacherId" reference="teacher" alwaysOn optionValue="tz" />
 ];
 

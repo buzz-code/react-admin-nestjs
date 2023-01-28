@@ -3,6 +3,12 @@ import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 
+const filters = [
+    <TextInput source="name:$cont" alwaysOn />,
+    <TextInput source="description:$cont" label="תיאור" />,
+    <TextInput source="value:$cont" label="ערך" alwaysOn />,
+];
+
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
         <CommonDatagrid {...props}>
@@ -35,6 +41,7 @@ const entity = {
     Datagrid,
     Inputs,
     Representation,
+    filters,
 };
 
 export default getResourceComponents(entity);

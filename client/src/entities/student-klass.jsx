@@ -4,6 +4,11 @@ import { CommonReferenceField } from '@shared/components/CommonReferenceField';
 import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 
+const filters = [
+    <CommonReferenceInput source="studentTz" reference="student" optionValue="tz" />,
+    <CommonReferenceInput source="klassId" reference="klass" optionValue="key" />,
+];
+
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
         <CommonDatagrid {...props}>
@@ -35,6 +40,7 @@ const importer = {
 const entity = {
     Datagrid,
     Inputs,
+    filters,
     importer,
 };
 
