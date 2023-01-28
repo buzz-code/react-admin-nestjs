@@ -68,6 +68,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix lessons.klasses text-align
 
 # todo
+* add student base klass view
 * add years in all tables
 * save import file data in a table & enable reverting - use response from bulk create api
 * import email
