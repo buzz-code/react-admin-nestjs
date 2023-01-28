@@ -63,28 +63,28 @@ export class AttReport implements IHasUserId {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Student)
+  @ManyToOne(() => Student, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
     { name: "student_tz", referencedColumnName: "tz" }
   ])
   student: Student;
 
-  @ManyToOne(() => Teacher)
+  @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
     { name: "teacher_id", referencedColumnName: "tz" }
   ])
   teacher: Teacher;
 
-  @ManyToOne(() => Lesson)
+  @ManyToOne(() => Lesson, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
     { name: "lesson_id", referencedColumnName: "key" }
   ])
   lesson: Lesson;
 
-  @ManyToOne(() => Klass)
+  @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
     { name: "klass_id", referencedColumnName: "key" }

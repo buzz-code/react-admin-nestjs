@@ -51,7 +51,7 @@ export class Klass implements IHasUserId {
   ])
   klassType: KlassType;
 
-  @ManyToOne(() => Teacher)
+  @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
     { name: "teacher_id", referencedColumnName: "tz" }

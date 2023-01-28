@@ -37,14 +37,14 @@ export class StudentKlass implements IHasUserId {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Student)
+  @ManyToOne(() => Student, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
     { name: "student_tz", referencedColumnName: "tz" }
   ])
   student: Student;
 
-  @ManyToOne(() => Klass)
+  @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
     { name: "klass_id", referencedColumnName: "key" }
