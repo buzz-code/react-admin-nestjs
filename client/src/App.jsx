@@ -20,6 +20,7 @@ import studentKlass from "src/entities/student-klass";
 import student from "src/entities/student";
 import teacher from "src/entities/teacher";
 import text from "src/entities/text";
+import studentKlassesReport from "src/entities/student-klasses-report";
 import user from "src/entities/user";
 import { isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
@@ -42,7 +43,9 @@ const App = () => (
             <Resource name="student_klass" {...studentKlass} />
             <Resource name="student" {...student} />
             <Resource name="teacher" {...teacher} />
+            <Resource name="student_klass_report" {...studentKlassesReport} />
             <Resource name="text" {...text} />
+
             {isAdmin(permissions) && <>
               <Resource name="yemot_call" {...resourceEntityGuesser} />
               <Resource name="user" {...user} />
