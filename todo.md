@@ -64,9 +64,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add export header names to all tables
 * add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * student klass report - QueryFailedError: Access denied for user 'user'@'%' (using password: YES)
+* fix joining errors
 
 # todo
-* fix joining errors
 * add years in all tables
 * save import file data in a table & enable reverting - use response from bulk create api
 * import email
