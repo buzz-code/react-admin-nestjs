@@ -62,6 +62,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * json-viewer for user permission & additional data - https://www.npmjs.com/package/react-admin-json-view?activeTab=readme
 * https://marmelab.com/react-admin/Admin.html#title
 * add export header names to all tables
+* add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 
 # todo
 * student klass report - QueryFailedError: Access denied for user 'user'@'%' (using password: YES)
@@ -89,7 +90,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * https://github.com/bigbasket/ra-components
 * date-time inputs https://www.npmjs.com/package/react-admin-date-inputs-refactor?activeTab=readme https://www.npmjs.com/package/@mpampin/react-admin-date-inputs https://www.npmjs.com/package/@sklinet/react-admin-date-inputs?activeTab=readme https://www.npmjs.com/package/react-admin-date-picker?activeTab=readme https://www.npmjs.com/package/react-admin-material-datepicker?activeTab=readme
 * permissions - https://www.npmjs.com/package/@blackbox-vision/ra-rbac
-* add filters - https://marmelab.com/react-admin/FilteringTutorial.html
 * use id column for relation everywhere
 * add typeorm migration - all foreign keys are using id
 * k3s
