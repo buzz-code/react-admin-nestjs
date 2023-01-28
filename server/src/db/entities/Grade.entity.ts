@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
-import { User } from "src/entities/User.entity";
+import { User } from "src/db/entities/User.entity";
 
 @Index("grades_users_idx", ["userId"], {})
 @Entity("grades")

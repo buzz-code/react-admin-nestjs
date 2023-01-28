@@ -3,10 +3,10 @@ import { InjectRepository, InjectDataSource } from "@nestjs/typeorm";
 import { CrudRequestOptions, GetManyDefaultResponse, Override } from "@nestjsx/crud";
 import { ParsedRequestParams } from "@nestjsx/crud-request";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
-import { AttReport } from "src/entities/AttReport.entity";
+import { AttReport } from "src/db/entities/AttReport.entity";
 import { DataSource, SelectQueryBuilder } from "typeorm";
 
-import { Student } from "src/entities/Student.entity";
+import { Student } from "src/db/entities/Student.entity";
 
 @Injectable()
 export class StudentsService extends TypeOrmCrudService<Student> {

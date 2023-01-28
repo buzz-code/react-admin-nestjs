@@ -1,6 +1,6 @@
 import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/exporter/types";
-import { KlassType } from "src/entities/KlassType.entity";
+import { KlassType } from "src/db/entities/KlassType.entity";
 
 function getConfig(): BaseEntityModuleOptions {
     return {

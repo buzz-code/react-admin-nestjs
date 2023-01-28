@@ -1,6 +1,6 @@
 import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/exporter/types";
-import { Student } from "src/entities/Student.entity";
+import { Student } from "src/db/entities/Student.entity";
 
 function getConfig(): BaseEntityModuleOptions {
     return {

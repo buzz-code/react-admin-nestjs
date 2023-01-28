@@ -1,7 +1,7 @@
 import { Column, DataSource, JoinColumn, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
-import { Klass } from "src/entities/Klass.entity";
-import { StudentKlass } from "src/entities/StudentKlass.entity";
+import { Klass } from "src/db/entities/Klass.entity";
+import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { User } from "@shared/entities/User.entity";
 
 @ViewEntity("student_klasses_report", {

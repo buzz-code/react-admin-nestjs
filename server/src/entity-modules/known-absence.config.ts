@@ -1,5 +1,5 @@
 import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
-import { KnownAbsence } from "src/entities/KnownAbsence.entity";
+import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 
 function getConfig(): BaseEntityModuleOptions {
     return {

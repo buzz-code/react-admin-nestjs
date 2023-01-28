@@ -7,23 +7,26 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
-import { User } from "src/entities/User.entity";
+import { User } from "src/db/entities/User.entity";
 
-@Index("students_users_idx", ["userId"], {})
-@Index(["userId", "tz"], { unique: true })
-@Entity("students")
-export class Student implements IHasUserId {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
+
+@Index("texts_users_idx", ["userId"], {})
+@Entity("texts")
+export class Text implements IHasUserId {
+  @PrimaryGeneratedColumn({ type: "int", name: "id", unsigned: true })
   id: number;
 
   @Column("int", { name: "user_id" })
   userId: number;
 
-  @Column("varchar", { name: "tz", length: 10 })
-  tz: string;
-
-  @Column("varchar", { name: "name", length: 500 })
+  @Column("varchar", { name: "name", length: 100 })
   name: string;
+
+  @Column("varchar", { name: "description", length: 100 })
+  description: string;
+
+  @Column("varchar", { name: "value", length: 10000 })
+  value: string;
 
   @Column("timestamp", {
     name: "created_at",
@@ -37,7 +40,7 @@ export class Student implements IHasUserId {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.students, {
+  @ManyToOne(() => User, (user) => user.texts, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
