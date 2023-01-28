@@ -9,7 +9,7 @@ function getConfig(): BaseEntityModuleOptions {
         exporter: {
             async processReqForExport(req: CrudRequest): Promise<void> {
                 req.options.query.join = {
-                    KlassType: { eager: true },
+                    klassType: { eager: true },
                     teacher: { eager: true },
                 };
             },

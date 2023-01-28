@@ -28,7 +28,7 @@ export class Klass implements IHasUserId {
   @Column("int", { name: "klass_type_id", nullable: true })
   klassTypeId: number | null;
 
-  @Column("varchar", { name: "teacher_id", nullable: true, length: 45 })
+  @Column("varchar", { name: "teacher_id", nullable: true, length: 10 })
   teacherId: string | null;
 
   @Column("timestamp", {
@@ -46,7 +46,7 @@ export class Klass implements IHasUserId {
   @ManyToOne(() => KlassType)
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
-    { name: "klass_type_id", referencedColumnName: "key" }
+    { name: "klass_type_id", referencedColumnName: "id" }
   ])
   klassType: KlassType;
 
