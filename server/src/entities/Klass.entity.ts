@@ -11,6 +11,7 @@ import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
 
 @Index("klasses_users_idx", ["userId"], {})
+@Index(["userId", "key"], { unique: true })
 @Entity("klasses")
 export class Klass implements IHasUserId {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

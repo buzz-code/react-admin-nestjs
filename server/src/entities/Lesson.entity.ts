@@ -10,6 +10,7 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { Teacher } from "./Teacher.entity";
 
 @Index("lessons_users_idx", ["userId"], {})
+@Index(["userId", "key"], { unique: true })
 @Entity("lessons")
 export class Lesson implements IHasUserId {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
