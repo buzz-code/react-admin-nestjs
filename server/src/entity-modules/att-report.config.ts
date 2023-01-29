@@ -6,6 +6,13 @@ import { AttReport } from "src/db/entities/AttReport.entity";
 function getConfig(): BaseEntityModuleOptions {
     return {
         entity: AttReport,
+        query: {
+            join: {
+                studentBaseKlass: {
+                    eager: true
+                }
+            }
+        },
         exporter: {
             async processReqForExport(req: CrudRequest): Promise<void> {
                 req.options.query.join = {

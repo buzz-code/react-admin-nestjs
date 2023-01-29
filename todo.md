@@ -66,9 +66,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * student klass report - QueryFailedError: Access denied for user 'user'@'%' (using password: YES)
 * fix joining errors
 * fix lessons.klasses text-align
+* add student base klass view
 
 # todo
-* add student base klass view
 * add years in all tables
 * save import file data in a table & enable reverting - use response from bulk create api
 * import email

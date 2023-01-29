@@ -11,6 +11,7 @@ import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
 import { Student } from "./Student.entity";
 import { Teacher } from "./Teacher.entity";
+import { StudentBaseKlass } from "../view-entities/StudentBaseKlass";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")
@@ -69,6 +70,13 @@ export class AttReport implements IHasUserId {
     { name: "student_tz", referencedColumnName: "tz" }
   ])
   student: Student;
+
+  @ManyToOne(() => StudentBaseKlass, { createForeignKeyConstraints: false })
+  @JoinColumn([
+    { name: "user_id", referencedColumnName: "userId" },
+    { name: "student_tz", referencedColumnName: "studentTz" }
+  ])
+  studentBaseKlass: StudentBaseKlass;
 
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
   @JoinColumn([
