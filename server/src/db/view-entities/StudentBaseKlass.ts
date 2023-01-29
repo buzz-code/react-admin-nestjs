@@ -11,7 +11,7 @@ import { Student } from "../entities/Student.entity";
     .groupBy('student_tz')
     .addGroupBy('user_id')
     .leftJoin(Klass, 'klasses', 'klasses.key = student_klasses.klass_id AND klasses.user_id = student_klasses.user_id')
-    .select('student_tz')
+    .select('student_tz', 'tz')
     .addSelect('student_klasses.user_id', 'user_id')
     .addSelect(`GROUP_CONCAT(if(klasses.klass_type_id in (21, 24), klasses.name, null) SEPARATOR ', ')`, 'base_klass')
 })
@@ -19,8 +19,8 @@ export class StudentBaseKlass implements IHasUserId {
   @Column("int", { name: "user_id" })
   userId: number;
 
-  @Column("varchar", { name: "student_tz", length: 10 })
-  studentTz: string;
+  @Column("varchar", { name: "tz", length: 10 })
+  tz: string;
 
   @Column({ name: "base_klass" })
   klassName: string;
