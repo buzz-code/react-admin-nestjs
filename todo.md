@@ -69,11 +69,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add student base klass view
 
 # todo
-* add years in all tables
-* save import file data in a table & enable reverting - use response from bulk create api
-* import email
-* better text management in db - no need to daclare each text so many times
 * change to typescript on client side
+* add years in all tables - check if can use null values
+* save import file data in a table
+* enable reverting for imported file - use response from bulk create api
+* import from email
+* better text management in db - no need to daclare each text so many times
 * rate limit backend requests
 * test filter by student base klass
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
