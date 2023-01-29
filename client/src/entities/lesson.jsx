@@ -17,7 +17,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
         <CommonDatagrid {...props}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <NumberField source="key" />
+            <TextField source="key" />
             <TextField source="name" />
             <TextField source="klasses" />
             <CommonReferenceField source="teacherId" reference="teacher" target="tz" />
