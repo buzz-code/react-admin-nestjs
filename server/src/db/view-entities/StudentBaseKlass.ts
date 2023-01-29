@@ -10,14 +10,19 @@ import { Student } from "../entities/Student.entity";
     .createQueryBuilder('student_klasses')
     .groupBy('student_tz')
     .addGroupBy('user_id')
+    .addGroupBy('year')
     .leftJoin(Klass, 'klasses', 'klasses.key = student_klasses.klass_id AND klasses.user_id = student_klasses.user_id')
     .select('student_tz', 'tz')
     .addSelect('student_klasses.user_id', 'user_id')
+    .addSelect('student_klasses.year', 'year')
     .addSelect(`GROUP_CONCAT(if(klasses.klass_type_id in (21, 24), klasses.name, null) SEPARATOR ', ')`, 'base_klass')
 })
 export class StudentBaseKlass implements IHasUserId {
   @Column("int", { name: "user_id" })
   userId: number;
+
+  @Column()
+  year: number;
 
   @Column("varchar", { name: "tz", length: 10 })
   tz: string;
@@ -28,7 +33,8 @@ export class StudentBaseKlass implements IHasUserId {
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
-    { name: "student_tz", referencedColumnName: "tz" }
+    { name: "year", referencedColumnName: "year" },
+    { name: "tz", referencedColumnName: "tz" }
   ])
   student: Student;
 }

@@ -11,7 +11,7 @@ import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
 
 @Index("klasses_users_idx", ["userId"], {})
-@Index(["userId", "key"], { unique: true })
+@Index(["userId", "key", "year"], { unique: true })
 @Entity("klasses")
 export class Klass implements IHasUserId {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -19,6 +19,9 @@ export class Klass implements IHasUserId {
 
   @Column("int", { name: "user_id" })
   userId: number;
+
+  @Column()
+  year: number;
 
   @Column("int", { name: "key" })
   key: number;
@@ -54,6 +57,7 @@ export class Klass implements IHasUserId {
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
+    { name: "year", referencedColumnName: "year" },
     { name: "teacher_id", referencedColumnName: "tz" }
   ])
   teacher: Teacher;

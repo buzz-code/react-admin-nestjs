@@ -19,6 +19,9 @@ export class StudentKlass implements IHasUserId {
   @Column("int", { name: "user_id" })
   userId: number;
 
+  @Column()
+  year: number;
+
   @Column("varchar", { name: "student_tz", length: 10 })
   studentTz: string;
 
@@ -40,6 +43,7 @@ export class StudentKlass implements IHasUserId {
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
+    { name: "year", referencedColumnName: "year" },
     { name: "student_tz", referencedColumnName: "tz" }
   ])
   student: Student;
@@ -47,6 +51,7 @@ export class StudentKlass implements IHasUserId {
   @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
+    { name: "year", referencedColumnName: "year" },
     { name: "klass_id", referencedColumnName: "key" }
   ])
   klass: Klass;

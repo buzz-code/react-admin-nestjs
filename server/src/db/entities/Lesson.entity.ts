@@ -10,7 +10,7 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { Teacher } from "./Teacher.entity";
 
 @Index("lessons_users_idx", ["userId"], {})
-@Index(["userId", "key"], { unique: true })
+@Index(["userId", "key", "year"], { unique: true })
 @Entity("lessons")
 export class Lesson implements IHasUserId {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -18,6 +18,9 @@ export class Lesson implements IHasUserId {
 
   @Column("int", { name: "user_id" })
   userId: number;
+
+  @Column()
+  year: number;
 
   @Column("int", { name: "key" })
   key: number;
@@ -52,6 +55,7 @@ export class Lesson implements IHasUserId {
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
+    { name: "year", referencedColumnName: "year" },
     { name: "teacher_id", referencedColumnName: "tz" }
   ])
   teacher: Teacher;

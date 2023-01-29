@@ -22,6 +22,9 @@ export class AttReport implements IHasUserId {
   @Column("int", { name: "user_id" })
   userId: number;
 
+  @Column()
+  year: number;
+
   @Column("varchar", { name: "student_tz", length: 10 })
   studentTz: string;
 
@@ -67,6 +70,7 @@ export class AttReport implements IHasUserId {
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
+    { name: "year", referencedColumnName: "year" },
     { name: "student_tz", referencedColumnName: "tz" }
   ])
   student: Student;
@@ -74,6 +78,7 @@ export class AttReport implements IHasUserId {
   @ManyToOne(() => StudentBaseKlass, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
+    { name: "year", referencedColumnName: "year" },
     { name: "student_tz", referencedColumnName: "tz" }
   ])
   studentBaseKlass: StudentBaseKlass;
@@ -81,6 +86,7 @@ export class AttReport implements IHasUserId {
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
+    { name: "year", referencedColumnName: "year" },
     { name: "teacher_id", referencedColumnName: "tz" }
   ])
   teacher: Teacher;
@@ -88,6 +94,7 @@ export class AttReport implements IHasUserId {
   @ManyToOne(() => Lesson, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
+    { name: "year", referencedColumnName: "year" },
     { name: "lesson_id", referencedColumnName: "key" }
   ])
   lesson: Lesson;
@@ -95,6 +102,7 @@ export class AttReport implements IHasUserId {
   @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
   @JoinColumn([
     { name: "user_id", referencedColumnName: "userId" },
+    { name: "year", referencedColumnName: "year" },
     { name: "klass_id", referencedColumnName: "key" }
   ])
   klass: Klass;

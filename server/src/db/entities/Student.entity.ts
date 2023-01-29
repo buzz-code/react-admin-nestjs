@@ -10,7 +10,7 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
 
 @Index("students_users_idx", ["userId"], {})
-@Index(["userId", "tz"], { unique: true })
+@Index(["userId", "tz", "year"], { unique: true })
 @Entity("students")
 export class Student implements IHasUserId {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -18,6 +18,9 @@ export class Student implements IHasUserId {
 
   @Column("int", { name: "user_id" })
   userId: number;
+
+  @Column()
+  year: number;
 
   @Column("varchar", { name: "tz", length: 10 })
   tz: string;

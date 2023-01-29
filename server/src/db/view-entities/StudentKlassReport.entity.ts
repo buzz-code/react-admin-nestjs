@@ -12,8 +12,10 @@ import { User } from "@shared/entities/User.entity";
     .leftJoin(Klass, 'klasses', 'klasses.key = student_klasses.klass_id AND klasses.user_id = student_klasses.user_id')
     .select('student_tz')
     .addGroupBy('student_klasses.user_id')
+    .addGroupBy('student_klasses.year')
     .addSelect('student_tz', 'id')
     .addSelect('student_klasses.user_id', 'user_id')
+    .addSelect('student_klasses.year', 'year')
     .addSelect(`GROUP_CONCAT(if(klasses.klass_type_id in (21, 24), klasses.name, null) SEPARATOR ', ')`, 'klasses_1')
     .addSelect(`GROUP_CONCAT(if(klasses.klass_type_id in (22, 25), klasses.name, null) SEPARATOR ', ')`, 'klasses_2')
     .addSelect(`GROUP_CONCAT(if(klasses.klass_type_id in (23, 26), klasses.name, null) SEPARATOR ', ')`, 'klasses_3')
@@ -25,6 +27,9 @@ export class StudentKlassReport implements IHasUserId {
 
   @Column("int", { name: "user_id" })
   userId: number;
+
+  @Column()
+  year: number;
 
   @Column("varchar", { name: "student_tz", length: 10 })
   studentTz: string;
