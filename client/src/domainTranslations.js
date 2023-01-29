@@ -103,8 +103,19 @@ export default {
                 phoneNumber: 'מספר טלפון',
             }
         },
-        yemot_call:{
+        yemot_call: {
             name: 'שיחה |||| שיחות',
+        },
+        student_klass_report: {
+            name: 'דוח שיוך תלמידה',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                studentTz: 'תלמידה',
+                klasses1: 'כיתת בסיס',
+                klasses2: 'התמחות',
+                klasses3: 'נוסף',
+                klassesNull: 'אחר',
+            }
         }
     }
 };
