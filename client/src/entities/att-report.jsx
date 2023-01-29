@@ -8,6 +8,7 @@ const filters = [
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     <CommonReferenceInput source="studentTz" reference="student" optionValue="tz" />,
+    <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
     <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />,
     <CommonReferenceInput source="klassId" reference="klass" optionValue="key" />,
     <CommonReferenceInput source="lessonId" reference="lesson" optionValue="key" />,

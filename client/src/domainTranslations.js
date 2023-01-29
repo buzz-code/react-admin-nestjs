@@ -7,6 +7,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 studentTz: 'תלמידה',
+                'studentBaseKlass.klassName': 'כיתת בסיס',
                 teacherId: 'מורה',
                 klassId: 'כיתה',
                 lessonId: 'שיעור',

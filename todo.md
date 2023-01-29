@@ -67,19 +67,15 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix joining errors
 * fix lessons.klasses text-align
 * add student base klass view
+* test filter by student base klass
 
 # todo
-* change to typescript on client side
 * add years in all tables - check if can use null values
 * save import file data in a table
 * enable reverting for imported file - use response from bulk create api
 * import from email
 * better text management in db - no need to daclare each text so many times
-* rate limit backend requests
-* test filter by student base klass
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
-* add mail server for sending & receiving - https://docs.postalserver.io/
-* add gzip to caddy
 * add yemot call module to dynamic modules
 * add audit log - full preview of item instead of soft delete
 * soft delete - https://github.com/nestjsx/crud/issues/433
@@ -88,6 +84,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * 
 
 # todo later
+* add mail server for sending & receiving - https://docs.postalserver.io/
+* add gzip to caddy
+* rate limit backend requests
+* change to typescript on client side
 * implement todos in dashboard item
 * add custom prefix to common components
 * https://github.com/bigbasket/ra-components
