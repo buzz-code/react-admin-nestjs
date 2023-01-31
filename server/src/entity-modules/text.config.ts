@@ -1,5 +1,5 @@
 import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
-import { IHeader } from "@shared/exporter/types";
+import { IHeader } from "@shared/utils/exporter/types";
 import { Text } from "src/db/entities/Text.entity";
 
 function getConfig(): BaseEntityModuleOptions {

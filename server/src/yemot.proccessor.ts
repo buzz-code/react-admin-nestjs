@@ -1,6 +1,6 @@
-import { YemotProccessor, YEMOT_HANGUP_STEP, YEMOT_NOT_IMPL_STEP } from "@shared/yemot/yemot-call.module";
+import { YemotProccessor, YEMOT_HANGUP_STEP, YEMOT_NOT_IMPL_STEP } from "@shared/utils/yemot/yemot-call.module";
 import { YemotCall, YemotParams } from "@shared/entities/YemotCall.entity";
-import yemotUtil from "@shared/yemot/yemot.util";
+import yemotUtil from "@shared/utils/yemot/yemot.util";
 
 export class YemotProccessorImpl extends YemotProccessor {
     steps = {

@@ -1,6 +1,6 @@
 import { CrudRequest } from "@dataui/crud";
 import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
-import { IHeader } from "@shared/exporter/types";
+import { IHeader } from "@shared/utils/exporter/types";
 import { Lesson } from "src/db/entities/Lesson.entity";
 
 function getConfig(): BaseEntityModuleOptions {

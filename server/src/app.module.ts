@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleConfig } from '@shared/config/typeorm.config';
 import { RequestContextModule } from 'nestjs-request-context';
 import { AuthModule } from '@shared/auth/auth.module';
-import { YemotCallModule } from '@shared/yemot/yemot-call.module';
+import { YemotCallModule } from '@shared/utils/yemot/yemot-call.module';
 import { YemotProccessorImpl } from 'src/yemot.proccessor';
 import { BaseEntityModule } from '@shared/base-entity/base-entity.module';
 
