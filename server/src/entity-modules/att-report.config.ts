@@ -14,13 +14,14 @@ function getConfig(): BaseEntityModuleOptions {
             }
         },
         exporter: {
-            async processReqForExport(req: CrudRequest): Promise<void> {
+            processReqForExport(req: CrudRequest, innerFunc) {
                 req.options.query.join = {
                     student: { eager: true },
                     teacher: { eager: true },
                     klass: { eager: true },
                     lesson: { eager: true }
                 };
+                return innerFunc(req);
             },
             getExportHeaders(): IHeader[] {
                 return [

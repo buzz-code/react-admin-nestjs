@@ -7,10 +7,11 @@ function getConfig(): BaseEntityModuleOptions {
     return {
         entity: Lesson,
         exporter: {
-            async processReqForExport(req: CrudRequest): Promise<void> {
+            processReqForExport(req: CrudRequest, innerFunc) {
                 req.options.query.join = {
                     teacher: { eager: true },
                 };
+                return innerFunc(req);
             },
             getExportHeaders(): IHeader[] {
                 return [
