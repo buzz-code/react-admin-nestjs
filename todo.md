@@ -71,9 +71,14 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add years in all tables - check if can use null values
 
 # todo
+* make student klass repot & sudent base klass generic
+* use https://orkhan.gitbook.io/typeorm/docs/embedded-entities
+* make year column nullable
+* move import & export to a utils folder
 * save import file data in a table
 * enable reverting for imported file - use response from bulk create api
 * import from email
+* add get, post, put, delete function to data provider
 * better text management in db - no need to daclare each text so many times
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * add yemot call module to dynamic modules
