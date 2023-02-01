@@ -9,6 +9,13 @@ import {
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
 
+export enum KlassTypeEnum {
+  baseKlass = 'כיתת אם',
+  track = 'מסלול',
+  speciality = 'התמחות',
+  other = 'אחר',
+}
+
 @Index("klass_types_users_idx", ["userId"], {})
 @Entity("klass_types")
 export class KlassType implements IHasUserId {
@@ -23,6 +30,9 @@ export class KlassType implements IHasUserId {
 
   @Column("varchar", { name: "name", length: 500 })
   name: string;
+
+  @Column('varchar', { default: KlassTypeEnum.other })
+  klassTypeEnum: KlassTypeEnum;
 
   @Column("timestamp", {
     name: "created_at",

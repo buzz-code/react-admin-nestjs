@@ -1,4 +1,4 @@
-import { NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateInput } from 'react-admin';
+import { NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateInput, AutocompleteInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -15,11 +15,14 @@ const Datagrid = ({ isAdmin, ...props }) => {
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <NumberField source="key" />
             <TextField source="name" />
+            <TextField source="klassTypeEnum" />
             {isAdmin && <DateField source="createdAt" />}
             {isAdmin && <DateField source="updatedAt" />}
         </CommonDatagrid>
     );
 }
+
+const klassTypeEnum = ['כיתת אם', 'מסלול', 'התמחות', 'אחר'];
 
 const Inputs = ({ isCreate, isAdmin }) => {
     return <>
@@ -27,6 +30,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {isAdmin && <ReferenceInput source="userId" reference="user" />}
         <NumberInput source="key" />
         <TextInput source="name" />
+        <AutocompleteInput source="klassTypeEnum" choices={klassTypeEnum.map(item => ({ id: item, name: item }))} />
         {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
     </>

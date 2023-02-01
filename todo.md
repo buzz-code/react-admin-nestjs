@@ -71,9 +71,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add years in all tables - check if can use null values
 * import from email
 * move import & export to a utils folder
+* make student klass repot & sudent base klass generic
 
 # todo
-* make student klass repot & sudent base klass generic
 * use https://orkhan.gitbook.io/typeorm/docs/embedded-entities
 * make year column nullable
 * save import file data in a table

@@ -37,6 +37,7 @@ export default {
             name: 'סוג כיתה |||| סוגי כיתה',
             fields: {
                 ...generalResourceFieldsTranslation,
+                klassTypeEnum: 'סוג כיתה בדו"ח',
             }
         },
         known_absence: {
@@ -112,9 +113,9 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 studentTz: 'תלמידה',
-                klasses1: 'כיתת בסיס',
-                klasses2: 'התמחות',
-                klasses3: 'נוסף',
+                klasses1: 'כיתת אם',
+                klasses2: 'מסלול',
+                klasses3: 'התמחות',
                 klassesNull: 'אחר',
             }
         }
