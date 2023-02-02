@@ -18,7 +18,7 @@ export class KnownAbsence implements IHasUserId {
   @Column("int", { name: "user_id" })
   userId: number;
 
-  @Column()
+  @Column({ nullable: true })
   year: number;
 
   @Column("varchar", { name: "student_tz", length: 10 })

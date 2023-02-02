@@ -19,7 +19,7 @@ export class Student implements IHasUserId {
   @Column("int", { name: "user_id" })
   userId: number;
 
-  @Column()
+  @Column({ nullable: true })
   year: number;
 
   @Column("varchar", { name: "tz", length: 10 })

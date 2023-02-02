@@ -72,10 +72,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * import from email
 * move import & export to a utils folder
 * make student klass repot & sudent base klass generic
+* make year column nullable
 
 # todo
-* use https://orkhan.gitbook.io/typeorm/docs/embedded-entities
-* make year column nullable
 * save import file data in a table
 * enable reverting for imported file - use response from bulk create api
 * add get, post, put, delete function to data provider
@@ -89,6 +88,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * 
 
 # todo later
+* use https://orkhan.gitbook.io/typeorm/docs/embedded-entities
 * add mail server for sending & receiving - https://docs.postalserver.io/
 * add gzip to caddy
 * rate limit backend requests

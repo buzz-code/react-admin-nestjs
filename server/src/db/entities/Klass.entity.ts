@@ -20,7 +20,7 @@ export class Klass implements IHasUserId {
   @Column("int", { name: "user_id" })
   userId: number;
 
-  @Column()
+  @Column({ nullable: true })
   year: number;
 
   @Column("int", { name: "key" })
