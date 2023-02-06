@@ -22,8 +22,4 @@ const entity = {
     exporter: false,
 };
 
-export default {
-    ...getResourceComponents(entity),
-    create: null,
-    edit: null,
-};
+export default getResourceComponents(entity);
