@@ -20,9 +20,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d shared/config/migration.config.ts",
+    "typeorm:cli-no-d": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
     "typeorm:run": "npm run typeorm:cli -- migration:run",
     "typeorm:generate": "npm run typeorm:cli -- migration:generate",
-    "typeorm:create": "npm run typeorm:cli -- migration:create",
+    "typeorm:create": "npm run typeorm:cli-no-d -- migration:create",
     "typeorm:revert": "npm run typeorm:cli -- migration:revert"
   },
   "dependencies": {
