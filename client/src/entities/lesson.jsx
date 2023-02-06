@@ -1,6 +1,6 @@
 import { DateField, DateInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
-import { CommonReferenceField } from '@shared/components/CommonReferenceField';
+import { MultiReferenceField } from '@shared/components/CommonReferenceField';
 import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -20,7 +20,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
             <TextField source="key" />
             <TextField source="name" />
             <TextField source="klasses" />
-            <CommonReferenceField source="teacherId" reference="teacher" target="tz" />
+            <MultiReferenceField source="teacherReferenceId" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             <DateField source="startDate" />
             <DateField source="endDate" />
             {isAdmin && <DateField source="createdAt" />}

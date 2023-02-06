@@ -7,10 +7,14 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 studentTz: 'תלמידה',
+                studentReferenceId: 'תלמידה',
                 'studentBaseKlass.klassName': 'כיתת בסיס',
                 teacherId: 'מורה',
+                teacherReferenceId: 'מורה',
                 klassId: 'כיתה',
+                klassReferenceId: 'כיתה',
                 lessonId: 'שיעור',
+                lessonReferenceId: 'שיעור',
                 reportDate: 'תאריך דיווח',
                 howManyLessons: 'מספר שיעורים',
                 absCount: 'חיסורים',
@@ -30,7 +34,9 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 klassTypeId: 'סוג כיתה',
+                klassTypeReferenceId: 'סוג כיתה',
                 teacherId: 'מורה',
+                teacherReferenceId: 'מורה',
             }
         },
         klass_type: {
@@ -45,6 +51,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 studentTz: 'תלמידה',
+                studentReferenceId: 'תלמידה',
                 reportDate: 'תאריך דיווח',
                 absnceCount: 'מספר חיסורים',
                 absnceCode: 'קוד חיסור',
@@ -59,6 +66,7 @@ export default {
                 ...generalResourceFieldsTranslation,
                 klasses: 'כיתות',
                 teacherId: 'מורה',
+                teacherReferenceId: 'מורה',
                 startDate: 'תאריך התחלה',
                 endDate: 'תאריך סיום',
             }
@@ -68,7 +76,9 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 studentTz: 'תלמידה',
+                studentReferenceId: 'תלמידה',
                 klassId: 'כיתה',
+                klassReferenceId: 'כיתה',
             }
         },
         student: {
@@ -113,6 +123,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 studentTz: 'תלמידה',
+                studentReferenceId: 'תלמידה',
                 klasses1: 'כיתת אם',
                 klasses2: 'מסלול',
                 klasses3: 'התמחות',

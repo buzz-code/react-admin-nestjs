@@ -1,6 +1,6 @@
 import { DateField, DateInput, NumberField, NumberInput, TextField, TextInput, ReferenceField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
-import { CommonReferenceField } from '@shared/components/CommonReferenceField';
+import { MultiReferenceField } from '@shared/components/CommonReferenceField';
 import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 
@@ -19,11 +19,11 @@ const Datagrid = ({ isAdmin, ...props }) => {
         <CommonDatagrid {...props}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <CommonReferenceField source="studentTz" reference="student" target="tz" />
+            <MultiReferenceField source="studentReferenceId" optionalSource="studentTz" reference="student" optionalTarget="tz" />
             <TextField source="studentBaseKlass.klassName" />
-            <CommonReferenceField source="teacherId" reference="teacher" target="tz" />
-            <CommonReferenceField source="klassId" reference="klass" target="key" />
-            <CommonReferenceField source="lessonId" reference="lesson" target="key" />
+            <MultiReferenceField source="teacherReferenceId" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
+            <MultiReferenceField source="klassReferenceId" optionalSource="klassId" reference="klass" optionalTarget="key" />
+            <MultiReferenceField source="lessonReferenceId" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
             <DateField source="reportDate" />
             <NumberField source="howManyLessons" />
             <NumberField source="absCount" />

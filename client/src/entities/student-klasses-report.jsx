@@ -1,6 +1,6 @@
 import { ReferenceField, TextField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
-import { CommonReferenceField } from '@shared/components/CommonReferenceField';
+import { MultiReferenceField } from '@shared/components/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 
 const Datagrid = ({ isAdmin, ...props }) => {
@@ -8,7 +8,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
         <CommonDatagrid {...props} readonly>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <CommonReferenceField source="studentTz" reference="student" target="tz" />
+            <MultiReferenceField source="studentReferenceId" optionalSource="studentTz" reference="student" optionalTarget="tz" />
             <TextField source="klasses1" />
             <TextField source="klasses2" />
             <TextField source="klasses3" />
