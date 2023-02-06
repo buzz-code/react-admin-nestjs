@@ -73,8 +73,14 @@ https://github.com/tinovyatkin/nest-puppeteer
 * move import & export to a utils folder
 * make student klass repot & sudent base klass generic
 * make year column nullable
+* use multi reference field
 
 # todo
+* add typeorm migration - all foreign keys are using id
+* validate exports are working after change
+* update in reference input
+* default order by 
+* add support for order by of names
 * save import file data in a table
 * enable reverting for imported file - use response from bulk create api
 * add get, post, put, delete function to data provider
@@ -99,7 +105,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * date-time inputs https://www.npmjs.com/package/react-admin-date-inputs-refactor?activeTab=readme https://www.npmjs.com/package/@mpampin/react-admin-date-inputs https://www.npmjs.com/package/@sklinet/react-admin-date-inputs?activeTab=readme https://www.npmjs.com/package/react-admin-date-picker?activeTab=readme https://www.npmjs.com/package/react-admin-material-datepicker?activeTab=readme
 * permissions - https://www.npmjs.com/package/@blackbox-vision/ra-rbac
 * use id column for relation everywhere
-* add typeorm migration - all foreign keys are using id
 * k3s
 * improve nestjs = https://wanago.io/2021/05/03/api-nestjs-cpu-intensive-tasks-queues/
 * use vite for server
