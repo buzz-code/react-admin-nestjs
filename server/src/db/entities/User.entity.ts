@@ -12,21 +12,21 @@ import { Text } from "src/db/entities/Text.entity";
 
 @Entity("users")
 export class User extends BaseUser {
-    @OneToMany(() => Grade, (grades) => grades.user)
+    // @OneToMany(() => Grade, (grades) => grades.user)
     grades: Grade[];
   
-    @OneToMany(() => KlassType, (klassTypes) => klassTypes.user)
+    // @OneToMany(() => KlassType, (klassTypes) => klassTypes.user)
     klassTypes: KlassType[];
   
-    @OneToMany(() => KnownAbsence, (knownAbsences) => knownAbsences.user)
+    // @OneToMany(() => KnownAbsence, (knownAbsences) => knownAbsences.user)
     knownAbsences: KnownAbsence[];
   
-    @OneToMany(() => Student, (students) => students.user)
+    // @OneToMany(() => Student, (students) => students.user)
     students: Student[];
   
-    @OneToMany(() => Teacher, (teachers) => teachers.user)
+    // @OneToMany(() => Teacher, (teachers) => teachers.user)
     teachers: Teacher[];
   
-    @OneToMany(() => Text, (texts) => texts.user)
+    // @OneToMany(() => Text, (texts) => texts.user)
     texts: Text[];
 }
