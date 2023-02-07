@@ -18,6 +18,8 @@ FROM node:16-alpine AS builder
 
 RUN apk add git
 
+ARG REACT_APP_API_URL
+
 ENV NODE_ENV production
 
 WORKDIR /app

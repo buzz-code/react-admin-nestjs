@@ -64,4 +64,4 @@ COPY --from=builder /app/yarn.lock .
 COPY --from=builder /app/dist/ ./dist/
 COPY --from=builder /app/node_modules/ ./node_modules/
 
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]
