@@ -2,10 +2,10 @@ import { DateField, DateInput, NumberField, NumberInput, ReferenceField, Referen
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
+import { CommonReferenceInputFilter } from '@shared/components/CommonReferenceInputFilter';
 
 const filters = [
-    <CommonReferenceInput source="studentTz" reference="student" optionValue="tz" />,
+    <CommonReferenceInputFilter source="studentReferenceId" reference="student" />,
     <DateInput source="reportDate" />,
     <NumberInput source="absnceCount" />,
     <NumberInput source="absnceCode" />,
@@ -36,7 +36,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <ReferenceInput source="userId" reference="user" />}
-        <TextInput source="studentTz" />
+        <ReferenceInput source="studentReferenceId" reference="student" />
         <DateInput source="reportDate" />
         <NumberInput source="absnceCount" />
         <NumberInput source="absnceCode" />

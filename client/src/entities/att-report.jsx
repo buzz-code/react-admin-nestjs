@@ -1,17 +1,17 @@
-import { DateField, DateInput, NumberField, NumberInput, TextField, TextInput, ReferenceField } from 'react-admin';
+import { DateField, DateInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/CommonReferenceField';
-import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
+import { CommonReferenceInputFilter } from '@shared/components/CommonReferenceInputFilter';
 
 const filters = [
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
-    <CommonReferenceInput source="studentTz" reference="student" optionValue="tz" />,
+    <CommonReferenceInputFilter source="studentReferenceId" reference="student" />,
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
-    <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />,
-    <CommonReferenceInput source="klassId" reference="klass" optionValue="key" />,
-    <CommonReferenceInput source="lessonId" reference="lesson" optionValue="key" />,
+    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" />,
+    <CommonReferenceInputFilter source="klassReferenceId" reference="klass" />,
+    <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" />,
 ];
 
 const Datagrid = ({ isAdmin, ...props }) => {
@@ -39,11 +39,11 @@ const Datagrid = ({ isAdmin, ...props }) => {
 const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
-        <CommonReferenceInput source="studentTz" reference="student" optionValue="tz" />
-        <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />
-        <CommonReferenceInput source="klassId" reference="klass" optionValue="key" />
-        <CommonReferenceInput source="lessonId" reference="lesson" optionValue="key" />
+        {isAdmin && <ReferenceInput source="userId" reference="user" />}
+        <ReferenceInput source="studentReferenceId" reference="student" />
+        <ReferenceInput source="teacherReferenceId" reference="teacher" />
+        <ReferenceInput source="klassReferenceId" reference="klass" />
+        <ReferenceInput source="lessonReferenceId" reference="lesson" />
         <DateInput source="reportDate" />
         <NumberInput source="howManyLessons" />
         <DateInput source="absCount" />

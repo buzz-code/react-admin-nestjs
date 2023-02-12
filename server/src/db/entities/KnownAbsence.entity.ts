@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   Entity,
   Index,
@@ -8,10 +9,21 @@ import {
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
+import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
+import { Student } from "./Student.entity";
 
 @Index("known_users_idx", ["userId"], {})
 @Entity("known_absences")
 export class KnownAbsence implements IHasUserId {
+  @BeforeInsert()
+  async fillFields() {
+    const dataSource = await getDataSource([Student, User]);
+
+    this.studentReferenceId = await findOneAndAssignReferenceId(
+      dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+    );
+  }
+
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -23,6 +35,9 @@ export class KnownAbsence implements IHasUserId {
 
   @Column("varchar", { name: "student_tz", length: 10 })
   studentTz: string;
+
+  @Column({ nullable: true })
+  studentReferenceId: number;
 
   @Column("date", { name: "report_date" })
   reportDate: string;

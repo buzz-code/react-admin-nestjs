@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   Entity,
   Index,
@@ -8,10 +9,33 @@ import {
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
+import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
+import { Student } from "./Student.entity";
+import { Klass } from "./Klass.entity";
+import { Lesson } from "./Lesson.entity";
+import { Teacher } from "./Teacher.entity";
 
 @Index("grades_users_idx", ["userId"], {})
 @Entity("grades")
 export class Grade implements IHasUserId {
+  @BeforeInsert()
+  async fillFields() {
+    const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User]);
+
+    this.studentReferenceId = await findOneAndAssignReferenceId(
+      dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+    );
+    this.teacherReferenceId = await findOneAndAssignReferenceId(
+      dataSource, Teacher, { year: this.year, tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
+    );
+    this.klassReferenceId = await findOneAndAssignReferenceId(
+      dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
+    );
+    this.lessonReferenceId = await findOneAndAssignReferenceId(
+      dataSource, Lesson, { year: this.year, key: this.lessonId }, this.userId, this.lessonReferenceId, this.lessonId
+    );
+  }
+
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -24,14 +48,26 @@ export class Grade implements IHasUserId {
   @Column("varchar", { name: "student_tz", length: 10 })
   studentTz: string;
 
+  @Column({ nullable: true })
+  studentReferenceId: number;
+
   @Column("varchar", { name: "teacher_id", length: 10 })
   teacherId: string;
+
+  @Column({ nullable: true })
+  teacherReferenceId: number;
 
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number | null;
 
+  @Column({ nullable: true })
+  klassReferenceId: number;
+
   @Column("int", { name: "lesson_id" })
   lessonId: number;
+
+  @Column({ nullable: true })
+  lessonReferenceId: number;
 
   @Column("date", { name: "report_date" })
   reportDate: string;

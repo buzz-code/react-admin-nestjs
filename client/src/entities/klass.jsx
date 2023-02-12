@@ -1,15 +1,15 @@
 import { TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateInput, NumberInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/CommonReferenceField';
-import { CommonReferenceInput } from '@shared/components/CommonRefenceInput';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
+import { CommonReferenceInputFilter } from '@shared/components/CommonReferenceInputFilter';
 
 const filters = [
     <NumberInput source="key" />,
     <TextInput source="name:$cont" alwaysOn />,
-    <CommonReferenceInput source="klassTypeId" reference="klassType" />,
-    <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />,
+    <CommonReferenceInputFilter source="klassTypeReferenceId" reference="klass_type" />,
+    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" />,
 ];
 
 const Datagrid = ({ isAdmin, ...props }) => {
@@ -33,8 +33,8 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {isAdmin && <ReferenceInput source="userId" reference="user" />}
         <NumberInput source="key" />
         <TextInput source="name" />
-        <CommonReferenceInput source="klassTypeId" reference="klass_type" />
-        <CommonReferenceInput source="teacherId" reference="teacher" optionValue="tz" />
+        <ReferenceInput source="klassTypeReferenceId" reference="klass_type" />
+        <ReferenceInput source="teacherReferenceId" reference="teacher" />
         {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
     </>

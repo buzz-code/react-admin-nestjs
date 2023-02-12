@@ -74,11 +74,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make student klass repot & sudent base klass generic
 * make year column nullable
 * use multi reference field
+* add typeorm migration - all foreign keys are using id
+* update in reference input
 
 # todo
-* add typeorm migration - all foreign keys are using id
+* add audit log - full preview of item instead of soft delete
+* soft delete - https://github.com/nestjsx/crud/issues/433
 * validate exports are working after change
-* update in reference input
 * default order by 
 * add support for order by of names
 * save import file data in a table
@@ -87,8 +89,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * better text management in db - no need to daclare each text so many times
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * add yemot call module to dynamic modules
-* add audit log - full preview of item instead of soft delete
-* soft delete - https://github.com/nestjsx/crud/issues/433
 * logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
 * check docker security issues
 * 
