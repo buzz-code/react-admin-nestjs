@@ -22,6 +22,7 @@ import teacherConfig from './entity-modules/teacher.config';
 import textConfig from './entity-modules/text.config';
 import studentKlassReportConfig from './entity-modules/student-klass-report.config';
 import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass';
+import { AuditLog } from '@shared/entities/AuditLog.entity';
 
 
 @Module({
@@ -41,6 +42,7 @@ import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass';
     BaseEntityModule.register(textConfig),
     BaseEntityModule.register(studentKlassReportConfig),
     BaseEntityModule.register({ entity: StudentBaseKlass }),
+    BaseEntityModule.register({ entity: AuditLog }),
     AuthModule,
     YemotCallModule.register(new YemotProccessorImpl())
   ],

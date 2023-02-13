@@ -48,6 +48,7 @@ const App = () => (
 
             {isAdmin(permissions) && <>
               <Resource name="yemot_call" {...resourceEntityGuesser} />
+              <Resource name="audit_log" {...resourceEntityGuesser} />
               <Resource name="user" {...user} />
             </>}
 
