@@ -76,10 +76,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * use multi reference field
 * add typeorm migration - all foreign keys are using id
 * update in reference input
-
-# todo
 * add audit log - full preview of item instead of soft delete
 * soft delete - https://github.com/nestjsx/crud/issues/433
+
+# todo
 * validate exports are working after change
 * default order by 
 * add support for order by of names
