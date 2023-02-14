@@ -78,9 +78,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update in reference input
 * add audit log - full preview of item instead of soft delete
 * soft delete - https://github.com/nestjsx/crud/issues/433
+* validate exports are working after change
 
 # todo
-* validate exports are working after change
 * default order by 
 * add support for order by of names
 * save import file data in a table

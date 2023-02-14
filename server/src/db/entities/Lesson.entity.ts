@@ -68,10 +68,6 @@ export class Lesson implements IHasUserId {
   updatedAt: Date;
 
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
-  @JoinColumn([
-    { name: "user_id", referencedColumnName: "userId" },
-    { name: "year", referencedColumnName: "year" },
-    { name: "teacher_id", referencedColumnName: "tz" }
-  ])
+  @JoinColumn({ name: 'teacherReferenceId' })
   teacher: Teacher;
 }

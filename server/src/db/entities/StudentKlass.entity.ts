@@ -62,18 +62,10 @@ export class StudentKlass implements IHasUserId {
   updatedAt: Date;
 
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })
-  @JoinColumn([
-    { name: "user_id", referencedColumnName: "userId" },
-    { name: "year", referencedColumnName: "year" },
-    { name: "student_tz", referencedColumnName: "tz" }
-  ])
+  @JoinColumn({ name: 'studentReferenceId' })
   student: Student;
 
   @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
-  @JoinColumn([
-    { name: "user_id", referencedColumnName: "userId" },
-    { name: "year", referencedColumnName: "year" },
-    { name: "klass_id", referencedColumnName: "key" }
-  ])
+  @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
 }

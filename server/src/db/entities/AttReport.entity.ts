@@ -101,42 +101,22 @@ export class AttReport implements IHasUserId {
   updatedAt: Date;
 
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })
-  @JoinColumn([
-    { name: "user_id", referencedColumnName: "userId" },
-    { name: "year", referencedColumnName: "year" },
-    { name: "student_tz", referencedColumnName: "tz" }
-  ])
+  @JoinColumn({ name: 'studentReferenceId' })
   student: Student;
 
   @ManyToOne(() => StudentBaseKlass, { createForeignKeyConstraints: false })
-  @JoinColumn([
-    { name: "user_id", referencedColumnName: "userId" },
-    { name: "year", referencedColumnName: "year" },
-    { name: "student_tz", referencedColumnName: "tz" }
-  ])
+  @JoinColumn({ name: 'studentReferenceId', referencedColumnName: 'id' })
   studentBaseKlass: StudentBaseKlass;
 
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
-  @JoinColumn([
-    { name: "user_id", referencedColumnName: "userId" },
-    { name: "year", referencedColumnName: "year" },
-    { name: "teacher_id", referencedColumnName: "tz" }
-  ])
+  @JoinColumn({ name: 'teacherReferenceId' })
   teacher: Teacher;
 
   @ManyToOne(() => Lesson, { createForeignKeyConstraints: false })
-  @JoinColumn([
-    { name: "user_id", referencedColumnName: "userId" },
-    { name: "year", referencedColumnName: "year" },
-    { name: "lesson_id", referencedColumnName: "key" }
-  ])
+  @JoinColumn({ name: 'lessonReferenceId' })
   lesson: Lesson;
 
   @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
-  @JoinColumn([
-    { name: "user_id", referencedColumnName: "userId" },
-    { name: "year", referencedColumnName: "year" },
-    { name: "klass_id", referencedColumnName: "key" }
-  ])
+  @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
 }
