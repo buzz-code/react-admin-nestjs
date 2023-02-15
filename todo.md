@@ -81,7 +81,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * validate exports are working after change
 
 # todo
-* default order by 
 * add support for order by of names
 * save import file data in a table
 * enable reverting for imported file - use response from bulk create api
