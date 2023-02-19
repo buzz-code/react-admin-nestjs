@@ -82,6 +82,16 @@ https://github.com/tinovyatkin/nest-puppeteer
 
 # todo
 * add support for order by of names
+לצרף את הטבלה רק אם היא מופיעה במיון
+* להכין מסמך בסיס לתמחור
+חבילה בסיסית בחינם
+שאר החבילות - תמחור לפי כמות תלמידות
+תוספת מחיר למשתמשים
+מחיר שקוף - יופיע באתר
+* להוסיף רשימת קבצים שהועלו
+* להוסיף אפשרות לבחור כתובות מייל
+* להציג את השיחות של ימות המשיח בצורה יפה
+* לשפר תהליך טלפוני
 * save import file data in a table
 * enable reverting for imported file - use response from bulk create api
 * add get, post, put, delete function to data provider
