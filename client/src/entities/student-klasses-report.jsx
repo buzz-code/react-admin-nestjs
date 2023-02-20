@@ -8,7 +8,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
         <CommonDatagrid {...props} readonly>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <MultiReferenceField source="studentReferenceId" optionalSource="studentTz" reference="student" optionalTarget="tz" />
+            <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
             <TextField source="klasses1" />
             <TextField source="klasses2" />
             <TextField source="klasses3" />

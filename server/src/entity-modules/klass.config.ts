@@ -6,6 +6,12 @@ import { Klass } from "src/db/entities/Klass.entity";
 function getConfig(): BaseEntityModuleOptions {
     return {
         entity: Klass,
+        query: {
+            join: {
+                teacher: {},
+                klassType: {},
+            }
+        },
         exporter: {
             processReqForExport(req: CrudRequest, innerFunc) {
                 req.options.query.join = {

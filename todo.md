@@ -79,10 +79,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add audit log - full preview of item instead of soft delete
 * soft delete - https://github.com/nestjsx/crud/issues/433
 * validate exports are working after change
+* add support for order by of names
+* לצרף את הטבלה רק אם היא מופיעה במיון
 
 # todo
-* add support for order by of names
-לצרף את הטבלה רק אם היא מופיעה במיון
 * להכין מסמך בסיס לתמחור
 חבילה בסיסית בחינם
 שאר החבילות - תמחור לפי כמות תלמידות

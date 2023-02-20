@@ -4,6 +4,11 @@ import { StudentKlassReport } from "src/db/view-entities/StudentKlassReport.enti
 function getConfig(): BaseEntityModuleOptions {
     return {
         entity: StudentKlassReport,
+        query: {
+            join: {
+                student: {},
+            },
+        },
     }
 }
 

@@ -6,6 +6,11 @@ import { Lesson } from "src/db/entities/Lesson.entity";
 function getConfig(): BaseEntityModuleOptions {
     return {
         entity: Lesson,
+        query: {
+            join: {
+                teacher: {},
+            },
+        },
         exporter: {
             processReqForExport(req: CrudRequest, innerFunc) {
                 req.options.query.join = {

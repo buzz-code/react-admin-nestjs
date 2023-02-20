@@ -19,8 +19,8 @@ const Datagrid = ({ isAdmin, ...props }) => {
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <TextField source="key" />
             <TextField source="name" />
-            <MultiReferenceField source="klassTypeReferenceId" reference="klass_type" optionalSource="klassTypeId" optionalTarget="id" />
-            <MultiReferenceField source="teacherReferenceId" reference="teacher" optionalSource="teacherId" optionalTarget="tz" />
+            <MultiReferenceField source="klassTypeReferenceId" sortBy="klassType.name" reference="klass_type" optionalSource="klassTypeId" optionalTarget="id" />
+            <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" reference="teacher" optionalSource="teacherId" optionalTarget="tz" />
             {isAdmin && <DateField source="createdAt" />}
             {isAdmin && <DateField source="updatedAt" />}
         </CommonDatagrid>

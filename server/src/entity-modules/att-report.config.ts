@@ -10,7 +10,11 @@ function getConfig(): BaseEntityModuleOptions {
             join: {
                 studentBaseKlass: {
                     eager: true
-                }
+                },
+                student: {},
+                teacher: {},
+                lesson: {},
+                klass: {},
             }
         },
         exporter: {
