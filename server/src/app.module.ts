@@ -23,6 +23,7 @@ import textConfig from './entity-modules/text.config';
 import studentKlassReportConfig from './entity-modules/student-klass-report.config';
 import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass';
 import { AuditLog } from '@shared/entities/AuditLog.entity';
+import { ImportFile } from '@shared/entities/ImportFile.entity';
 
 
 @Module({
@@ -43,6 +44,7 @@ import { AuditLog } from '@shared/entities/AuditLog.entity';
     BaseEntityModule.register(studentKlassReportConfig),
     BaseEntityModule.register({ entity: StudentBaseKlass }),
     BaseEntityModule.register({ entity: AuditLog }),
+    BaseEntityModule.register({ entity: ImportFile }),
     AuthModule,
     YemotCallModule.register(new YemotProccessorImpl())
   ],
