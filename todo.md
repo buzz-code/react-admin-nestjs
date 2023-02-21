@@ -81,9 +81,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * validate exports are working after change
 * add support for order by of names
 * לצרף את הטבלה רק אם היא מופיעה במיון
+* save import file data in a table
+* add get, post, put, delete function to data provider
+* define a table for 'audit-log' & 'import-file' data
 
 # todo
-* save import file data in a table
 * create a table of 'payment tracks'
 * להכין מסמך בסיס לתמחור
 חבילה בסיסית בחינם
@@ -94,8 +96,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * להוסיף אפשרות לבחור כתובות מייל
 * להציג את השיחות של ימות המשיח בצורה יפה
 * לשפר תהליך טלפוני
-* enable reverting for imported file - use response from bulk create api
-* add get, post, put, delete function to data provider
+* enable reverting for imported file
+* add menu grouping
 * better text management in db - no need to daclare each text so many times
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * add yemot call module to dynamic modules

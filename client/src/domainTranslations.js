@@ -129,6 +129,15 @@ export default {
                 klasses3: 'התמחות',
                 klassesNull: 'אחר',
             }
-        }
+        },
+        import_file: {
+            name: 'קבצים שהועלו',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                fileName: 'שם הקובץ',
+                entityIds: 'מזהים',
+                entityName: 'סוג טבלה',
+            }
+        },
     }
 };

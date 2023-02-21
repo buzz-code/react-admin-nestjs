@@ -19,9 +19,13 @@ import lesson from "src/entities/lesson";
 import studentKlass from "src/entities/student-klass";
 import student from "src/entities/student";
 import teacher from "src/entities/teacher";
-import text from "@shared/components/common-entities/text";
 import studentKlassesReport from "src/entities/student-klasses-report";
+
+import text from "@shared/components/common-entities/text";
 import user from "@shared/components/common-entities/user";
+import auditLog from '@shared/components/common-entities/audit-log';
+import importFile from '@shared/components/common-entities/import-file';
+
 import { isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 
@@ -45,11 +49,11 @@ const App = () => (
             <Resource name="teacher" {...teacher} />
             <Resource name="student_klass_report" {...studentKlassesReport} />
             <Resource name="text" {...text} />
+            <Resource name="import_file" {...importFile} />
 
             {isAdmin(permissions) && <>
               <Resource name="yemot_call" {...resourceEntityGuesser} />
-              <Resource name="audit_log" {...resourceEntityGuesser} />
-              <Resource name="import_file" {...resourceEntityGuesser} />
+              <Resource name="audit_log" {...auditLog} />
               <Resource name="user" {...user} />
             </>}
 
