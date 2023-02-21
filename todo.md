@@ -96,6 +96,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * להוסיף אפשרות לבחור כתובות מייל
 * להציג את השיחות של ימות המשיח בצורה יפה
 * לשפר תהליך טלפוני
+* update react admin version
 * enable reverting for imported file
 * add menu grouping
 * better text management in db - no need to daclare each text so many times
