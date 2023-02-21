@@ -86,13 +86,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * define a table for 'audit-log' & 'import-file' data
 * update react admin version
 * להוסיף רשימת קבצים שהועלו
+* add yemot call module to dynamic modules
 
 # todo
-* add yemot call module to dynamic modules
-* להציג את השיחות של ימות המשיח בצורה יפה
-* לשפר תהליך טלפוני
-* add menu grouping
+* לשפר תהליך טלפוני- לנסות לשים שם את התהליך הטלפוני של מאיר
 * better text management in db - no need to daclare each text so many times
+* להציג את השיחות של ימות המשיח בצורה יפה
+* add menu grouping
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * logs  // https://console.cloud.google.com/logs/query?authuser=1&project=react-admin-nestjs-dev
 * logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
