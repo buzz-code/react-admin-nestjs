@@ -85,26 +85,26 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add get, post, put, delete function to data provider
 * define a table for 'audit-log' & 'import-file' data
 * update react admin version
+* להוסיף רשימת קבצים שהועלו
 
 # todo
+* add yemot call module to dynamic modules
+* להציג את השיחות של ימות המשיח בצורה יפה
+* לשפר תהליך טלפוני
+* add menu grouping
+* better text management in db - no need to daclare each text so many times
+* render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
+* logs  // https://console.cloud.google.com/logs/query?authuser=1&project=react-admin-nestjs-dev
+* logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
 * create a table of 'payment tracks'
 * להכין מסמך בסיס לתמחור
 חבילה בסיסית בחינם
 שאר החבילות - תמחור לפי כמות תלמידות
-תוספת מחיר למשתמשים
+תוספת מחיר לפי משתמשים
 מחיר שקוף - יופיע באתר
-* להוסיף רשימת קבצים שהועלו
 * להוסיף אפשרות לבחור כתובות מייל
-* להציג את השיחות של ימות המשיח בצורה יפה
-* לשפר תהליך טלפוני
-* enable reverting for imported file
-* add menu grouping
-* better text management in db - no need to daclare each text so many times
-* render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
-* add yemot call module to dynamic modules
-* logs  // https://console.cloud.google.com/logs/query?authuser=1&project=react-admin-nestjs-dev
-* logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
 * check docker security issues
+* enable reverting for imported file
 * 
 
 # todo later
