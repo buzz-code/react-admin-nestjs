@@ -83,6 +83,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * לצרף את הטבלה רק אם היא מופיעה במיון
 
 # todo
+* save import file data in a table
+* create a table of 'payment tracks'
 * להכין מסמך בסיס לתמחור
 חבילה בסיסית בחינם
 שאר החבילות - תמחור לפי כמות תלמידות
@@ -92,7 +94,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * להוסיף אפשרות לבחור כתובות מייל
 * להציג את השיחות של ימות המשיח בצורה יפה
 * לשפר תהליך טלפוני
-* save import file data in a table
 * enable reverting for imported file - use response from bulk create api
 * add get, post, put, delete function to data provider
 * better text management in db - no need to daclare each text so many times
