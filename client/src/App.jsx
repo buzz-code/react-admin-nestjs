@@ -19,9 +19,9 @@ import lesson from "src/entities/lesson";
 import studentKlass from "src/entities/student-klass";
 import student from "src/entities/student";
 import teacher from "src/entities/teacher";
-import text from "src/entities/text";
+import text from "@shared/components/common-entities/text";
 import studentKlassesReport from "src/entities/student-klasses-report";
-import user from "src/entities/user";
+import user from "@shared/components/common-entities/user";
 import { isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 
