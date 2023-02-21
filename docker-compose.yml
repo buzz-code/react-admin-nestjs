@@ -13,6 +13,7 @@ services:
         pull_policy: build
         environment:
             PORT: 80
+            REACT_APP_API_URL: https://api.$DOMAIN_NAME
         labels:
             caddy: $DOMAIN_NAME
             caddy.reverse_proxy: "{{upstreams 80}}"
