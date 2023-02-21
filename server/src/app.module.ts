@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleConfig } from '@shared/config/typeorm.config';
 import { RequestContextModule } from 'nestjs-request-context';
 import { AuthModule } from '@shared/auth/auth.module';
-import { YemotCallModule } from '@shared/utils/yemot/yemot-call.module';
-import { YemotProccessorImpl } from 'src/yemot.proccessor';
+import { YemotModule } from '@shared/utils/yemot/yemot.module';
+import { yemotProcessorProvider } from 'src/yemot.processor';
 import { BaseEntityModule } from '@shared/base-entity/base-entity.module';
 
 import userConfig from './entity-modules/user.config';
@@ -24,6 +24,7 @@ import studentKlassReportConfig from './entity-modules/student-klass-report.conf
 import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass';
 import { AuditLog } from '@shared/entities/AuditLog.entity';
 import { ImportFile } from '@shared/entities/ImportFile.entity';
+import { YemotCall } from '@shared/entities/YemotCall.entity';
 
 
 @Module({
@@ -45,8 +46,9 @@ import { ImportFile } from '@shared/entities/ImportFile.entity';
     BaseEntityModule.register({ entity: StudentBaseKlass }),
     BaseEntityModule.register({ entity: AuditLog }),
     BaseEntityModule.register({ entity: ImportFile }),
+    BaseEntityModule.register({ entity: YemotCall }),
     AuthModule,
-    YemotCallModule.register(new YemotProccessorImpl())
+    YemotModule.register(yemotProcessorProvider)
   ],
   controllers: [AppController],
   providers: [AppService],

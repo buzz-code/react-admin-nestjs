@@ -118,6 +118,11 @@ export default {
         yemot_call: {
             name: 'שיחה |||| שיחות',
         },
+        'yemot': {
+            ApiCallId: 'מזהה שיחה',
+            ApiDID: 'מספר מערכת',
+            ApiPhone: 'מספר טלפון שמתקשר',
+        },
         student_klass_report: {
             name: 'דוח שיוך תלמידה',
             fields: {
