@@ -1,9 +1,6 @@
 export class YemotRequest {
     params: any;
     dataSource: any;
-    has(key: string) {
-        return this.params[key] !== undefined;
-    }
     async getLessonFromLessonId(lessonId: string) {
         return { lessonId };
     }
@@ -29,6 +26,7 @@ export class Chain implements IHandler {
             if (index < this.handlers.length) {
                 const handler = this.handlers[index];
                 index++;
+                // console.log('handler name:', handler.constructor.name)
                 await handler.handleRequest(req, res, (handled: Boolean) => {
                     if (handled) {
                         return callback(true);
