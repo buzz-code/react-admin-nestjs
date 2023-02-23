@@ -4,6 +4,9 @@ export class YemotRequest {
     async getLessonFromLessonId(lessonId: string) {
         return { lessonId };
     }
+    async getTeacherByPhone(phone: string) {
+        return { name: 'teacher', phone };
+    }
 }
 export class YemotResponse {
     send(msg: string) { }
