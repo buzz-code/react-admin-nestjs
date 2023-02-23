@@ -4,9 +4,9 @@ class CheckIfLessonDefinedHandler extends Handler {
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.lesson !== undefined) {
             // Exit the chain early if lesson is already defined
-            next(true);
+            return next(true);
         } else {
-            next();
+            return next();
         }
     }
 }
@@ -17,17 +17,17 @@ class AskForLessonIdHandler {
             delete req.params.lessonToConfirm;
             return res.send('askForLessonId');
         }
-        next();
+        return next();
     }
 }
 
 class GetLessonFromLessonIdHandler {
-    handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
+    async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (!req.has('lessonToConfirm')) {
-            const lesson = req.getLessonFromLessonId(req.params.lessonId);
+            const lesson = await req.getLessonFromLessonId(req.params.lessonId);
             req.params.lessonToConfirm = lesson;
         }
-        next();
+        return next();
     }
 }
 
@@ -43,7 +43,7 @@ class AskForLessonConfirmHandler {
                 return res.send('askForLessonId');
             }
         }
-        next();
+        return next();
     }
 }
 
@@ -52,7 +52,7 @@ class ConfirmLessonHandler {
         if (req.params.lessonConfirm === true) {
             // Set the lesson and exit the chain if confirmed
             req.params.lesson = req.params.lessonToConfirm;
-            next();
+            return next();
         } else {
             // If not confirmed, ask for lesson ID again
             delete req.params.lessonId;

@@ -4,7 +4,7 @@ export class YemotRequest {
     has(key: string) {
         return this.params[key] !== undefined;
     }
-    getLessonFromLessonId(lessonId: string) {
+    async getLessonFromLessonId(lessonId: string) {
         return { lessonId };
     }
 }
@@ -13,7 +13,7 @@ export class YemotResponse {
 };
 
 export interface IHandler {
-    handleRequest: (req: YemotRequest, res: YemotResponse, callback: Function) => any;
+    handleRequest: (req: YemotRequest, res: YemotResponse, callback: Function) => Promise<any>;
 }
 
 export class Chain implements IHandler {
@@ -23,24 +23,24 @@ export class Chain implements IHandler {
         this.handlers = handlers;
     }
 
-    handleRequest(req: YemotRequest, res: YemotResponse, callback: Function) {
+    async handleRequest(req: YemotRequest, res: YemotResponse, callback: Function) {
         let index = 0;
-        const next = () => {
+        const next = async () => {
             if (index < this.handlers.length) {
                 const handler = this.handlers[index];
                 index++;
-                handler.handleRequest(req, res, (handled: Boolean) => {
+                await handler.handleRequest(req, res, (handled: Boolean) => {
                     if (handled) {
-                        callback(true);
+                        return callback(true);
                     } else {
-                        next();
+                        return next();
                     }
                 });
             } else {
-                callback(false);
+                return callback(false);
             }
         };
-        next();
+        return next();
     }
 
     addHandler(handler: IHandler) {
@@ -50,6 +50,6 @@ export class Chain implements IHandler {
 
 export abstract class Handler implements IHandler {
     handleRequest(req: YemotRequest, res: YemotResponse, callback: Function): any {
-        callback();
+        return callback();
     };
 }

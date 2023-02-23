@@ -18,12 +18,12 @@ describe('lesson chain of responsibility', () => {
                 lessonToConfirm: undefined,
                 lessonConfirm: undefined,
             },
-            getLessonFromLessonId: jest.fn().mockReturnValueOnce(defaultLesson),
+            getLessonFromLessonId: jest.fn().mockResolvedValue(defaultLesson),
             has: jest.fn((prop) => req.params[prop] !== undefined),
         };
         res = {
             continueMock: false,
-            send: jest.fn().mockImplementation((msg: string) => {
+            send: jest.fn(async (msg: string) => {
                 switch (msg) {
                     case 'askForLessonId':
                         req.params.lessonId = defaultLesson.id;
@@ -33,35 +33,35 @@ describe('lesson chain of responsibility', () => {
                         break;
                 }
                 if (res.continueMock) {
-                    chain.handleRequest(req, res, next);
+                    await chain.handleRequest(req, res, next);
                 }
             }),
         };
-        next = jest.fn();
+        next = jest.fn(() => Promise.resolve());
     });
 
-    test('lesson is confirmed, should set lesson and exit chain', () => {
+    test('lesson is confirmed, should set lesson and exit chain', async () => {
         req.params.lessonId = defaultLesson.id;
         req.params.lessonToConfirm = defaultLesson;
         req.params.lessonConfirm = true;
 
-        chain.handleRequest(req, res, next);
+        await chain.handleRequest(req, res, next);
 
         expect(next).toHaveBeenCalled();
         expect(req.params.lesson).toEqual(defaultLesson);
     });
 
-    test('lesson ID is not defined, should ask for lesson ID', () => {
-        chain.handleRequest(req, res, next);
+    test('lesson ID is not defined, should ask for lesson ID', async () => {
+        await chain.handleRequest(req, res, next);
 
         expect(next).not.toHaveBeenCalledWith();
         expect(res.send).toHaveBeenCalledWith('askForLessonId');
     });
 
-    test('lesson is found, should ask for confirmation', () => {
+    test('lesson is found, should ask for confirmation', async () => {
         req.params.lessonId = defaultLesson.id;
 
-        chain.handleRequest(req, res, next);
+        await chain.handleRequest(req, res, next);
 
         expect(req.params.lessonToConfirm).toEqual(defaultLesson);
         expect(next).not.toHaveBeenCalledWith();
@@ -69,7 +69,7 @@ describe('lesson chain of responsibility', () => {
         expect(res.send).toHaveBeenCalledWith('askForLessonConfirm');
     });
 
-    test('req has lessonId, lesson exists but is not confirmed, user enters a new lessonId which also exists and is confirmed', () => {
+    test('req has lessonId, lesson exists but is not confirmed, user enters a new lessonId which also exists and is confirmed', async () => {
         req.params.lessonId = 'math101';
         req.params.lessonToConfirm = {
             id: 'math101',
@@ -78,7 +78,7 @@ describe('lesson chain of responsibility', () => {
         req.params.lessonConfirm = false;
         res.continueMock = true;
 
-        chain.handleRequest(req, res, next);
+        await chain.handleRequest(req, res, next);
 
         expect(res.send).toBeCalledTimes(2);
         expect(res.send).toHaveBeenNthCalledWith(1, 'askForLessonId');
@@ -89,11 +89,11 @@ describe('lesson chain of responsibility', () => {
         expect(req.params.lesson).toEqual(defaultLesson);
     });
 
-    test('lesson is not found, should ask for lesson ID again', () => {
+    test('lesson is not found, should ask for lesson ID again', async () => {
         req.params.lessonId = '123';
         req.getLessonFromLessonId = jest.fn().mockReturnValueOnce(null);
 
-        chain.handleRequest(req, res, next);
+        await chain.handleRequest(req, res, next);
 
         expect(req.params.lessonToConfirm).toBeNull();
         expect(next).not.toHaveBeenCalledWith();
