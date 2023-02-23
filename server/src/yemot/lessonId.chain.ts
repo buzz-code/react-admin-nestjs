@@ -1,8 +1,8 @@
-import { Chain } from "./interface";
+import { Chain, Handler, YemotRequest, YemotResponse } from "./interface";
 
-class CheckIfLessonDefinedHandler {
-    handleRequest(req, res, next) {
-        if (req.lesson !== undefined) {
+class CheckIfLessonDefinedHandler extends Handler {
+    handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
+        if (req.params.lesson !== undefined) {
             // Exit the chain early if lesson is already defined
             next(true);
         } else {
@@ -12,35 +12,35 @@ class CheckIfLessonDefinedHandler {
 }
 
 class AskForLessonIdHandler {
-    handleRequest(req, res, next) {
+    handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (!req.has('lessonId')) {
-            delete req.lessonToConfirm;
-            return res.askForLessonId();
+            delete req.params.lessonToConfirm;
+            return res.send('askForLessonId');
         }
         next();
     }
 }
 
 class GetLessonFromLessonIdHandler {
-    handleRequest(req, res, next) {
+    handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (!req.has('lessonToConfirm')) {
-            const lesson = req.getLessonFromLessonId(req.lessonId);
-            req.lessonToConfirm = lesson;
+            const lesson = req.getLessonFromLessonId(req.params.lessonId);
+            req.params.lessonToConfirm = lesson;
         }
         next();
     }
 }
 
 class AskForLessonConfirmHandler {
-    handleRequest(req, res, next) {
+    handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (!req.has('lessonConfirm')) {
-            if (req.lessonToConfirm != null) {
-                delete req.lesson;
-                return res.askForLessonConfirm();
+            if (req.params.lessonToConfirm != null) {
+                delete req.params.lesson;
+                return res.send('askForLessonConfirm');
             } else {
                 // If lesson is null, ask for lesson ID again
-                delete req.lessonId;
-                return res.askForLessonId();
+                delete req.params.lessonId;
+                return res.send('askForLessonId');
             }
         }
         next();
@@ -48,17 +48,17 @@ class AskForLessonConfirmHandler {
 }
 
 class ConfirmLessonHandler {
-    handleRequest(req, res, next) {
-        if (req.lessonConfirm === true) {
+    handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
+        if (req.params.lessonConfirm === true) {
             // Set the lesson and exit the chain if confirmed
-            req.lesson = req.lessonToConfirm;
+            req.params.lesson = req.params.lessonToConfirm;
             next();
         } else {
             // If not confirmed, ask for lesson ID again
-            delete req.lessonId;
-            delete req.lessonToConfirm;
-            delete req.lessonConfirm;
-            return res.askForLessonId();
+            delete req.params.lessonId;
+            delete req.params.lessonToConfirm;
+            delete req.params.lessonConfirm;
+            return res.send('askForLessonId');
         }
     }
 }
