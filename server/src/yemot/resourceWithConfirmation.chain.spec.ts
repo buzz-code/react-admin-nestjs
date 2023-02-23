@@ -1,4 +1,4 @@
-import getResourceConfirmationChain from "./lessonId.chain";
+import getResourceConfirmationChain from "./resourceWithConfirmation.chain";
 
 const resource = 'lesson';
 const chain = getResourceConfirmationChain(resource, req => req.getLessonFromLessonId(req.params[resource].id));
