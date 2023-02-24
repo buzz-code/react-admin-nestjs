@@ -49,7 +49,7 @@ describe('lesson chain of responsibility', () => {
 
         await chain.handleRequest(req, res, next);
 
-        expect(next).toHaveBeenCalledWith(true);
+        expect(next).toHaveBeenCalled();
     });
 
     test('lesson is confirmed, should set lesson and exit chain', async () => {
@@ -66,7 +66,7 @@ describe('lesson chain of responsibility', () => {
     test('lesson ID is not defined, should ask for lesson ID', async () => {
         await chain.handleRequest(req, res, next);
 
-        expect(next).not.toHaveBeenCalledWith();
+        expect(next).not.toHaveBeenCalled();
         expect(res.send).toHaveBeenCalledWith(`askFor${resource}Id`);
     });
 
@@ -76,7 +76,7 @@ describe('lesson chain of responsibility', () => {
         await chain.handleRequest(req, res, next);
 
         expect(req.params[resource].dataToConfirm).toEqual(defaultLesson);
-        expect(next).not.toHaveBeenCalledWith();
+        expect(next).not.toHaveBeenCalled();
         expect(req.getLessonFromLessonId).toHaveBeenCalledWith(defaultLesson.id);
         expect(res.send).toHaveBeenCalledWith(`askFor${resource}Confirm`);
     });
@@ -108,7 +108,7 @@ describe('lesson chain of responsibility', () => {
         await chain.handleRequest(req, res, next);
 
         expect(req.params[resource].dataToConfirm).toBeNull();
-        expect(next).not.toHaveBeenCalledWith();
+        expect(next).not.toHaveBeenCalled();
         expect(req.getLessonFromLessonId).toHaveBeenCalledWith('123');
         expect(res.send).toHaveBeenCalledWith(`askFor${resource}Id`);
     });

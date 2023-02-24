@@ -31,7 +31,7 @@ describe('lesson chain of responsibility', () => {
 
         await chain.handleRequest(req, res, next);
 
-        expect(next).toHaveBeenCalledWith(true);
+        expect(next).toHaveBeenCalled();
     });
 
     test('teacher is not defined and no teahcer found, should return error message', async () => {
@@ -46,7 +46,7 @@ describe('lesson chain of responsibility', () => {
     test('teacher is not defined & fetched by phone, should end chain', async () => {
         await chain.handleRequest(req, res, next);
 
-        expect(next).toHaveBeenCalledWith(false);
+        expect(next).toHaveBeenCalled();
         expect(req.getTeacherByPhone).toHaveBeenCalled();
         expect(req.params.teacher).toEqual(defaultTeacher);
     });

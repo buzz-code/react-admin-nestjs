@@ -32,13 +32,13 @@ export class Chain implements IHandler {
                 // console.log('handler name:', handler.constructor.name)
                 await handler.handleRequest(req, res, (handled: Boolean) => {
                     if (handled) {
-                        return callback(true);
+                        return callback();
                     } else {
                         return next();
                     }
                 });
             } else {
-                return callback(false);
+                return callback();
             }
         };
         return next();
