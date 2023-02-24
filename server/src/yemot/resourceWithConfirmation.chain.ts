@@ -1,6 +1,6 @@
-import { Chain, Handler, YemotRequest, YemotResponse } from "./interface";
+import { Chain, HandlerBase, YemotRequest, YemotResponse } from "./interface";
 
-class CheckIfResourceDefinedHandler extends Handler {
+class CheckIfResourceDefinedHandler extends HandlerBase {
     constructor(private resource: string) { super(); }
 
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
@@ -16,7 +16,7 @@ class CheckIfResourceDefinedHandler extends Handler {
     }
 }
 
-class AskForResourceIdHandler extends Handler {
+class AskForResourceIdHandler extends HandlerBase {
     constructor(private resource: string) { super(); }
 
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
@@ -28,7 +28,7 @@ class AskForResourceIdHandler extends Handler {
     }
 }
 
-class GetResourceFromResourceIdHandler extends Handler {
+class GetResourceFromResourceIdHandler extends HandlerBase {
     constructor(private resource: string, private getResource: (req: YemotRequest) => Promise<any>) { super(); }
 
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
@@ -40,7 +40,7 @@ class GetResourceFromResourceIdHandler extends Handler {
     }
 }
 
-class AskForResourceConfirmHandler extends Handler {
+class AskForResourceConfirmHandler extends HandlerBase {
     constructor(private resource: string) { super(); }
 
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
@@ -58,7 +58,7 @@ class AskForResourceConfirmHandler extends Handler {
     }
 }
 
-class ConfirmResourceHandler extends Handler {
+class ConfirmResourceHandler extends HandlerBase {
     constructor(private resource: string) { super(); }
 
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {

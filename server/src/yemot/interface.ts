@@ -49,8 +49,15 @@ export class Chain implements IHandler {
     }
 }
 
-export abstract class Handler implements IHandler {
+export abstract class HandlerBase implements IHandler {
     handleRequest(req: YemotRequest, res: YemotResponse, callback: Function): any {
         return callback();
     };
+}
+
+export class Handler extends HandlerBase {
+    constructor(handleRequest: IHandler['handleRequest']) {
+        super();
+        this.handleRequest = handleRequest;
+    }
 }

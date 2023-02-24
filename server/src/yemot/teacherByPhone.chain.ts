@@ -1,6 +1,6 @@
-import { Chain, Handler, YemotRequest, YemotResponse } from "./interface";
+import { Chain, HandlerBase, YemotRequest, YemotResponse } from "./interface";
 
-class CheckIfTeacherDefinedHandler extends Handler {
+class CheckIfTeacherDefinedHandler extends HandlerBase {
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.teacher !== undefined) {
             // Exit the chain early if teacher is already defined
@@ -11,7 +11,7 @@ class CheckIfTeacherDefinedHandler extends Handler {
     }
 }
 
-class GetTeacherFromPhoneHandler {
+class GetTeacherFromPhoneHandler extends HandlerBase {
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         const teacher = await req.getTeacherByPhone(req.params.phone);
         if (teacher) {
