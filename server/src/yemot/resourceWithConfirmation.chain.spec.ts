@@ -1,3 +1,4 @@
+import { pascalCase } from "change-case";
 import getResourceConfirmationChain from "./resourceWithConfirmation.chain";
 
 const resource = 'lesson';
@@ -29,10 +30,10 @@ describe('lesson chain of responsibility', () => {
             continueMock: false,
             send: jest.fn(async (msg: string) => {
                 switch (msg) {
-                    case `askFor${resource}Id`:
+                    case `type${pascalCase(resource)}Id`:
                         req.params[resource].id = defaultLesson.id;
                         break;
-                    case `askFor${resource}Confirm`:
+                    case `confirm${pascalCase(resource)}`:
                         req.params[resource].isConfirmed = true;
                         break;
                 }
@@ -67,7 +68,7 @@ describe('lesson chain of responsibility', () => {
         await chain.handleRequest(req, res, next);
 
         expect(next).not.toHaveBeenCalled();
-        expect(res.send).toHaveBeenCalledWith(`askFor${resource}Id`);
+        expect(res.send).toHaveBeenCalledWith(`type${pascalCase(resource)}Id`);
     });
 
     test('lesson is found, should ask for confirmation', async () => {
@@ -78,7 +79,7 @@ describe('lesson chain of responsibility', () => {
         expect(req.params[resource].dataToConfirm).toEqual(defaultLesson);
         expect(next).not.toHaveBeenCalled();
         expect(req.getLessonFromLessonId).toHaveBeenCalledWith(defaultLesson.id);
-        expect(res.send).toHaveBeenCalledWith(`askFor${resource}Confirm`);
+        expect(res.send).toHaveBeenCalledWith(`confirm${pascalCase(resource)}`);
     });
 
     test('req has lessonId, lesson exists but is not confirmed, user enters a new lessonId which also exists and is confirmed', async () => {
@@ -93,10 +94,10 @@ describe('lesson chain of responsibility', () => {
         await chain.handleRequest(req, res, next);
 
         expect(res.send).toBeCalledTimes(2);
-        expect(res.send).toHaveBeenNthCalledWith(1, `askFor${resource}Id`);
+        expect(res.send).toHaveBeenNthCalledWith(1, `type${pascalCase(resource)}Id`);
         expect(req.getLessonFromLessonId).toHaveBeenCalledWith(defaultLesson.id);
         expect(req.params[resource].dataToConfirm).toEqual(defaultLesson);
-        expect(res.send).toHaveBeenNthCalledWith(2, `askFor${resource}Confirm`);
+        expect(res.send).toHaveBeenNthCalledWith(2, `confirm${pascalCase(resource)}`);
         expect(next).toHaveBeenCalled();
         expect(req.params[resource].data).toEqual(defaultLesson);
     });
@@ -110,6 +111,6 @@ describe('lesson chain of responsibility', () => {
         expect(req.params[resource].dataToConfirm).toBeNull();
         expect(next).not.toHaveBeenCalled();
         expect(req.getLessonFromLessonId).toHaveBeenCalledWith('123');
-        expect(res.send).toHaveBeenCalledWith(`askFor${resource}Id`);
+        expect(res.send).toHaveBeenCalledWith(`type${pascalCase(resource)}Id`);
     });
 });

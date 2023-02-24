@@ -40,7 +40,7 @@ describe('lesson chain of responsibility', () => {
         await chain.handleRequest(req, res, next);
 
         expect(next).not.toHaveBeenCalled();
-        expect(res.send).toBeCalledWith('teacherIsNotDefined');
+        expect(res.send).toBeCalledWith('phoneIsNotRecognizedInTheSystem');
     });
 
     test('teacher is not defined & fetched by phone, should end chain', async () => {

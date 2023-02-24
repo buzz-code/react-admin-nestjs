@@ -18,7 +18,7 @@ class GetTeacherFromPhoneHandler extends HandlerBase {
             req.params.teacher = teacher;
             return next();
         } else {
-            return res.send('teacherIsNotDefined');
+            return res.send('phoneIsNotRecognizedInTheSystem');
         }
     }
 }

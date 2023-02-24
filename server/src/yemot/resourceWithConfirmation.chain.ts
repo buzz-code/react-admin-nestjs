@@ -1,3 +1,4 @@
+import { pascalCase } from "change-case";
 import { Chain, HandlerBase, YemotRequest, YemotResponse } from "./interface";
 
 class CheckIfResourceDefinedHandler extends HandlerBase {
@@ -22,7 +23,7 @@ class AskForResourceIdHandler extends HandlerBase {
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params[this.resource].id === undefined) {
             delete req.params[this.resource].dataToConfirm;
-            return res.send(`askFor${this.resource}Id`);
+            return res.send(`type${pascalCase(this.resource)}Id`);
         }
         return next();
     }
@@ -47,11 +48,11 @@ class AskForResourceConfirmHandler extends HandlerBase {
         if (req.params[this.resource].isConfirmed === undefined) {
             if (req.params[this.resource].dataToConfirm != null) {
                 delete req.params[this.resource].data;
-                return res.send(`askFor${this.resource}Confirm`);
+                return res.send(`confirm${pascalCase(this.resource)}`);
             } else {
                 // If resource is null, ask for resource ID again
                 delete req.params[this.resource].id;
-                return res.send(`askFor${this.resource}Id`);
+                return res.send(`type${pascalCase(this.resource)}Id`);
             }
         }
         return next();
@@ -71,7 +72,7 @@ class ConfirmResourceHandler extends HandlerBase {
             delete req.params[this.resource].id;
             delete req.params[this.resource].dataToConfirm;
             delete req.params[this.resource].isConfirmed;
-            return res.send(`askFor${this.resource}Id`);
+            return res.send(`type${pascalCase(this.resource)}Id`);
         }
     }
 }
