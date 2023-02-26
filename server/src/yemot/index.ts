@@ -1,8 +1,8 @@
+import getAttReportChain from "./attReport.chain";
 import { Chain, Handler, YemotRequest } from "./interface";
+import getReportTypeChain from "./reportType.chain";
 import getResourceConfirmationChain from "./resourceWithConfirmation.chain";
 import teacherByPhoneChain from "./teacherByPhone.chain";
-
-const teacherChain = teacherByPhoneChain;
 
 
 function getLessonFromLessonId(req: YemotRequest) {
@@ -41,10 +41,28 @@ const createBaseReportHandler = new Handler(async (req, res, next) => {
 });
 
 
+const notifySuccessAndEndHandler = new Handler(async (req, res, next) => {
+    return res.send('dataWasSavedSuccessfully');
+});
+
+
+async function getExistingReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
+    return [];
+}
+const attReportChain = getAttReportChain(getExistingReports);
+
+
+// todo: create gradeReportChain
+const reportTypeChain = getReportTypeChain(attReportChain);
+
+
+// todo: add exeption handler and res.send('dataWasNotSaved');
 export default new Chain([
-    teacherChain,
+    teacherByPhoneChain,
     lessonChain,
     klassFromLessonHandler,
     klassChain,
     createBaseReportHandler,
+    reportTypeChain,
+    notifySuccessAndEndHandler,
 ]);
