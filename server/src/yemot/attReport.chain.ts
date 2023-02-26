@@ -67,6 +67,74 @@ class CheckHowManyLessonsHandler extends HandlerBase {
     }
 }
 
+class LoadStudentListHandler extends HandlerBase {
+    async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
+        if (req.params.students === undefined) {
+            const studentList = await req.getStudentsByUserIdAndKlassIds(req.params.userId, req.params.baseReport.klassReferenceId);
+            req.params.students = studentList.filter(item => !req.params.idsToSkip.has(item.tz));
+        }
+        return next();
+    }
+}
+
+class ValidateAbsCountHandler extends HandlerBase {
+    handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
+        if (req.params.absCount === undefined) {
+            return res.send('absCount');
+        } else if (!req.params.absCountValidated) {
+            req.params.absCountValidated = req.params.absCount > 0 && req.params.absCount <= req.params.howManyLessons;
+            if (!req.params.absCountValidated) {
+                return res.send('absCount');
+            }
+        }
+        return next();
+    }
+}
+class SaveAndGoToNextStudent extends HandlerBase {
+    async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
+        if (req.params.existing.length) {
+            await req.deleteExistingReports(req.params.existingReports);
+        }
+        const attReport = {
+            ...req.params.baseReport,
+            how_many_lessons: req.params.howManyLessons,
+            student_tz: req.params.student.tz,
+            abs_count: req.params.absCount,
+            approved_abs_count: req.params.approvedAbsCount || '0',
+            comments: '',
+            sheet_name: req.params.sheetName,
+        };
+        await req.saveReport(attReport);
+
+        req.params.studentIndex++;
+        delete req.params.student;
+        delete req.params.absCount;
+        delete req.params.absCountValidated;
+        return next();
+    }
+}
+const studentChain = new Chain([
+    new ValidateAbsCountHandler(),
+    new SaveAndGoToNextStudent(),
+]);
+
+class IterateStudentsHandler extends HandlerBase {
+    async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
+        if (req.params.studentIndex === undefined) {
+            req.params.studentIndex = 0;
+        }
+        if (req.params.studentIndex < req.params.students.length) {
+            req.params.student = req.params.students[req.params.studentIndex];
+            req.params.existing = req.params.existingReports.filter(item => item.student_tz == req.params.student.tz);
+            return studentChain.handleRequest(req, res, () => {
+                return this.handleRequest(req, res, next);
+            });
+        }
+        return next();
+    }
+}
+
+
 // todo: add askForStudentData logic
 export default function getAttReportChain(getExistingReports: GetExistingReportsFunction) {
     return new Chain([
@@ -74,5 +142,7 @@ export default function getAttReportChain(getExistingReports: GetExistingReports
         new GetExistingReportsHandler(getExistingReports),
         new CheckExistingReportsHandler(),
         new CheckHowManyLessonsHandler(),
+        new LoadStudentListHandler(),
+        new IterateStudentsHandler(),
     ]);
 }

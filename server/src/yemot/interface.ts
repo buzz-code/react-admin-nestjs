@@ -7,6 +7,15 @@ export class YemotRequest {
     async getTeacherByPhone(phone: string) {
         return { name: 'teacher', phone };
     }
+    async getStudentsByUserIdAndKlassIds(userId: number, klassId: number) {
+        return [{ tz: '123' }, { tz: '456' }];
+    }
+    saveReport(attReport: any) {
+        // todo
+    }
+    deleteExistingReports(existingReports: any) {
+        // todo
+    }
 }
 export class YemotResponse {
     send(msg: string) { }

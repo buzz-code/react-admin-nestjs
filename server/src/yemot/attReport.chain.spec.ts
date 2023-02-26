@@ -160,6 +160,7 @@ describe("attReport chain", () => {
         beforeEach(() => {
             req.params.sheetName = 'someSheetName';
             req.params.existingReports = [];
+            chain.handlers.length = 4;
         });
 
         it('should ask for how many lessons if howManyLessons param is not defined', async () => {
@@ -185,6 +186,137 @@ describe("attReport chain", () => {
 
             expect(res.send).not.toHaveBeenCalled();
             expect(next).toHaveBeenCalled();
+        });
+    });
+
+    describe('should load student list', () => {
+        beforeEach(() => {
+            req.params.sheetName = 'someSheetName';
+            req.params.existingReports = [];
+            req.params.howManyLessons = 2;
+            req.params.baseReport = {
+                userId: req.params.userId,
+                teacherReferenceId: 'teacher1',
+                klassReferenceId: req.params.klass.data.id,
+                lessonReferenceId: req.params.lesson.data.id,
+                reportDate: new Date(),
+            };
+            chain.handlers.length = 5;
+            next.mockClear();
+        });
+
+        it('should not load student list if already defined', async () => {
+            // Arrange
+            req.params.students = [{ tz: '111111111' }, { tz: '222222222' }];
+
+            // Act
+            await chain.handleRequest(req, res, next);
+
+            // Assert
+            expect(res.send).not.toHaveBeenCalled();
+            expect(req.params.students).toEqual([{ tz: '111111111' }, { tz: '222222222' }]);
+            expect(next).toHaveBeenCalled();
+        });
+
+        it('should load student list if not defined and idsToSkip is empty set', async () => {
+            // Arrange
+            req.params.students = undefined;
+            req.params.idsToSkip = new Set();
+            req.getStudentsByUserIdAndKlassIds = jest.fn().mockResolvedValue([{ tz: '111111111' }, { tz: '222222222' }]);
+
+            // Act
+            await chain.handleRequest(req, res, next);
+
+            // Assert
+            expect(res.send).not.toHaveBeenCalled();
+            expect(req.getStudentsByUserIdAndKlassIds).toHaveBeenCalledWith(req.params.userId, req.params.baseReport.klassReferenceId);
+            expect(req.params.students).toEqual([{ tz: '111111111' }, { tz: '222222222' }]);
+            expect(next).toHaveBeenCalled();
+        });
+
+        it('should load student list if not defined and idsToSkip is filled set', async () => {
+            // Arrange
+            req.params.students = undefined;
+            req.params.idsToSkip = new Set(['333333333']);
+            req.getStudentsByUserIdAndKlassIds = jest.fn().mockResolvedValue([{ tz: '111111111' }, { tz: '222222222' }, { tz: '333333333' }]);
+
+            // Act
+            await chain.handleRequest(req, res, next);
+
+            // Assert
+            expect(res.send).not.toHaveBeenCalled();
+            expect(req.getStudentsByUserIdAndKlassIds).toHaveBeenCalledWith(req.params.userId, req.params.baseReport.klassReferenceId);
+            expect(req.params.students).toEqual([{ tz: '111111111' }, { tz: '222222222' }]);
+            expect(next).toHaveBeenCalled();
+        });
+    });
+
+    describe('should iterate students', () => {
+        beforeEach(() => {
+            req.params.sheetName = 'someSheetName';
+            req.params.existingReports = [];
+            req.params.howManyLessons = 2;
+            req.params.baseReport = {
+                userId: req.params.userId,
+                teacherReferenceId: 'teacher1',
+                klassReferenceId: req.params.klass.data.id,
+                lessonReferenceId: req.params.lesson.data.id,
+                reportDate: new Date(),
+            };
+            req.params.students = [{ tz: '111111111' }, { tz: '222222222' }];
+            chain.handlers.length = 6;
+            req.saveReport = jest.fn();
+            next.mockClear();
+        });
+
+        it('when there are more students to iterate, should set the current student and call the studentChain', async () => {
+            await chain.handleRequest(req, res, next);
+
+            expect(req.params.studentIndex).toBe(0);
+            expect(req.params.student).toEqual(req.params.students[0]);
+            expect(req.params.existing).toEqual([]);
+            expect(next).toHaveBeenCalledTimes(0);
+            expect(res.send).toHaveBeenCalledWith('absCount');
+        });
+
+        it('when there are no more students to iterate, should call the next handler', async () => {
+            req.params.studentIndex = 2;
+
+            await chain.handleRequest(req, res, next);
+
+            expect(next).toHaveBeenCalledTimes(1);
+        });
+
+        it('when there is an absCount, should validate its value', async () => {
+            req.params.absCount = 0;
+
+            await chain.handleRequest(req, res, next);
+
+            expect(req.params.absCountValidation).toBeUndefined();
+            expect(next).toHaveBeenCalledTimes(0);
+            expect(res.send).toHaveBeenCalledWith('absCount');
+        });
+
+        it('when there is a large absCount, should ask again', async () => {
+            req.params.absCount = 3;
+
+            await chain.handleRequest(req, res, next);
+
+            expect(req.params.absCountValidation).toBeUndefined();
+            expect(next).toHaveBeenCalledTimes(0);
+            expect(res.send).toHaveBeenCalledWith('absCount');
+        });
+
+        it('when there is a valid absCount, should save and go to next student', async () => {
+            req.params.absCount = 1;
+
+            await chain.handleRequest(req, res, next);
+
+            console.log(req.params)
+            expect(req.params.studentIndex).toEqual(1);
+            expect(req.saveReport).toHaveBeenCalled();
+            expect(next).toHaveBeenCalledTimes(0);
+            expect(res.send).toHaveBeenCalledWith('absCount');
         });
     });
 });
