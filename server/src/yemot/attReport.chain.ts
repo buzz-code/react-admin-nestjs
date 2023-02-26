@@ -82,12 +82,31 @@ class ValidateAbsCountHandler extends HandlerBase {
         if (req.params.absCount === undefined) {
             return res.send('absCount');
         } else if (!req.params.absCountValidated) {
+            if (this.isSideMenu(req.params.absCount, req, res)) {
+                return next();
+            }
             req.params.absCountValidated = req.params.absCount > 0 && req.params.absCount <= req.params.howManyLessons;
             if (!req.params.absCountValidated) {
                 return res.send('absCount');
             }
         }
         return next();
+    }
+
+    isSideMenu(value: string, req: YemotRequest, res: YemotResponse) {
+        if (req.params.sideMenu !== undefined) {
+            value = '*' + req.params.sideMenu;
+            req.params.sideMenu = undefined;
+        }
+        if (value === '*') {
+            return res.send('sideMenu');
+        } else if (value === '*4') {
+            req.params.studentIndex--;
+            req.params.studentIndex = Math.max(0, req.params.studentIndex);
+        } else if (value === '*6') {
+            req.params.studentIndex++;
+        }
+        return false;
     }
 }
 class SaveAndGoToNextStudent extends HandlerBase {

@@ -307,8 +307,29 @@ describe("attReport chain", () => {
             expect(res.send).toHaveBeenCalledWith('absCount');
         });
 
+        it('when opened a side menu, should ask for direction', async () => {
+            req.params.absCount = '*';
+
+            await chain.handleRequest(req, res, next);
+
+            expect(req.params.absCountValidation).toBeUndefined();
+            expect(next).toHaveBeenCalledTimes(0);
+            expect(res.send).toHaveBeenCalledWith('sideMenu');
+        });
+
+        it('when opened a side menu with a direction, should go to student', async () => {
+            req.params.absCount = '*6';
+
+            await chain.handleRequest(req, res, next);
+
+            expect(req.params.studentIndex).toEqual(1);
+            expect(next).toHaveBeenCalledTimes(0);
+            expect(res.send).toHaveBeenCalledWith('absCount');
+        });
+
         it('when there is a valid absCount, should save and go to next student', async () => {
             req.params.absCount = 1;
+            req.params.studentIndex = 0;
 
             await chain.handleRequest(req, res, next);
 
