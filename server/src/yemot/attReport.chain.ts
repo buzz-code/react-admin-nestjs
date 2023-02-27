@@ -83,7 +83,7 @@ class ValidateAbsCountHandler extends HandlerBase {
             return res.send('absCount');
         } else if (!req.params.absCountValidated) {
             if (this.isSideMenu(req.params.absCount, req, res)) {
-                return next();
+                return next(true);
             }
             req.params.absCountValidated = req.params.absCount > 0 && req.params.absCount <= req.params.howManyLessons;
             if (!req.params.absCountValidated) {
@@ -124,11 +124,9 @@ class SaveAndGoToNextStudent extends HandlerBase {
             sheet_name: req.params.sheetName,
         };
         await req.saveReport(attReport);
-
+      
         req.params.studentIndex++;
-        delete req.params.student;
-        delete req.params.absCount;
-        delete req.params.absCountValidated;
+        clearStudentData(req);
         return next();
     }
 }
@@ -136,16 +134,22 @@ const studentChain = new Chain([
     new ValidateAbsCountHandler(),
     new SaveAndGoToNextStudent(),
 ]);
+function clearStudentData(req: YemotRequest) {
+    delete req.params.student;
+    delete req.params.existing;
+    delete req.params.absCount;
+    delete req.params.absCountValidated;
+}
 
 class IterateStudentsHandler extends HandlerBase {
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
-        if (req.params.studentIndex === undefined) {
-            req.params.studentIndex = 0;
-        }
+        req.params.studentIndex ??= 0;
         if (req.params.studentIndex < req.params.students.length) {
-            req.params.student = req.params.students[req.params.studentIndex];
-            req.params.existing = req.params.existingReports.filter(item => item.student_tz == req.params.student.tz);
+            req.params.student ??= req.params.students[req.params.studentIndex];
+            req.params.existing ??= req.params.existingReports.filter(item => item.student_tz == req.params.student.tz);
             return studentChain.handleRequest(req, res, () => {
+                clearStudentData(req);
+
                 return this.handleRequest(req, res, next);
             });
         }
