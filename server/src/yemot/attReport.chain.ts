@@ -2,6 +2,13 @@ import { Chain, HandlerBase, YemotRequest, YemotResponse } from "./interface";
 
 type GetExistingReportsFunction = (userId: string, klassId: string, lessonId: string, sheetName: string) => Promise<any>;
 
+export interface IReportProperty {
+    name: string;
+    message: string;
+    field: string;
+    validate(req: YemotRequest): boolean;
+}
+
 class GetSheetNameHandler extends HandlerBase {
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.sheetName !== undefined) {
@@ -78,17 +85,26 @@ class LoadStudentListHandler extends HandlerBase {
 }
 
 class ValidateAbsCountHandler extends HandlerBase {
+    constructor(private properties: IReportProperty[]) {
+        super();
+    }
+
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
-        if (req.params.absCount === undefined) {
-            return res.send('absCount');
-        } else if (!req.params.absCountValidated) {
-            if (this.isSideMenu(req.params.absCount, req, res)) {
-                return next(true);
+        req.params.propertyIndex ??= 0;
+        while (req.params.propertyIndex < this.properties.length) {
+            const prop = this.properties[req.params.propertyIndex];
+            if (req.params[prop.name] === undefined) {
+                return res.send(prop.message);
+            } else if (!req.params[prop.name + 'Validated']) {
+                if (this.isSideMenu(req.params[prop.name], req, res)) {
+                    return next(true);
+                }
+                req.params[prop.name + 'Validated'] = prop.validate(req);
+                if (!req.params[prop.name + 'Validated']) {
+                    return res.send(prop.message);
+                }
             }
-            req.params.absCountValidated = req.params.absCount > 0 && req.params.absCount <= req.params.howManyLessons;
-            if (!req.params.absCountValidated) {
-                return res.send('absCount');
-            }
+            req.params.propertyIndex++;
         }
         return next();
     }
@@ -110,6 +126,10 @@ class ValidateAbsCountHandler extends HandlerBase {
     }
 }
 class SaveAndGoToNextStudent extends HandlerBase {
+    constructor(private properties: IReportProperty[]) {
+        super();
+    }
+
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.existing.length) {
             await req.deleteExistingReports(req.params.existingReports);
@@ -118,37 +138,48 @@ class SaveAndGoToNextStudent extends HandlerBase {
             ...req.params.baseReport,
             how_many_lessons: req.params.howManyLessons,
             student_tz: req.params.student.tz,
-            abs_count: req.params.absCount,
-            approved_abs_count: req.params.approvedAbsCount || '0',
+            // approved_abs_count: req.params.approvedAbsCount || '0',
             comments: '',
             sheet_name: req.params.sheetName,
         };
+        for (const prop of this.properties) {
+            attReport[prop.field] = req.params[prop.name];
+        }
         await req.saveReport(attReport);
-      
+
         req.params.studentIndex++;
-        clearStudentData(req);
+        clearStudentData(req, this.properties);
         return next();
     }
 }
-const studentChain = new Chain([
-    new ValidateAbsCountHandler(),
-    new SaveAndGoToNextStudent(),
-]);
-function clearStudentData(req: YemotRequest) {
+function clearStudentData(req: YemotRequest, properties: IReportProperty[]) {
     delete req.params.student;
     delete req.params.existing;
-    delete req.params.absCount;
-    delete req.params.absCountValidated;
+    delete req.params.propertyIndex;
+    for (const prop of properties) {
+        delete req.params[prop.name];
+        delete req.params[prop.name + 'Validated'];
+    }
 }
 
 class IterateStudentsHandler extends HandlerBase {
+    studentChain: Chain;
+
+    constructor(private properties: IReportProperty[]) {
+        super();
+        this.studentChain = new Chain([
+            new ValidateAbsCountHandler(properties),
+            new SaveAndGoToNextStudent(properties),
+        ]);
+    }
+
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         req.params.studentIndex ??= 0;
         if (req.params.studentIndex < req.params.students.length) {
             req.params.student ??= req.params.students[req.params.studentIndex];
             req.params.existing ??= req.params.existingReports.filter(item => item.student_tz == req.params.student.tz);
-            return studentChain.handleRequest(req, res, () => {
-                clearStudentData(req);
+            return this.studentChain.handleRequest(req, res, () => {
+                clearStudentData(req, this.properties);
 
                 return this.handleRequest(req, res, next);
             });
@@ -159,13 +190,13 @@ class IterateStudentsHandler extends HandlerBase {
 
 
 // todo: add askForStudentData logic
-export default function getAttReportChain(getExistingReports: GetExistingReportsFunction) {
+export default function getAttReportChain(getExistingReports: GetExistingReportsFunction, properties: IReportProperty[]) {
     return new Chain([
         new GetSheetNameHandler(),
         new GetExistingReportsHandler(getExistingReports),
         new CheckExistingReportsHandler(),
         new CheckHowManyLessonsHandler(),
         new LoadStudentListHandler(),
-        new IterateStudentsHandler(),
+        new IterateStudentsHandler(properties),
     ]);
 }

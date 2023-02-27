@@ -1,4 +1,4 @@
-import getAttReportChain from "./attReport.chain";
+import getAttReportChain, { IReportProperty } from "./attReport.chain";
 import { YemotRequest, YemotResponse } from "./interface";
 
 describe("attReport chain", () => {
@@ -7,6 +7,16 @@ describe("attReport chain", () => {
     let next: jest.Mock<any, any>;
     let chain: ReturnType<typeof getAttReportChain>;
     const getExistingReports = jest.fn().mockResolvedValue([]);
+    const properties: IReportProperty[] = [
+        {
+            name: 'absCount',
+            message: 'absCount',
+            field: 'abs_count',
+            validate(req: YemotRequest) {
+                return req.params.absCount > 0 && req.params.absCount <= req.params.howManyLessons;
+            }
+        }
+    ]
 
     beforeEach(() => {
         req = {
@@ -24,7 +34,7 @@ describe("attReport chain", () => {
 
         next = jest.fn();
 
-        chain = getAttReportChain(getExistingReports);
+        chain = getAttReportChain(getExistingReports, properties);
     });
 
     describe("GetSheetNameHandler", () => {

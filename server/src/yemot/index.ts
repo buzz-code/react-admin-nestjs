@@ -1,4 +1,4 @@
-import getAttReportChain from "./attReport.chain";
+import getAttReportChain, { IReportProperty } from "./attReport.chain";
 import { Chain, Handler, YemotRequest } from "./interface";
 import getReportTypeChain from "./reportType.chain";
 import getResourceConfirmationChain from "./resourceWithConfirmation.chain";
@@ -49,7 +49,17 @@ const notifySuccessAndEndHandler = new Handler(async (req, res, next) => {
 async function getExistingReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
     return [];
 }
-const attReportChain = getAttReportChain(getExistingReports);
+const properties: IReportProperty[] = [
+    {
+        name: 'absCount',
+        message: 'absCount',
+        field: 'abs_count',
+        validate(req: YemotRequest) {
+            return req.params.absCount > 0 && req.params.absCount <= req.params.howManyLessons;
+        }
+    }
+]
+const attReportChain = getAttReportChain(getExistingReports, properties);
 
 
 // todo: create gradeReportChain
