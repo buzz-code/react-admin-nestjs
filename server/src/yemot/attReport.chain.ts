@@ -189,8 +189,7 @@ class IterateStudentsHandler extends HandlerBase {
 }
 
 
-// todo: add askForStudentData logic
-export default function getAttReportChain(getExistingReports: GetExistingReportsFunction, properties: IReportProperty[]) {
+export default function getReportChain(getExistingReports: GetExistingReportsFunction, properties: IReportProperty[]) {
     return new Chain([
         new GetSheetNameHandler(),
         new GetExistingReportsHandler(getExistingReports),

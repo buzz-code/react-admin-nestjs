@@ -1,13 +1,13 @@
-import getAttReportChain from './attReport.chain';
+import getReportChain from './attReport.chain';
 import { YemotRequest, YemotResponse } from './interface';
 import getReportTypeChain from './reportType.chain';
-import gradeReportChain from './teacherByPhone.chain';
 
 async function getExistingReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
     return [];
 }
-const attReportChain = getAttReportChain(getExistingReports);
-const reportTypeChain = getReportTypeChain(attReportChain);
+const attReportChain = getReportChain(getExistingReports, []);
+const gradeReportChain = getReportChain(getExistingReports, []);
+const reportTypeChain = getReportTypeChain(attReportChain, gradeReportChain);
 
 describe('reportChain', () => {
     let req: YemotRequest;

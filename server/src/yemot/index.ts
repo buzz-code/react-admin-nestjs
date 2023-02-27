@@ -1,4 +1,4 @@
-import getAttReportChain, { IReportProperty } from "./attReport.chain";
+import getReportChain, { IReportProperty } from "./attReport.chain";
 import { Chain, Handler, YemotRequest } from "./interface";
 import getReportTypeChain from "./reportType.chain";
 import getResourceConfirmationChain from "./resourceWithConfirmation.chain";
@@ -46,10 +46,10 @@ const notifySuccessAndEndHandler = new Handler(async (req, res, next) => {
 });
 
 
-async function getExistingReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
+async function getExistingAttReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
     return [];
 }
-const properties: IReportProperty[] = [
+const attProperties: IReportProperty[] = [
     {
         name: 'absCount',
         message: 'absCount',
@@ -59,11 +59,23 @@ const properties: IReportProperty[] = [
         }
     }
 ]
-const attReportChain = getAttReportChain(getExistingReports, properties);
+const attReportChain = getReportChain(getExistingAttReports, attProperties);
+async function getExistingGradeReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
+    return [];
+}
+const gradeProperties: IReportProperty[] = [
+    {
+        name: 'grade',
+        message: 'grade',
+        field: 'grade',
+        validate(req: YemotRequest) {
+            return req.params.grade > 0 && req.params.grade <= 100;
+        }
+    }
+]
+const gradeReportChain = getReportChain(getExistingGradeReports, gradeProperties);
 
-
-// todo: create gradeReportChain
-const reportTypeChain = getReportTypeChain(attReportChain);
+const reportTypeChain = getReportTypeChain(attReportChain, gradeReportChain);
 
 
 // todo: add exeption handler and res.send('dataWasNotSaved');

@@ -1,11 +1,11 @@
-import getAttReportChain, { IReportProperty } from "./attReport.chain";
+import getReportChain, { IReportProperty } from "./attReport.chain";
 import { YemotRequest, YemotResponse } from "./interface";
 
 describe("attReport chain", () => {
     let req: YemotRequest;
     let res: YemotResponse;
     let next: jest.Mock<any, any>;
-    let chain: ReturnType<typeof getAttReportChain>;
+    let chain: ReturnType<typeof getReportChain>;
     const getExistingReports = jest.fn().mockResolvedValue([]);
     const properties: IReportProperty[] = [
         {
@@ -34,7 +34,7 @@ describe("attReport chain", () => {
 
         next = jest.fn();
 
-        chain = getAttReportChain(getExistingReports, properties);
+        chain = getReportChain(getExistingReports, properties);
     });
 
     describe("GetSheetNameHandler", () => {

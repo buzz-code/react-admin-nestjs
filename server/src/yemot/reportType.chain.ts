@@ -1,6 +1,4 @@
 import { Chain, HandlerBase, IHandler, YemotRequest, YemotResponse } from "./interface";
-import gradeReportChain from "./teacherByPhone.chain";
-// import gradeReportChain from "./gradeReportChain";
 
 class CheckIfReportTypeDefinedHandler extends HandlerBase {
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
@@ -26,19 +24,22 @@ class UseAttReportChainHandler extends HandlerBase {
 }
 
 class UseGradeReportChainHandler extends HandlerBase {
+    constructor(private gradeReportChain: IHandler) {
+        super();
+    }
+
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.reportType === '2') {
-            gradeReportChain.handleRequest(req, res, next);
-        } else {
-            return next();
+            return this.gradeReportChain.handleRequest(req, res, next);
         }
+        return next();
     }
 }
 
-export default function getReportTypeChain(attReportChain) {
+export default function getReportTypeChain(attReportChain: Chain, gradeReportChain: Chain) {
     return new Chain([
         new CheckIfReportTypeDefinedHandler(),
         new UseAttReportChainHandler(attReportChain),
-        new UseGradeReportChainHandler(),
+        new UseGradeReportChainHandler(gradeReportChain),
     ]);
 }
