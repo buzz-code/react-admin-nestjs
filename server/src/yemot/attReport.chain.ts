@@ -1,4 +1,4 @@
-import { Chain, HandlerBase, YemotRequest, YemotResponse } from "./interface";
+import { Chain, HandlerBase, YemotRequest, YemotResponse } from "@shared/utils/yemot/chain.interface";
 
 type GetExistingReportsFunction = (userId: string, klassId: string, lessonId: string, sheetName: string) => Promise<any>;
 

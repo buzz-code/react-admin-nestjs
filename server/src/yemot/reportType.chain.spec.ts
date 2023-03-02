@@ -1,5 +1,5 @@
 import getReportChain from './attReport.chain';
-import { YemotRequest, YemotResponse } from './interface';
+import { YemotRequest, YemotResponse } from '@shared/utils/yemot/chain.interface';
 import getReportTypeChain from './reportType.chain';
 
 async function getExistingReports(userId: string, klassId: string, lessonId: string, sheetName: string) {

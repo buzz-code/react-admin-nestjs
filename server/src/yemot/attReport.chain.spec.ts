@@ -1,5 +1,5 @@
 import getReportChain, { IReportProperty } from "./attReport.chain";
-import { YemotRequest, YemotResponse } from "./interface";
+import { YemotRequest, YemotResponse } from "@shared/utils/yemot/chain.interface";
 
 describe("attReport chain", () => {
     let req: YemotRequest;

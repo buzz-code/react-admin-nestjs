@@ -1,5 +1,5 @@
 import getReportChain, { IReportProperty } from "./attReport.chain";
-import { Chain, Handler, YemotRequest } from "./interface";
+import { Chain, Handler, YemotRequest } from "@shared/utils/yemot/chain.interface";
 import getReportTypeChain from "./reportType.chain";
 import getResourceConfirmationChain from "./resourceWithConfirmation.chain";
 import teacherByPhoneChain from "./teacherByPhone.chain";
