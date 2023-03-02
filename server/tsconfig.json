@@ -20,10 +20,10 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@shared/*": [
-        "./shared/*"
+        "shared/*"
       ],
       "src/*": [
-        "./src/*"
+        "src/*"
       ]
     }
   }
