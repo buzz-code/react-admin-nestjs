@@ -6,7 +6,8 @@ import { typeOrmModuleConfig } from '@shared/config/typeorm.config';
 import { RequestContextModule } from 'nestjs-request-context';
 import { AuthModule } from '@shared/auth/auth.module';
 import { YemotModule } from '@shared/utils/yemot/yemot.module';
-import { yemotProcessorProvider } from 'src/yemot.processor';
+// import { yemotProcessorProvider } from 'src/yemot.processor';
+import yemotChain from './yemot/yemot.chain';
 import { BaseEntityModule } from '@shared/base-entity/base-entity.module';
 
 import userConfig from './entity-modules/user.config';
@@ -48,7 +49,7 @@ import { YemotCall } from '@shared/entities/YemotCall.entity';
     BaseEntityModule.register({ entity: ImportFile }),
     BaseEntityModule.register({ entity: YemotCall }),
     AuthModule,
-    YemotModule.register(yemotProcessorProvider)
+    YemotModule.register(yemotChain)
   ],
   controllers: [AppController],
   providers: [AppService],
