@@ -1,4 +1,5 @@
-import { Chain, HandlerBase, YemotRequest, YemotResponse } from "@shared/utils/yemot/chain.interface";
+import { Chain, HandlerBase } from "@shared/utils/yemot/chain.interface";
+import { YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
 
 class CheckIfTeacherDefinedHandler extends HandlerBase {
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {

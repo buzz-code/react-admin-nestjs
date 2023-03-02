@@ -2,7 +2,7 @@ import teacherByPhoneChain from "./teacherByPhone.chain";
 
 const chain = teacherByPhoneChain;
 
-describe('lesson chain of responsibility', () => {
+describe('teacher chain of responsibility', () => {
     let req;
     let res;
     let next;
@@ -22,6 +22,7 @@ describe('lesson chain of responsibility', () => {
         };
         res = {
             send: jest.fn(() => Promise.resolve()),
+            getText: jest.fn(key => key)
         };
         next = jest.fn(() => Promise.resolve());
     });

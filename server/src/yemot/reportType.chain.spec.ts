@@ -1,5 +1,5 @@
 import getReportChain from './attReport.chain';
-import { YemotRequest, YemotResponse } from '@shared/utils/yemot/chain.interface';
+import { YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
 import getReportTypeChain from './reportType.chain';
 
 async function getExistingReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
@@ -16,7 +16,12 @@ describe('reportChain', () => {
     const next = jest.fn();
     beforeEach(() => {
         req = { params: {} } as YemotRequest;
-        res = { send: sendMock } as YemotResponse;
+        res = {
+            send: sendMock,
+            getText: jest.fn(key => Promise.resolve(key)),
+            messages: [],
+            getResponse: jest.fn(),
+        } as YemotResponse;
         next.mockClear();
     });
 

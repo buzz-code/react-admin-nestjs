@@ -41,6 +41,7 @@ describe('lesson chain of responsibility', () => {
                     await chain.handleRequest(req, res, next);
                 }
             }),
+            getText: jest.fn(key => key),
         };
         next = jest.fn(() => Promise.resolve());
     });

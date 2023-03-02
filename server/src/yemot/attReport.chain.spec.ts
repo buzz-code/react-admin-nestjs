@@ -1,5 +1,5 @@
 import getReportChain, { IReportProperty } from "./attReport.chain";
-import { YemotRequest, YemotResponse } from "@shared/utils/yemot/chain.interface";
+import { YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
 
 describe("attReport chain", () => {
     let req: YemotRequest;
@@ -30,6 +30,9 @@ describe("attReport chain", () => {
 
         res = {
             send: jest.fn(),
+            getText: jest.fn(key => Promise.resolve(key)),
+            messages: [],
+            getResponse: jest.fn(),
         } as YemotResponse;
 
         next = jest.fn();

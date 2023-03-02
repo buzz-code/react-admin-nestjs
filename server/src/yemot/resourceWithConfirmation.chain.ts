@@ -1,5 +1,6 @@
 import { pascalCase } from "change-case";
-import { Chain, HandlerBase, YemotRequest, YemotResponse } from "@shared/utils/yemot/chain.interface";
+import { Chain, HandlerBase } from "@shared/utils/yemot/chain.interface";
+import { YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
 
 class CheckIfResourceDefinedHandler extends HandlerBase {
     constructor(private resource: string) { super(); }
