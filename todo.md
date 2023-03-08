@@ -90,15 +90,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * enable reverting for imported file
 
 # todo
-* לשפר תהליך טלפוני- לנסות לשים שם את התהליך הטלפוני של מאיר
-* fix yemot simulator with lesson confirm
-* https://www.google.com/search?q=nest+auto+delete+migration+files&oq=nest+auto+delete+migration+files&aqs=chrome..69i57.6553j0j7&sourceid=chrome&ie=UTF-8
-* better text management in db - no need to daclare each text so many times
-* להציג את השיחות של ימות המשיח בצורה יפה
 * add menu grouping
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * logs  // https://console.cloud.google.com/logs/query?authuser=1&project=react-admin-nestjs-dev
 * logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
+* check docker security issues
+* better text management in db - no need to daclare each text so many times
+* https://www.google.com/search?q=nest+auto+delete+migration+files&oq=nest+auto+delete+migration+files&aqs=chrome..69i57.6553j0j7&sourceid=chrome&ie=UTF-8
 * create a table of 'payment tracks'
 * להכין מסמך בסיס לתמחור
 חבילה בסיסית בחינם
@@ -106,7 +104,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 תוספת מחיר לפי משתמשים
 מחיר שקוף - יופיע באתר
 * להוסיף אפשרות לבחור כתובות מייל
-* check docker security issues
+* לשפר תהליך טלפוני- לנסות לשים שם את התהליך הטלפוני של מאיר
+* fix yemot simulator with lesson confirm
+* להציג את השיחות של ימות המשיח בצורה יפה
 * 
 
 # todo later
