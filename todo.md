@@ -87,6 +87,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update react admin version
 * להוסיף רשימת קבצים שהועלו
 * add yemot call module to dynamic modules
+* enable reverting for imported file
 
 # todo
 * לשפר תהליך טלפוני- לנסות לשים שם את התהליך הטלפוני של מאיר
@@ -106,7 +107,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 מחיר שקוף - יופיע באתר
 * להוסיף אפשרות לבחור כתובות מייל
 * check docker security issues
-* enable reverting for imported file
 * 
 
 # todo later
