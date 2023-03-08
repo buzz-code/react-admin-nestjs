@@ -6,7 +6,7 @@ class CheckIfReportTypeDefinedHandler extends HandlerBase {
         if (req.params.reportType !== undefined) {
             return next();
         } else {
-            return res.send('getReportType');
+            return res.send(res.getText('getReportType'), 'reportType');
         }
     }
 }

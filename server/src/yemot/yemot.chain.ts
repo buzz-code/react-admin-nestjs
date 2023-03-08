@@ -43,7 +43,7 @@ const createBaseReportHandler = new Handler(async (req, res, next) => {
 
 
 const notifySuccessAndEndHandler = new Handler(async (req, res, next) => {
-    return res.send('dataWasSavedSuccessfully');
+    return res.send(res.getText('dataWasSavedSuccessfully'));
 });
 
 

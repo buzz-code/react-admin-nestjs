@@ -15,12 +15,13 @@ class GetSheetNameHandler extends HandlerBase {
         if (req.params.sheetName !== undefined) {
             return next();
         } else if (req.params.isCurrentMonth === undefined) {
-            return res.send('askIsCurrentMonth');
+            const currentMonth = this.getMonthName(new Date().getMonth() + 1);
+            return res.send(res.getText('askIsCurrentMonth', currentMonth), 'isCurrentMonth');
         } else if (req.params.isCurrentMonth === '1') {
             req.params.sheetName = this.getMonthName(new Date().getMonth() + 1);
             return next();
         } else if (req.params.currentMonth === undefined) {
-            return res.send('askForCurrentMonth');
+            return res.send(res.getText('askForCurrentMonth'), 'currentMonth');
         } else {
             req.params.sheetName = this.getMonthName(Number(req.params.currentMonth));
             return next();
@@ -51,15 +52,14 @@ class CheckExistingReportsHandler extends HandlerBase {
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.existingReports.length > 0) {
             if (req.params.isSkipExistingReports === undefined) {
-                return res.send('askIfSkipExistingReports');
+                return res.send(res.getText('askIfSkipExistingReports'), 'isSkipExistingReports');
             } else if (req.params.idsToSkip === undefined) {
                 if (req.params.isSkipExistingReports === '1') {
                     req.params.idsToSkip = new Set(req.params.existingReports.map(item => item.student_tz));
-                } else {
-                    req.params.idsToSkip = new Set();
                 }
             }
         }
+        req.params.idsToSkip ??= new Set();
         return next();
     }
 }
@@ -67,9 +67,10 @@ class CheckExistingReportsHandler extends HandlerBase {
 class CheckHowManyLessonsHandler extends HandlerBase {
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.howManyLessons === undefined) {
-            return res.send('howManyLessons');
+            return res.send(res.getText('howManyLessons'), 'howManyLessons');
         } else if (req.params.howManyLessons === '0') {
-            return res.send('howManyLessons');
+            res.send(res.getText('tryAgain'));
+            return res.send(res.getText('howManyLessons'), 'howManyLessons');
         }
         return next();
     }
@@ -79,6 +80,7 @@ class LoadStudentListHandler extends HandlerBase {
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.students === undefined) {
             const studentList = await req.getStudentsByUserIdAndKlassIds(req.params.userId, req.params.baseReport.klassReferenceId);
+            console.log({ studentList });
             req.params.students = studentList.filter(item => !req.params.idsToSkip.has(item.tz));
         }
         return next();
@@ -95,14 +97,15 @@ class ValidateAbsCountHandler extends HandlerBase {
         while (req.params.propertyIndex < this.properties.length) {
             const prop = this.properties[req.params.propertyIndex];
             if (req.params[prop.name] === undefined) {
-                return res.send(prop.message);
+                return res.send(res.getText(prop.message), prop.name);
             } else if (!req.params[prop.name + 'Validated']) {
                 if (this.isSideMenu(req.params[prop.name], req, res)) {
                     return next(true);
                 }
                 req.params[prop.name + 'Validated'] = prop.validate(req);
                 if (!req.params[prop.name + 'Validated']) {
-                    return res.send(prop.message);
+                    res.send(res.getText('tryAgain'));
+                    return res.send(res.getText(prop.message), prop.name);
                 }
             }
             req.params.propertyIndex++;
@@ -116,14 +119,16 @@ class ValidateAbsCountHandler extends HandlerBase {
             req.params.sideMenu = undefined;
         }
         if (value === '*') {
-            return res.send('sideMenu');
+            res.send(res.getText('sideMenu'), 'sideMenu');
         } else if (value === '*4') {
             req.params.studentIndex--;
             req.params.studentIndex = Math.max(0, req.params.studentIndex);
         } else if (value === '*6') {
             req.params.studentIndex++;
+        } else {
+            return false;
         }
-        return false;
+        return true;
     }
 }
 class SaveAndGoToNextStudent extends HandlerBase {

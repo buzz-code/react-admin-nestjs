@@ -17,9 +17,11 @@ class GetTeacherFromPhoneHandler extends HandlerBase {
         const teacher = await req.getTeacherByPhone(req.params.phone);
         if (teacher) {
             req.params.teacher = teacher;
+            res.send(res.getText('welcomeForTeacher', teacher.name)) 
             return next();
         } else {
-            return res.send('phoneIsNotRecognizedInTheSystem');
+            res.send(res.getText('phoneIsNotRecognizedInTheSystem'));
+            res.send(res.hangup());
         }
     }
 }

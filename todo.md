@@ -90,6 +90,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 
 # todo
 * לשפר תהליך טלפוני- לנסות לשים שם את התהליך הטלפוני של מאיר
+* fix yemot simulator with lesson confirm
 * https://www.google.com/search?q=nest+auto+delete+migration+files&oq=nest+auto+delete+migration+files&aqs=chrome..69i57.6553j0j7&sourceid=chrome&ie=UTF-8
 * better text management in db - no need to daclare each text so many times
 * להציג את השיחות של ימות המשיח בצורה יפה
