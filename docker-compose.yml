@@ -24,6 +24,7 @@ services:
         networks:
             - private-network
             - caddy
+            - elknet
 
 
     backend:
@@ -53,6 +54,7 @@ services:
         networks:
             - private-network
             - caddy
+            - elknet
 
     mysql:
         container_name: mysql
@@ -71,6 +73,7 @@ services:
             - "db_data:/var/lib/mysql"
         networks:
             - private-network
+            - elknet
 
     phpmyadmin:
         container_name: php-myadmin
@@ -89,6 +92,7 @@ services:
         networks:
             - private-network
             - caddy
+            - elknet
 
 
 volumes:
@@ -97,4 +101,6 @@ volumes:
 networks:
     private-network:
     caddy:
+        external: true
+    elknet:
         external: true
