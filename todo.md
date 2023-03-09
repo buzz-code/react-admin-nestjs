@@ -88,11 +88,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * להוסיף רשימת קבצים שהועלו
 * add yemot call module to dynamic modules
 * enable reverting for imported file
+* logs
 
 # todo
 * add sign up form
-* logs  // https://console.cloud.google.com/logs/query?authuser=1&project=react-admin-nestjs-dev
-* logs - https://hub.docker.com/r/fluent/fluentd/ https://earthly.dev/blog/understanding-docker-logging-and-log-files/ sematext logstash
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * check docker security issues
 * better text management in db - no need to daclare each text so many times
