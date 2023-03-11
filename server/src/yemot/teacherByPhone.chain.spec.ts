@@ -22,7 +22,8 @@ describe('teacher chain of responsibility', () => {
         };
         res = {
             send: jest.fn(() => Promise.resolve()),
-            getText: jest.fn(key => key)
+            getText: jest.fn(key => key),
+            hangup: jest.fn().mockReturnValue('hangup'),
         };
         next = jest.fn(() => Promise.resolve());
     });
@@ -42,6 +43,7 @@ describe('teacher chain of responsibility', () => {
 
         expect(next).not.toHaveBeenCalled();
         expect(res.send).toBeCalledWith('phoneIsNotRecognizedInTheSystem');
+        expect(res.send).toBeCalledWith('hangup');
     });
 
     test('teacher is not defined & fetched by phone, should end chain', async () => {

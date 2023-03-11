@@ -80,7 +80,6 @@ class LoadStudentListHandler extends HandlerBase {
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.students === undefined) {
             const studentList = await req.getStudentsByUserIdAndKlassIds(req.params.userId, req.params.baseReport.klassReferenceId);
-            console.log({ studentList });
             req.params.students = studentList.filter(item => !req.params.idsToSkip.has(item.tz));
         }
         return next();
@@ -100,6 +99,9 @@ class ValidateAbsCountHandler extends HandlerBase {
                 return res.send(res.getText(prop.message), prop.name);
             } else if (!req.params[prop.name + 'Validated']) {
                 if (this.isSideMenu(req.params[prop.name], req, res)) {
+                    if (res.messages.length) {
+                        return;
+                    }
                     return next(true);
                 }
                 req.params[prop.name + 'Validated'] = prop.validate(req);

@@ -1,6 +1,7 @@
 import getReportChain from './attReport.chain';
-import { YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
+import { YemotRequest, YemotResponse, YemotResponseMock } from "@shared/utils/yemot/yemot.interface";
 import getReportTypeChain from './reportType.chain';
+import util from '@shared/utils/yemot/yemot.util';
 
 async function getExistingReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
     return [];
@@ -12,22 +13,18 @@ const reportTypeChain = getReportTypeChain(attReportChain, gradeReportChain);
 describe('reportChain', () => {
     let req: YemotRequest;
     let res: YemotResponse;
-    const sendMock = jest.fn();
     const next = jest.fn();
     beforeEach(() => {
         req = { params: {} } as YemotRequest;
-        res = {
-            send: sendMock,
-            getText: jest.fn(key => Promise.resolve(key)),
-            messages: [],
-            getResponse: jest.fn(),
-        } as YemotResponse;
+        res = new YemotResponseMock();
         next.mockClear();
     });
 
     it('should return askForReportType if reportType is undefined', async () => {
         await reportTypeChain.handleRequest(req, res, next);
-        expect(sendMock).toHaveBeenCalledWith('getReportType');
+
+        const response = await res.getResponse();
+        expect(response).toEqual(util.read_v2('getReportType', 'reportType'));
         expect(next).not.toHaveBeenCalled();
     });
 
@@ -35,6 +32,7 @@ describe('reportChain', () => {
         req.params.reportType = '1';
         const attReportChainMock = jest.spyOn(attReportChain, 'handleRequest');
         await reportTypeChain.handleRequest(req, res, next);
+
         expect(attReportChainMock).toHaveBeenCalled();
         expect(next).not.toHaveBeenCalled();
     });
@@ -43,6 +41,7 @@ describe('reportChain', () => {
         req.params.reportType = '2';
         const gradeReportChainMock = jest.spyOn(gradeReportChain, 'handleRequest');
         await reportTypeChain.handleRequest(req, res, next);
+
         expect(gradeReportChainMock).toHaveBeenCalled();
         expect(next).not.toHaveBeenCalled();
     });
@@ -50,6 +49,7 @@ describe('reportChain', () => {
     it('should go on if reportType is 3', async () => {
         req.params.reportType = '3';
         await reportTypeChain.handleRequest(req, res, next);
+
         expect(next).toHaveBeenCalled();
     });
 });

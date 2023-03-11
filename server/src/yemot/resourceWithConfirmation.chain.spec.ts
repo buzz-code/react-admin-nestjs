@@ -2,7 +2,7 @@ import { pascalCase } from "change-case";
 import getResourceConfirmationChain from "./resourceWithConfirmation.chain";
 
 const resource = 'lesson';
-const chain = getResourceConfirmationChain(resource, req => req.getLessonFromLessonId(req.params[resource].id));
+const chain = getResourceConfirmationChain(resource, req => req.getLessonFromLessonId(req.params[resource + 'Id']));
 
 describe('lesson chain of responsibility', () => {
     let req;
@@ -18,11 +18,11 @@ describe('lesson chain of responsibility', () => {
         req = {
             params: {
                 [resource]: {
-                    id: undefined,
                     data: undefined,
                     dataToConfirm: undefined,
-                    isConfirmed: undefined,
-                }
+                },
+                [resource + 'Id']: undefined,
+                [resource + 'Confirm']: undefined,
             },
             getLessonFromLessonId: jest.fn().mockResolvedValue(defaultLesson),
         };
@@ -31,10 +31,10 @@ describe('lesson chain of responsibility', () => {
             send: jest.fn(async (msg: string) => {
                 switch (msg) {
                     case `type${pascalCase(resource)}Id`:
-                        req.params[resource].id = defaultLesson.id;
+                        req.params[resource + 'Id'] = defaultLesson.id;
                         break;
                     case `confirm${pascalCase(resource)}`:
-                        req.params[resource].isConfirmed = true;
+                        req.params[resource + 'Confirm'] = true;
                         break;
                 }
                 if (res.continueMock) {
@@ -42,6 +42,7 @@ describe('lesson chain of responsibility', () => {
                 }
             }),
             getText: jest.fn(key => key),
+            clear: jest.fn(),
         };
         next = jest.fn(() => Promise.resolve());
     });
@@ -55,9 +56,9 @@ describe('lesson chain of responsibility', () => {
     });
 
     test('lesson is confirmed, should set lesson and exit chain', async () => {
-        req.params[resource].id = defaultLesson.id;
+        req.params[resource + 'Id'] = defaultLesson.id;
         req.params[resource].dataToConfirm = defaultLesson;
-        req.params[resource].isConfirmed = true;
+        req.params[resource + 'Confirm'] = true;
 
         await chain.handleRequest(req, res, next);
 
@@ -69,42 +70,42 @@ describe('lesson chain of responsibility', () => {
         await chain.handleRequest(req, res, next);
 
         expect(next).not.toHaveBeenCalled();
-        expect(res.send).toHaveBeenCalledWith(`type${pascalCase(resource)}Id`);
+        expect(res.send).toHaveBeenCalledWith(`type${pascalCase(resource)}Id`, resource + 'Id');
     });
 
     test('lesson is found, should ask for confirmation', async () => {
-        req.params[resource].id = defaultLesson.id;
+        req.params[resource + 'Id'] = defaultLesson.id;
 
         await chain.handleRequest(req, res, next);
 
         expect(req.params[resource].dataToConfirm).toEqual(defaultLesson);
         expect(next).not.toHaveBeenCalled();
         expect(req.getLessonFromLessonId).toHaveBeenCalledWith(defaultLesson.id);
-        expect(res.send).toHaveBeenCalledWith(`confirm${pascalCase(resource)}`);
+        expect(res.send).toHaveBeenCalledWith(`confirm${pascalCase(resource)}`, resource + 'Confirm');
     });
 
     test('req has lessonId, lesson exists but is not confirmed, user enters a new lessonId which also exists and is confirmed', async () => {
-        req.params[resource].id = 'math101';
+        req.params[resource + 'Id'] = 'math101';
         req.params[resource].dataToConfirm = {
             id: 'math101',
             name: 'Mathematics 101'
         };
-        req.params[resource].isConfirmed = false;
+        req.params[resource + 'Confirm'] = false;
         res.continueMock = true;
 
         await chain.handleRequest(req, res, next);
 
         expect(res.send).toBeCalledTimes(2);
-        expect(res.send).toHaveBeenNthCalledWith(1, `type${pascalCase(resource)}Id`);
+        expect(res.send).toHaveBeenNthCalledWith(1, `type${pascalCase(resource)}Id`, resource + 'Id');
         expect(req.getLessonFromLessonId).toHaveBeenCalledWith(defaultLesson.id);
         expect(req.params[resource].dataToConfirm).toEqual(defaultLesson);
-        expect(res.send).toHaveBeenNthCalledWith(2, `confirm${pascalCase(resource)}`);
+        expect(res.send).toHaveBeenNthCalledWith(2, `confirm${pascalCase(resource)}`, resource + 'Confirm');
         expect(next).toHaveBeenCalled();
         expect(req.params[resource].data).toEqual(defaultLesson);
     });
 
     test('lesson is not found, should ask for lesson ID again', async () => {
-        req.params[resource].id = '123';
+        req.params[resource + 'Id'] = '123';
         req.getLessonFromLessonId = jest.fn().mockReturnValueOnce(null);
 
         await chain.handleRequest(req, res, next);
@@ -112,6 +113,6 @@ describe('lesson chain of responsibility', () => {
         expect(req.params[resource].dataToConfirm).toBeNull();
         expect(next).not.toHaveBeenCalled();
         expect(req.getLessonFromLessonId).toHaveBeenCalledWith('123');
-        expect(res.send).toHaveBeenCalledWith(`type${pascalCase(resource)}Id`);
+        expect(res.send).toHaveBeenCalledWith(`type${pascalCase(resource)}Id`, resource + 'Id');
     });
 });

@@ -1,5 +1,6 @@
 import getReportChain, { IReportProperty } from "./attReport.chain";
-import { YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
+import { YemotRequest, YemotResponse, YemotResponseMock } from "@shared/utils/yemot/yemot.interface";
+import util from "@shared/utils/yemot/yemot.util";
 
 describe("attReport chain", () => {
     let req: YemotRequest;
@@ -28,12 +29,8 @@ describe("attReport chain", () => {
             },
         } as YemotRequest;
 
-        res = {
-            send: jest.fn(),
-            getText: jest.fn(key => Promise.resolve(key)),
-            messages: [],
-            getResponse: jest.fn(),
-        } as YemotResponse;
+        res = new YemotResponseMock();
+        jest.spyOn(res, 'send');
 
         next = jest.fn();
 
@@ -55,12 +52,13 @@ describe("attReport chain", () => {
             expect(req.params.sheetName).toEqual("someSheetName");
         });
 
-        it("should ask if current month if isCurrentMonth is not defined", () => {
+        it("should ask if current month if isCurrentMonth is not defined", async () => {
             req.params.isCurrentMonth = undefined;
 
             chain.handleRequest(req, res, next);
 
-            expect(res.send).toHaveBeenCalledWith("askIsCurrentMonth");
+            const response = await res.getResponse();
+            expect(response).toEqual(util.read_v2("askIsCurrentMonth", "isCurrentMonth"));
             expect(next).not.toHaveBeenCalled();
         });
 
@@ -72,12 +70,13 @@ describe("attReport chain", () => {
             expect(req.params.sheetName).toEqual(expect.any(String));
         });
 
-        it("should ask for current month if isCurrentMonth is not '1'", () => {
+        it("should ask for current month if isCurrentMonth is not '1'", async () => {
             req.params.isCurrentMonth = "0";
 
             chain.handleRequest(req, res, next);
 
-            expect(res.send).toHaveBeenCalledWith("askForCurrentMonth");
+            const response = await res.getResponse();
+            expect(response).toEqual(util.read_v2("askForCurrentMonth", "currentMonth"));
             expect(next).not.toHaveBeenCalled();
         });
 
@@ -128,7 +127,8 @@ describe("attReport chain", () => {
         it('should ask if skip existing reports if existingReports has items and isSkipExistingReports is not defined', async () => {
             await chain.handleRequest(req, res, next);
 
-            expect(res.send).toHaveBeenCalledWith('askIfSkipExistingReports');
+            const response = await res.getResponse();
+            expect(response).toEqual(util.read_v2("askIfSkipExistingReports", "isSkipExistingReports"));
             expect(next).not.toHaveBeenCalled();
         });
 
@@ -179,7 +179,8 @@ describe("attReport chain", () => {
         it('should ask for how many lessons if howManyLessons param is not defined', async () => {
             await chain.handleRequest(req, res, next);
 
-            expect(res.send).toHaveBeenCalledWith('howManyLessons');
+            const response = await res.getResponse();
+            expect(response).toEqual(util.read_v2("howManyLessons", "howManyLessons"));
             expect(next).not.toHaveBeenCalled();
         });
 
@@ -188,7 +189,11 @@ describe("attReport chain", () => {
 
             await chain.handleRequest(req, res, next);
 
-            expect(res.send).toHaveBeenCalledWith('howManyLessons');
+            const response = await res.getResponse();
+            expect(response).toEqual(util.send(
+                util.id_list_message_v2("tryAgain"),
+                util.read_v2("howManyLessons", "howManyLessons")
+            ));
             expect(next).not.toHaveBeenCalled();
         });
 
@@ -289,7 +294,8 @@ describe("attReport chain", () => {
             expect(req.params.student).toEqual(req.params.students[0]);
             expect(req.params.existing).toEqual([]);
             expect(next).toHaveBeenCalledTimes(0);
-            expect(res.send).toHaveBeenCalledWith('absCount');
+            const response = await res.getResponse();
+            expect(response).toEqual(util.read_v2("absCount", "absCount"));
         });
 
         it('when there are no more students to iterate, should call the next handler', async () => {
@@ -307,7 +313,11 @@ describe("attReport chain", () => {
 
             expect(req.params.absCountValidation).toBeUndefined();
             expect(next).toHaveBeenCalledTimes(0);
-            expect(res.send).toHaveBeenCalledWith('absCount');
+            const response = await res.getResponse();
+            expect(response).toEqual(util.send(
+                util.id_list_message_v2('tryAgain'),
+                util.read_v2("absCount", "absCount")
+            ));
         });
 
         it('when there is a large absCount, should ask again', async () => {
@@ -317,7 +327,11 @@ describe("attReport chain", () => {
 
             expect(req.params.absCountValidation).toBeUndefined();
             expect(next).toHaveBeenCalledTimes(0);
-            expect(res.send).toHaveBeenCalledWith('absCount');
+            const response = await res.getResponse();
+            expect(response).toEqual(util.send(
+                util.id_list_message_v2('tryAgain'),
+                util.read_v2("absCount", "absCount")
+            ));
         });
 
         it('when opened a side menu, should ask for direction', async () => {
@@ -327,7 +341,8 @@ describe("attReport chain", () => {
 
             expect(req.params.absCountValidation).toBeUndefined();
             expect(next).toHaveBeenCalledTimes(0);
-            expect(res.send).toHaveBeenCalledWith('sideMenu');
+            const response = await res.getResponse();
+            expect(response).toEqual(util.read_v2("sideMenu", "sideMenu"));
         });
 
         it('when opened a side menu with a direction, should go to student', async () => {
@@ -337,7 +352,8 @@ describe("attReport chain", () => {
 
             expect(req.params.studentIndex).toEqual(1);
             expect(next).toHaveBeenCalledTimes(0);
-            expect(res.send).toHaveBeenCalledWith('absCount');
+            const response = await res.getResponse();
+            expect(response).toEqual(util.read_v2("absCount", "absCount"));
         });
 
         it('when there is a valid absCount, should save and go to next student', async () => {
@@ -350,7 +366,8 @@ describe("attReport chain", () => {
             expect(req.params.studentIndex).toEqual(1);
             expect(req.saveReport).toHaveBeenCalled();
             expect(next).toHaveBeenCalledTimes(0);
-            expect(res.send).toHaveBeenCalledWith('absCount');
+            const response = await res.getResponse();
+            expect(response).toEqual(util.read_v2("absCount", "absCount"));
         });
     });
 });
