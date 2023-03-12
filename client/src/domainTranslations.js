@@ -140,7 +140,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 fileName: 'שם הקובץ',
-                entityIds: 'מזהים',
+                entityIds: 'רשומות',
                 entityName: 'סוג טבלה',
             }
         },
