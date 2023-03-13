@@ -4,6 +4,7 @@ import { AuthService } from '@shared/auth/auth.service';
 import { JwtAuthGuard } from '@shared/auth/jwt-auth.guard';
 import { LocalAuthGuard } from '@shared/auth/local-auth.guard';
 import { Response } from 'express';
+import { LocalRegisterAuthGuard } from '@shared/auth/local-register-auth.guard';
 
 @Controller()
 export class AppController {
@@ -15,6 +16,15 @@ export class AppController {
   @Post('auth/login')
   @HttpCode(200)
   async login(@Request() req, @Res() response: Response) {
+    const cookie = await this.authService.getCookieWithJwtToken(req.user);
+    response.setHeader('Set-Cookie', cookie);
+    return response.send({ success: true });
+  }
+
+  @UseGuards(LocalRegisterAuthGuard)
+  @Post('auth/register')
+  @HttpCode(200)
+  async register(@Request() req, @Res() response: Response) {
     const cookie = await this.authService.getCookieWithJwtToken(req.user);
     response.setHeader('Set-Cookie', cookie);
     return response.send({ success: true });
