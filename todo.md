@@ -92,8 +92,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add sign up form
 
 # todo
-* update register page
-https://www.google.com/search?q=react+admin+sign+up+component&oq=react+admin+sign+up+component&aqs=chrome..69i57j69i64.6335j0j7&sourceid=chrome&ie=UTF-8
 * add mail support
 * update code-server
 https://github.com/microsoft/vscode/issues/169901

@@ -28,7 +28,8 @@ import importFile from '@shared/components/common-entities/import-file';
 
 import { isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
-import { Register } from '@shared/components/layout/Register';
+import { RegisterPage } from '@shared/components/layout/RegisterPage';
+import { LoginPage } from '@shared/components/layout/LoginPage';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -36,7 +37,9 @@ const App = () => (
   <BrowserRouter>
     <RTLStyle>
       <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider}
-        theme={theme} title='נוכחות' dashboard={Dashboard} layout={Layout} requireAuth>
+        theme={theme} title='נוכחות' 
+        dashboard={Dashboard} layout={Layout} loginPage={LoginPage}
+         requireAuth>
         {permissions => (
           <>
             <Resource name="att_report" {...attReport} />
@@ -63,7 +66,7 @@ const App = () => (
             </CustomRoutes>
 
             <CustomRoutes noLayout>
-              <Route path="/register" element={<Register />} />
+              <Route path="/register" element={<RegisterPage />} />
             </CustomRoutes>
             
             {/* <CustomRoutes>
