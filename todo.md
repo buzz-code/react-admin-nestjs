@@ -89,10 +89,17 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add yemot call module to dynamic modules
 * enable reverting for imported file
 * logs
+* add sign up form
 
 # todo
-* add sign up form
+* update register page
+https://www.google.com/search?q=react+admin+sign+up+component&oq=react+admin+sign+up+component&aqs=chrome..69i57j69i64.6335j0j7&sourceid=chrome&ie=UTF-8
+* add mail support
+* update code-server
+https://github.com/microsoft/vscode/issues/169901
+https://github.com/microsoft/vscode/issues/146580
 * render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
+* add settings & profile page
 * check docker security issues
 * better text management in db - no need to daclare each text so many times
 * https://www.google.com/search?q=nest+auto+delete+migration+files&oq=nest+auto+delete+migration+files&aqs=chrome..69i57.6553j0j7&sourceid=chrome&ie=UTF-8
