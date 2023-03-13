@@ -28,6 +28,7 @@ import importFile from '@shared/components/common-entities/import-file';
 
 import { isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
+import { Register } from '@shared/components/layout/Register';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -60,6 +61,15 @@ const App = () => (
             <CustomRoutes>
               <Route path="/yemot-simulator" element={<YemotSimulator />} />
             </CustomRoutes>
+
+            <CustomRoutes noLayout>
+              <Route path="/register" element={<Register />} />
+            </CustomRoutes>
+            
+            {/* <CustomRoutes>
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/profile" element={<Profile />} />
+            </CustomRoutes> */}
           </>
         )}
       </Admin>
