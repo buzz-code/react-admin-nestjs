@@ -90,13 +90,16 @@ https://github.com/tinovyatkin/nest-puppeteer
 * enable reverting for imported file
 * logs
 * add sign up form
+* update code-server
 
 # todo
-* add mail support
-* update code-server
-https://github.com/microsoft/vscode/issues/169901
-https://github.com/microsoft/vscode/issues/146580
-* render dynamic columns - pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
+* test send mails
+https://notiz.dev/blog/send-emails-with-nestjs
+https://nest-modules.github.io/mailer/docs/mailer
+* self host n8n
+* add mail addresses table
+* add recieve email webhook
+* render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * add settings & profile page
 * check docker security issues
 * better text management in db - no need to daclare each text so many times
