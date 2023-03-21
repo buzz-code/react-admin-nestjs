@@ -91,12 +91,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * logs
 * add sign up form
 * update code-server
+* test send mails
+* self host n8n
 
 # todo
-* test send mails
-https://notiz.dev/blog/send-emails-with-nestjs
-https://nest-modules.github.io/mailer/docs/mailer
-* self host n8n
 * add mail addresses table
 * add recieve email webhook
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
