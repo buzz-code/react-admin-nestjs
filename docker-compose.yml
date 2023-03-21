@@ -42,6 +42,8 @@ services:
             MYSQL_DATABASE: $MYSQL_DATABASE
             JWT_SECRET: $JWT_SECRET
             ADMIN_USER: $ADMIN_USER
+            SMTP_USER: $SMTP_USER
+            SMTP_PASSWORD: $SMTP_PASSWORD
         depends_on:
             - mysql
         labels:
