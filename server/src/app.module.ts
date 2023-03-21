@@ -8,6 +8,7 @@ import { AuthModule } from '@shared/auth/auth.module';
 import { YemotModule } from '@shared/utils/yemot/yemot.module';
 // import { yemotProcessorProvider } from 'src/yemot.processor';
 import yemotChain from './yemot/yemot.chain';
+import { MailSendModule } from '@shared/utils/mail/mail-send.module';
 import { BaseEntityModule } from '@shared/base-entity/base-entity.module';
 
 import userConfig from './entity-modules/user.config';
@@ -32,6 +33,7 @@ import { YemotCall } from '@shared/entities/YemotCall.entity';
   imports: [
     TypeOrmModule.forRoot(typeOrmModuleConfig),
     RequestContextModule,
+    MailSendModule,
     BaseEntityModule.register(userConfig),
     BaseEntityModule.register(attReportConfig),
     BaseEntityModule.register(gradeConfig),
