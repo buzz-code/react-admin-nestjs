@@ -75,7 +75,6 @@ services:
             - "db_data:/var/lib/mysql"
         networks:
             - private-network
-            - elknet
 
     phpmyadmin:
         container_name: php-myadmin
@@ -93,8 +92,6 @@ services:
           - "80"
         networks:
             - private-network
-            - caddy
-            - elknet
 
 
 volumes:
