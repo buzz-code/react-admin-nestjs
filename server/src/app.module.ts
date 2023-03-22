@@ -27,7 +27,7 @@ import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass';
 import { AuditLog } from '@shared/entities/AuditLog.entity';
 import { ImportFile } from '@shared/entities/ImportFile.entity';
 import { YemotCall } from '@shared/entities/YemotCall.entity';
-import { MailAddress } from '@shared/entities/MailAddress.entity';
+import mailAddressConfig from '@shared/utils/mail/mail-address.config';
 
 
 @Module({
@@ -51,7 +51,7 @@ import { MailAddress } from '@shared/entities/MailAddress.entity';
     BaseEntityModule.register({ entity: AuditLog }),
     BaseEntityModule.register({ entity: ImportFile }),
     BaseEntityModule.register({ entity: YemotCall }),
-    BaseEntityModule.register({ entity: MailAddress }),
+    BaseEntityModule.register(mailAddressConfig),
     AuthModule,
     YemotModule.register(yemotChain)
   ],
