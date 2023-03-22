@@ -93,9 +93,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update code-server
 * test send mails
 * self host n8n
+* add mail addresses table
+* add mail update n8n workflow
 
 # todo
-* add mail addresses table
+* add mail recieve in n8n
+* add button to validate mail address
 * add recieve email webhook
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * add settings & profile page
