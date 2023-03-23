@@ -97,6 +97,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add mail update n8n workflow
 * add mail recieve in n8n
 * add mail fallback in n8n
+* לשפר תהליך טלפוני- לנסות לשים שם את התהליך הטלפוני של מאיר
 
 # todo
 * add recieve email webhook
@@ -113,7 +114,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 תוספת מחיר לפי משתמשים
 מחיר שקוף - יופיע באתר
 * להוסיף אפשרות לבחור כתובות מייל
-* לשפר תהליך טלפוני- לנסות לשים שם את התהליך הטלפוני של מאיר
 * fix yemot simulator with lesson confirm
 * להציג את השיחות של ימות המשיח בצורה יפה
 * add menu grouping
