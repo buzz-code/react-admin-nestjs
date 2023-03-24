@@ -38,9 +38,9 @@ const App = () => (
   <BrowserRouter>
     <RTLStyle>
       <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider}
-        theme={theme} title='נוכחות' 
+        theme={theme} title='נוכחות'
         dashboard={Dashboard} layout={Layout} loginPage={LoginPage}
-         requireAuth>
+        requireAuth>
         {permissions => (
           <>
             <Resource name="att_report" {...attReport} />
@@ -59,6 +59,7 @@ const App = () => (
             {isAdmin(permissions) && <>
               <Resource name="yemot_call" {...resourceEntityGuesser} />
               <Resource name="mail_address" {...mailAddress} />
+              <Resource name="recieved_mail" {...resourceEntityGuesser} />
               <Resource name="audit_log" {...auditLog} />
               <Resource name="user" {...user} />
             </>}
@@ -70,7 +71,7 @@ const App = () => (
             <CustomRoutes noLayout>
               <Route path="/register" element={<RegisterPage />} />
             </CustomRoutes>
-            
+
             {/* <CustomRoutes>
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />

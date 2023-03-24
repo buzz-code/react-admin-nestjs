@@ -28,6 +28,7 @@ import { AuditLog } from '@shared/entities/AuditLog.entity';
 import { ImportFile } from '@shared/entities/ImportFile.entity';
 import { YemotCall } from '@shared/entities/YemotCall.entity';
 import mailAddressConfig from '@shared/utils/mail/mail-address.config';
+import { RecievedMail } from '@shared/entities/RecievedMail.entity';
 
 
 @Module({
@@ -52,6 +53,7 @@ import mailAddressConfig from '@shared/utils/mail/mail-address.config';
     BaseEntityModule.register({ entity: ImportFile }),
     BaseEntityModule.register({ entity: YemotCall }),
     BaseEntityModule.register(mailAddressConfig),
+    BaseEntityModule.register({ entity: RecievedMail }),
     AuthModule,
     YemotModule.register(yemotChain)
   ],

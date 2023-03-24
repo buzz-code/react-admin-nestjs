@@ -140,8 +140,10 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 fileName: 'שם הקובץ',
+                fileSource: 'מקור הקובץ',
                 entityIds: 'רשומות',
                 entityName: 'סוג טבלה',
+                response: 'תגובה',
             }
         },
     }
