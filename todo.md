@@ -98,9 +98,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add mail recieve in n8n
 * add mail fallback in n8n
 * לשפר תהליך טלפוני- לנסות לשים שם את התהליך הטלפוני של מאיר
+* add recieve email webhook
 
 # todo
-* add recieve email webhook
+* update data-ui/crud version and use request.auth instead of injecting user data
+* test if can now use extra route params
 * add button to validate mail address
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * add settings & profile page
