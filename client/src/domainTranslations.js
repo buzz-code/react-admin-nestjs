@@ -150,7 +150,7 @@ export default {
             name: 'כתובת מייל |||| כתובות מייל',
             fields: {
                 ...generalResourceFieldsTranslation,
-                alias: 'שם המייל',
+                alias: 'כתובת המייל',
                 entity: 'טבלת יעד',
             }
         },
