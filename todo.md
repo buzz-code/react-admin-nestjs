@@ -101,12 +101,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add recieve email webhook
 
 # todo
-* update data-ui/crud version and use request.auth instead of injecting user data
-* test if can now use extra route params
-* render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * add settings & profile page
 * להוסיף אפשרות לבחור כתובות מייל
 * add button to validate mail address
+* update data-ui/crud version and use request.auth instead of injecting user data
+* test if can now use extra route params
+* render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * check docker security issues
 * better text management in db - no need to daclare each text so many times
 * https://www.google.com/search?q=nest+auto+delete+migration+files&oq=nest+auto+delete+migration+files&aqs=chrome..69i57.6553j0j7&sourceid=chrome&ie=UTF-8
