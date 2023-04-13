@@ -101,6 +101,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add recieve email webhook
 
 # todo
+* update react admin
 * add settings & profile page
 * להוסיף אפשרות לבחור כתובות מייל
 * add button to validate mail address
