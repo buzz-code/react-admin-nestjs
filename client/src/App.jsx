@@ -26,6 +26,7 @@ import user from "@shared/components/common-entities/user";
 import auditLog from '@shared/components/common-entities/audit-log';
 import importFile from '@shared/components/common-entities/import-file';
 import mailAddress from '@shared/components/common-entities/mail-address';
+import recievedMail from '@shared/components/common-entities/recieved-mail';
 
 import { isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
@@ -59,7 +60,7 @@ const App = () => (
             {isAdmin(permissions) && <>
               <Resource name="yemot_call" {...resourceEntityGuesser} />
               <Resource name="mail_address" {...mailAddress} />
-              <Resource name="recieved_mail" {...resourceEntityGuesser} />
+              <Resource name="recieved_mail" {...recievedMail} />
               <Resource name="audit_log" {...auditLog} />
               <Resource name="user" {...user} />
             </>}
