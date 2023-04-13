@@ -104,6 +104,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add settings & profile page
 * להוסיף אפשרות לבחור כתובות מייל
 * add button to validate mail address
+* create github actions workflow
 * update data-ui/crud version and use request.auth instead of injecting user data
 * test if can now use extra route params
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
