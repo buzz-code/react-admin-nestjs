@@ -99,15 +99,14 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add mail fallback in n8n
 * לשפר תהליך טלפוני- לנסות לשים שם את התהליך הטלפוני של מאיר
 * add recieve email webhook
+* להוסיף אפשרות לבחור כתובות מייל
 
 # todo
 * update react admin
-* add settings & profile page
-* להוסיף אפשרות לבחור כתובות מייל
-* add button to validate mail address
 * create github actions workflow
 * update data-ui/crud version and use request.auth instead of injecting user data
 * test if can now use extra route params
+* add button to validate mail address
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * check docker security issues
 * better text management in db - no need to daclare each text so many times
@@ -121,6 +120,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix yemot simulator with lesson confirm
 * להציג את השיחות של ימות המשיח בצורה יפה
 * add menu grouping
+* add settings & profile page
 * 
 
 # todo later
