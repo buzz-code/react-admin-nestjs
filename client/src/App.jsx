@@ -56,10 +56,10 @@ const App = () => (
             <Resource name="student_klass_report" {...studentKlassesReport} />
             <Resource name="text" {...text} />
             <Resource name="import_file" {...importFile} />
+            <Resource name="mail_address" {...mailAddress} create={isAdmin(permissions) && mailAddress.create} />
 
             {isAdmin(permissions) && <>
               <Resource name="yemot_call" {...resourceEntityGuesser} />
-              <Resource name="mail_address" {...mailAddress} />
               <Resource name="recieved_mail" {...recievedMail} />
               <Resource name="audit_log" {...auditLog} />
               <Resource name="user" {...user} />
@@ -73,10 +73,10 @@ const App = () => (
               <Route path="/register" element={<RegisterPage />} />
             </CustomRoutes>
 
-            {/* <CustomRoutes>
+            {/* {!isAdmin(permissions) && <CustomRoutes>
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
-            </CustomRoutes> */}
+            </CustomRoutes>} */}
           </>
         )}
       </Admin>

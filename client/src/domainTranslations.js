@@ -146,5 +146,13 @@ export default {
                 response: 'תגובה',
             }
         },
+        mail_address: {
+            name: 'כתובת מייל |||| כתובות מייל',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                alias: 'שם המייל',
+                entity: 'טבלת יעד',
+            }
+        },
     }
 };
