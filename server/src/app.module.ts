@@ -3,7 +3,6 @@ import { AppController } from 'src/app.controller';
 import { AppService } from 'src/app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleConfig } from '@shared/config/typeorm.config';
-import { RequestContextModule } from 'nestjs-request-context';
 import { AuthModule } from '@shared/auth/auth.module';
 import { YemotModule } from '@shared/utils/yemot/yemot.module';
 // import { yemotProcessorProvider } from 'src/yemot.processor';
@@ -34,7 +33,6 @@ import { RecievedMail } from '@shared/entities/RecievedMail.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmModuleConfig),
-    RequestContextModule,
     MailSendModule,
     BaseEntityModule.register(userConfig),
     BaseEntityModule.register(attReportConfig),
