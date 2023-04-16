@@ -386,12 +386,12 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@dataui/crud-request@^5.2.2":
-  version "5.2.2"
-  resolved "https://registry.yarnpkg.com/@dataui/crud-request/-/crud-request-5.2.2.tgz#fc493ad110b04f6cef704a3c45376bdb65c24ce6"
-  integrity sha512-8kcBDXlWPAZCg+qX8O1+fLqoz2Bts2X/stkdgg8D7D1o4gp2JeeWEraOL2694vvqxrJIjXbNPDSxO3i0qQlBcw==
+"@dataui/crud-request@^5.2.3":
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/@dataui/crud-request/-/crud-request-5.2.3.tgz#6594404b98a81db97c1e536c13d1e944bad2aec0"
+  integrity sha512-AYqI0MU6d+RKKWkYCKLx4xYZGISrHGd3W9+id1NL5BbpN1nwcwRhxVkzsklmQtjXFY8mjCFOQIIUvFiVWoI2xA==
   dependencies:
-    "@dataui/crud-util" "^5.2.2"
+    "@dataui/crud-util" "^5.2.3"
     qs "^6.8.0"
 
 "@dataui/crud-typeorm@^5.2.2":
@@ -401,18 +401,18 @@
   dependencies:
     "@zmotivat0r/o0" "^1.0.2"
 
-"@dataui/crud-util@^5.2.2":
-  version "5.2.2"
-  resolved "https://registry.yarnpkg.com/@dataui/crud-util/-/crud-util-5.2.2.tgz#2481f0f8ae2bc7220601d812af16b4957b25570d"
-  integrity sha512-yhWPb1BE3BGUS8UJARodcX2lswybS3gdCPK8n8YpjD81L3r1wIWUA66IBkqAOcZS4++dEsCOHpLXcW35S7TkfQ==
+"@dataui/crud-util@^5.2.3":
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/@dataui/crud-util/-/crud-util-5.2.3.tgz#48a1b97c66f032d8ad8413e8dd44307342d8232e"
+  integrity sha512-vMngESRZuvMFW8dOlseN67Ff246yheHZ2mw7DllogslPpa3xeFWx3OvPCFpn5Zac88Lkxt7pGJzpy33QviTSaA==
 
-"@dataui/crud@^5.2.2":
-  version "5.2.2"
-  resolved "https://registry.yarnpkg.com/@dataui/crud/-/crud-5.2.2.tgz#c6ed576070f3aeb1e17c9a23d2effae96371b538"
-  integrity sha512-0rEQO6AqeaadCLeiYKervZKpPNkOs1gp2ZOuJR5D9RAnqyzzqI+/P7qc5YuvnIHsK3rlP+BS59p5HlrWFWQvKw==
+"@dataui/crud@^5.2.3":
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/@dataui/crud/-/crud-5.2.3.tgz#e6cc67fd607cbe1a9f4ed0f67591a9bb1130493b"
+  integrity sha512-Svha4Wg8Q9A+2bhR2VsOr6hogjP/5S/ztt7JPw9uclCy5MLjqby6dlhwNAZ9XKAevB7HQdAdjlduizQxkXhJqw==
   dependencies:
-    "@dataui/crud-request" "^5.2.2"
-    "@dataui/crud-util" "^5.2.2"
+    "@dataui/crud-request" "^5.2.3"
+    "@dataui/crud-util" "^5.2.3"
     deepmerge "^3.2.0"
     pluralize "^8.0.0"
 

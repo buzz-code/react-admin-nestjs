@@ -28,7 +28,7 @@
     "typeorm:revert": "npm run typeorm:cli -- migration:revert"
   },
   "dependencies": {
-    "@dataui/crud": "^5.2.2",
+    "@dataui/crud": "^5.2.3",
     "@dataui/crud-typeorm": "^5.2.2",
     "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/axios": "^2.0.0",
