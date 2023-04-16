@@ -107,7 +107,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 # todo
 * create github actions workflow
 * check the use of request_parser.extra property
-* test if can now use extra route params
+* test if can now use extra route params for reports
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * check docker security issues - change to use docker swarm for production
 * better text management in db - no need to daclare each text so many times
