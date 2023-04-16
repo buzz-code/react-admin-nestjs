@@ -101,11 +101,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add recieve email webhook
 * להוסיף אפשרות לבחור כתובות מייל
 * add validation for mail address - also across domains
+* update react admin
+* update data-ui/crud version and use request.auth instead of injecting user data
 
 # todo
-* update react admin
 * create github actions workflow
-* update data-ui/crud version and use request.auth instead of injecting user data
+* check the use of request_parser.extra property
 * test if can now use extra route params
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * check docker security issues
