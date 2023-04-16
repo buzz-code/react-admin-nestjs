@@ -20,9 +20,12 @@ jobs:
           # Check if there is a directory named the same as my repository name
           if [ -d "${{ github.event.repository.name }}" ]; then
             cd "${{ github.event.repository.name }}"   # If directory exists, change to it
+            git pull origin main
+            git submodule update --init
           else
             git clone "${{ github.repositoryUrl }}" "${{ github.event.repository.name }}"   # If directory does not exist, clone the repository
             cd "${{ github.event.repository.name }}"   # Change to the cloned repository
+            git submodule update --init
             cp .env.template .env   # Copy ".env.template" to ".env"
           fi
           
