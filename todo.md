@@ -109,7 +109,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * check the use of request_parser.extra property
 * test if can now use extra route params
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
-* check docker security issues
+* check docker security issues - change to use docker swarm for production
 * better text management in db - no need to daclare each text so many times
 * https://www.google.com/search?q=nest+auto+delete+migration+files&oq=nest+auto+delete+migration+files&aqs=chrome..69i57.6553j0j7&sourceid=chrome&ie=UTF-8
 * create a table of 'payment tracks'
