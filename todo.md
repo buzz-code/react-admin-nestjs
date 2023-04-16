@@ -103,9 +103,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add validation for mail address - also across domains
 * update react admin
 * update data-ui/crud version and use request.auth instead of injecting user data
+* create github actions workflow
 
 # todo
-* create github actions workflow
+* check why prod code is not updating - the files are updated, but the runnng code is the old code, proved by logs, only after deleting the containers his is fixed
 * check the use of request_parser.extra property
 * test if can now use extra route params for reports
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
