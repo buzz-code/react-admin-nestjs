@@ -104,14 +104,17 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update react admin
 * update data-ui/crud version and use request.auth instead of injecting user data
 * create github actions workflow
+* check the use of request_parser.extra property
 
 # todo
 * check why prod code is not updating - the files are updated, but the runnng code is the old code, proved by logs, only after deleting the containers his is fixed
-* check the use of request_parser.extra property
-* test if can now use extra route params for reports
+* add student grade report
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * check docker security issues - change to use docker swarm for production
 * better text management in db - no need to daclare each text so many times
+SELECT b.key AS base_key, b.value AS base_value, o.id, o.key AS override_key, o.value AS override_value
+FROM base_texts b
+LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
 * https://www.google.com/search?q=nest+auto+delete+migration+files&oq=nest+auto+delete+migration+files&aqs=chrome..69i57.6553j0j7&sourceid=chrome&ie=UTF-8
 * create a table of 'payment tracks'
 * להכין מסמך בסיס לתמחור
