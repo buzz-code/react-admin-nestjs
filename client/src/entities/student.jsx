@@ -2,15 +2,21 @@ import { DateField, DateInput, ReferenceField, ReferenceInput, TextField, TextIn
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
+import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
+import NoteAltIcon from '@mui/icons-material/NoteAlt';
 
 const filters = [
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
 ];
 
+const additionalBulkButtons = [
+    <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />} name='studentReportCard' filename='תעודה' />
+];
+
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
-        <CommonDatagrid {...props}>
+        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <TextField source="tz" />
