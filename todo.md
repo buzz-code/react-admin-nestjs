@@ -110,9 +110,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add json to report generators
 * rename 'reportDefinition' to 'reportGenerator'
 * simplify getReportData function from base-entity.service
+* make student grade report work
 
 # todo
-* make student grade report work
+* make import button work even without 'resource' prop
 * support multiple report generation at once - add buffer to pdf generator
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * check docker security issues - change to use docker swarm for production

@@ -69,7 +69,7 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
     async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
         if (req.parsed.extra.report in this.reportsDict) {
             const generator = this.reportsDict[req.parsed.extra.report];
-            const params = { userId: 1, studentId: 23 };
+            const params = { userId: 1, studentId: 180 };
             return {
                 generator,
                 params,

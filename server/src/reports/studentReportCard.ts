@@ -93,8 +93,8 @@ const reportTemplate = `
         <% if (reportParams.groupByKlass) { %>
             <% var klasses = {} %>
             <% reports.forEach(item => {
-                klasses[item.klass_name] = klasses[item.klass_name] || { name: item.klass_name, reports: [] }
-                klasses[item.klass_name].reports.push(item)
+                klasses[item.klass.name] = klasses[item.klass.name] || { name: item.klass.name, reports: [] }
+                klasses[item.klass.name].reports.push(item)
             }) %>
             <% reportDataArr = Object.values(klasses).sort((a, b) => a.name?.trim()?.localeCompare(b.name?.trim())) %>
         <% } %>
@@ -143,15 +143,15 @@ const reportTemplate = `
                     <% reports.forEach((report, index) => { %>
                         <% if (
                             (!reportParams.forceGrades || (report.grade != undefined && report.grade != null)) &&
-                            (!reportParams.forceAtt || (report.lessons))
+                            (!reportParams.forceAtt || (report.howManyLessons))
                         ) { %>
                             <tr>
-                                <td class="full-cell"><%= report.lesson_name %></td>
-                                <td class="full-cell"><%= report.teacher_name %></td>
+                                <td class="full-cell"><%= report.lesson && report.lesson.name %></td>
+                                <td class="full-cell"><%= report.teacher && report.teacher.name %></td>
 
-                                <% var att_percents = Math.round(((report.lessons - report.abs_count) / report.lessons) * 100) %> 
+                                <% var att_percents = Math.round(((report.howManyLessons - report.absCount) / report.howManyLessons) * 100) %> 
                                 
-                                <% if (report.lessons * 2 == report.abs_count) { %>
+                                <% if (report.howManyLessons * 2 == report.absCount) { %>
                                     <td class="full-cell"><%= report.grade %></td>
                                     <td class="full-cell">&nbsp;</td>
                                 <% } else { %>
@@ -186,9 +186,9 @@ const reportTemplate = `
                                 <th>&nbsp;</th>
                             <% } %>
 
-                            <% var reportsNoSpecial = reports.filter(item => item.lessons * 2 != item.abs_count) %>
-                            <% var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.lessons, 0) %> 
-                            <% var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.abs_count, 0) %> 
+                            <% var reportsNoSpecial = reports.filter(item => item.howManyLessons * 2 != item.absCount) %>
+                            <% var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.howManyLessons, 0) %> 
+                            <% var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.absCount, 0) %> 
                             <% var total_att_count = total_lesson_count - total_abs_count %> 
 
                             <th>
@@ -220,7 +220,7 @@ const reportTemplate = `
                 </h4>
             <% } %>
         </div>
-        <small class="notice">הופק באמצעות תוכנת יומנט</small>
+        <small class="notice">אקדא אקדא <%= student.name %></small>
         <div class="end-image">
           <% /* %>
           <%- include('image', { img: footerImage }); %>
@@ -246,15 +246,15 @@ const getReportData: IGetReportDataFunction = async (params, dataSource) => {
                 teacher: true,
             }
         }),
-        dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId }),
+        dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
     ])
     return {
         user,
         student,
-        attReports,
         studentBaseKlass,
         reportParams: {},
-        reports: [],
+        reports: attReports,
+        approved_abs_count: {},
     };
 }
 
