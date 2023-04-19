@@ -111,6 +111,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * rename 'reportDefinition' to 'reportGenerator'
 * simplify getReportData function from base-entity.service
 * make student grade report work
+* support multiple report generation at once - add buffer to pdf generator
+* make student report card work for multiple selected ids
 
 # todo
 * make import button work even without 'resource' prop

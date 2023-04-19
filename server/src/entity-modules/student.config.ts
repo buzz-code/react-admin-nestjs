@@ -8,6 +8,7 @@ import { ParsedRequestParams } from "@dataui/crud-request";
 import { AttReport } from "src/db/entities/AttReport.entity";
 import { CommonReportData } from "@shared/utils/report/types";
 import studentReportCard from "../reports/studentReportCard";
+import { BulkToPdfReportGenerator } from "@shared/utils/report/report.generators";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -64,12 +65,14 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
     }
 
     reportsDict = {
-        studentReportCard,
+        studentReportCard: new BulkToPdfReportGenerator(studentReportCard),
     };
     async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
         if (req.parsed.extra.report in this.reportsDict) {
             const generator = this.reportsDict[req.parsed.extra.report];
-            const params = { userId: 1, studentId: 180 };
+            const params = req.parsed.extra.ids
+                .split(',')
+                .map(id => ({ userId: req.auth.id, studentId: id }));
             return {
                 generator,
                 params,
