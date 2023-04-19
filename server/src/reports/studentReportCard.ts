@@ -2,7 +2,7 @@ import * as React from 'react';
 import { User } from 'src/db/entities/User.entity';
 import { Student } from 'src/db/entities/Student.entity';
 import { AttReport } from 'src/db/entities/AttReport.entity';
-import { EjsToPdfReportDefinition, IGetReportDataFunction, ReactToPdfReportDefinition } from '@shared/utils/report/report.generators';
+import { EjsToPdfReportGenerator, IGetReportDataFunction, ReactToPdfReportGenerator } from '@shared/utils/report/report.generators';
 import { StudentBaseKlass } from 'src/db/view-entities/StudentBaseKlass';
 
 const reportTemplate = `
@@ -258,4 +258,4 @@ const getReportData: IGetReportDataFunction = async (dataSource, params) => {
     };
 }
 
-export default new EjsToPdfReportDefinition('studentReportCard', getReportData, reportTemplate, reportOptions);
+export default new EjsToPdfReportGenerator('studentReportCard', getReportData, reportTemplate, reportOptions);

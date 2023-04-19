@@ -7,9 +7,8 @@ import { Student } from "src/db/entities/Student.entity";
 import { DataSource, In, SelectQueryBuilder } from "typeorm";
 import { ParsedRequestParams } from "@dataui/crud-request";
 import { AttReport } from "src/db/entities/AttReport.entity";
-import { CommonFileFormat, CommonFileResponse } from "@shared/utils/report/types";
+import { CommonFileResponse } from "@shared/utils/report/types";
 import { getCommonFileResponse, getFileBuffer } from "@shared/utils/report/report.util";
-import { BaseReportDefinition } from "@shared/utils/report/report.generators";
 import studentReportCard from "../reports/studentReportCard";
 
 function getConfig(): BaseEntityModuleOptions {
@@ -73,13 +72,13 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
         studentReportCard,
     };
     async getReportData(req: CrudRequest<any, any>): Promise<CommonFileResponse> {
-        const definition = this.reportsDict[req.parsed.extra.report];
+        const generator = this.reportsDict[req.parsed.extra.report];
         const params = { userId: 1, studentId: 23 };
         const name = req.parsed.extra.report;
-        if (definition) {
-            const data = await definition.getReportData(this.dataSource, params);
-            const buffer = await getFileBuffer(definition, data);
-            return getCommonFileResponse(buffer, definition.fileFormat, name);
+        if (generator) {
+            const data = await generator.getReportData(this.dataSource, params);
+            const buffer = await getFileBuffer(generator, data);
+            return getCommonFileResponse(buffer, generator.fileFormat, name);
         }
         return super.getReportData(req);
     }
