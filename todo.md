@@ -105,9 +105,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update data-ui/crud version and use request.auth instead of injecting user data
 * create github actions workflow
 * check the use of request_parser.extra property
+* fix error on importing file - field fileSource doesnt have a default value
 
 # todo
-* fix error on importing file - field fileSource doesnt have a default value
 * check why prod code is not updating - the files are updated, but the runnng code is the old code, proved by logs, only after deleting the containers his is fixed
 * make student grade report work
 * support multiple report generation at once
