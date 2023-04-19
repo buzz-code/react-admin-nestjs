@@ -1,14 +1,12 @@
 import { CrudRequest, CrudRequestOptions, GetManyDefaultResponse, Override } from "@dataui/crud";
-import { InjectDataSource } from "@nestjs/typeorm";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
 import { Student } from "src/db/entities/Student.entity";
-import { DataSource, In, SelectQueryBuilder } from "typeorm";
+import { In, SelectQueryBuilder } from "typeorm";
 import { ParsedRequestParams } from "@dataui/crud-request";
 import { AttReport } from "src/db/entities/AttReport.entity";
-import { CommonFileResponse } from "@shared/utils/report/types";
-import { getCommonFileResponse, getFileBuffer } from "@shared/utils/report/report.util";
+import { CommonReportData } from "@shared/utils/report/types";
 import studentReportCard from "../reports/studentReportCard";
 
 function getConfig(): BaseEntityModuleOptions {
@@ -27,9 +25,6 @@ function getConfig(): BaseEntityModuleOptions {
 }
 
 class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
-    @InjectDataSource()
-    private dataSource: DataSource;
-
     @Override()
     protected async doGetMany(builder: SelectQueryBuilder<T>, query: ParsedRequestParams, options: CrudRequestOptions): Promise<T[] | GetManyDefaultResponse<T>> {
         const res = await super.doGetMany(builder, query, options);
@@ -71,14 +66,14 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
     reportsDict = {
         studentReportCard,
     };
-    async getReportData(req: CrudRequest<any, any>): Promise<CommonFileResponse> {
-        const generator = this.reportsDict[req.parsed.extra.report];
-        const params = { userId: 1, studentId: 23 };
-        const name = req.parsed.extra.report;
-        if (generator) {
-            const data = await generator.getReportData(this.dataSource, params);
-            const buffer = await getFileBuffer(generator, data);
-            return getCommonFileResponse(buffer, generator.fileFormat, name);
+    async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
+        if (req.parsed.extra.report in this.reportsDict) {
+            const generator = this.reportsDict[req.parsed.extra.report];
+            const params = { userId: 1, studentId: 23 };
+            return {
+                generator,
+                params,
+            };
         }
         return super.getReportData(req);
     }

@@ -234,7 +234,7 @@ const reportOptions: ejs.Options = {
     compileDebug: true,
 };
 
-const getReportData: IGetReportDataFunction = async (dataSource, params) => {
+const getReportData: IGetReportDataFunction = async (params, dataSource) => {
     const [user, student, attReports, studentBaseKlass] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),

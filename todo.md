@@ -108,12 +108,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix error on importing file - field fileSource doesnt have a default value
 * check why prod code is not updating - the files are updated, but the runnng code is the old code, proved by logs, only after deleting the containers his is fixed
 * add json to report generators
+* rename 'reportDefinition' to 'reportGenerator'
+* simplify getReportData function from base-entity.service
 
 # todo
 * make student grade report work
 * support multiple report generation at once - add buffer to pdf generator
-* rename 'reportDefinition' to 'reportGenerator'
-* simplify getReportData function from base-entity.service
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * check docker security issues - change to use docker swarm for production
 * better text management in db - no need to daclare each text so many times
