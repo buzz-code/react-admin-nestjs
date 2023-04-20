@@ -116,16 +116,16 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add mail server for sending & receiving - https://docs.postalserver.io/
 * rate limit backend requests
 * use id column for relation everywhere
+* support multiple report generation at once - add buffer to pdf generator
 
 # todo
 * make import button work even without 'resource' prop
-* support multiple report generation at once - add buffer to pdf generator
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
-* check docker security issues - change to use docker swarm for production
 * better text management in db - no need to daclare each text so many times
 SELECT b.key AS base_key, b.value AS base_value, o.id, o.key AS override_key, o.value AS override_value
 FROM base_texts b
 LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
+* implement todos in dashboard item
 * https://www.google.com/search?q=nest+auto+delete+migration+files&oq=nest+auto+delete+migration+files&aqs=chrome..69i57.6553j0j7&sourceid=chrome&ie=UTF-8
 * create a table of 'payment tracks'
 * להכין מסמך בסיס לתמחור
@@ -133,6 +133,7 @@ LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
 שאר החבילות - תמחור לפי כמות תלמידות
 תוספת מחיר לפי משתמשים
 מחיר שקוף - יופיע באתר
+* check docker security issues - change to use docker swarm for production
 * fix yemot simulator with lesson confirm
 * להציג את השיחות של ימות המשיח בצורה יפה
 * split report generators to different files - one for each generator - maybe
@@ -142,10 +143,8 @@ LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
 * 
 
 # todo later
-* use https://orkhan.gitbook.io/typeorm/docs/embedded-entities
 * add gzip to caddy
 * change to typescript on client side
-* implement todos in dashboard item
 * add custom prefix to common components
 * https://github.com/bigbasket/ra-components
 * date-time inputs https://www.npmjs.com/package/react-admin-date-inputs-refactor?activeTab=readme https://www.npmjs.com/package/@mpampin/react-admin-date-inputs https://www.npmjs.com/package/@sklinet/react-admin-date-inputs?activeTab=readme https://www.npmjs.com/package/react-admin-date-picker?activeTab=readme https://www.npmjs.com/package/react-admin-material-datepicker?activeTab=readme
