@@ -121,13 +121,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 # todo
 * add images folder so users can edit images for reports
 * make import button work even without 'resource' prop
-* render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * better text management in db - no need to daclare each text so many times
 SELECT b.key AS base_key, b.value AS base_value, o.id, o.key AS override_key, o.value AS override_value
 FROM base_texts b
 LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
+* render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * implement todos in dashboard item
-* https://www.google.com/search?q=nest+auto+delete+migration+files&oq=nest+auto+delete+migration+files&aqs=chrome..69i57.6553j0j7&sourceid=chrome&ie=UTF-8
+* nest auto delete migration files
 * create a table of 'payment tracks'
 * להכין מסמך בסיס לתמחור
 חבילה בסיסית בחינם
@@ -136,14 +136,14 @@ LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
 מחיר שקוף - יופיע באתר
 * check docker security issues - change to use docker swarm for production
 * fix yemot simulator with lesson confirm
-* להציג את השיחות של ימות המשיח בצורה יפה
 * split report generators to different files - one for each generator - maybe
 * add menu grouping
-* add settings & profile page
-* add ability to edit report templates
 * 
 
 # todo later
+* להציג את השיחות של ימות המשיח בצורה יפה
+* add settings & profile page
+* add ability to edit report templates
 * add gzip to caddy
 * change to typescript on client side
 * add custom prefix to common components
