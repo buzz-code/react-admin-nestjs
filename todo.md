@@ -113,6 +113,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make student grade report work
 * support multiple report generation at once - add buffer to pdf generator
 * make student report card work for multiple selected ids
+* add mail server for sending & receiving - https://docs.postalserver.io/
+* rate limit backend requests
 
 # todo
 * make import button work even without 'resource' prop
@@ -140,9 +142,7 @@ LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
 
 # todo later
 * use https://orkhan.gitbook.io/typeorm/docs/embedded-entities
-* add mail server for sending & receiving - https://docs.postalserver.io/
 * add gzip to caddy
-* rate limit backend requests
 * change to typescript on client side
 * implement todos in dashboard item
 * add custom prefix to common components

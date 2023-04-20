@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { AppController } from 'src/app.controller';
 import { AppService } from 'src/app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -32,6 +34,7 @@ import { RecievedMail } from '@shared/entities/RecievedMail.entity';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({ ttl: 60, limit: 15 }),
     TypeOrmModule.forRoot(typeOrmModuleConfig),
     MailSendModule,
     BaseEntityModule.register(userConfig),
@@ -56,6 +59,12 @@ import { RecievedMail } from '@shared/entities/RecievedMail.entity';
     YemotModule.register(yemotChain)
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
+  ],
 })
 export class AppModule { }
