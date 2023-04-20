@@ -119,6 +119,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * support multiple report generation at once - add buffer to pdf generator
 
 # todo
+* add images folder so users can edit images for reports
 * make import button work even without 'resource' prop
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * better text management in db - no need to daclare each text so many times
