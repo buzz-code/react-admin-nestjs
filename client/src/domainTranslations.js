@@ -154,5 +154,27 @@ export default {
                 entity: 'טבלת יעד',
             }
         },
+        audit_log: {
+            name: 'נתונים שהשתנו',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                entityId: 'מזהה שורה',
+                entityName: 'טבלה',
+                operation: 'פעולה',
+                entityData: 'המידע שהשתנה',
+            }
+        },
+        recieved_mail: {
+            name: 'מיילים שהתקבלו',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                from: 'מאת',
+                to: 'אל',
+                subject: 'כותרת',
+                body: 'תוכן',
+                entityName: 'טבלת יעד',
+                importFileIds: 'קבצים מצורפים',
+            }
+        }
     }
 };

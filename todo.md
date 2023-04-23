@@ -119,9 +119,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * support multiple report generation at once - add buffer to pdf generator
 * add userId filter for admin user in all tables
 * add user info fields to register form - שם, פלאפון מייל, שם המוסד, כתובת המוסד, טלפון המוסד. תפקיד
+* translate all tables - including admin
 
 # todo
-* translate all tables - including admin
 * add report filters popup to bulk report button
 * search google how to send response mail with smtp server
 * add images table so users can edit images for reports
