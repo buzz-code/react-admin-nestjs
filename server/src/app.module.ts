@@ -34,7 +34,7 @@ import { RecievedMail } from '@shared/entities/RecievedMail.entity';
 
 @Module({
   imports: [
-    ThrottlerModule.forRoot({ ttl: 60, limit: 15 }),
+    ThrottlerModule.forRoot({ ttl: 60, limit: 20 }),
     TypeOrmModule.forRoot(typeOrmModuleConfig),
     MailSendModule,
     BaseEntityModule.register(userConfig),
