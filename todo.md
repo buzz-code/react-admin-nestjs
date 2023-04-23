@@ -118,13 +118,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * use id column for relation everywhere
 * support multiple report generation at once - add buffer to pdf generator
 * add userId filter for admin user in all tables
+* add user info fields to register form - שם, פלאפון מייל, שם המוסד, כתובת המוסד, טלפון המוסד. תפקיד
 
 # todo
 * translate all tables - including admin
 * add report filters popup to bulk report button
 * search google how to send response mail with smtp server
-* send mail to shifi about how react-admin filters work - cache & hidden filters
-* add user info fields to register form - שם, פלאפון מייל, שם המוסד, כתובת המוסד, טלפון המוסד. תפקיד
 * add images table so users can edit images for reports
 * make import button work even without 'resource' prop
 * better text management in db - no need to daclare each text so many times
