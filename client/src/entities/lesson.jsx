@@ -1,4 +1,4 @@
-import { DateField, DateInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
@@ -24,8 +24,8 @@ const Datagrid = ({ isAdmin, ...props }) => {
             <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             <DateField source="startDate" />
             <DateField source="endDate" />
-            {isAdmin && <DateField source="createdAt" />}
-            {isAdmin && <DateField source="updatedAt" />}
+            {isAdmin && <DateField showDate showTime source="createdAt" />}
+            {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
     );
 }
@@ -40,8 +40,8 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <ReferenceInput source="teacherReferenceId" reference="teacher" />
         <DateInput source="startDate" />
         <DateInput source="endDate" />
-        {!isCreate && isAdmin && <DateInput source="createdAt" disabled />}
-        {!isCreate && isAdmin && <DateInput source="updatedAt" disabled />}
+        {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+        {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
 }
 
