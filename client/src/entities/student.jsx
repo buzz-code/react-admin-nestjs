@@ -4,8 +4,18 @@ import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import { useIsAdmin } from '@shared/utils/permissionsUtil';
+
+const AdminFilter = ({ children }) => {
+    const isAdmin = useIsAdmin();
+    if (!isAdmin) {
+        return null;
+    }
+    return children;
+}
 
 const filters = [
+    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
 ];

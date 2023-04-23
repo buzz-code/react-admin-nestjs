@@ -117,9 +117,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * rate limit backend requests
 * use id column for relation everywhere
 * support multiple report generation at once - add buffer to pdf generator
+* add userId filter for admin user in all tables
 
 # todo
-* add userId filter for admin user in all tables
 * translate all tables - including admin
 * add report filters popup to bulk report button
 * search google how to send response mail with smtp server

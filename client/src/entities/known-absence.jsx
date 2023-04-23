@@ -5,6 +5,7 @@ import { getResourceComponents } from '@shared/components/crudContainers/CommonE
 import { CommonReferenceInputFilter } from '@shared/components/CommonReferenceInputFilter';
 
 const filters = [
+    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student" />,
     <DateInput source="reportDate" />,
     <NumberInput source="absnceCount" />,
