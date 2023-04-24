@@ -28,7 +28,7 @@ import importFile from '@shared/components/common-entities/import-file';
 import mailAddress from '@shared/components/common-entities/mail-address';
 import recievedMail from '@shared/components/common-entities/recieved-mail';
 
-import { isAdmin } from "@shared/utils/permissionsUtil";
+import { isShowUsersData, isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
@@ -62,7 +62,10 @@ const App = () => (
               <Resource name="yemot_call" {...resourceEntityGuesser} />
               <Resource name="recieved_mail" {...recievedMail} />
               <Resource name="audit_log" {...auditLog} />
-              <Resource name="user" {...user} />
+            </>}
+
+            {isShowUsersData(permissions) && <>
+              <Resource name="user" {...user} create={isAdmin(permissions) && user.create} edit={isAdmin(permissions) && user.edit} />
             </>}
 
             <CustomRoutes>

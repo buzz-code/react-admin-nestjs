@@ -113,6 +113,7 @@ export default {
                 email: 'כתובת מייל',
                 password: 'סיסמא',
                 phoneNumber: 'מספר טלפון',
+                userInfo: 'מידע על המשתמש',
             }
         },
         yemot_call: {

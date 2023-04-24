@@ -122,8 +122,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * translate all tables - including admin
 * update date fields format
 * search google how to send response mail with smtp server
+* add permission to users table to shifi
 
 # todo
+* remove delete button from mail address list and users table for simple users
 * add report filters popup to bulk report button
 * add images table so users can edit images for reports
 * better text management in db - no need to daclare each text so many times
