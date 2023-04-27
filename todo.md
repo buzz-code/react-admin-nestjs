@@ -124,9 +124,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * search google how to send response mail with smtp server
 * add permission to users table to shifi
 * remove delete button from mail address list and users table for simple users
+* make export function only one with extra.format for the format
 
 # todo
-* make export function only one with extra.format for the format
 * add api webhook for pivot - with support for more than one
 * add subroute for students for pivot
 * add the ability to export pivot
