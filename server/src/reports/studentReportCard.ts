@@ -151,7 +151,7 @@ const reportTemplate = `
 
                                 <% var att_percents = Math.round(((report.howManyLessons - report.absCount) / report.howManyLessons) * 100) %> 
                                 
-                                <% if (report.howManyLessons * 2 == report.absCount) { %>
+                                <% if (report.howManyLessons && report.howManyLessons * 2 == report.absCount) { %>
                                     <td class="full-cell"><%= report.grade %></td>
                                     <td class="full-cell">&nbsp;</td>
                                 <% } else { %>
@@ -220,7 +220,7 @@ const reportTemplate = `
                 </h4>
             <% } %>
         </div>
-        <small class="notice">אקדא אקדא <%= student.name %></small>
+        <small class="notice">הופק באמצעות תוכנת יומנט</small>
         <div class="end-image">
           <% /* %>
           <%- include('image', { img: footerImage }); %>

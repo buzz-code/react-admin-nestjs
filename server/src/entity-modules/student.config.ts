@@ -71,6 +71,7 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
         if (req.parsed.extra.report in this.reportsDict) {
             const generator = this.reportsDict[req.parsed.extra.report];
             const params = req.parsed.extra.ids
+                .toString()
                 .split(',')
                 .map(id => ({ userId: req.auth.id, studentId: id }));
             return {
