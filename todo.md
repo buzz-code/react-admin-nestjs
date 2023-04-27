@@ -125,10 +125,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add permission to users table to shifi
 * remove delete button from mail address list and users table for simple users
 * make export function only one with extra.format for the format
-
-# todo
 * add api webhook for pivot - with support for more than one
 * add subroute for students for pivot
+
+# todo
 * add the ability to export pivot
 * add report filters popup to bulk report button
 * add images table so users can edit images for reports
