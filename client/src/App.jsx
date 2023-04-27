@@ -21,6 +21,8 @@ import student from "src/entities/student";
 import teacher from "src/entities/teacher";
 import studentKlassesReport from "src/entities/student-klasses-report";
 
+import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
+
 import text from "@shared/components/common-entities/text";
 import user from "@shared/components/common-entities/user";
 import auditLog from '@shared/components/common-entities/audit-log';
@@ -51,7 +53,9 @@ const App = () => (
             <Resource name="known_absence" {...knownAbsence} />
             <Resource name="lesson" {...lesson} />
             <Resource name="student_klass" {...studentKlass} />
-            <Resource name="student" {...student} />
+            <Resource name="student" {...student}>
+              <Route path="student-attendance" element={<StudentAttendanceList />} />
+            </Resource>
             <Resource name="teacher" {...teacher} />
             <Resource name="student_klass_report" {...studentKlassesReport} />
             <Resource name="text" {...text} create={isAdmin(permissions) && text.create} />

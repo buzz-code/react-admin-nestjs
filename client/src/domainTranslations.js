@@ -176,6 +176,13 @@ export default {
                 entityName: 'טבלת יעד',
                 importFileIds: 'קבצים מצורפים',
             }
-        }
+        },
+        'student/pivot?extra.pivot=StudentAttendance': {
+            name: 'דוח נוכחות (פיבוט)',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                tz: 'תז',
+            }
+        },
     }
 };
