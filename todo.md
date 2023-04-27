@@ -129,6 +129,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add subroute for students for pivot
 
 # todo
+* add analytics to check popular pages and buttons
 * add the ability to export pivot
 * add report filters popup to bulk report button
 * add images table so users can edit images for reports
