@@ -12,13 +12,15 @@ import { Student } from "./Student.entity";
 import { Klass } from "./Klass.entity";
 import { User } from "./User.entity";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
+import { KlassType } from "./KlassType.entity";
+import { Teacher } from "./Teacher.entity";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Entity("student_klasses")
 export class StudentKlass implements IHasUserId {
   @BeforeInsert()
   async fillFields() {
-    const dataSource = await getDataSource([Student, Klass, User]);
+    const dataSource = await getDataSource([Student, Klass, User, KlassType, Teacher]);
 
     this.studentReferenceId = await findOneAndAssignReferenceId(
       dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
