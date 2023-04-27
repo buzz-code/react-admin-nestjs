@@ -54,7 +54,7 @@ const App = () => (
             <Resource name="student" {...student} />
             <Resource name="teacher" {...teacher} />
             <Resource name="student_klass_report" {...studentKlassesReport} />
-            <Resource name="text" {...text} />
+            <Resource name="text" {...text} create={isAdmin(permissions) && text.create} />
             <Resource name="import_file" {...importFile} />
             <Resource name="mail_address" {...mailAddress} create={isAdmin(permissions) && mailAddress.create} />
 
