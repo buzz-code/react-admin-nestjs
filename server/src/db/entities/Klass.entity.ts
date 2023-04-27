@@ -68,7 +68,7 @@ export class Klass implements IHasUserId {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => KlassType)
+  @ManyToOne(() => KlassType, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'klassTypeReferenceId' })
   klassType: KlassType;
 
