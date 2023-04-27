@@ -29,5 +29,4 @@ jobs:
             cp .env.template .env   # Copy ".env.template" to ".env"
           fi
           
-          docker compose build
-          docker compose up -d   # Run docker-compose up in detached mode
+          docker compose up --build -d   # Run docker-compose up in detached mode
