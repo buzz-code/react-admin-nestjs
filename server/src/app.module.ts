@@ -34,7 +34,7 @@ import { RecievedMail } from '@shared/entities/RecievedMail.entity';
 
 @Module({
   imports: [
-    ThrottlerModule.forRoot({ ttl: 60, limit: 50 }),
+    ThrottlerModule.forRoot({ ttl: 60, limit: 120 }),
     TypeOrmModule.forRoot(typeOrmModuleConfig),
     MailSendModule,
     BaseEntityModule.register(userConfig),
@@ -61,10 +61,10 @@ import { RecievedMail } from '@shared/entities/RecievedMail.entity';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard
-    }
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard
+    // }
   ],
 })
 export class AppModule { }
