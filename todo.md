@@ -129,9 +129,15 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add subroute for students for pivot
 
 # todo
+* add explanation how to configure yemot phone to connect to the system
 * add analytics to check popular pages and buttons
+* add filters to student attendance pivot
+* re-run migration scripts (referenceId) for demo.yoman.online
 * add the ability to export pivot
 * add report filters popup to bulk report button
+* check why updated_at column not updating
+* check why backend container at docker is not updated
+* add option to self connect to yemot phone
 * add images table so users can edit images for reports
 * better text management in db - no need to daclare each text so many times
 SELECT b.key AS base_key, b.value AS base_value, o.id, o.key AS override_key, o.value AS override_value
