@@ -33,7 +33,7 @@ export class StudentKlassReport implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
-  @Column("varchar", { name: "student_tz", length: 10 })
+  @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
   @Column({ name: "klasses_1" })

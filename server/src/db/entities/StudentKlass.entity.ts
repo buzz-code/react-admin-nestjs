@@ -39,13 +39,13 @@ export class StudentKlass implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
-  @Column("varchar", { name: "student_tz", length: 10 })
+  @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
   @Column({ nullable: true })
   studentReferenceId: number;
 
-  @Column("int", { name: "klass_id" })
+  @Column("int", { name: "klass_id", nullable: true })
   klassId: number;
 
   @Column({ nullable: true })

@@ -46,13 +46,13 @@ export class AttReport implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
-  @Column("varchar", { name: "student_tz", length: 10 })
+  @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
   @Column({ nullable: true })
   studentReferenceId: number;
 
-  @Column("varchar", { name: "teacher_id", length: 10 })
+  @Column("varchar", { name: "teacher_id", length: 10, nullable: true })
   teacherId: string;
 
   @Column({ nullable: true })
@@ -64,7 +64,7 @@ export class AttReport implements IHasUserId {
   @Column({ nullable: true })
   klassReferenceId: number;
 
-  @Column("int", { name: "lesson_id" })
+  @Column("int", { name: "lesson_id", nullable: true })
   lessonId: number;
 
   @Column({ nullable: true })

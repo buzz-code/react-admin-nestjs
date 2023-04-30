@@ -43,7 +43,7 @@ export class Lesson implements IHasUserId {
   @Column("varchar", { name: "klasses", nullable: true, length: 450 })
   klasses: string | null;
 
-  @Column("varchar", { name: "teacher_id", length: 10 })
+  @Column("varchar", { name: "teacher_id", length: 10, nullable: true })
   teacherId: string;
 
   @Column({ nullable: true })
