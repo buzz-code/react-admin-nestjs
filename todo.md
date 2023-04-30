@@ -127,9 +127,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make export function only one with extra.format for the format
 * add api webhook for pivot - with support for more than one
 * add subroute for students for pivot
+* add explanation how to configure yemot phone to connect to the system
 
 # todo
-* add explanation how to configure yemot phone to connect to the system
 * add analytics to check popular pages and buttons
 * add filters to student attendance pivot
 * re-run migration scripts (referenceId) for demo.yoman.online

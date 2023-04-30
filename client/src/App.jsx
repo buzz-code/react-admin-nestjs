@@ -34,6 +34,7 @@ import { isShowUsersData, isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
+import Tutorial from '@shared/components/views/Tutorial';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -74,6 +75,7 @@ const App = () => (
 
             <CustomRoutes>
               <Route path="/yemot-simulator" element={<YemotSimulator />} />
+              <Route path="/tutorial" element={<Tutorial />} />
             </CustomRoutes>
 
             <CustomRoutes noLayout>
