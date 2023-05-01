@@ -130,6 +130,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add explanation how to configure yemot phone to connect to the system
 
 # todo
+* add send excel file to teacher
+* add swagger - https://docs.nestjs.com/openapi/introduction
+* add unique validator for mail address uniqueness - https://github.com/typestack/class-validator#custom-validation-decorators https://stackoverflow.com/questions/75660359/how-to-add-unique-field-validation-in-nest-js-with-class-validator 
+* add logs for each request - https://www.npmjs.com/package/nestjs-pino
 * add analytics to check popular pages and buttons
 * add filters to student attendance pivot
 * re-run migration scripts (referenceId) for demo.yoman.online
@@ -137,6 +141,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add report filters popup to bulk report button
 * check why updated_at column not updating
 * check why backend container at docker is not updated
+* add 'impersonate' logic, impersonate button at users table, impersonate api in auth service, allow only for admins, in user data keep the data that it is impersonated, and on logout return admin user, save previousUserId on the jwt token and use it on impersonate end
 * add option to self connect to yemot phone
 * add images table so users can edit images for reports
 * better text management in db - no need to daclare each text so many times
