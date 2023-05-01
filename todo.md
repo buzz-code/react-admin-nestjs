@@ -132,6 +132,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * rename id_copy1 to updated_at
 
 # todo
+* show pages data in a special page - in accordion
 * add send excel file to teacher
 * add unique validator for mail address uniqueness - https://github.com/typestack/class-validator#custom-validation-decorators https://stackoverflow.com/questions/75660359/how-to-add-unique-field-validation-in-nest-js-with-class-validator 
 * add logs for each request - https://www.npmjs.com/package/nestjs-pino
