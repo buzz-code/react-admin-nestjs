@@ -106,6 +106,14 @@ export default {
                 value: 'ערך',
             }
         },
+        page: {
+            name: 'עמוד |||| עמודים',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                description: 'תיאור',
+                value: 'ערך',
+            }
+        },
         user: {
             name: 'משתמש |||| משתמשים',
             fields: {

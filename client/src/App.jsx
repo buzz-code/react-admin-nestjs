@@ -29,8 +29,9 @@ import auditLog from '@shared/components/common-entities/audit-log';
 import importFile from '@shared/components/common-entities/import-file';
 import mailAddress from '@shared/components/common-entities/mail-address';
 import recievedMail from '@shared/components/common-entities/recieved-mail';
+import page from '@shared/components/common-entities/page';
 
-import { isShowUsersData, isAdmin } from "@shared/utils/permissionsUtil";
+import { isShowUsersData, isEditPagesData, isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
@@ -71,6 +72,10 @@ const App = () => (
 
             {isShowUsersData(permissions) && <>
               <Resource name="user" {...user} create={isAdmin(permissions) && user.create} edit={isAdmin(permissions) && user.edit} />
+            </>}
+
+            {isEditPagesData(permissions) && <>
+              <Resource name="page" {...page} create={isAdmin(permissions) && page.create} />
             </>}
 
             <CustomRoutes>
