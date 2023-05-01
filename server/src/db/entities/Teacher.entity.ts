@@ -1,10 +1,12 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
@@ -37,16 +39,10 @@ export class Teacher implements IHasUserId {
   @Column("varchar", { name: "email", nullable: true, length: 500 })
   email: string | null;
 
-  @Column("timestamp", {
-    name: "created_at",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 
-  @Column("timestamp", {
-    name: "updated_at",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
   updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.teachers, {

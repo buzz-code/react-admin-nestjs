@@ -1,11 +1,13 @@
 import {
   BeforeInsert,
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Teacher } from "./Teacher.entity";
@@ -55,16 +57,10 @@ export class Lesson implements IHasUserId {
   @Column("date", { name: "end_date", nullable: true })
   endDate: string | null;
 
-  @Column("timestamp", {
-    name: "created_at",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 
-  @Column("timestamp", {
-    name: "updated_at",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
   updatedAt: Date;
 
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })

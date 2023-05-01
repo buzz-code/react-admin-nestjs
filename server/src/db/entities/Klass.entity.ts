@@ -1,11 +1,13 @@
 import {
   BeforeInsert,
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { KlassType } from "./KlassType.entity";
@@ -56,16 +58,10 @@ export class Klass implements IHasUserId {
   @Column({ nullable: true })
   teacherReferenceId: number;
 
-  @Column("timestamp", {
-    name: "created_at",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 
-  @Column("timestamp", {
-    name: "updated_at",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
   updatedAt: Date;
 
   @ManyToOne(() => KlassType, { createForeignKeyConstraints: false })
