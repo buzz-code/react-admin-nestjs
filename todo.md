@@ -129,6 +129,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add subroute for students for pivot
 * add explanation how to configure yemot phone to connect to the system
 * add swagger - https://docs.nestjs.com/openapi/introduction
+* rename id_copy1 to updated_at
 
 # todo
 * add send excel file to teacher
