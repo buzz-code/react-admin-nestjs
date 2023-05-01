@@ -128,10 +128,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add api webhook for pivot - with support for more than one
 * add subroute for students for pivot
 * add explanation how to configure yemot phone to connect to the system
+* add swagger - https://docs.nestjs.com/openapi/introduction
 
 # todo
 * add send excel file to teacher
-* add swagger - https://docs.nestjs.com/openapi/introduction
 * add unique validator for mail address uniqueness - https://github.com/typestack/class-validator#custom-validation-decorators https://stackoverflow.com/questions/75660359/how-to-add-unique-field-validation-in-nest-js-with-class-validator 
 * add logs for each request - https://www.npmjs.com/package/nestjs-pino
 * add analytics to check popular pages and buttons

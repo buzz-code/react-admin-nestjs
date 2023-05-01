@@ -38,6 +38,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.3.0",
     "@nestjs/throttler": "^4.0.0",
     "@nestjs/typeorm": "^9.0.1",
     "@nestjsx/crud": "^5.0.0-alpha.3",
