@@ -17,6 +17,7 @@ import { Teacher } from "./Teacher.entity";
 import { StudentBaseKlass } from "../view-entities/StudentBaseKlass";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { User } from "./User.entity";
+import { KlassType } from "./KlassType.entity";
 import { IsNotEmpty, MaxLength, ValidateIf } from "class-validator";
 
 @Index("att_users_idx", ["userId"], {})
@@ -24,7 +25,7 @@ import { IsNotEmpty, MaxLength, ValidateIf } from "class-validator";
 export class AttReport implements IHasUserId {
   @BeforeInsert()
   async fillFields() {
-    const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User]);
+    const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
 
     this.studentReferenceId = await findOneAndAssignReferenceId(
       dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
