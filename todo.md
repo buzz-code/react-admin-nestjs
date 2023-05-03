@@ -131,18 +131,32 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add swagger - https://docs.nestjs.com/openapi/introduction
 * rename id_copy1 to updated_at
 * show pages data in a special page - in accordion
+* check why updated_at column not updating
+* render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 
 # todo
-* add send excel file to teacher
+* check why backend container at docker is not updated
+* make sure class-validator works properly
+* add class-validator to every entity
+* add client side validation to every entity
+* tranlate class-validator errors - https://github.com/typestack/class-validator/issues/169
+* update pages - add order, order by order, add permission to add new page
 * add unique validator for mail address uniqueness - https://github.com/typestack/class-validator#custom-validation-decorators https://stackoverflow.com/questions/75660359/how-to-add-unique-field-validation-in-nest-js-with-class-validator 
 * add logs for each request - https://www.npmjs.com/package/nestjs-pino
-* add analytics to check popular pages and buttons
-* add filters to student attendance pivot
 * re-run migration scripts (referenceId) for demo.yoman.online
-* add the ability to export pivot
+* add analytics to check popular pages and buttons
+* user that didnt pay can't export any data - pdf or excel, can't download bulk report
+* add to users table payment isPaid & payment method inputs
+* add to users table mail address alias & title from which will send emails
 * add report filters popup to bulk report button
-* check why updated_at column not updating
-* check why backend container at docker is not updated
+* hide month data from att_report - should not be used
+* add new table - for report months - will have name, start date, end date
+* new report for teachers report - teacher, month, sent lessons, not sent lessons
+* the new report will have button to send email to teacher
+* a new popup will be opened to edit the email message, with default value. mail subject will be in text table. 
+* add send excel file to teacher in new teacher report
+* add filters to student attendance pivot
+* add the ability to export pivot
 * add 'impersonate' logic, impersonate button at users table, impersonate api in auth service, allow only for admins, in user data keep the data that it is impersonated, and on logout return admin user, save previousUserId on the jwt token and use it on impersonate end
 * add option to self connect to yemot phone
 * add images table so users can edit images for reports
@@ -150,8 +164,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 SELECT b.key AS base_key, b.value AS base_value, o.id, o.key AS override_key, o.value AS override_value
 FROM base_texts b
 LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
-* render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
-* implement todos in dashboard item
 * nest auto delete migration files
 * create a table of 'payment tracks'
 * להכין מסמך בסיס לתמחור
@@ -163,6 +175,7 @@ LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
 * fix yemot simulator with lesson confirm
 * split report generators to different files - one for each generator - maybe
 * add menu grouping
+* implement todos in dashboard item
 * 
 
 # todo later
