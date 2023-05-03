@@ -53,7 +53,7 @@ const App = () => (
             <Resource name="grade" {...resourceEntityGuesser} />
             <Resource name="klass" {...klass} />
             <Resource name="klass_type" {...klassType} />
-            <Resource name="known_absence" {...knownAbsence} />
+            {/* <Resource name="known_absence" {...knownAbsence} /> */}
             <Resource name="lesson" {...lesson} />
             <Resource name="student_klass" {...studentKlass} />
             <Resource name="student" {...student}>
