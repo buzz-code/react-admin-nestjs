@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
+import { IsNotEmpty, MaxLength } from "class-validator";
 
 export enum KlassTypeEnum {
   baseKlass = 'כיתת אם',
@@ -27,9 +28,12 @@ export class KlassType implements IHasUserId {
   @Column("int", { name: "user_id" })
   userId: number;
 
+  @IsNotEmpty({ always: true })
   @Column("int", { name: "key" })
   key: number;
 
+  @IsNotEmpty({ always: true })
+  @MaxLength(500, { always: true })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 

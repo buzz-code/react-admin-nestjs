@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
+import { IsNotEmpty, MaxLength } from "class-validator";
 
 
 @Index("texts_users_idx", ["userId"], {})
@@ -21,12 +22,18 @@ export class Text implements IHasUserId {
   @Column("int", { name: "user_id" })
   userId: number;
 
+  @IsNotEmpty({ always: true })
+  @MaxLength(100, { always: true })
   @Column("varchar", { name: "name", length: 100 })
   name: string;
 
+  @IsNotEmpty({ always: true })
+  @MaxLength(100, { always: true })
   @Column("varchar", { name: "description", length: 100 })
   description: string;
 
+  @IsNotEmpty({ always: true })
+  @MaxLength(10000, { always: true })
   @Column("varchar", { name: "value", length: 10000 })
   value: string;
 

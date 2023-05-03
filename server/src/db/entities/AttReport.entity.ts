@@ -17,6 +17,7 @@ import { Teacher } from "./Teacher.entity";
 import { StudentBaseKlass } from "../view-entities/StudentBaseKlass";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { User } from "./User.entity";
+import { IsNotEmpty, MaxLength, ValidateIf } from "class-validator";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")
@@ -48,31 +49,46 @@ export class AttReport implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.studentReferenceId), { always: true })
+  @IsNotEmpty({ always: true })
   @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.studentTz), { always: true })
+  @IsNotEmpty({ always: true })
   @Column({ nullable: true })
   studentReferenceId: number;
 
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherReferenceId), { always: true })
+  @IsNotEmpty({ always: true })
   @Column("varchar", { name: "teacher_id", length: 10, nullable: true })
   teacherId: string;
 
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherId), { always: true })
+  @IsNotEmpty({ always: true })
   @Column({ nullable: true })
   teacherReferenceId: number;
 
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.klassReferenceId), { always: true })
+  @IsNotEmpty({ always: true })
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number | null;
 
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.klassId), { always: true })
+  @IsNotEmpty({ always: true })
   @Column({ nullable: true })
   klassReferenceId: number;
 
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.lessonReferenceId), { always: true })
   @Column("int", { name: "lesson_id", nullable: true })
   lessonId: number;
 
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.lessonId), { always: true })
   @Column({ nullable: true })
   lessonReferenceId: number;
 
   @Column("date", { name: "report_date" })
+  @IsNotEmpty({ always: true })
   reportDate: string;
 
   @Column("int", { name: "how_many_lessons", nullable: true })
@@ -84,9 +100,11 @@ export class AttReport implements IHasUserId {
   @Column("int", { name: "approved_abs_count", default: () => "'0'" })
   approvedAbsCount: number;
 
+  @MaxLength(500, { always: true })
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;
 
+  @MaxLength(100, { always: true })
   @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
   sheetName: string | null;
 

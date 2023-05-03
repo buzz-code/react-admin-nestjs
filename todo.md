@@ -134,11 +134,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * check why updated_at column not updating
 * render dynamic columns - student pivot - https://stackoverflow.com/questions/59321237/how-to-render-dynamic-fields-on-list-component-of-react-admin
 * make sure class-validator works properly
+* add class-validator to every entity
+* add client side validation to every entity
 
 # todo
 * check why backend container at docker is not updated
-* add class-validator to every entity
-* add client side validation to every entity
+* add BeforeUpdate to each BeforeInsert
 * tranlate class-validator errors - https://github.com/typestack/class-validator/issues/169
 * check what happens when email import is failing class-validator
 * update pages - add order, order by order, add permission to add new page

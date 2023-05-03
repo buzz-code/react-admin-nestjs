@@ -1,8 +1,9 @@
-import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, required } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter } from '@shared/components/CommonReferenceInputFilter';
+import CommonReferenceInput from '@shared/components/CommonReferenceInput';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -40,12 +41,12 @@ const Datagrid = ({ isAdmin, ...props }) => {
 const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <ReferenceInput source="userId" reference="user" />}
-        <ReferenceInput source="studentReferenceId" reference="student" />
-        <ReferenceInput source="teacherReferenceId" reference="teacher" />
-        <ReferenceInput source="klassReferenceId" reference="klass" />
-        <ReferenceInput source="lessonReferenceId" reference="lesson" />
-        <DateInput source="reportDate" />
+        {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
+        <CommonReferenceInput source="studentReferenceId" reference="student" validate={required()} />
+        <CommonReferenceInput source="teacherReferenceId" reference="teacher" validate={required()} />
+        <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} />
+        <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} />
+        <DateInput source="reportDate" validate={required()} />
         <NumberInput source="howManyLessons" />
         <NumberInput source="absCount" />
         <NumberInput source="approvedAbsCount" />

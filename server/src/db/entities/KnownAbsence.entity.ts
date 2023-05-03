@@ -13,6 +13,7 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { Student } from "./Student.entity";
+import { IsNotEmpty, MaxLength, ValidateIf } from "class-validator";
 
 @Index("known_users_idx", ["userId"], {})
 @Entity("known_absences")
@@ -35,12 +36,17 @@ export class KnownAbsence implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
+  @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.studentReferenceId), { always: true })
+  @IsNotEmpty({ always: true })
   @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
+  @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.studentTz), { always: true })
+  @IsNotEmpty({ always: true })
   @Column({ nullable: true })
   studentReferenceId: number;
 
+  @IsNotEmpty({ always: true })
   @Column("date", { name: "report_date" })
   reportDate: string;
 
@@ -50,12 +56,15 @@ export class KnownAbsence implements IHasUserId {
   @Column("int", { name: "absnce_code", nullable: true })
   absnceCode: number | null;
 
+  @MaxLength(100, { always: true })
   @Column("varchar", { name: "sender_name", nullable: true, length: 100 })
   senderName: string | null;
 
+  @MaxLength(500, { always: true })
   @Column("varchar", { name: "reason", nullable: true, length: 500 })
   reason: string | null;
 
+  @MaxLength(500, { always: true })
   @Column("varchar", { name: "comment", nullable: true, length: 500 })
   comment: string | null;
 

@@ -13,6 +13,7 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { Teacher } from "./Teacher.entity";
 import { User } from "./User.entity";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
+import { IsNotEmpty, MaxLength } from "class-validator";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -36,12 +37,16 @@ export class Lesson implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
+  @IsNotEmpty({ always: true })
   @Column("int", { name: "key" })
   key: number;
 
+  @IsNotEmpty({ always: true })
+  @MaxLength(500, { always: true })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
+  @MaxLength(450, { always: true })
   @Column("varchar", { name: "klasses", nullable: true, length: 450 })
   klasses: string | null;
 

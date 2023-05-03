@@ -1,8 +1,9 @@
-import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, ReferenceField, ReferenceInput, TextField, TextInput } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, ReferenceField, ReferenceInput, required, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter } from '@shared/components/CommonReferenceInputFilter';
+import CommonReferenceInput from '@shared/components/CommonReferenceInput';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -36,9 +37,9 @@ const Datagrid = ({ isAdmin, ...props }) => {
 const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <ReferenceInput source="userId" reference="user" />}
-        <ReferenceInput source="studentReferenceId" reference="student" />
-        <DateInput source="reportDate" />
+        {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
+        <CommonReferenceInput source="studentReferenceId" reference="student"  validate={required()}/>
+        <DateInput source="reportDate"  validate={required()}/>
         <NumberInput source="absnceCount" />
         <NumberInput source="absnceCode" />
         <TextInput source="senderName" />

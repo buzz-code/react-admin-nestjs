@@ -14,6 +14,7 @@ import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
 import { User } from "./User.entity";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
+import { IsNotEmpty, MaxLength, ValidateIf } from "class-validator";
 
 @Index("klasses_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -40,15 +41,22 @@ export class Klass implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
+  @IsNotEmpty({ always: true })
   @Column("int", { name: "key" })
   key: number;
 
+  @IsNotEmpty({ always: true })
+  @MaxLength(500, { always: true })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
+  @ValidateIf((attReport: Klass) => !Boolean(attReport.klassTypeReferenceId), { always: true })
+  @IsNotEmpty({ always: true })
   @Column("int", { name: "klass_type_id", nullable: true })
   klassTypeId: number | null;
 
+  @ValidateIf((attReport: Klass) => !Boolean(attReport.klassTypeId), { always: true })
+  @IsNotEmpty({ always: true })
   @Column({ nullable: true })
   klassTypeReferenceId: number;
 
