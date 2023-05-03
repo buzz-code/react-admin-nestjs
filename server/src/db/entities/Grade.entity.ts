@@ -1,5 +1,6 @@
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -21,6 +22,7 @@ import { Teacher } from "./Teacher.entity";
 @Entity("grades")
 export class Grade implements IHasUserId {
   @BeforeInsert()
+  @BeforeUpdate()
   async fillFields() {
     const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User]);
 

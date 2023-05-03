@@ -1,5 +1,6 @@
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -19,6 +20,7 @@ import { IsNotEmpty, MaxLength, ValidateIf } from "class-validator";
 @Entity("known_absences")
 export class KnownAbsence implements IHasUserId {
   @BeforeInsert()
+  @BeforeUpdate()
   async fillFields() {
     const dataSource = await getDataSource([Student, User]);
 

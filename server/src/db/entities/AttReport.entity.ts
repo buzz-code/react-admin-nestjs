@@ -1,5 +1,6 @@
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -24,6 +25,7 @@ import { IsNotEmpty, MaxLength, ValidateIf } from "class-validator";
 @Entity("att_reports")
 export class AttReport implements IHasUserId {
   @BeforeInsert()
+  @BeforeUpdate()
   async fillFields() {
     const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
 

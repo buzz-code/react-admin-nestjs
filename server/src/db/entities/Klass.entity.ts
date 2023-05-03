@@ -1,5 +1,6 @@
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -21,6 +22,7 @@ import { IsNotEmpty, MaxLength, ValidateIf } from "class-validator";
 @Entity("klasses")
 export class Klass implements IHasUserId {
   @BeforeInsert()
+  @BeforeUpdate()
   async fillFields() {
     const dataSource = await getDataSource([KlassType, Teacher, User]);
 
