@@ -1,4 +1,4 @@
-import { DateField, DateTimeInput, EmailField, ReferenceField, ReferenceInput, required, TextField, TextInput } from 'react-admin';
+import { DateField, DateTimeInput, EmailField, maxLength, ReferenceField, ReferenceInput, required, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -30,11 +30,11 @@ const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <TextInput source="tz" validate={required()} />
-        <TextInput source="name" validate={required()} />
-        <TextInput source="phone" />
-        <TextInput source="phone2" />
-        <TextInput source="email" />
+        <TextInput source="tz" validate={[required(), maxLength(10)]} />
+        <TextInput source="name" validate={[required(), maxLength(500)]} />
+        <TextInput source="phone" validate={maxLength(10)} />
+        <TextInput source="phone2" validate={maxLength(10)} />
+        <TextInput source="email" validate={maxLength(500)} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>

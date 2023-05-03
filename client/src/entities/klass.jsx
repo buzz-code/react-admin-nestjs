@@ -1,4 +1,4 @@
-import { TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateTimeInput, NumberInput, required } from 'react-admin';
+import { TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateTimeInput, NumberInput, required, maxLength } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
@@ -34,7 +34,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
         <NumberInput source="key" validate={required()} />
-        <TextInput source="name" validate={required()} />
+        <TextInput source="name" validate={[required(), maxLength(500)]} />
         <CommonReferenceInput source="klassTypeReferenceId" reference="klass_type" validate={required()} />
         <CommonReferenceInput source="teacherReferenceId" reference="teacher" />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
