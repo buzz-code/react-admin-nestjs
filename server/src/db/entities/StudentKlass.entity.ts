@@ -18,6 +18,7 @@ import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity
 import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
 import { IsNotEmpty, ValidateIf } from "class-validator";
+import { CrudValidationGroups } from "@dataui/crud";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Entity("student_klasses")
@@ -45,22 +46,22 @@ export class StudentKlass implements IHasUserId {
   year: number;
 
   @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.studentReferenceId), { always: true })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
   @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.studentTz), { always: true })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   studentReferenceId: number;
 
   @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.klassReferenceId), { always: true })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number;
 
   @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.klassId), { always: true })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   klassReferenceId: number;
 

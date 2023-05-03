@@ -10,7 +10,8 @@ import {
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
-import { IsNotEmpty, MaxLength } from "class-validator";
+import { IsNotEmpty, IsOptional, MaxLength } from "class-validator";
+import { CrudValidationGroups } from "@dataui/crud";
 
 @Index("teachers_users_idx", ["userId"], {})
 @Index(["userId", "tz", "year"], { unique: true })
@@ -25,24 +26,29 @@ export class Teacher implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(10, { always: true })
   @Column("varchar", { name: "tz", length: 10 })
   tz: string;
 
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(10, { always: true })
   @Column("varchar", { name: "phone", nullable: true, length: 10 })
   phone: string | null;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(10, { always: true })
   @Column("varchar", { name: "phone2", nullable: true, length: 10 })
   phone2: string | null;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "email", nullable: true, length: 500 })
   email: string | null;

@@ -19,7 +19,8 @@ import { StudentBaseKlass } from "../view-entities/StudentBaseKlass";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { User } from "./User.entity";
 import { KlassType } from "./KlassType.entity";
-import { IsNotEmpty, MaxLength, ValidateIf } from "class-validator";
+import { IsNotEmpty, IsOptional, MaxLength, ValidateIf } from "class-validator";
+import { CrudValidationGroups } from "@dataui/crud";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")
@@ -53,32 +54,32 @@ export class AttReport implements IHasUserId {
   year: number;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.studentReferenceId), { always: true })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.studentTz), { always: true })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   studentReferenceId: number;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherReferenceId), { always: true })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "teacher_id", length: 10, nullable: true })
   teacherId: string;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherId), { always: true })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   teacherReferenceId: number;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.klassReferenceId), { always: true })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number | null;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.klassId), { always: true })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   klassReferenceId: number;
 
@@ -91,7 +92,7 @@ export class AttReport implements IHasUserId {
   lessonReferenceId: number;
 
   @Column("date", { name: "report_date" })
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   reportDate: string;
 
   @Column("int", { name: "how_many_lessons", nullable: true })
@@ -103,10 +104,12 @@ export class AttReport implements IHasUserId {
   @Column("int", { name: "approved_abs_count", default: () => "'0'" })
   approvedAbsCount: number;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(100, { always: true })
   @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
   sheetName: string | null;

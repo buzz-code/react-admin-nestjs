@@ -10,7 +10,8 @@ import {
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
-import { IsNotEmpty, MaxLength } from "class-validator";
+import { IsNotEmpty, IsOptional, MaxLength } from "class-validator";
+import { CrudValidationGroups } from "@dataui/crud";
 
 export enum KlassTypeEnum {
   baseKlass = 'כיתת אם',
@@ -28,11 +29,12 @@ export class KlassType implements IHasUserId {
   @Column("int", { name: "user_id" })
   userId: number;
 
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("int", { name: "key" })
   key: number;
 
-  @IsNotEmpty({ always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
