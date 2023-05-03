@@ -107,11 +107,11 @@ export default {
             }
         },
         page: {
-            name: 'עמוד |||| עמודים',
+            name: 'הסבר למשתמשים',
             fields: {
                 ...generalResourceFieldsTranslation,
-                description: 'תיאור',
-                value: 'ערך',
+                description: 'כותרת',
+                value: 'תוכן',
             }
         },
         user: {

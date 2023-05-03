@@ -76,7 +76,7 @@ const App = () => (
             </>}
 
             {isEditPagesData(permissions) && <>
-              <Resource name="page" {...page} create={isAdmin(permissions) && page.create} />
+              <Resource name="page" {...page} />
             </>}
 
             <CustomRoutes>
