@@ -137,12 +137,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add class-validator to every entity
 * add client side validation to every entity
 * add BeforeUpdate to each BeforeInsert
+* update pages - add order, order by order, add permission to add new page
 
 # todo
 * check why backend container at docker is not updated
 * tranlate class-validator errors - https://github.com/typestack/class-validator/issues/169
 * check what happens when email import is failing class-validator
-* update pages - add order, order by order, add permission to add new page
 * add unique validator for mail address uniqueness - https://github.com/typestack/class-validator#custom-validation-decorators https://stackoverflow.com/questions/75660359/how-to-add-unique-field-validation-in-nest-js-with-class-validator 
 * add logs for each request - https://www.npmjs.com/package/nestjs-pino
 * re-run migration scripts (referenceId) for demo.yoman.online
@@ -162,6 +162,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add 'impersonate' logic, impersonate button at users table, impersonate api in auth service, allow only for admins, in user data keep the data that it is impersonated, and on logout return admin user, save previousUserId on the jwt token and use it on impersonate end
 * add option to self connect to yemot phone
 * add images table so users can edit images for reports
+* add user image to export pdf file
 * better text management in db - no need to daclare each text so many times
 SELECT b.key AS base_key, b.value AS base_value, o.id, o.key AS override_key, o.value AS override_value
 FROM base_texts b
