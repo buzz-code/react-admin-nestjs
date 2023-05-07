@@ -10,8 +10,9 @@ import {
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
-import { IsNotEmpty, IsOptional, MaxLength } from "class-validator";
+import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
+import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
 
 @Index("teachers_users_idx", ["userId"], {})
 @Index(["userId", "tz", "year"], { unique: true })

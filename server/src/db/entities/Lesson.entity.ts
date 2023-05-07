@@ -14,8 +14,9 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { Teacher } from "./Teacher.entity";
 import { User } from "./User.entity";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
-import { IsNotEmpty, IsOptional, MaxLength } from "class-validator";
+import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
+import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })

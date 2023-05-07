@@ -19,8 +19,9 @@ import { StudentBaseKlass } from "../view-entities/StudentBaseKlass";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { User } from "./User.entity";
 import { KlassType } from "./KlassType.entity";
-import { IsNotEmpty, IsOptional, MaxLength, ValidateIf } from "class-validator";
+import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
+import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")

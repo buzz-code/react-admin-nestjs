@@ -17,8 +17,9 @@ import { User } from "./User.entity";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
-import { IsNotEmpty, ValidateIf } from "class-validator";
+import { ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
+import { IsNotEmpty } from "@shared/utils/validation/class-validator-he";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Entity("student_klasses")

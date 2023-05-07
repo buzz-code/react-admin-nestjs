@@ -138,11 +138,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add client side validation to every entity
 * add BeforeUpdate to each BeforeInsert
 * update pages - add order, order by order, add permission to add new page
+* tranlate class-validator errors - https://github.com/typestack/class-validator/issues/169
 
 # todo
 * check why backend container at docker is not updated
-* tranlate class-validator errors - https://github.com/typestack/class-validator/issues/169
-* check what happens when email import is failing class-validator
 * add unique validator for mail address uniqueness - https://github.com/typestack/class-validator#custom-validation-decorators https://stackoverflow.com/questions/75660359/how-to-add-unique-field-validation-in-nest-js-with-class-validator 
 * add logs for each request - https://www.npmjs.com/package/nestjs-pino
 * re-run migration scripts (referenceId) for demo.yoman.online
@@ -156,6 +155,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * new report for teachers report - teacher, month, sent lessons, not sent lessons
 * the new report will have button to send email to teacher
 * a new popup will be opened to edit the email message, with default value. mail subject will be in text table. 
+* check what happens when email import is failing class-validator
+* email import - return good error message for non excel files
 * add send excel file to teacher in new teacher report
 * add filters to student attendance pivot
 * add the ability to export pivot
