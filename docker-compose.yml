@@ -51,8 +51,8 @@ services:
             caddy.reverse_proxy: "{{upstreams 3000}}"
         volumes: 
             - ./server:/app
-            - /app/node_modules
-            - /app/dist
+            # - /app/node_modules
+            # - /app/dist
         networks:
             - private-network
             - caddy
