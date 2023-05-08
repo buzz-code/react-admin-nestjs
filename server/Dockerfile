@@ -57,7 +57,7 @@ RUN apk add --no-cache \
     chromium
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
-WORKDIR /app
+WORKDIR /app2
 
 COPY --from=builder /app/package*.json .
 COPY --from=builder /app/yarn.lock .
