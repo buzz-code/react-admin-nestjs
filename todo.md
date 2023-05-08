@@ -139,12 +139,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add BeforeUpdate to each BeforeInsert
 * update pages - add order, order by order, add permission to add new page
 * tranlate class-validator errors - https://github.com/typestack/class-validator/issues/169
+* check why backend container at docker is not updated
+* re-run migration scripts (referenceId) for demo.yoman.online
 
 # todo
-* check why backend container at docker is not updated
 * add unique validator for mail address uniqueness - https://github.com/typestack/class-validator#custom-validation-decorators https://stackoverflow.com/questions/75660359/how-to-add-unique-field-validation-in-nest-js-with-class-validator 
 * add logs for each request - https://www.npmjs.com/package/nestjs-pino
-* re-run migration scripts (referenceId) for demo.yoman.online
+* change to use docker swarm for production
 * add analytics to check popular pages and buttons
 * user that didnt pay can't export any data - pdf or excel, can't download bulk report
 * add to users table payment isPaid & payment method inputs
@@ -175,7 +176,7 @@ LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
 שאר החבילות - תמחור לפי כמות תלמידות
 תוספת מחיר לפי משתמשים
 מחיר שקוף - יופיע באתר
-* check docker security issues - change to use docker swarm for production
+* check docker security issues
 * fix yemot simulator with lesson confirm
 * split report generators to different files - one for each generator - maybe
 * add menu grouping
