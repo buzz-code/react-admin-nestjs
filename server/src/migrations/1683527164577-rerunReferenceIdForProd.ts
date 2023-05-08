@@ -111,7 +111,7 @@ async function createAndFillReferenceIdColumn(queryRunner: QueryRunner, tableNam
             set lessonReferenceId = lessons.id
         `);
             break;
-            case EnumJoinTypes.klass_types:
+        case EnumJoinTypes.klass_types:
             await queryRunner.query(`
             update ${table.name}
                 join klass_types on (
@@ -120,7 +120,7 @@ async function createAndFillReferenceIdColumn(queryRunner: QueryRunner, tableNam
                 )
             set klassTypeReferenceId = klass_types.id
         `);
-        break;
+            break;
 
         default:
             break;
