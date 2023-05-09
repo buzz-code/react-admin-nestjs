@@ -63,7 +63,7 @@ const App = () => (
             <Resource name="student_klass_report" {...studentKlassesReport} />
             <Resource name="text" {...text} create={isAdmin(permissions) && text.create} />
             <Resource name="import_file" {...importFile} />
-            <Resource name="mail_address" {...mailAddress} create={isAdmin(permissions) && mailAddress.create} />
+            <Resource name="mail_address" {...mailAddress} />
 
             {isAdmin(permissions) && <>
               <Resource name="yemot_call" {...resourceEntityGuesser} />

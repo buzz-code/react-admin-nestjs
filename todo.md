@@ -141,9 +141,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * tranlate class-validator errors - https://github.com/typestack/class-validator/issues/169
 * check why backend container at docker is not updated
 * re-run migration scripts (referenceId) for demo.yoman.online
+* add unique validator for mail address uniqueness
+* add option to delete a mail address
 
 # todo
-* add unique validator for mail address uniqueness - https://github.com/typestack/class-validator#custom-validation-decorators https://stackoverflow.com/questions/75660359/how-to-add-unique-field-validation-in-nest-js-with-class-validator 
 * add logs for each request - https://www.npmjs.com/package/nestjs-pino
 * change to use docker swarm for production
 * add analytics to check popular pages and buttons
