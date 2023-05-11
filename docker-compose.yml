@@ -90,6 +90,7 @@ services:
           - "80"
         networks:
             - private-network
+            - caddy
 
 
 volumes:
