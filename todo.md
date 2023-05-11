@@ -144,6 +144,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add unique validator for mail address uniqueness
 * add option to delete a mail address
 * add logs for each request - https://www.npmjs.com/package/nestjs-pino
+* hide month data from att_report - should not be used
 
 # todo
 * change to use docker swarm for production
@@ -152,7 +153,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add to users table payment isPaid & payment method inputs
 * add to users table mail address alias & title from which will send emails
 * add report filters popup to bulk report button
-* hide month data from att_report - should not be used
 * add new table - for report months - will have name, start date, end date
 * new report for teachers report - teacher, month, sent lessons, not sent lessons
 * the new report will have button to send email to teacher

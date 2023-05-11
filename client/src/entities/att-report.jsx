@@ -31,7 +31,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
             <NumberField source="absCount" />
             <NumberField source="approvedAbsCount" />
             <TextField source="comments" />
-            <TextField source="sheetName" />
+            {/* <TextField source="sheetName" /> */}
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -51,7 +51,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <NumberInput source="absCount" />
         <NumberInput source="approvedAbsCount" />
         <TextInput source="comments" validate={maxLength(500)} />
-        <TextInput source="sheetName" validate={maxLength(100)} />
+        {/* <TextInput source="sheetName" validate={maxLength(100)} /> */}
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
