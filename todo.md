@@ -143,9 +143,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * re-run migration scripts (referenceId) for demo.yoman.online
 * add unique validator for mail address uniqueness
 * add option to delete a mail address
+* add logs for each request - https://www.npmjs.com/package/nestjs-pino
 
 # todo
-* add logs for each request - https://www.npmjs.com/package/nestjs-pino
 * change to use docker swarm for production
 * add analytics to check popular pages and buttons
 * user that didnt pay can't export any data - pdf or excel, can't download bulk report
