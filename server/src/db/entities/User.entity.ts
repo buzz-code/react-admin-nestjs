@@ -26,7 +26,4 @@ export class User extends BaseUser {
   
     // @OneToMany(() => Teacher, (teachers) => teachers.user)
     teachers: Teacher[];
-  
-    // @OneToMany(() => Text, (texts) => texts.user)
-    texts: Text[];
 }
