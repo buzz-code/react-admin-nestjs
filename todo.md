@@ -157,6 +157,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * email import - return good error message for non excel files
 * add send excel file to teacher in new teacher report
 * if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
+* on user creation - register, add default values for report months table
 * add to users table payment isPaid & payment method inputs
 * add to users table mail address alias & title from which will send emails
 * user that didnt pay can't export any data - pdf or excel, can't download bulk report
