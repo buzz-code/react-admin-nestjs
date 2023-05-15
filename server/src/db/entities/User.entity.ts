@@ -8,7 +8,6 @@ import { Lesson } from "src/db/entities/Lesson.entity";
 import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { Student } from "src/db/entities/Student.entity";
 import { Teacher } from "src/db/entities/Teacher.entity";
-import { Text } from "src/db/entities/Text.entity";
 
 @Entity("users")
 export class User extends BaseUser {
