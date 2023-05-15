@@ -192,5 +192,23 @@ export default {
                 tz: 'תז',
             }
         },
+        report_month: {
+            name: 'תקופות דיווח',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                startDate: 'תאריך התחלה',
+                endDate: 'תאריך סיום',
+            }
+        },
+        teacher_report_status: {
+            name: 'דיווחים למורה',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                teacherReferenceId: 'מורה',
+                reportMonthReferenceId: 'תקופת דיווח',
+                reportedLessons: 'שיעורים שדווחו',
+                notReportedLessons: 'שיעורים שלא דווחו',
+            }
+        },
     }
 };

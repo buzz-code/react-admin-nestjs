@@ -8,10 +8,9 @@ import CommonReferenceInput from '@shared/components/CommonReferenceInput';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
-    <NumberInput source="key" />,
     <TextInput source="name:$cont" alwaysOn />,
-    <TextInput source="klasses:$cont" label="קוד כיתה" />,
-    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" alwaysOn />,
+    <DateInput source="startDate" />,
+    <DateInput source="endDate" />,
 ];
 
 const Datagrid = ({ isAdmin, ...props }) => {
@@ -19,10 +18,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
         <CommonDatagrid {...props}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <TextField source="key" />
             <TextField source="name" />
-            <TextField source="klasses" />
-            <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             <DateField source="startDate" />
             <DateField source="endDate" />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
@@ -35,21 +31,18 @@ const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <NumberInput source="key" validate={required()} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
-        <TextInput source="klasses" validate={maxLength(450)} />
-        <CommonReferenceInput source="teacherReferenceId" reference="teacher" />
-        <DateInput source="startDate" />
-        <DateInput source="endDate" />
+        <DateInput source="startDate" validate={required()} />
+        <DateInput source="endDate" validate={required()} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
 }
 
-const Representation = 'name';
+const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['key', 'name', 'klasses', 'teacherId'],
+    fields: ['name', 'startDate', 'endDate'],
 }
 
 const entity = {

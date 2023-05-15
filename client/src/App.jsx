@@ -20,6 +20,8 @@ import studentKlass from "src/entities/student-klass";
 import student from "src/entities/student";
 import teacher from "src/entities/teacher";
 import studentKlassesReport from "src/entities/student-klasses-report";
+import reportMonth from "src/entities/report-month";
+import teacherReportStatus from "src/entities/teacher-report-status";
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
 
@@ -50,7 +52,7 @@ const App = () => (
         {permissions => (
           <>
             <Resource name="att_report" {...attReport} />
-            <Resource name="grade" {...resourceEntityGuesser} />
+            {/* <Resource name="grade" {...resourceEntityGuesser} /> */}
             <Resource name="klass" {...klass} />
             <Resource name="klass_type" {...klassType} />
             {/* <Resource name="known_absence" {...knownAbsence} /> */}
@@ -60,7 +62,9 @@ const App = () => (
               <Route path="student-attendance" element={<StudentAttendanceList />} />
             </Resource>
             <Resource name="teacher" {...teacher} />
+            <Resource name="report_month" {...reportMonth} />
             <Resource name="student_klass_report" {...studentKlassesReport} />
+            <Resource name="teacher_report_status" {...teacherReportStatus} />
             <Resource name="text" {...text} create={isAdmin(permissions) && text.create} />
             <Resource name="import_file" {...importFile} />
             <Resource name="mail_address" {...mailAddress} />
