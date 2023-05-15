@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, UnauthorizedException, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { AppService } from 'src/app.service';
 import { AuthService } from '@shared/auth/auth.service';
 import { JwtAuthGuard } from '@shared/auth/jwt-auth.guard';
@@ -32,7 +32,8 @@ export class AppController {
 
   @Post('auth/logout')
   async logOut(@Res() response: Response) {
-    response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
+    const cookie = await this.authService.getCookieForLogOut();
+    response.setHeader('Set-Cookie', cookie);
     return response.sendStatus(200);
   }
 
@@ -40,6 +41,26 @@ export class AppController {
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('auth/impersonate')
+  async impersonate(@Request() req, @Res() response: Response) {
+    if (!req.user.permissions.admin) {
+      console.log('impersonate non authorized')
+      throw new UnauthorizedException();
+    }
+    const cookie = await this.authService.getCookieForImpersonate(req.body.userId);
+    response.setHeader('Set-Cookie', cookie);
+    return response.send({ success: true });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('auth/unimpersonate')
+  async unimpersonate(@Request() req, @Res() response: Response) {
+    const cookie = await this.authService.getCookieForLogOut(req.user);
+    response.setHeader('Set-Cookie', cookie);
+    return response.sendStatus(200);
   }
 
   @Get()
