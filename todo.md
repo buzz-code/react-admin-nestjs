@@ -149,9 +149,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add new table - for report months - will have name, start date, end date
 * new report for teachers report - teacher, month, sent lessons, not sent lessons
 * change lessons.klasses field - make reference id field
+* add new route - for any thing, not just reports
 
 # todo
-* add new route - for any thing, not just reports
 * the new report will have button to send email to teacher
 * add report filters popup to bulk report button
 * a new popup will be opened to edit the email message, with default value. mail subject will be in text table. 
@@ -159,6 +159,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * email import - return good error message for non excel files
 * add send excel file to teacher in new teacher report
 * if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
+* student pivot without teacher name - only lesson id
 * on user creation - register, add default values for report months table
 * add to users table payment isPaid & payment method inputs
 * add to users table mail address alias & title from which will send emails
