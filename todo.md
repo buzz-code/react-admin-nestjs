@@ -148,8 +148,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add 'impersonate' logic, impersonate button at users table, impersonate api in auth service, allow only for admins, in user data keep the data that it is impersonated, and on logout return admin user, save previousUserId on the jwt token and use it on impersonate end
 * add new table - for report months - will have name, start date, end date
 * new report for teachers report - teacher, month, sent lessons, not sent lessons
+* change lessons.klasses field - make reference id field
 
 # todo
+* add new route - for any thing, not just reports
 * the new report will have button to send email to teacher
 * add report filters popup to bulk report button
 * a new popup will be opened to edit the email message, with default value. mail subject will be in text table. 

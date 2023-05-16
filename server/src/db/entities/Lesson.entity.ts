@@ -56,6 +56,9 @@ export class Lesson implements IHasUserId {
   @Column("varchar", { name: "klasses", nullable: true, length: 450 })
   klasses: string | null;
 
+  @Column("simple-array", { nullable: true })
+  klassReferenceIds: number[];
+
   @Column("varchar", { name: "teacher_id", length: 10, nullable: true })
   teacherId: string;
 
