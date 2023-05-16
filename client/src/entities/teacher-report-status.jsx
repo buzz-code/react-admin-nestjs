@@ -14,10 +14,8 @@ const Datagrid = ({ isAdmin, ...props }) => {
         <CommonDatagrid {...props}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <ReferenceField source="teacherReferenceId" reference="teacher" />
-            {/* sortBy='teacher.name' */}
-            <ReferenceField source="reportMonthReferenceId" reference="report_month"/>
-            {/* sortBy='reportMonth.name' */}
+            <ReferenceField source="teacherReferenceId" reference="teacher" sortBy='teacherName' />
+            <ReferenceField source="reportMonthReferenceId" reference="report_month" sortBy='reportMonthName' />
             <ReferenceArrayField source="reportedLessons" reference="lesson" />
             <ReferenceArrayField source="notReportedLessons" reference="lesson" />
         </CommonDatagrid>

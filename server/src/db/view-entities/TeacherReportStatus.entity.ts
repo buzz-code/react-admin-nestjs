@@ -10,10 +10,14 @@ import { TeacherLessonReportStatus } from "./TeacherLessonReportStatus.entity";
     .select('CONCAT(tlrs.userId, "_", tlrs.teacherId, "_", COALESCE(tlrs.reportMonthId, "null"))', 'id')
     .addSelect('tlrs.userId', 'userId')
     .addSelect('tlrs.teacherId', 'teacherId')
+    .addSelect('teacher.name', 'teacherName')
     .addSelect('tlrs.reportMonthId', 'reportMonthId')
+    .addSelect('rm.name', 'reportMonthName')
     .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 1 THEN tlrs.lessonId END ORDER BY tlrs.lessonId)', 'reportedLessons')
     .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonId END ORDER BY tlrs.lessonId)', 'notReportedLessons')
     .from(TeacherLessonReportStatus, 'tlrs')
+    .leftJoin(Teacher, 'teacher', 'tlrs.teacherId = teacher.id')
+    .leftJoin(ReportMonth, 'rm', 'tlrs.reportMonthId = rm.id')
     .groupBy('tlrs.userId')
     .addGroupBy('tlrs.teacherId')
     .addGroupBy('tlrs.reportMonthId')
@@ -31,20 +35,18 @@ export class TeacherReportStatus implements IHasUserId {
   @ViewColumn({ name: 'teacherId' })
   teacherReferenceId: number;
 
+  @ViewColumn()
+  teacherName: string;
+
   @ViewColumn({ name: 'reportMonthId' })
   reportMonthReferenceId: number;
+
+  @ViewColumn()
+  reportMonthName: string;
 
   @Column('simple-array')
   reportedLessons: number[];
 
   @Column('simple-array')
   notReportedLessons: number[];
-
-  // @ManyToOne(() => Teacher)
-  // @JoinColumn({ name: 'teacherReferenceId' })
-  // teacher: Teacher;
-
-  // @ManyToOne(() => ReportMonth)
-  // @JoinColumn({ name: 'reportMonthId' })
-  // reportMonth: ReportMonth;
 }

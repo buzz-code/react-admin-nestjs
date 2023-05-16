@@ -146,10 +146,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add logs for each request - https://www.npmjs.com/package/nestjs-pino
 * hide month data from att_report - should not be used
 * add 'impersonate' logic, impersonate button at users table, impersonate api in auth service, allow only for admins, in user data keep the data that it is impersonated, and on logout return admin user, save previousUserId on the jwt token and use it on impersonate end
-
-# todo
 * add new table - for report months - will have name, start date, end date
 * new report for teachers report - teacher, month, sent lessons, not sent lessons
+
+# todo
 * the new report will have button to send email to teacher
 * add report filters popup to bulk report button
 * a new popup will be opened to edit the email message, with default value. mail subject will be in text table. 

@@ -33,7 +33,7 @@ import mailAddressConfig from '@shared/utils/mail/mail-address.config';
 import { RecievedMail } from '@shared/entities/RecievedMail.entity';
 import pageConfig from './entity-modules/page.config';
 import { ReportMonth } from './db/entities/ReportMonth.entity';
-import { TeacherReportStatus } from './db/view-entities/TeacherReportStatus.entity';
+import teacherReportStatusConfig from './entity-modules/teacher-report-status.config';
 
 
 @Module({
@@ -62,16 +62,7 @@ import { TeacherReportStatus } from './db/view-entities/TeacherReportStatus.enti
     BaseEntityModule.register({ entity: RecievedMail }),
     BaseEntityModule.register(pageConfig),
     BaseEntityModule.register({ entity: ReportMonth }),
-    BaseEntityModule.register({
-      entity: TeacherReportStatus,
-      query: {
-        join: {
-          reportMonth: {
-            eager: true
-          },
-        }
-      },
-    }),
+    BaseEntityModule.register(teacherReportStatusConfig),
     AuthModule,
     YemotModule.register(yemotChain)
   ],
