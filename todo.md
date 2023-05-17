@@ -152,11 +152,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add new route - for any thing, not just reports
 * the new report will have button to send email to teacher
 * add send excel file to teacher in new teacher report
+* check how to add lesson name in excel file email
 
 # todo
 * add report filters popup to bulk report button & bulk action button
 * a new popup will be opened to edit the email message, with default value. mail subject will be in text table. 
-* check how to add lesson name in excel file email
 * check how the excel should look like
 * check if can add additional columns to excel that will not be read (student name etc)
 * check what happens when email import is failing class-validator

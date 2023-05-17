@@ -10,6 +10,7 @@ import { In } from 'typeorm';
 export interface TeacherReportFileData extends IDataToExcelReportGenerator {
     user: User,
     teacher: Teacher,
+    lesson: Lesson,
 }
 const getReportData: IGetReportDataFunction = async (params, dataSource): Promise<TeacherReportFileData[]> => {
     const [userId, teacherId, reportMonthId] = params.id.split('_');
@@ -39,9 +40,12 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
         sheetName: teacherReportStatus.reportMonthName ?? 'דיווח נוכחות',
         user,
         teacher,
+        lesson,
     }));
 }
 
-const generator = new DataToExcelReportGenerator('teacherReportFile');
+const getReportName = (data: TeacherReportFileData) => `קובץ נוכחות למורה ${data.teacher.name} לשיעור ${data.lesson.name}`;
+
+const generator = new DataToExcelReportGenerator(getReportName);
 
 export default new BulkToZipReportGenerator(generator, getReportData);

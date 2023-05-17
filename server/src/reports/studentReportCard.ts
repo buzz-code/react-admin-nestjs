@@ -258,4 +258,6 @@ const getReportData: IGetReportDataFunction = async (params, dataSource) => {
     };
 }
 
-export default new EjsToPdfReportGenerator('studentReportCard', getReportData, reportTemplate, reportOptions);
+const getReportName = data => `תעודה לתלמידה ${data.student.name} כיתה ${data.studentBaseKlass.klassName}`;
+
+export default new EjsToPdfReportGenerator(getReportName, getReportData, reportTemplate, reportOptions);
