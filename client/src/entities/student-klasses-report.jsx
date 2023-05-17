@@ -1,6 +1,6 @@
 import { ReferenceField, TextField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
-import { MultiReferenceField } from '@shared/components/CommonReferenceField';
+import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 
 const Datagrid = ({ isAdmin, ...props }) => {

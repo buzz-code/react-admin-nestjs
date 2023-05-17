@@ -2,7 +2,7 @@ import { NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, Date
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import CommonReferenceInput from '@shared/components/CommonReferenceInput';
+import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,

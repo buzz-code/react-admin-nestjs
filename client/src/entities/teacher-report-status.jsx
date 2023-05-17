@@ -1,7 +1,7 @@
 import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField, required } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInputFilter } from '@shared/components/CommonReferenceInputFilter';
+import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import AttachEmailIcon from '@mui/icons-material/AttachEmail';

@@ -4,8 +4,7 @@ import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
-import { useIsAdmin } from '@shared/utils/permissionsUtil';
-import CommonReferenceInput from '@shared/components/CommonReferenceInput';
+import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
