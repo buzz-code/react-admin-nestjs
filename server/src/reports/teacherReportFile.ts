@@ -24,15 +24,19 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
     ]);
     const lessonStudents: { [key: number]: StudentKlass[] } = {};
     for (const lesson of lessons) {
-        const students = await dataSource.getRepository(StudentKlass).find({
-            where: {
-                klassReferenceId: In(lesson.klassReferenceIds)
-            },
-            relations: {
-                student: true,
-            }
-        });
-        lessonStudents[lesson.id] = students;
+        if (lesson.klassReferenceIds?.length) {
+            const students = await dataSource.getRepository(StudentKlass).find({
+                where: {
+                    klassReferenceId: In(lesson.klassReferenceIds)
+                },
+                relations: {
+                    student: true,
+                }
+            });
+            lessonStudents[lesson.id] = students;
+        } else {
+            lessonStudents[lesson.id] = [];
+        }
     }
     return lessons.map(lesson => ({
         headerRow: ['תז', 'שם תלמידה'],
