@@ -39,17 +39,17 @@ export class Teacher implements IHasUserId {
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @MaxLength(10, { always: true })
   @Column("varchar", { name: "phone", nullable: true, length: 10 })
   phone: string | null;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @MaxLength(10, { always: true })
   @Column("varchar", { name: "phone2", nullable: true, length: 10 })
   phone2: string | null;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "email", nullable: true, length: 500 })
   email: string | null;

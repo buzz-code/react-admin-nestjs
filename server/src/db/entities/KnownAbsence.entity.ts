@@ -60,17 +60,17 @@ export class KnownAbsence implements IHasUserId {
   @Column("int", { name: "absnce_code", nullable: true })
   absnceCode: number | null;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @MaxLength(100, { always: true })
   @Column("varchar", { name: "sender_name", nullable: true, length: 100 })
   senderName: string | null;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "reason", nullable: true, length: 500 })
   reason: string | null;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  always: true
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "comment", nullable: true, length: 500 })
   comment: string | null;

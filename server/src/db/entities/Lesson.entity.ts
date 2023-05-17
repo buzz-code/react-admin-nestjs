@@ -51,7 +51,7 @@ export class Lesson implements IHasUserId {
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @MaxLength(450, { always: true })
   @Column("varchar", { name: "klasses", nullable: true, length: 450 })
   klasses: string | null;

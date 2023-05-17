@@ -105,12 +105,12 @@ export class AttReport implements IHasUserId {
   @Column("int", { name: "approved_abs_count", default: () => "'0'" })
   approvedAbsCount: number;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @MaxLength(100, { always: true })
   @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
   sheetName: string | null;
