@@ -30,4 +30,3 @@ jobs:
           fi
           
           docker compose up --build -d   # Run docker-compose up in detached mode
-          docker compose up -d backend --build --force-recreate
