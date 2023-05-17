@@ -28,7 +28,7 @@ function getConfig(): BaseEntityModuleOptions {
 
 class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends BaseEntityService<T> {
     reportsDict = {
-        teacherReportFile: new BulkToZipReportGenerator(teacherReportFile),
+        teacherReportFile: new BulkToZipReportGenerator(() => 'קבצי נוכחות למורות', teacherReportFile),
     };
     async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
         if (req.parsed.extra.report in this.reportsDict) {

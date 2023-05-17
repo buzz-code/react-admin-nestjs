@@ -48,4 +48,4 @@ const getReportName = (data: TeacherReportFileData) => `קובץ נוכחות ל
 
 const generator = new DataToExcelReportGenerator(getReportName);
 
-export default new BulkToZipReportGenerator(generator, getReportData);
+export default new BulkToZipReportGenerator(() => 'קבצי נוכחות למורה', generator, getReportData);
