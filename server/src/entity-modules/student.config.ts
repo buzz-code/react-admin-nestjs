@@ -41,7 +41,6 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
                         },
                         relations: {
                             lesson: true,
-                            teacher: true,
                         }
                     });
 
@@ -51,14 +50,14 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
                     if (item.absCount === 0) {
                         return;
                     }
-                    const key = `${item.lessonReferenceId}_${item.teacherReferenceId}`;
+                    const key = `${item.lessonReferenceId}`;
                     if (studentMap[item.studentReferenceId][key] === undefined) {
                         studentMap[item.studentReferenceId][key] = 0;
 
                         if (!headers[key]) {
                             headers[key] = {
                                 value: key,
-                                label: `${item.lesson?.name} המו\' ${item.teacher?.name}`
+                                label: `${item.lesson?.name}`
                             };
                         }
                     }
