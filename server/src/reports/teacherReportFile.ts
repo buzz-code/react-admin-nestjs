@@ -44,7 +44,7 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
     }));
 }
 
-const getReportName = (data: TeacherReportFileData) => `קובץ נוכחות למורה ${data.teacher.name} לשיעור ${data.lesson.name}`;
+const getReportName = (data: TeacherReportFileData) => `קובץ נוכחות למורה ${data.teacher?.name} לשיעור ${data.lesson?.name}`;
 
 const generator = new DataToExcelReportGenerator(getReportName);
 
