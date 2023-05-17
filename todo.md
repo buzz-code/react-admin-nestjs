@@ -159,25 +159,26 @@ https://github.com/tinovyatkin/nest-puppeteer
 * student pivot without teacher name - only lesson id
 
 # todo
-* check how the excel should look like
-* check what happens when email import is failing class-validator - not going through because using bulk
-* email import - return good error message for non excel files
-* if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
-* on user creation - register, add default values for report months table
 * add to users table payment isPaid & payment method inputs
 * add to users table mail address alias & title from which will send emails
 * user that didnt pay can't export any data - pdf or excel, can't download bulk report
-* change to use docker swarm for production
-* add analytics to check popular pages and buttons
 * add filters to student attendance pivot
 * add the ability to export pivot
-* add option to self connect to yemot phone
+* align all texts in translation to same format - snake case
+* add analytics to check popular pages and buttons
 * add images table so users can edit images for reports
 * add user image to export pdf file
 * better text management in db - no need to daclare each text so many times
 SELECT b.key AS base_key, b.value AS base_value, o.id, o.key AS override_key, o.value AS override_value
 FROM base_texts b
 LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
+* check how the excel should look like
+* check what happens when email import is failing class-validator - not going through because using bulk. combine https://stackoverflow.com/questions/58843038/how-to-manually-test-input-validation-with-nestjs-and-class-validator with https://github.com/gid-oss/dataui-nestjs-crud/blob/25b0f851a96305c0dbe8cb91cb9e88ad9284e63c/packages/crud/src/crud/validation.helper.ts#L28
+* email import - return good error message for non excel files
+* if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
+* on user creation - register, add default values for report months table
+* change to use docker swarm for production
+* add option to self connect to yemot phone
 * nest auto delete migration files
 * create a table of 'payment tracks'
 * להכין מסמך בסיס לתמחור
@@ -189,8 +190,7 @@ LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
 * fix yemot simulator with lesson confirm
 * split report generators to different files - one for each generator - maybe
 * add menu grouping
-* implement todos in dashboard item
-* align all texts in translation to same format - snake case
+* make dashboard items configurable - implement todos
 * 
 
 # todo later
