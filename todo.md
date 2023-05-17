@@ -155,11 +155,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * check how to add lesson name in excel file email
 * add report filters popup to bulk report button & bulk action button - and send data to server
 * a new popup will be opened to edit the email message, with default value. mail subject will be in text table. 
+* check if can add additional columns to excel that will not be read (student name etc) - yes, with '' as column name
 
 # todo
 * check how the excel should look like
-* check if can add additional columns to excel that will not be read (student name etc)
-* check what happens when email import is failing class-validator
+* check what happens when email import is failing class-validator - not going through because using bulk
 * email import - return good error message for non excel files
 * if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
 * student pivot without teacher name - only lesson id
