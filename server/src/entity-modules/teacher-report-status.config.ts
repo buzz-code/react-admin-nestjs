@@ -74,7 +74,7 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                                 await this.mailSendService.sendMail({
                                     to: data[0].teacher.email,
                                     subject: 'קבצי נוכחות למילוי',
-                                    html: 'מורה יקרה, מצורפים קבצים',
+                                    html: req.parsed.extra.mailBody ?? 'מורה יקרה, מצורפים קבצים',
                                     attachments,
                                 });
                             }

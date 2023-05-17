@@ -1,4 +1,4 @@
-import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField } from 'react-admin';
+import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField, required } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter } from '@shared/components/CommonReferenceInputFilter';
@@ -6,6 +6,7 @@ import { BulkReportButton } from '@shared/components/crudContainers/BulkReportBu
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import AttachEmailIcon from '@mui/icons-material/AttachEmail';
 import BrowserUpdatedIcon from '@mui/icons-material/BrowserUpdated';
+import { RichTextInput } from 'ra-input-rich-text';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -13,9 +14,12 @@ const filters = [
     <CommonReferenceInputFilter source="reportMonthReferenceId" reference="report_month" />,
 ];
 
+const defaultMailBody = 'מורה יקרה, מצורפים קבצים';
 const additionalBulkButtons = [
     <BulkReportButton label='הורדת אקסל למורה' icon={<BrowserUpdatedIcon />} name='teacherReportFile' />,
-    <BulkActionButton label='שליחת אקסל למורה' icon={<AttachEmailIcon />} name='teacherReportFile' />
+    <BulkActionButton label='שליחת אקסל למורה' icon={<AttachEmailIcon />} name='teacherReportFile' >
+        <RichTextInput source="mailBody" label="תוכן המייל" validate={required()} defaultValue={defaultMailBody} />
+    </BulkActionButton>,
 ];
 
 const Datagrid = ({ isAdmin, ...props }) => {

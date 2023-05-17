@@ -153,10 +153,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * the new report will have button to send email to teacher
 * add send excel file to teacher in new teacher report
 * check how to add lesson name in excel file email
+* add report filters popup to bulk report button & bulk action button - and send data to server
+* a new popup will be opened to edit the email message, with default value. mail subject will be in text table. 
 
 # todo
-* add report filters popup to bulk report button & bulk action button
-* a new popup will be opened to edit the email message, with default value. mail subject will be in text table. 
 * check how the excel should look like
 * check if can add additional columns to excel that will not be read (student name etc)
 * check what happens when email import is failing class-validator
@@ -190,6 +190,7 @@ LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
 * split report generators to different files - one for each generator - maybe
 * add menu grouping
 * implement todos in dashboard item
+* align all texts in translation to same format - snake case
 * 
 
 # todo later
