@@ -157,6 +157,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * a new popup will be opened to edit the email message, with default value. mail subject will be in text table. 
 * check if can add additional columns to excel that will not be read (student name etc) - yes, with '' as column name
 * student pivot without teacher name - only lesson id
+* student klass report doesn't work when has only studentReferenceId - it works on studentTz
 
 # todo
 * add to users table payment isPaid & payment method inputs
