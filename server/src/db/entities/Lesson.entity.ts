@@ -45,9 +45,9 @@ export class Lesson implements IHasUserId {
   @Column("int", { name: "key" })
   key: number;
 
-  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(500, { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 

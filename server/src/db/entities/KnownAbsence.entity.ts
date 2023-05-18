@@ -70,7 +70,7 @@ export class KnownAbsence implements IHasUserId {
   @Column("varchar", { name: "reason", nullable: true, length: 500 })
   reason: string | null;
 
-  always: true
+  @IsOptional({ always: true })
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "comment", nullable: true, length: 500 })
   comment: string | null;

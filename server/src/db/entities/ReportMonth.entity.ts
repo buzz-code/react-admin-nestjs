@@ -18,9 +18,9 @@ export class ReportMonth {
   @Column()
   userId: number;
 
-  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(255, { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
   name: string;
 

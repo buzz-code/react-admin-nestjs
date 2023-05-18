@@ -11,7 +11,11 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'key', label: 'מזהה' },
                     { value: 'name', label: 'שם' },
                 ];
-            }
+            },
+            getImportFields(entityColumns) {
+                entityColumns.splice(1, 0, '');
+                return entityColumns;
+            },
         }
     }
 }
