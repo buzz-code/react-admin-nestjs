@@ -159,21 +159,18 @@ https://github.com/tinovyatkin/nest-puppeteer
 * student pivot without teacher name - only lesson id
 * student klass report doesn't work when has only studentReferenceId - it works on studentTz
 * check what happens when email import is failing class-validator
+* add to users table payment isPaid & payment method inputs
+* user that didnt pay can't export any data - pdf or excel, can't download bulk report
+* add to users table mail address alias & title from which will send emails
 
 # todo
-* add to users table payment isPaid & payment method inputs
-* add to users table mail address alias & title from which will send emails
-* user that didnt pay can't export any data - pdf or excel, can't download bulk report
+* better text management in db - no need to daclare each text so many times (join text table to users table and then back to text table, and have the base and override translation for each text)
 * add filters to student attendance pivot
 * add the ability to export pivot
 * align all texts in translation to same format - snake case
 * add analytics to check popular pages and buttons
 * add images table so users can edit images for reports
 * add user image to export pdf file
-* better text management in db - no need to daclare each text so many times
-SELECT b.key AS base_key, b.value AS base_value, o.id, o.key AS override_key, o.value AS override_value
-FROM base_texts b
-LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
 * fiter dependant fields - lesson should depend on klass filter and on teacher filter
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
 * check how the teacher excel should look like
