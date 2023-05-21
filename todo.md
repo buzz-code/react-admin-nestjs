@@ -165,6 +165,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 
 # todo
 * better text management in db - no need to daclare each text so many times (join text table to users table and then back to text table, and have the base and override translation for each text)
+* text management - how to edit existing translation or non-existing translation - maybe add special buttons for this, and use action for edit
 * add filters to student attendance pivot
 * add the ability to export pivot
 * align all texts in translation to same format - snake case
