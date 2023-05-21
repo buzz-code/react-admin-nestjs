@@ -8,6 +8,7 @@ import { CommonReportData } from "@shared/utils/report/types";
 import { TeacherReportStatus } from "src/db/view-entities/TeacherReportStatus.entity";
 import teacherReportFile, { TeacherReportFileData } from "src/reports/teacherReportFile";
 import * as JSZip from 'jszip';
+import { validateUserHasPaid } from "@shared/base-entity/base-entity.controller";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -52,6 +53,8 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
             .map(id => ({ userId: req.auth.id, id }));
         switch (req.parsed.extra.action) {
             case 'teacherReportFile': {
+                await validateUserHasPaid(req.auth, this.dataSource);
+
                 const generator = teacherReportFile;
                 for (const p of params) {
                     try {
