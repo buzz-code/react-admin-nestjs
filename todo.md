@@ -174,7 +174,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 SELECT b.key AS base_key, b.value AS base_value, o.id, o.key AS override_key, o.value AS override_value
 FROM base_texts b
 LEFT JOIN overrides o ON b.key = o.key AND o.user_id = 1;
-* check how the excel should look like
+* fiter dependant fields - lesson should depend on klass filter and on teacher filter
+* when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
+* check how the teacher excel should look like
 * email import - return good error message for non excel files
 * if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
 * on user creation - register, add default values for report months table
