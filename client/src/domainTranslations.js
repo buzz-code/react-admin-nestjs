@@ -122,6 +122,8 @@ export default {
                 password: 'סיסמא',
                 phoneNumber: 'מספר טלפון',
                 userInfo: 'מידע על המשתמש',
+                isPaid: 'האם שילם?',
+                paymentMethod: 'אופן התשלום',
             }
         },
         yemot_call: {
