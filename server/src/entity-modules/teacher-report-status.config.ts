@@ -8,7 +8,7 @@ import { CommonReportData } from "@shared/utils/report/types";
 import { TeacherReportStatus } from "src/db/view-entities/TeacherReportStatus.entity";
 import teacherReportFile, { TeacherReportFileData } from "src/reports/teacherReportFile";
 import * as JSZip from 'jszip';
-import { validateUserHasPaid } from "@shared/base-entity/base-entity.controller";
+import { validateUserHasPaid } from "@shared/base-entity/base-entity.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
