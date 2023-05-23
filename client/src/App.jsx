@@ -76,7 +76,7 @@ const App = () => (
             </>}
 
             {isShowUsersData(permissions) && <>
-              <Resource name="user" {...user} create={isAdmin(permissions) && user.create} edit={isAdmin(permissions) && user.edit} />
+              <Resource name="user" {...user} create={isAdmin(permissions) && user.create} />
             </>}
 
             {isEditPagesData(permissions) && <>

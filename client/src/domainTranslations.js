@@ -124,6 +124,8 @@ export default {
                 userInfo: 'מידע על המשתמש',
                 isPaid: 'האם שילם?',
                 paymentMethod: 'אופן התשלום',
+                mailAddressAlias: 'כתובת המייל ממנה יישלחו מיילים',
+                mailAddressTitle: 'שם כתובת המייל',
             }
         },
         yemot_call: {
