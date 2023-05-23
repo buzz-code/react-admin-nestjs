@@ -1,5 +1,6 @@
 import { Chain, HandlerBase } from "@shared/utils/yemot/chain.interface";
 import { YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
+import { AttReport } from "src/db/entities/AttReport.entity";
 
 type GetExistingReportsFunction = (userId: string, klassId: string, lessonId: string, sheetName: string) => Promise<any>;
 
@@ -79,7 +80,7 @@ class CheckHowManyLessonsHandler extends HandlerBase {
 class LoadStudentListHandler extends HandlerBase {
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.students === undefined) {
-            const studentList = await req.getStudentsByUserIdAndKlassIds(req.params.userId, req.params.baseReport.klassReferenceId);
+            const studentList = await req.getStudentsByKlassId(req.params.baseReport.klassReferenceId);
             req.params.students = studentList.filter(item => !req.params.idsToSkip.has(item.tz));
         }
         return next();
@@ -142,13 +143,13 @@ class SaveAndGoToNextStudent extends HandlerBase {
         if (req.params.existing.length) {
             await req.deleteExistingReports(req.params.existingReports);
         }
-        const attReport = {
+        const attReport: AttReport = {
             ...req.params.baseReport,
-            how_many_lessons: req.params.howManyLessons,
-            student_tz: req.params.student.tz,
+            howManyLessons: req.params.howManyLessons,
+            studentTz: req.params.student.tz,
             // approved_abs_count: req.params.approvedAbsCount || '0',
             comments: '',
-            sheet_name: req.params.sheetName,
+            sheetName: req.params.sheetName,
         };
         for (const prop of this.properties) {
             attReport[prop.field] = req.params[prop.name];

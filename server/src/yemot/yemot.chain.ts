@@ -13,7 +13,7 @@ const lessonChain = getResourceConfirmationChain('lesson', getLessonFromLessonId
 
 
 function getKlassFromKlassId(req: YemotRequest) {
-    return req.getLessonFromLessonId(req.params.klass.id);
+    return req.getKlassByKlassId(req.params.klass.id);
 };
 const klassFromLessonHandler = new Handler(async (req, res, next) => {
     if (req.params.teacher?.data === undefined) {
@@ -48,7 +48,7 @@ const notifySuccessAndEndHandler = new Handler(async (req, res, next) => {
 
 
 async function getExistingAttReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
-    return [];
+    return []; //todo - getExistingReports
 }
 const attProperties: IReportProperty[] = [
     {
@@ -62,7 +62,7 @@ const attProperties: IReportProperty[] = [
 ]
 const attReportChain = getReportChain(getExistingAttReports, attProperties);
 async function getExistingGradeReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
-    return [];
+    return []; //todo - getExistingReports
 }
 const gradeProperties: IReportProperty[] = [
     {

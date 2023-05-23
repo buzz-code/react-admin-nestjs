@@ -240,14 +240,14 @@ describe("attReport chain", () => {
             // Arrange
             req.params.students = undefined;
             req.params.idsToSkip = new Set();
-            req.getStudentsByUserIdAndKlassIds = jest.fn().mockResolvedValue([{ tz: '111111111' }, { tz: '222222222' }]);
+            req.getStudentsByKlassId = jest.fn().mockResolvedValue([{ tz: '111111111' }, { tz: '222222222' }]);
 
             // Act
             await chain.handleRequest(req, res, next);
 
             // Assert
             expect(res.send).not.toHaveBeenCalled();
-            expect(req.getStudentsByUserIdAndKlassIds).toHaveBeenCalledWith(req.params.userId, req.params.baseReport.klassReferenceId);
+            expect(req.getStudentsByKlassId).toHaveBeenCalledWith(req.params.baseReport.klassReferenceId);
             expect(req.params.students).toEqual([{ tz: '111111111' }, { tz: '222222222' }]);
             expect(next).toHaveBeenCalled();
         });
@@ -256,14 +256,14 @@ describe("attReport chain", () => {
             // Arrange
             req.params.students = undefined;
             req.params.idsToSkip = new Set(['333333333']);
-            req.getStudentsByUserIdAndKlassIds = jest.fn().mockResolvedValue([{ tz: '111111111' }, { tz: '222222222' }, { tz: '333333333' }]);
+            req.getStudentsByKlassId = jest.fn().mockResolvedValue([{ tz: '111111111' }, { tz: '222222222' }, { tz: '333333333' }]);
 
             // Act
             await chain.handleRequest(req, res, next);
 
             // Assert
             expect(res.send).not.toHaveBeenCalled();
-            expect(req.getStudentsByUserIdAndKlassIds).toHaveBeenCalledWith(req.params.userId, req.params.baseReport.klassReferenceId);
+            expect(req.getStudentsByKlassId).toHaveBeenCalledWith(req.params.baseReport.klassReferenceId);
             expect(req.params.students).toEqual([{ tz: '111111111' }, { tz: '222222222' }]);
             expect(next).toHaveBeenCalled();
         });

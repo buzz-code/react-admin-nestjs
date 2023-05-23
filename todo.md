@@ -166,6 +166,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * text management - how to edit existing translation or non-existing translation - maybe add special buttons for this, and use action for edit
 
 # todo
+* fix yemot - getExistingReports logic
 * add filters to student attendance pivot
 * add the ability to export pivot
 * align all texts in translation to same format - snake case
