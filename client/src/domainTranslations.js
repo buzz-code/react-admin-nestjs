@@ -106,6 +106,14 @@ export default {
                 value: 'ערך',
             }
         },
+        text_by_user: {
+            name: 'הודעה |||| הודעות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                description: 'תיאור',
+                value: 'ערך',
+            }
+        },
         page: {
             name: 'הסבר למשתמשים',
             fields: {

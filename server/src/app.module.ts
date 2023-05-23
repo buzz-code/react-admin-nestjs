@@ -29,6 +29,7 @@ import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass';
 import { AuditLog } from '@shared/entities/AuditLog.entity';
 import { ImportFile } from '@shared/entities/ImportFile.entity';
 import { YemotCall } from '@shared/entities/YemotCall.entity';
+import { TextByUser } from '@shared/view-entities/TextByUser.entity';
 import mailAddressConfig from '@shared/utils/mail/mail-address.config';
 import { RecievedMail } from '@shared/entities/RecievedMail.entity';
 import pageConfig from './entity-modules/page.config';
@@ -63,6 +64,7 @@ import teacherReportStatusConfig from './entity-modules/teacher-report-status.co
     BaseEntityModule.register(pageConfig),
     BaseEntityModule.register({ entity: ReportMonth }),
     BaseEntityModule.register(teacherReportStatusConfig),
+    BaseEntityModule.register({ entity: TextByUser }),
     AuthModule,
     YemotModule.register(yemotChain)
   ],

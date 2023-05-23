@@ -26,6 +26,7 @@ import teacherReportStatus from "src/entities/teacher-report-status";
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
 
 import text from "@shared/components/common-entities/text";
+import textByUser from "@shared/components/common-entities/text-by-user";
 import user from "@shared/components/common-entities/user";
 import auditLog from '@shared/components/common-entities/audit-log';
 import importFile from '@shared/components/common-entities/import-file';
@@ -65,11 +66,12 @@ const App = () => (
             <Resource name="report_month" {...reportMonth} />
             <Resource name="student_klass_report" {...studentKlassesReport} />
             <Resource name="teacher_report_status" {...teacherReportStatus} />
-            <Resource name="text" {...text} create={isAdmin(permissions) && text.create} />
+            <Resource name="text_by_user" {...textByUser} />
             <Resource name="import_file" {...importFile} />
             <Resource name="mail_address" {...mailAddress} />
 
             {isAdmin(permissions) && <>
+              <Resource name="text" {...text} />
               <Resource name="yemot_call" {...resourceEntityGuesser} />
               <Resource name="recieved_mail" {...recievedMail} />
               <Resource name="audit_log" {...auditLog} />
