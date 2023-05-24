@@ -202,6 +202,8 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
+                'extra.klassId': 'כיתה',
+                'extra.lessonId': 'שיעור',
             }
         },
         report_month: {

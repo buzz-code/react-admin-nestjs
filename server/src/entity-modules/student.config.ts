@@ -25,7 +25,7 @@ function getConfig(): BaseEntityModuleOptions {
 }
 
 class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
-    protected async populatePivotData(pivotName: string, list: T[]) {
+    protected async populatePivotData(pivotName: string, list: T[], extra: any) {
         const data = list as Student[];
         const studentIds = data.map(item => item.id);
         const studentMap = data.reduce((a, b) => ({ ...a, [b.id]: b }), {});
@@ -38,6 +38,8 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
                         where: {
                             userId: data[0].userId,
                             studentReferenceId: In(studentIds),
+                            klassReferenceId: extra?.klassId,
+                            lessonReferenceId: extra?.lessonId,
                         },
                         relations: {
                             lesson: true,

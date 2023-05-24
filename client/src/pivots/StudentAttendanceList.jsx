@@ -1,4 +1,5 @@
 import { CommonDatagrid, CommonList } from "@shared/components/crudContainers/CommonList"
+import { CommonReferenceInputFilter } from "@shared/components/fields/CommonReferenceInputFilter";
 import { useIsAdmin } from "@shared/utils/permissionsUtil";
 import { ReferenceField, TextField, useListContext, ReferenceInput, TextInput } from "react-admin"
 
@@ -9,6 +10,8 @@ export default (props) => {
         isAdmin && <ReferenceInput source="userId" reference="user" />,
         <TextInput source="tz:$cont" label="תז" />,
         <TextInput source="name:$cont" alwaysOn />,
+        <CommonReferenceInputFilter source="extra.klassId" reference="klass" alwaysOn />,
+        <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" alwaysOn />,
     ].filter(item => item);
 
     return (
