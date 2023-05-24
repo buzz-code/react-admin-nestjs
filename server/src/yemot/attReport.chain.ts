@@ -2,7 +2,8 @@ import { Chain, HandlerBase } from "@shared/utils/yemot/chain.interface";
 import { YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
 import { AttReport } from "src/db/entities/AttReport.entity";
 
-type GetExistingReportsFunction = (userId: string, klassId: string, lessonId: string, sheetName: string) => Promise<any>;
+type GetExistingReportsFunction = (req: YemotRequest, klassId: string, lessonId: string, sheetName: string) =>
+    Promise<Array<any>>;
 
 export interface IReportProperty {
     name: string;
@@ -43,7 +44,7 @@ class GetExistingReportsHandler extends HandlerBase {
 
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.existingReports === undefined) {
-            req.params.existingReports = await this.getExistingReports(req.params.userId, req.params.klass.data.id, req.params.lesson.data.id, req.params.sheetName);
+            req.params.existingReports = await this.getExistingReports(req, req.params.klass.data.id, req.params.lesson.data.id, req.params.sheetName);
         }
         return next();
     }

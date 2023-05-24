@@ -47,8 +47,8 @@ const notifySuccessAndEndHandler = new Handler(async (req, res, next) => {
 });
 
 
-async function getExistingAttReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
-    return []; //todo - getExistingReports
+async function getExistingAttReports(req: YemotRequest, klassId: string, lessonId: string, sheetName: string) {
+    return req.getExistingAttReports(klassId, lessonId, sheetName);
 }
 const attProperties: IReportProperty[] = [
     {
@@ -61,8 +61,8 @@ const attProperties: IReportProperty[] = [
     }
 ]
 const attReportChain = getReportChain(getExistingAttReports, attProperties);
-async function getExistingGradeReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
-    return []; //todo - getExistingReports
+async function getExistingGradeReports(req: YemotRequest, klassId: string, lessonId: string, sheetName: string) {
+    return req.getExistingGradeReports(klassId, lessonId, sheetName);
 }
 const gradeProperties: IReportProperty[] = [
     {

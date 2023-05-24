@@ -102,7 +102,7 @@ describe("attReport chain", () => {
         it('should call getExistingReports if existingReports param is not defined', async () => {
             await chain.handleRequest(req, res, next);
 
-            expect(getExistingReports).toHaveBeenCalledWith(req.params.userId, req.params.klass.data.id, req.params.lesson.data.id, req.params.sheetName);
+            expect(getExistingReports).toHaveBeenCalledWith(req, req.params.klass.data.id, req.params.lesson.data.id, req.params.sheetName);
             expect(next).toHaveBeenCalled();
             expect(req.params.existingReports).toEqual(expect.any(Array));
         });
