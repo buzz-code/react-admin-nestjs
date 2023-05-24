@@ -53,7 +53,9 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
             .map(id => ({ userId: req.auth.id, id }));
         switch (req.parsed.extra.action) {
             case 'teacherReportFile': {
-                await validateUserHasPaid(req.auth, this.dataSource);
+                if (params.length > 1) {
+                    await validateUserHasPaid(req.auth, this.dataSource, 'בחשבון חינמי אפשר לשלוח רק מייל אחד בכל פעם');
+                }
 
                 const generator = teacherReportFile;
                 for (const p of params) {
