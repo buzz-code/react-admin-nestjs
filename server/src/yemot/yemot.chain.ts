@@ -7,13 +7,13 @@ import { YemotRequest } from "@shared/utils/yemot/yemot.interface";
 
 
 function getLessonFromLessonId(req: YemotRequest) {
-    return req.getLessonFromLessonId(req.params.lesson.id);
+    return req.getLessonFromLessonId(req.params.lessonId);
 };
 const lessonChain = getResourceConfirmationChain('lesson', getLessonFromLessonId);
 
 
 function getKlassFromKlassId(req: YemotRequest) {
-    return req.getKlassByKlassId(req.params.klass.id);
+    return req.getKlassByKlassId(req.params.klassId);
 };
 const klassFromLessonHandler = new Handler(async (req, res, next) => {
     if (req.params.teacher?.data === undefined) {
