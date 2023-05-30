@@ -16,7 +16,7 @@ export default (props) => {
 
     return (
         <CommonList resource="student/pivot?extra.pivot=StudentAttendance"
-            importer={null} exporter={false} filters={filters} {...props}>
+            importer={null} exporter={true} filters={filters} {...props}>
             <Datagrid />
         </CommonList>
     );
