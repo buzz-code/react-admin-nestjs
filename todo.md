@@ -169,9 +169,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add menu grouping - https://stackoverflow.com/questions/53336432/react-admin-create-sub-menu
 * add icons to menu items
 * show yemot simulator for admin
+* add the ability to export pivot
 
 # todo
-* add the ability to export pivot
 * align all texts in translation to same format - snake case
 * add analytics to check popular pages and buttons
 * add images table so users can edit images for reports
