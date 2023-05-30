@@ -172,11 +172,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add the ability to export pivot
 
 # todo
-* align all texts in translation to same format - snake case
-* add analytics to check popular pages and buttons
+* fiter dependant fields - lesson should depend on klass filter and on teacher filter
 * add images table so users can edit images for reports
 * add user image to export pdf file
-* fiter dependant fields - lesson should depend on klass filter and on teacher filter
+* align all texts in translation to same format - snake case
+* add analytics to check popular pages and buttons
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
 * check how the teacher excel should look like
 * email import - return good error message for non excel files
