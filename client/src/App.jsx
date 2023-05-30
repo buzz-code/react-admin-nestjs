@@ -52,37 +52,40 @@ const App = () => (
         requireAuth>
         {permissions => (
           <>
-            <Resource name="att_report" {...attReport} />
-            {/* <Resource name="grade" {...resourceEntityGuesser} /> */}
-            <Resource name="klass" {...klass} />
-            <Resource name="klass_type" {...klassType} />
-            {/* <Resource name="known_absence" {...knownAbsence} /> */}
-            <Resource name="lesson" {...lesson} />
-            <Resource name="student_klass" {...studentKlass} />
-            <Resource name="student" {...student}>
+            <Resource name="teacher" {...teacher} options={{ menuGroup: 'data' }} />
+            <Resource name="klass" {...klass} options={{ menuGroup: 'data' }} />
+            <Resource name="lesson" {...lesson} options={{ menuGroup: 'data' }} />
+            <Resource name="student" {...student} options={{ menuGroup: 'data' }}>
               <Route path="student-attendance" element={<StudentAttendanceList />} />
             </Resource>
-            <Resource name="teacher" {...teacher} />
-            <Resource name="report_month" {...reportMonth} />
-            <Resource name="student_klass_report" {...studentKlassesReport} />
-            <Resource name="teacher_report_status" {...teacherReportStatus} />
-            <Resource name="text_by_user" {...textByUser} />
-            <Resource name="import_file" {...importFile} />
-            <Resource name="mail_address" {...mailAddress} />
+            <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} />
+            <Resource name="att_report" {...attReport} options={{ menuGroup: 'data' }} />
+
+            <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} />
+            <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} />
+
+            <Resource name="klass_type" {...klassType} options={{ menuGroup: 'settings' }} />
+            <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} />
+            <Resource name="text_by_user" {...textByUser} options={{ menuGroup: 'settings' }} />
+            <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} />
+            <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} />
+
+            {/* <Resource name="grade" {...resourceEntityGuesser} /> */}
+            {/* <Resource name="known_absence" {...knownAbsence} /> */}
 
             {isAdmin(permissions) && <>
-              <Resource name="text" {...text} />
-              <Resource name="yemot_call" {...resourceEntityGuesser} />
-              <Resource name="recieved_mail" {...recievedMail} />
-              <Resource name="audit_log" {...auditLog} />
+              <Resource name="text" {...text} options={{ menuGroup: 'admin' }} />
+              <Resource name="yemot_call" {...resourceEntityGuesser} options={{ menuGroup: 'admin' }} />
+              <Resource name="recieved_mail" {...recievedMail} options={{ menuGroup: 'admin' }} />
+              <Resource name="audit_log" {...auditLog} options={{ menuGroup: 'admin' }} />
             </>}
 
             {isShowUsersData(permissions) && <>
-              <Resource name="user" {...user} create={isAdmin(permissions) && user.create} />
+              <Resource name="user" {...user} create={isAdmin(permissions) && user.create} options={{ menuGroup: 'admin' }} />
             </>}
 
             {isEditPagesData(permissions) && <>
-              <Resource name="page" {...page} />
+              <Resource name="page" {...page} options={{ menuGroup: 'admin' }} />
             </>}
 
             <CustomRoutes>
