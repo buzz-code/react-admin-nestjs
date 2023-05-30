@@ -99,7 +99,7 @@ export default {
             }
         },
         text: {
-            name: 'הודעה |||| הודעות',
+            name: 'הודעה |||| הודעות - טבלת אדמין',
             fields: {
                 ...generalResourceFieldsTranslation,
                 description: 'תיאור',
