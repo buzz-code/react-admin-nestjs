@@ -41,6 +41,24 @@ import { LoginPage } from '@shared/components/layout/LoginPage';
 import Tutorial from '@shared/components/views/Tutorial';
 import PageList from '@shared/components/views/PageList';
 
+import BadgeIcon from '@mui/icons-material/Badge';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import SchoolIcon from '@mui/icons-material/School';
+import PortraitIcon from '@mui/icons-material/Portrait';
+import GroupWorkIcon from '@mui/icons-material/GroupWork';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import RuleIcon from '@mui/icons-material/Rule';
+import CategoryIcon from '@mui/icons-material/Category';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import SettingsPhoneIcon from '@mui/icons-material/SettingsPhone';
+import EmailIcon from '@mui/icons-material/Email';
+import LogoDevIcon from '@mui/icons-material/LogoDev';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+
 const i18nProvider = getI18nProvider(domainTranslations);
 
 const App = () => (
@@ -52,40 +70,40 @@ const App = () => (
         requireAuth>
         {permissions => (
           <>
-            <Resource name="teacher" {...teacher} options={{ menuGroup: 'data' }} />
-            <Resource name="klass" {...klass} options={{ menuGroup: 'data' }} />
-            <Resource name="lesson" {...lesson} options={{ menuGroup: 'data' }} />
-            <Resource name="student" {...student} options={{ menuGroup: 'data' }}>
+            <Resource name="teacher" {...teacher} options={{ menuGroup: 'data' }} icon={BadgeIcon} />
+            <Resource name="klass" {...klass} options={{ menuGroup: 'data' }} icon={SupervisedUserCircleIcon} />
+            <Resource name="lesson" {...lesson} options={{ menuGroup: 'data' }} icon={SchoolIcon} />
+            <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
               <Route path="student-attendance" element={<StudentAttendanceList />} />
             </Resource>
-            <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} />
-            <Resource name="att_report" {...attReport} options={{ menuGroup: 'data' }} />
+            <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={GroupWorkIcon} />
+            <Resource name="att_report" {...attReport} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
 
-            <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} />
-            <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} />
+            <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
+            <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
 
-            <Resource name="klass_type" {...klassType} options={{ menuGroup: 'settings' }} />
-            <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} />
-            <Resource name="text_by_user" {...textByUser} options={{ menuGroup: 'settings' }} />
-            <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} />
-            <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} />
+            <Resource name="klass_type" {...klassType} options={{ menuGroup: 'settings' }} icon={CategoryIcon} />
+            <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
+            <Resource name="text_by_user" {...textByUser} options={{ menuGroup: 'settings' }} icon={RateReviewIcon} />
+            <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} icon={AlternateEmailIcon} />
+            <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
 
             {/* <Resource name="grade" {...resourceEntityGuesser} /> */}
             {/* <Resource name="known_absence" {...knownAbsence} /> */}
 
             {isAdmin(permissions) && <>
               <Resource name="text" {...text} options={{ menuGroup: 'admin' }} />
-              <Resource name="yemot_call" {...resourceEntityGuesser} options={{ menuGroup: 'admin' }} />
-              <Resource name="recieved_mail" {...recievedMail} options={{ menuGroup: 'admin' }} />
-              <Resource name="audit_log" {...auditLog} options={{ menuGroup: 'admin' }} />
+              <Resource name="yemot_call" {...resourceEntityGuesser} options={{ menuGroup: 'admin' }} icon={SettingsPhoneIcon} />
+              <Resource name="recieved_mail" {...recievedMail} options={{ menuGroup: 'admin' }} icon={EmailIcon} />
+              <Resource name="audit_log" {...auditLog} options={{ menuGroup: 'admin' }} icon={LogoDevIcon} />
             </>}
 
             {isShowUsersData(permissions) && <>
-              <Resource name="user" {...user} create={isAdmin(permissions) && user.create} options={{ menuGroup: 'admin' }} />
+              <Resource name="user" {...user} create={isAdmin(permissions) && user.create} options={{ menuGroup: 'admin' }} icon={AccountBoxIcon} />
             </>}
 
             {isEditPagesData(permissions) && <>
-              <Resource name="page" {...page} options={{ menuGroup: 'admin' }} />
+              <Resource name="page" {...page} options={{ menuGroup: 'admin' }} icon={AutoStoriesIcon} />
             </>}
 
             <CustomRoutes>
