@@ -22,14 +22,14 @@ const customMenuItems = [
 ];
 
 const menuGroups = [
-    { name: 'data', label: 'נתונים', icon: <DatasetIcon /> },
+    { name: 'data', icon: <DatasetIcon /> },
     {
-        name: 'report', label: 'דוחות', icon: <AnalyticsIcon />, routes: [
+        name: 'report', icon: <AnalyticsIcon />, routes: [
             <MenuItemLink key="student-attendance" to="/student/student-attendance" primaryText="דוח נוכחות (פיבוט)" leftIcon={<SummarizeIcon />} />,
         ]
     },
-    { name: 'settings', label: 'הגדרות', icon: <SettingsIcon /> },
-    { name: 'admin', label: 'ניהול', icon: <AdminPanelSettingsIcon /> },
+    { name: 'settings', icon: <SettingsIcon /> },
+    { name: 'admin', icon: <AdminPanelSettingsIcon /> },
 ];
 
 export const Layout = (props) => (

@@ -1,6 +1,12 @@
 import { generalResourceFieldsTranslation } from "@shared/providers/i18nProvider"
 
 export default {
+    menu_groups: {
+        data: 'נתונים',
+        report: 'דוחות',
+        settings: 'הגדרות',
+        admin: 'ניהול',
+    },
     resources: {
         att_report: {
             name: 'רשומת נוכחות |||| נוכחות',
