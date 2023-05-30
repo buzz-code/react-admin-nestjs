@@ -71,6 +71,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 klasses: 'כיתות',
+                klassReferenceIds: 'כיתות',
                 teacherId: 'מורה',
                 teacherReferenceId: 'מורה',
                 startDate: 'תאריך התחלה',
