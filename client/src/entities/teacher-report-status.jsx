@@ -18,7 +18,7 @@ const defaultMailBody = 'מורה יקרה, מצורפים קבצים';
 const additionalBulkButtons = [
     <BulkReportButton label='הורדת אקסל למורה' icon={<BrowserUpdatedIcon />} name='teacherReportFile' />,
     <BulkActionButton label='שליחת אקסל למורה' icon={<AttachEmailIcon />} name='teacherReportFile' >
-        <RichTextInput source="mailBody" label="תוכן המייל" validate={required()} defaultValue={defaultMailBody} />
+        <RichTextInput key="mailBody" source="mailBody" label="תוכן המייל" validate={required()} defaultValue={defaultMailBody} />
     </BulkActionButton>,
 ];
 
