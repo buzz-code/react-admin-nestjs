@@ -166,6 +166,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * text management - how to edit existing translation or non-existing translation - maybe add special buttons for this, and use action for edit
 * fix yemot - getExistingReports logic
 * add filters to student attendance pivot
+* add menu grouping - https://stackoverflow.com/questions/53336432/react-admin-create-sub-menu
+* add icons to menu items
+* show yemot simulator for admin
 
 # todo
 * add the ability to export pivot
@@ -191,7 +194,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * check docker security issues
 * fix yemot simulator with lesson confirm
 * split report generators to different files - one for each generator - maybe
-* add menu grouping
 * make dashboard items configurable - implement todos
 * 
 
