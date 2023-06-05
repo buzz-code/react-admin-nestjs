@@ -10,8 +10,8 @@ import { RichTextInput } from 'ra-input-rich-text';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
-    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" />,
-    <CommonReferenceInputFilter source="reportMonthReferenceId" reference="report_month" />,
+    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />,
+    <CommonReferenceInputFilter source="reportMonthReferenceId" reference="report_month" dynamicFilter={{ userId: 'userId' }} />,
 ];
 
 const defaultMailBody = 'מורה יקרה, מצורפים קבצים';

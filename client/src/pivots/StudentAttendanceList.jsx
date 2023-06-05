@@ -10,8 +10,8 @@ export default (props) => {
         isAdmin && <ReferenceInput source="userId" reference="user" />,
         <TextInput source="tz:$cont" label="תז" />,
         <TextInput source="name:$cont" alwaysOn />,
-        <CommonReferenceInputFilter source="extra.klassId" reference="klass" alwaysOn />,
-        <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" alwaysOn />,
+        <CommonReferenceInputFilter source="extra.klassId" reference="klass" dynamicFilter={{ userId: 'userId' }} alwaysOn />,
+        <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" dynamicFilter={{ userId: 'userId' }} alwaysOn />,
     ].filter(item => item);
 
     return (

@@ -7,8 +7,8 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
-    <CommonReferenceInputFilter source="studentReferenceId" reference="student" />,
-    <CommonReferenceInputFilter source="klassReferenceId" reference="klass" />,
+    <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={{ userId: 'userId' }} />,
+    <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={{ userId: 'userId' }} />,
 ];
 
 const Datagrid = ({ isAdmin, ...props }) => {
@@ -29,7 +29,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
         <CommonReferenceInput source="studentReferenceId" reference="student" validate={required()} />
-        <CommonReferenceInput source="klassReferenceId" reference="klass"  validate={required()}/>
+        <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>

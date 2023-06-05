@@ -170,9 +170,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add icons to menu items
 * show yemot simulator for admin
 * add the ability to export pivot
+* fiter dependant fields - lesson should depend on klass filter and on teacher filter
 
 # todo
-* fiter dependant fields - lesson should depend on klass filter and on teacher filter
 * add images table so users can edit images for reports
 * add user image to export pdf file
 * align all texts in translation to same format - snake case

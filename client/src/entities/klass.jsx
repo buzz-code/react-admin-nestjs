@@ -10,8 +10,8 @@ const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
     <NumberInput source="key" />,
     <TextInput source="name:$cont" alwaysOn />,
-    <CommonReferenceInputFilter source="klassTypeReferenceId" reference="klass_type" />,
-    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" />,
+    <CommonReferenceInputFilter source="klassTypeReferenceId" reference="klass_type" dynamicFilter={{ userId: 'userId' }} />,
+    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />,
 ];
 
 const Datagrid = ({ isAdmin, ...props }) => {
