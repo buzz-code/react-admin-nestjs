@@ -173,8 +173,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fiter dependant fields - lesson should depend on klass filter and on teacher filter
 * add analytics to check popular pages and buttons
 * align all texts in translation to same format - snake case
+* fix yemot simulator with lesson confirm
 
 # todo
+* ask shifi and implement global year filter
 * add global year filter - it will be saved in the cookie of the user
 * add percents reports for students
 * add images table so users can edit images for reports
@@ -194,7 +196,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 תוספת מחיר לפי משתמשים
 מחיר שקוף - יופיע באתר
 * check docker security issues
-* fix yemot simulator with lesson confirm
 * split report generators to different files - one for each generator - maybe
 * make dashboard items configurable - implement todos
 * 
