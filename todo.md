@@ -180,6 +180,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * ask shifi and implement global year filter
 * add global year filter - it will be saved in the cookie of the user
 * add percents reports for students
+* add a button on percents report to view student reports
 * add images table so users can edit images for reports
 * add user image to export pdf file
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
