@@ -174,6 +174,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add analytics to check popular pages and buttons
 * align all texts in translation to same format - snake case
 * fix yemot simulator with lesson confirm
+* update excel file look
 
 # todo
 * ask shifi and implement global year filter
