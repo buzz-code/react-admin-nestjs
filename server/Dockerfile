@@ -29,6 +29,7 @@ WORKDIR /app
 
 COPY package*.json /app/
 COPY yarn.lock /app/
+COPY .yarnclean /app/
 
 RUN yarn install
 
