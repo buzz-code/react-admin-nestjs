@@ -33,6 +33,19 @@ export default {
             name: 'רשומת ציונים |||| ציונים',
             fields: {
                 ...generalResourceFieldsTranslation,
+                studentTz: 'תלמידה',
+                studentReferenceId: 'תלמידה',
+                'studentBaseKlass.klassName': 'כיתת בסיס',
+                teacherId: 'מורה',
+                teacherReferenceId: 'מורה',
+                klassId: 'כיתה',
+                klassReferenceId: 'כיתה',
+                lessonId: 'שיעור',
+                lessonReferenceId: 'שיעור',
+                reportDate: 'תאריך דיווח',
+                howManyLessons: 'מספר שיעורים',
+                grade: 'ציון',
+                comments: 'הערה',
             }
         },
         klass: {

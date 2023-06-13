@@ -17,6 +17,7 @@ import { Student } from "./Student.entity";
 import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
 import { Teacher } from "./Teacher.entity";
+import { KlassType } from "./KlassType.entity";
 
 @Index("grades_users_idx", ["userId"], {})
 @Entity("grades")
@@ -24,7 +25,7 @@ export class Grade implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
   async fillFields() {
-    const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User]);
+    const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
 
     this.studentReferenceId = await findOneAndAssignReferenceId(
       dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz

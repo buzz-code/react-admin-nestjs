@@ -12,6 +12,7 @@ import { Dashboard, Layout } from 'src/GeneralLayout';
 
 import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityGuesser';
 import attReport from "src/entities/att-report";
+import grade from "src/entities/grade";
 import klass from "src/entities/klass";
 import klassType from "src/entities/klass-type";
 import knownAbsence from "src/entities/known-absence";
@@ -47,6 +48,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import PortraitIcon from '@mui/icons-material/Portrait';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import ViewListIcon from '@mui/icons-material/ViewList';
+import GradingIcon from '@mui/icons-material/Grading';
 import RuleIcon from '@mui/icons-material/Rule';
 import CategoryIcon from '@mui/icons-material/Category';
 import DateRangeIcon from '@mui/icons-material/DateRange';
@@ -78,6 +80,7 @@ const App = () => (
             </Resource>
             <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={GroupWorkIcon} />
             <Resource name="att_report" {...attReport} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
+            <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
 
             <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
             <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
