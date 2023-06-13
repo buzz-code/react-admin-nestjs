@@ -12,7 +12,7 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsNotEmpty, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { Type } from "class-transformer";
 
 @Index("students_users_idx", ["userId"], {})
@@ -31,6 +31,7 @@ export class Student implements IHasUserId {
   @Type(() => String)
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(10, { always: true })
+  @IsUniqueCombination(['userId'], [Student, User], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "tz", length: 10 })
   tz: string;

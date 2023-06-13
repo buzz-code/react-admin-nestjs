@@ -175,12 +175,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * align all texts in translation to same format - snake case
 * fix yemot simulator with lesson confirm
 * update excel file look
+* add unique validator for student tz & (lesson key + year) & teacher tz & klass key per user
 
 # todo
-* ask shifi and implement global year filter
-* add global year filter - it will be saved in the cookie of the user
 * add percents reports for students
 * add a button on percents report to view student reports
+* ask shifi and implement global year filter - only lesson
+* add global year filter - it will be saved in the cookie of the user
 * add images table so users can edit images for reports
 * add user image to export pdf file
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
