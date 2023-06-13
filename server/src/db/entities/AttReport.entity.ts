@@ -15,7 +15,7 @@ import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
 import { Student } from "./Student.entity";
 import { Teacher } from "./Teacher.entity";
-import { StudentBaseKlass } from "../view-entities/StudentBaseKlass";
+import { StudentBaseKlass } from "../view-entities/StudentBaseKlass.entity";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { User } from "./User.entity";
 import { KlassType } from "./KlassType.entity";

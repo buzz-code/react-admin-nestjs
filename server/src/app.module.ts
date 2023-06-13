@@ -25,7 +25,7 @@ import studentConfig from './entity-modules/student.config';
 import teacherConfig from './entity-modules/teacher.config';
 import textConfig from './entity-modules/text.config';
 import studentKlassReportConfig from './entity-modules/student-klass-report.config';
-import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass';
+import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass.entity';
 import { AuditLog } from '@shared/entities/AuditLog.entity';
 import { ImportFile } from '@shared/entities/ImportFile.entity';
 import { YemotCall } from '@shared/entities/YemotCall.entity';
