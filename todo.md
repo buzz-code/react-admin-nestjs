@@ -182,6 +182,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 
 # todo
 * build a view for att_report and grade data
+* update StudentKlassReport to show klass ids with ReferenceArrayInput
 SELECT * 
 FROM `students` 
 LEFT JOIN grades on grades.studentReferenceId = students.id
