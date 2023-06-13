@@ -178,9 +178,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add unique validator for student tz & (lesson key + year) & teacher tz & klass key per user
 * add grade entity in client side
 * fill some data in grade entity
+* add dynamic filter in common reference input
 
 # todo
-* add dynamic filter in common reference input
 * build a view for att_report and grade data
 SELECT * 
 FROM `students` 

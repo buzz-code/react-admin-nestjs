@@ -28,8 +28,8 @@ const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <CommonReferenceInput source="studentReferenceId" reference="student" validate={required()} />
-        <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} />
+        <CommonReferenceInput source="studentReferenceId" reference="student" validate={required()} dynamicFilter={{ userId: 'userId' }} />
+        <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={{ userId: 'userId' }} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>

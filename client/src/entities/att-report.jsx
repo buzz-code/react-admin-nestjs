@@ -42,10 +42,10 @@ const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <CommonReferenceInput source="studentReferenceId" reference="student" validate={required()} />
-        <CommonReferenceInput source="teacherReferenceId" reference="teacher" validate={required()} />
-        <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} />
-        <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} />
+        <CommonReferenceInput source="studentReferenceId" reference="student" validate={required()} dynamicFilter={{ userId: 'userId' }} />
+        <CommonReferenceInput source="teacherReferenceId" reference="teacher" validate={required()} dynamicFilter={{ userId: 'userId' }} />
+        <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={{ userId: 'userId' }} />
+        <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} dynamicFilter={{ userId: 'userId' }} />
         <DateInput source="reportDate" validate={required()} />
         <NumberInput source="howManyLessons" />
         <NumberInput source="absCount" />
