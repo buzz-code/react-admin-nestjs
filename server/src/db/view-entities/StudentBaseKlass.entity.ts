@@ -7,19 +7,19 @@ import { KlassType, KlassTypeEnum } from "../entities/KlassType.entity";
 
 @ViewEntity("student_base_klass", {
   expression: (dataSource: DataSource) => dataSource
-    .getRepository(StudentKlass)
-    .createQueryBuilder('student_klasses')
-    .groupBy('studentReferenceId')
-    .addGroupBy('student_tz')
-    .addGroupBy('user_id')
-    .addGroupBy('year')
-    .leftJoin(Klass, 'klasses', 'klasses.id = student_klasses.klassReferenceId OR (klasses.key = student_klasses.klass_id AND klasses.user_id = student_klasses.user_id)')
-    .leftJoin(KlassType, 'klass_types', 'klass_types.id = klasses.klassTypeReferenceId OR (klass_types.id = klasses.klass_type_id AND klass_types.user_id = klasses.user_id)')
+    .createQueryBuilder()
     .select('studentReferenceId', 'id')
     .addSelect('student_tz', 'tz')
     .addSelect('student_klasses.user_id', 'user_id')
     .addSelect('student_klasses.year', 'year')
     .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', klasses.name, null) SEPARATOR ', ')`, 'base_klass')
+    .from(StudentKlass, 'student_klasses')
+    .leftJoin(Klass, 'klasses', 'klasses.id = student_klasses.klassReferenceId OR (klasses.key = student_klasses.klass_id AND klasses.user_id = student_klasses.user_id)')
+    .leftJoin(KlassType, 'klass_types', 'klass_types.id = klasses.klassTypeReferenceId OR (klass_types.id = klasses.klass_type_id AND klass_types.user_id = klasses.user_id)')
+    .groupBy('studentReferenceId')
+    .addGroupBy('student_tz')
+    .addGroupBy('user_id')
+    .addGroupBy('year')
 })
 export class StudentBaseKlass implements IHasUserId {
   @Column()
