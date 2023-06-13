@@ -41,7 +41,7 @@ export class Lesson implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
-  @IsUniqueCombination(['userId'], [Lesson, Teacher], { always: true })
+  @IsUniqueCombination(['userId'], [Lesson, Teacher, User], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("int", { name: "key" })
   key: number;
