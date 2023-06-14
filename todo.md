@@ -180,16 +180,16 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fill some data in grade entity
 * add dynamic filter in common reference input
 * build a view for att_report and grade data
-
-# todo
 * add percents reports for students - based on student global report
 * add a button on percents report to view student reports
 * add export definition to percents report
-* update StudentKlassReport to show klass ids with ReferenceArrayInput
+
+# todo
 * ask shifi and implement global year filter - only lesson
 * add global year filter - it will be saved in the cookie of the user
 * add images table so users can edit images for reports
 * add user image to export pdf file
+* update StudentKlassReport to show klass ids with ReferenceArrayInput
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
 * check how the teacher excel should look like
 * email import - return good error message for non excel files
