@@ -244,5 +244,18 @@ export default {
                 notReportedLessons: 'שיעורים שלא דווחו',
             }
         },
+        student_global_report: {
+            name: 'סיכום דיווחי תלמידה',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                studentReferenceId: 'תלמידה',
+                teacherReferenceId: 'מורה',
+                klassReferenceId: 'כיתה',
+                lessonReferenceId: 'שיעור',
+                lessonsCount: 'סיכום מספר שיעורים',
+                absCount: 'סיכום חיסורים',
+                gradeAvg: 'ציון ממוצע',
+            }
+        },
     }
 };

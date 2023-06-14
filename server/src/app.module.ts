@@ -35,6 +35,7 @@ import { RecievedMail } from '@shared/entities/RecievedMail.entity';
 import pageConfig from './entity-modules/page.config';
 import { ReportMonth } from './db/entities/ReportMonth.entity';
 import teacherReportStatusConfig from './entity-modules/teacher-report-status.config';
+import { StudentGlobalReport } from './db/view-entities/StudentGlobalReport.entity';
 
 
 @Module({
@@ -65,6 +66,7 @@ import teacherReportStatusConfig from './entity-modules/teacher-report-status.co
     BaseEntityModule.register({ entity: ReportMonth }),
     BaseEntityModule.register(teacherReportStatusConfig),
     BaseEntityModule.register({ entity: TextByUser }),
+    BaseEntityModule.register({ entity: StudentGlobalReport }),
     AuthModule,
     YemotModule.register(yemotChain)
   ],

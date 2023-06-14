@@ -23,6 +23,7 @@ import teacher from "src/entities/teacher";
 import studentKlassesReport from "src/entities/student-klasses-report";
 import reportMonth from "src/entities/report-month";
 import teacherReportStatus from "src/entities/teacher-report-status";
+import studentGlobalReport from "src/entities/student-global-report";
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
 
@@ -50,6 +51,7 @@ import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import GradingIcon from '@mui/icons-material/Grading';
 import RuleIcon from '@mui/icons-material/Rule';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 import CategoryIcon from '@mui/icons-material/Category';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import RateReviewIcon from '@mui/icons-material/RateReview';
@@ -84,6 +86,7 @@ const App = () => (
 
             <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
             <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
+            <Resource name="student_global_report" {...studentGlobalReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
 
             <Resource name="klass_type" {...klassType} options={{ menuGroup: 'settings' }} icon={CategoryIcon} />
             <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
