@@ -1,9 +1,6 @@
 import { Column, DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
-import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { Student } from "../entities/Student.entity";
-import { AttReport } from "../entities/AttReport.entity";
-import { Grade } from "../entities/Grade.entity";
 import { AttReportAndGrade } from "./AttReportAndGrade.entity";
 import { Teacher } from "../entities/Teacher.entity";
 import { Lesson } from "../entities/Lesson.entity";
