@@ -1,10 +1,13 @@
-import { Column, DataSource, JoinColumn, ManyToOne, ViewEntity } from "typeorm";
+import { Column, DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { Student } from "../entities/Student.entity";
 import { AttReport } from "../entities/AttReport.entity";
 import { Grade } from "../entities/Grade.entity";
 import { AttReportAndGrade } from "./AttReportAndGrade.entity";
+import { Teacher } from "../entities/Teacher.entity";
+import { Lesson } from "../entities/Lesson.entity";
+import { Klass } from "../entities/Klass.entity";
 
 @ViewEntity("student_global_report", {
   expression: (dataSource: DataSource) => dataSource
@@ -28,7 +31,8 @@ import { AttReportAndGrade } from "./AttReportAndGrade.entity";
     .addGroupBy('year')
 })
 export class StudentGlobalReport implements IHasUserId {
-  @Column()
+  @ViewColumn()
+  @PrimaryColumn()
   id: string;
 
   @Column("int", { name: "user_id" })
@@ -61,4 +65,16 @@ export class StudentGlobalReport implements IHasUserId {
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'studentReferenceId' })
   student: Student;
+
+  @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'teacherReferenceId' })
+  teacher: Teacher;
+
+  @ManyToOne(() => Lesson, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'lessonReferenceId' })
+  lesson: Lesson;
+
+  @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'klassReferenceId' })
+  klass: Klass;
 }
