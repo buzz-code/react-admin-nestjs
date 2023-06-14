@@ -244,8 +244,8 @@ export default {
                 notReportedLessons: 'שיעורים שלא דווחו',
             }
         },
-        student_global_report: {
-            name: 'סיכום דיווחי תלמידה',
+        student_percent_report: {
+            name: 'דוח אחוזים לתלמידה',
             fields: {
                 ...generalResourceFieldsTranslation,
                 studentReferenceId: 'תלמידה',
@@ -253,7 +253,8 @@ export default {
                 klassReferenceId: 'כיתה',
                 lessonReferenceId: 'שיעור',
                 lessonsCount: 'סיכום מספר שיעורים',
-                absCount: 'סיכום חיסורים',
+                absPercents: 'אחוז חיסור',
+                attPercents: 'אחוז נוכחות',
                 gradeAvg: 'ציון ממוצע',
             }
         },

@@ -26,8 +26,9 @@ const Datagrid = ({ isAdmin, ...props }) => {
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
             <NumberField source="lessonsCount" />
-            <NumberField source="absCount" />
-            <NumberField source="gradeAvg" options={{ maximumFractionDigits: 2 }} />
+            <NumberField source="absPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
+            <NumberField source="attPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
+            <NumberField source="gradeAvg" options={{ style: 'percent', maximumFractionDigits: 2 }} />
         </CommonDatagrid>
     );
 }

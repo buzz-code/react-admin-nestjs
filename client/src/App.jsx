@@ -23,7 +23,7 @@ import teacher from "src/entities/teacher";
 import studentKlassesReport from "src/entities/student-klasses-report";
 import reportMonth from "src/entities/report-month";
 import teacherReportStatus from "src/entities/teacher-report-status";
-import studentGlobalReport from "src/entities/student-global-report";
+import studentPercentReport from "src/entities/student-percent-report";
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
 
@@ -86,7 +86,7 @@ const App = () => (
 
             <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
             <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
-            <Resource name="student_global_report" {...studentGlobalReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
+            <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
 
             <Resource name="klass_type" {...klassType} options={{ menuGroup: 'settings' }} icon={CategoryIcon} />
             <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />

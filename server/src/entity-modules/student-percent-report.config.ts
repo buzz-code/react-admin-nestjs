@@ -1,9 +1,9 @@
 import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
-import { StudentGlobalReport } from "src/db/view-entities/StudentGlobalReport.entity";
+import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
-        entity: StudentGlobalReport,
+        entity: StudentPercentReport,
         query: {
             join: {
                 student: {},
