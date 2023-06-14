@@ -179,22 +179,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add grade entity in client side
 * fill some data in grade entity
 * add dynamic filter in common reference input
+* build a view for att_report and grade data
 
 # todo
-* build a view for att_report and grade data
-* update StudentKlassReport to show klass ids with ReferenceArrayInput
-SELECT * 
-FROM `students` 
-LEFT JOIN grades on grades.studentReferenceId = students.id
-LEFT JOIN att_reports on att_reports.studentReferenceId = students.id
-WHERE 
-    COALESCE(att_reports.teacherReferenceId, grades.teacherReferenceId) = COALESCE(grades.teacherReferenceId, att_reports.teacherReferenceId)
-AND
-    COALESCE(att_reports.klassReferenceId, grades.klassReferenceId) = COALESCE(grades.klassReferenceId, att_reports.klassReferenceId)
-AND
-    COALESCE(att_reports.lessonReferenceId, grades.lessonReferenceId) = COALESCE(grades.lessonReferenceId, att_reports.lessonReferenceId);
-* add percents reports for students
+* add percents reports for students - based on student global report
 * add a button on percents report to view student reports
+* add export definition to percents report
+* update StudentKlassReport to show klass ids with ReferenceArrayInput
 * ask shifi and implement global year filter - only lesson
 * add global year filter - it will be saved in the cookie of the user
 * add images table so users can edit images for reports
