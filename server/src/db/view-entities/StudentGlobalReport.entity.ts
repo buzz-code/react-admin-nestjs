@@ -10,7 +10,7 @@ import { AttReportAndGrade } from "./AttReportAndGrade.entity";
   expression: (dataSource: DataSource) => dataSource
     .createQueryBuilder()
     .select('CONCAT(studentReferenceId, "_", teacherReferenceId, "_", klassReferenceId, "_", lessonReferenceId)', 'id')
-    .select('user_id')
+    .addSelect('user_id')
     .addSelect('year')
     .addSelect('studentReferenceId')
     .addSelect('teacherReferenceId')
