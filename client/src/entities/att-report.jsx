@@ -52,7 +52,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <CommonReferenceInput source="studentReferenceId" reference="student" validate={required()} dynamicFilter={{ userId: 'userId' }} />
         <CommonReferenceInput source="teacherReferenceId" reference="teacher" validate={required()} dynamicFilter={{ userId: 'userId' }} />
         <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={{ userId: 'userId' }} />
-        <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} dynamicFilter={{ userId: 'userId' }} />
+        <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} dynamicFilter={{ userId: 'userId', year: 'year' }} />
         <DateInput source="reportDate" validate={required()} />
         <NumberInput source="howManyLessons" defaultValue={1} />
         <NumberInput source="absCount" defaultValue={0} />
