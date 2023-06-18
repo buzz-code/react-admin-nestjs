@@ -1,10 +1,10 @@
-import { DateInput, NumberField, TextField, ReferenceField, ReferenceInput, useRecordContext, useCreatePath, Button, Link, AutocompleteInput, SelectField } from 'react-admin';
+import { DateInput, NumberField, TextField, ReferenceField, ReferenceInput, useRecordContext, AutocompleteInput, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
-import ListIcon from '@mui/icons-material/List';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
+import { ShowMatchingRecordsButton } from '@shared/components/fields/ShowMatchingRecordsButton';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -44,17 +44,10 @@ const Datagrid = ({ isAdmin, ...props }) => {
 
 const ShowMatchingAttReportsButton = ({ ...props }) => {
     const { studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId } = useRecordContext();
-    const createPath = useCreatePath();
     const filter = { studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId };
 
     return (
-        <Button label='ra.action.show_matching_records' startIcon={<ListIcon />}
-            component={Link}
-            to={{
-                pathname: createPath({ resource: 'att_report', type: 'list' }),
-                search: `filter=${JSON.stringify(filter)}`
-            }}
-            onClick={e => e.stopPropagation()} />
+        <ShowMatchingRecordsButton filter={filter} resource="att_report" />
     );
 }
 
