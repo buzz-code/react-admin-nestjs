@@ -1,5 +1,6 @@
 import { CommonDatagrid, CommonList } from "@shared/components/crudContainers/CommonList"
 import { CommonReferenceInputFilter } from "@shared/components/fields/CommonReferenceInputFilter";
+import { filterArrayByParams } from "@shared/utils/filtersUtil";
 import { useIsAdmin } from "@shared/utils/permissionsUtil";
 import { ReferenceField, TextField, useListContext, ReferenceInput, TextInput, AutocompleteInput, SelectField } from "react-admin"
 // import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
@@ -19,10 +20,7 @@ const filterDefaultValues = {
 
 export default (props) => {
     const isAdmin = useIsAdmin();
-
-    const filtersArr = filters
-        .map(item => typeof item === 'function' ? item({ isAdmin }) : item)
-        .filter(item => item);
+    const filtersArr = f(filters, { isAdmin });
 
     return (
         <CommonList resource="student/pivot?extra.pivot=StudentAttendance"
@@ -39,7 +37,7 @@ const Datagrid = ({ ...props }) => {
     const isAdmin = useIsAdmin();
 
     const columns = [
-        isAdmin && <TextField key="id" source="id"/>,
+        isAdmin && <TextField key="id" source="id" />,
         isAdmin && <ReferenceField key="userId" source="userId" reference="user" />,
         <TextField key="tz" source="tz" />,
         <TextField key="name" source="name" />,
