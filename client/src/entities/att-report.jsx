@@ -1,9 +1,10 @@
-import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, required, maxLength } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, required, maxLength, AutocompleteInput, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
+import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -14,7 +15,12 @@ const filters = [
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={{ userId: 'userId' }} />,
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ userId: 'userId', teacherReferenceId: 'teacherReferenceId', 'klassReferenceIds:$cont': 'klassReferenceId' }} />,
+    <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
+
+const filterDefaultValues = {
+    ...defaultYearFilter,
+};
 
 const Datagrid = ({ isAdmin, ...props }) => {
     return (
@@ -26,6 +32,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
             <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
+            <SelectField source="year" choices={yearChoices} />
             <DateField source="reportDate" />
             <NumberField source="howManyLessons" />
             <NumberField source="absCount" />
@@ -51,6 +58,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <NumberInput source="absCount" defaultValue={0} />
         <NumberInput source="approvedAbsCount" defaultValue={0} />
         <TextInput source="comments" validate={maxLength(500)} />
+        <AutocompleteInput source="year" choices={yearChoices} />
         {/* <TextInput source="sheetName" validate={maxLength(100)} /> */}
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
@@ -61,6 +69,7 @@ const entity = {
     Datagrid,
     Inputs,
     filters,
+    filterDefaultValues,
 };
 
 export default getResourceComponents(entity);

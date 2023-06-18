@@ -1,4 +1,4 @@
-import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField, required } from 'react-admin';
+import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField, required, AutocompleteInput, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
@@ -7,12 +7,18 @@ import { BulkActionButton } from '@shared/components/crudContainers/BulkActionBu
 import AttachEmailIcon from '@mui/icons-material/AttachEmail';
 import BrowserUpdatedIcon from '@mui/icons-material/BrowserUpdated';
 import { RichTextInput } from 'ra-input-rich-text';
+// import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />,
     <CommonReferenceInputFilter source="reportMonthReferenceId" reference="report_month" dynamicFilter={{ userId: 'userId' }} />,
+    // <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
+
+const filterDefaultValues = {
+    // ...defaultYearFilter,
+};
 
 const defaultMailBody = 'מורה יקרה, מצורפים קבצים';
 const additionalBulkButtons = [
@@ -31,6 +37,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
             <ReferenceField source="reportMonthReferenceId" reference="report_month" sortBy='reportMonthName' />
             <ReferenceArrayField source="reportedLessons" reference="lesson" />
             <ReferenceArrayField source="notReportedLessons" reference="lesson" />
+            {/* <SelectField source="year" choices={yearChoices} /> */}
         </CommonDatagrid>
     );
 }
@@ -38,6 +45,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
 const entity = {
     Datagrid,
     filters,
+    filterDefaultValues,
 };
 
 export default getResourceComponents(entity);
