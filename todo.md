@@ -183,10 +183,16 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add percents reports for students - based on student global report
 * add a button on percents report to view student reports
 * add export definition to percents report
+* move filtersArr logic to a util file
+* create show matching records button component
+* add a default year filter
 
 # todo
-* ask shifi and implement global year filter - only lesson
-* add global year filter - it will be saved in the cookie of the user
+* add default year value on server side for att-report, grade, lesson, student-klass
+* add student number validation - how to do this with year ? maybe student will need to have a year column too
+* fix student attendance list year at backend
+* add button to bulk update the year
+* add year filter for dashboard items
 * add images table so users can edit images for reports
 https://marmelab.com/react-admin/ImageInput.html
 * add user image to export pdf file
