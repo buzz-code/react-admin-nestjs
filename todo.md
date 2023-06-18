@@ -186,6 +186,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * move filtersArr logic to a util file
 * create show matching records button component
 * add a default year filter
+* check how the teacher excel should look like
 
 # todo
 * add default year value on server side for att-report, grade, lesson, student-klass
@@ -193,14 +194,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix student attendance list year at backend
 * add button to bulk update the year
 * add year filter for dashboard items
-* add images table so users can edit images for reports
-https://marmelab.com/react-admin/ImageInput.html
+* add images table so users can edit images for reports - https://marmelab.com/react-admin/ImageInput.html
 * add user image to export pdf file
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
-* check how the teacher excel should look like
 * email import - return good error message for non excel files
-* if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
 * on user creation - register, add default values for report months table
 * change to use docker swarm for production
 * add option to self connect to yemot phone
@@ -217,6 +215,7 @@ https://marmelab.com/react-admin/ImageInput.html
 * 
 
 # todo later
+* if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
 * להציג את השיחות של ימות המשיח בצורה יפה
 * add settings & profile page
 * add ability to edit report templates
