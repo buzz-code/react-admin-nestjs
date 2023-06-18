@@ -7,17 +7,17 @@ import { BulkActionButton } from '@shared/components/crudContainers/BulkActionBu
 import AttachEmailIcon from '@mui/icons-material/AttachEmail';
 import BrowserUpdatedIcon from '@mui/icons-material/BrowserUpdated';
 import { RichTextInput } from 'ra-input-rich-text';
-// import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
+import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />,
     <CommonReferenceInputFilter source="reportMonthReferenceId" reference="report_month" dynamicFilter={{ userId: 'userId' }} />,
-    // <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
 const filterDefaultValues = {
-    // ...defaultYearFilter,
+    ...defaultYearFilter,
 };
 
 const defaultMailBody = 'מורה יקרה, מצורפים קבצים';
@@ -35,9 +35,9 @@ const Datagrid = ({ isAdmin, ...props }) => {
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <ReferenceField source="teacherReferenceId" reference="teacher" sortBy='teacherName' />
             <ReferenceField source="reportMonthReferenceId" reference="report_month" sortBy='reportMonthName' />
+            <SelectField source="year" choices={yearChoices} />
             <ReferenceArrayField source="reportedLessons" reference="lesson" />
             <ReferenceArrayField source="notReportedLessons" reference="lesson" />
-            {/* <SelectField source="year" choices={yearChoices} /> */}
         </CommonDatagrid>
     );
 }

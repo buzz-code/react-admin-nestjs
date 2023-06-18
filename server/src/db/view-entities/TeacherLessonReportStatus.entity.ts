@@ -11,6 +11,7 @@ import { Lesson } from "../entities/Lesson.entity";
     .select('teachers.user_id', 'userId')
     .addSelect('teachers.id', 'teacherId')
     .addSelect('lessons.id', 'lessonId')
+    .addSelect('lessons.year', 'year')
     .addSelect('report_months.id', 'reportMonthId')
     .addSelect('CASE WHEN COUNT(att_reports.id) > 0 THEN 1 ELSE 0 END', 'isReported')
     .from(Teacher, 'teachers')
@@ -26,6 +27,9 @@ import { Lesson } from "../entities/Lesson.entity";
 export class TeacherLessonReportStatus implements IHasUserId {
   @Column()
   userId: number;
+
+  @Column()
+  year: number;
 
   @Column()
   teacherId: number;

@@ -12,6 +12,7 @@ import { TeacherLessonReportStatus } from "./TeacherLessonReportStatus.entity";
     .addSelect('tlrs.teacherId', 'teacherId')
     .addSelect('teacher.name', 'teacherName')
     .addSelect('tlrs.reportMonthId', 'reportMonthId')
+    .addSelect('tlrs.year', 'year')
     .addSelect('rm.name', 'reportMonthName')
     .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 1 THEN tlrs.lessonId END ORDER BY tlrs.lessonId)', 'reportedLessons')
     .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonId END ORDER BY tlrs.lessonId)', 'notReportedLessons')
@@ -21,6 +22,7 @@ import { TeacherLessonReportStatus } from "./TeacherLessonReportStatus.entity";
     .groupBy('tlrs.userId')
     .addGroupBy('tlrs.teacherId')
     .addGroupBy('tlrs.reportMonthId')
+    .addGroupBy('tlrs.year')
     .orderBy('tlrs.reportMonthId')
     .addOrderBy('tlrs.teacherId')
 })
@@ -31,6 +33,9 @@ export class TeacherReportStatus implements IHasUserId {
 
   @ViewColumn()
   userId: number;
+
+  @ViewColumn()
+  year: number;
 
   @ViewColumn({ name: 'teacherId' })
   teacherReferenceId: number;
