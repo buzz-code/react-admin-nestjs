@@ -188,6 +188,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * ask shifi and implement global year filter - only lesson
 * add global year filter - it will be saved in the cookie of the user
 * add images table so users can edit images for reports
+https://marmelab.com/react-admin/ImageInput.html
 * add user image to export pdf file
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
