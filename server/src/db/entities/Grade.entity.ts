@@ -18,6 +18,7 @@ import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
 import { Teacher } from "./Teacher.entity";
 import { KlassType } from "./KlassType.entity";
+import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 
 @Index("grades_users_idx", ["userId"], {})
 @Entity("grades")
@@ -39,6 +40,8 @@ export class Grade implements IHasUserId {
     this.lessonReferenceId = await findOneAndAssignReferenceId(
       dataSource, Lesson, { year: this.year, key: this.lessonId }, this.userId, this.lessonReferenceId, this.lessonId
     );
+
+    fillDefaultYearValue(this);
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

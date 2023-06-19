@@ -20,6 +20,7 @@ import { Teacher } from "./Teacher.entity";
 import { ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty } from "@shared/utils/validation/class-validator-he";
+import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Entity("student_klasses")
@@ -35,6 +36,8 @@ export class StudentKlass implements IHasUserId {
     this.klassReferenceId = await findOneAndAssignReferenceId(
       dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
     );
+
+    fillDefaultYearValue(this);
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

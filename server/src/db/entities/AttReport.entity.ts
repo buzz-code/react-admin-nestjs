@@ -22,6 +22,7 @@ import { KlassType } from "./KlassType.entity";
 import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")
@@ -43,6 +44,8 @@ export class AttReport implements IHasUserId {
     this.lessonReferenceId = await findOneAndAssignReferenceId(
       dataSource, Lesson, { year: this.year, key: this.lessonId }, this.userId, this.lessonReferenceId, this.lessonId
     );
+
+    fillDefaultYearValue(this);
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

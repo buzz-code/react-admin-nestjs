@@ -17,6 +17,7 @@ import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -30,6 +31,8 @@ export class Lesson implements IHasUserId {
     this.teacherReferenceId = await findOneAndAssignReferenceId(
       dataSource, Teacher, { year: this.year, tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
     );
+
+    fillDefaultYearValue(this);
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

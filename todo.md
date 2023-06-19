@@ -187,9 +187,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * create show matching records button component
 * add a default year filter
 * check how the teacher excel should look like
+* add default year value on server side for att-report, grade, lesson, student-klass
 
 # todo
-* add default year value on server side for att-report, grade, lesson, student-klass
+* add migration to fill year value if year is null or 0
+* add impersonate button in user edit form
 * add student number validation - how to do this with year ? maybe student will need to have a year column too
 * fix student attendance list year at backend
 * add button to bulk update the year
