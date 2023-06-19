@@ -20,7 +20,7 @@ const filterDefaultValues = {
 
 export default (props) => {
     const isAdmin = useIsAdmin();
-    const filtersArr = f(filters, { isAdmin });
+    const filtersArr = filterArrayByParams(filters, { isAdmin });
 
     return (
         <CommonList resource="student/pivot?extra.pivot=StudentAttendance"
