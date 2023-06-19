@@ -189,12 +189,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * check how the teacher excel should look like
 * add default year value on server side for att-report, grade, lesson, student-klass
 * add migration to fill year value if year is null or 0
+* add impersonate button in user edit form
 
 # todo
-* add impersonate button in user edit form
+* create a table of 'payment tracks' - with name, price and student number limit
+* add field for user to have payment track
 * add student number validation - how to do this with year ? maybe student will need to have a year column too
 * fix student attendance list year at backend
-* add button to bulk update the year
 * add year filter for dashboard items
 * add images table so users can edit images for reports - https://marmelab.com/react-admin/ImageInput.html
 * add user image to export pdf file
@@ -203,20 +204,19 @@ https://github.com/tinovyatkin/nest-puppeteer
 * email import - return good error message for non excel files
 * on user creation - register, add default values for report months table
 * change to use docker swarm for production
-* add option to self connect to yemot phone
 * nest auto delete migration files
-* create a table of 'payment tracks'
 * להכין מסמך בסיס לתמחור
 חבילה בסיסית בחינם
 שאר החבילות - תמחור לפי כמות תלמידות
 תוספת מחיר לפי משתמשים
 מחיר שקוף - יופיע באתר
 * check docker security issues
-* split report generators to different files - one for each generator - maybe
 * make dashboard items configurable - implement todos
+* add option to self connect to yemot phone
 * 
 
 # todo later
+* split report generators to different files - one for each generator - maybe
 * if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
 * להציג את השיחות של ימות המשיח בצורה יפה
 * add settings & profile page
