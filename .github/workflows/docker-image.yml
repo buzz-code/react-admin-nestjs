@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: "Build:checkout"
         uses: actions/checkout@v2
-      - name: 'Build:dockerimage'
+      - name: 'Build:dockerimage-server'
         uses: docker/build-push-action@v1
         with:
           registry: ghcr.io
@@ -21,3 +21,4 @@ jobs:
           password: ${{ secrets.PAT }}
           repository: ${{ github.repository_owner }}/${{ github.event.repository.name }}
           tags: latest,${{github.sha}}
+          file: "{context}/server/Dockerfile"
