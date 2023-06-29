@@ -22,4 +22,4 @@ jobs:
           password: ${{ secrets.PAT }}
           repository: ${{ github.repository_owner }}/${{ github.event.repository.name }}
           tags: latest,${{github.sha}}
-          file: server/Dockerfile
+          context: ./server
