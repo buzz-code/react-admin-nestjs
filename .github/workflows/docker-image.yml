@@ -13,13 +13,25 @@ jobs:
     steps:
       - name: "Build:checkout"
         uses: actions/checkout@v2
-      - name: 'Build:dockerimage-server'
+        with:
+          submodules: recursive
+      - name: 'Build:dockerimage-client'
         uses: docker/build-push-action@v4
         with:
+          context: ./client
           push: true
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.PAT }}
           repository: ${{ github.repository_owner }}/${{ github.event.repository.name }}
           tags: latest,${{github.sha}}
+      - name: 'Build:dockerimage-server'
+        uses: docker/build-push-action@v4
+        with:
           context: ./server
+          push: true
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.PAT }}
+          repository: ${{ github.repository_owner }}/${{ github.event.repository.name }}
+          tags: latest,${{github.sha}}
