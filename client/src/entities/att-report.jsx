@@ -8,8 +8,8 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
-    <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
+    <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={{ userId: 'userId' }} />,
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />,
