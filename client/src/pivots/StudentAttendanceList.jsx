@@ -1,6 +1,6 @@
-import { CommonDatagrid, CommonList } from "@shared/components/crudContainers/CommonList"
+import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
+import { CommonDatagrid } from "@shared/components/crudContainers/CommonList"
 import { CommonReferenceInputFilter } from "@shared/components/fields/CommonReferenceInputFilter";
-import { filterArrayByParams } from "@shared/utils/filtersUtil";
 import { useIsAdmin } from "@shared/utils/permissionsUtil";
 import { ReferenceField, TextField, useListContext, ReferenceInput, TextInput, AutocompleteInput, SelectField } from "react-admin"
 // import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
@@ -17,20 +17,6 @@ const filters = [
 const filterDefaultValues = {
     // ...defaultYearFilter,
 };
-
-export default (props) => {
-    const isAdmin = useIsAdmin();
-    const filtersArr = filterArrayByParams(filters, { isAdmin });
-
-    return (
-        <CommonList resource="student/pivot?extra.pivot=StudentAttendance"
-            importer={null} exporter={true}
-            filters={filtersArr} filterDefaultValues={filterDefaultValues}
-            {...props}>
-            <Datagrid />
-        </CommonList>
-    );
-}
 
 const Datagrid = ({ ...props }) => {
     const { data } = useListContext();
@@ -53,3 +39,12 @@ const Datagrid = ({ ...props }) => {
         </CommonDatagrid>
     );
 }
+
+const entity = {
+    resource: 'student/pivot?extra.pivot=StudentAttendance',
+    Datagrid,
+    filters,
+    filterDefaultValues,
+}
+
+export default getResourceComponents(entity).list;
