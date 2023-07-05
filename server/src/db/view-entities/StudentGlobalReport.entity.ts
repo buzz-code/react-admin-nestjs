@@ -9,7 +9,8 @@ import { Klass } from "../entities/Klass.entity";
 @ViewEntity("student_global_report", {
   expression: (dataSource: DataSource) => dataSource
     .createQueryBuilder()
-    .select('CONCAT(studentReferenceId, "_", teacherReferenceId, "_", klassReferenceId, "_", lessonReferenceId)', 'id')
+    .select('CONCAT(COALESCE(studentReferenceId, "null"), "_", COALESCE(teacherReferenceId, "null"), "_", ' +
+      'COALESCE(klassReferenceId, "null"), "_", COALESCE(lessonReferenceId, "null"))', 'id')
     .addSelect('user_id')
     .addSelect('year')
     .addSelect('studentReferenceId')
