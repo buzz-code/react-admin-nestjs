@@ -26,6 +26,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <TextField source="tz" />
             <TextField source="name" />
+            <TextField source="comment" />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -38,6 +39,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
         <TextInput source="tz" validate={[required(), maxLength(10)]} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
+        <TextInput source="comment" validate={[required(), maxLength(1000)]} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
         <Labeled label="שיוך לכיתות">

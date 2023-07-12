@@ -106,6 +106,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
+                comment: 'הערה',
             }
         },
         teacher: {
