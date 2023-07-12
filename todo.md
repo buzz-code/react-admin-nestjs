@@ -210,7 +210,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
 * on user creation - register, add default values for report months table
-* change to use docker swarm for production
+* change to use docker swarm for production - with github container repository
 * nest auto delete migration files
 * check docker security issues
 * add option to self connect to yemot phone
