@@ -192,6 +192,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add impersonate button in user edit form
 * email import - return good error message for non excel files
 * add student percents report with dates
+* fix show matching records with dates
+* hide original student percents report
 
 # todo
 * create a table of 'payment tracks' - with name, price and student number limit
