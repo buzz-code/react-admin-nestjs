@@ -196,6 +196,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * hide original student percents report
 * show student klass table in student edit form - maybe even with option to create\update\delete
 * add comment field to students table
+* update react-admin
 
 # todo
 * create a table of 'payment tracks' - with name, price and student number limit
