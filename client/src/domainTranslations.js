@@ -245,6 +245,20 @@ export default {
             }
         },
         student_percent_report: {
+            name: 'דוח אחוזים כללי',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                studentReferenceId: 'תלמידה',
+                teacherReferenceId: 'מורה',
+                klassReferenceId: 'כיתה',
+                lessonReferenceId: 'שיעור',
+                lessonsCount: 'סיכום מספר שיעורים',
+                absPercents: 'אחוז חיסור',
+                attPercents: 'אחוז נוכחות',
+                gradeAvg: 'ציון ממוצע',
+            }
+        },
+        'student_percent_report/pivot?extra.pivot=PercentReportWithDates': {
             name: 'דוח אחוזים לתלמידה',
             fields: {
                 ...generalResourceFieldsTranslation,

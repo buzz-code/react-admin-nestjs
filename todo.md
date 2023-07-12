@@ -191,6 +191,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add migration to fill year value if year is null or 0
 * add impersonate button in user edit form
 * email import - return good error message for non excel files
+* add student percents report with dates
 
 # todo
 * create a table of 'payment tracks' - with name, price and student number limit

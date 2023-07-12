@@ -24,6 +24,7 @@ import pageConfig from './entity-modules/page.config';
 import { ReportMonth } from './db/entities/ReportMonth.entity';
 import teacherReportStatusConfig from './entity-modules/teacher-report-status.config';
 import studentPercentReportConfig from './entity-modules/student-percent-report.config';
+import { AttReportAndGrade } from "./db/view-entities/AttReportAndGrade.entity";
 
 @Module({
     imports: [
@@ -50,6 +51,7 @@ import studentPercentReportConfig from './entity-modules/student-percent-report.
         BaseEntityModule.register(teacherReportStatusConfig),
         BaseEntityModule.register({ entity: TextByUser }),
         BaseEntityModule.register(studentPercentReportConfig),
+        BaseEntityModule.register({entity: AttReportAndGrade}),
     ]
 })
 export class EntitiesModule { }

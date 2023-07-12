@@ -26,6 +26,7 @@ import teacherReportStatus from "src/entities/teacher-report-status";
 import studentPercentReport from "src/entities/student-percent-report";
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
+import PercentReportWithDatesList from 'src/pivots/PercentReportWithDatesList';
 
 import text from "@shared/components/common-entities/text";
 import textByUser from "@shared/components/common-entities/text-by-user";
@@ -86,7 +87,6 @@ const App = () => (
 
             <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
             <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
-            <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
 
             <Resource name="klass_type" {...klassType} options={{ menuGroup: 'settings' }} icon={CategoryIcon} />
             <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
@@ -98,6 +98,7 @@ const App = () => (
             {/* <Resource name="known_absence" {...knownAbsence} /> */}
 
             {isAdmin(permissions) && <>
+              <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon}/>
               <Resource name="text" {...text} options={{ menuGroup: 'admin' }} />
               <Resource name="yemot_call" {...resourceEntityGuesser} options={{ menuGroup: 'admin' }} icon={SettingsPhoneIcon} />
               <Resource name="recieved_mail" {...recievedMail} options={{ menuGroup: 'admin' }} icon={EmailIcon} />
@@ -113,6 +114,7 @@ const App = () => (
             </>}
 
             <CustomRoutes>
+              <Route path="/percent-report-with-dates" element={<PercentReportWithDatesList />} />
               <Route path="/yemot-simulator" element={<YemotSimulator />} />
               <Route path="/tutorial" element={<Tutorial />} />
               <Route path="/pages-view" element={<PageList />} />

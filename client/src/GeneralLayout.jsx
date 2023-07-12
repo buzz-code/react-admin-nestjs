@@ -26,6 +26,7 @@ const menuGroups = [
     {
         name: 'report', icon: <AnalyticsIcon />, routes: [
             <MenuItemLink key="student-attendance" to="/student/student-attendance" primaryText="דוח נוכחות (פיבוט)" leftIcon={<SummarizeIcon />} />,
+            <MenuItemLink key="percent-report-with-dates" to="/percent-report-with-dates" primaryText="דוח אחוזים לתלמידה" leftIcon={<SummarizeIcon />} />,
         ]
     },
     { name: 'settings', icon: <SettingsIcon /> },
