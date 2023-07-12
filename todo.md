@@ -199,6 +199,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update react-admin
 
 # todo
+* add unique validator on client side - https://marmelab.com/react-admin/useUnique.html
 * create a table of 'payment tracks' - with name, price and student number limit
 * add field for user to have payment track
 * add student number validation - how to do this with year ? maybe student will need to have a year column too
