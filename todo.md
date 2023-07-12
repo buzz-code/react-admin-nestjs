@@ -194,6 +194,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add student percents report with dates
 * fix show matching records with dates
 * hide original student percents report
+* show student klass table in student edit form - maybe even with option to create\update\delete
 
 # todo
 * create a table of 'payment tracks' - with name, price and student number limit

@@ -1,10 +1,12 @@
-import { DateField, DateTimeInput, maxLength, ReferenceField, ReferenceInput, required, TextField, TextInput } from 'react-admin';
+import { DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceInput, ReferenceManyField, required, SelectField, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
+import { yearChoices } from '@shared/utils/yearFilter';
+import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -38,6 +40,14 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <TextInput source="name" validate={[required(), maxLength(500)]} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+        <Labeled label="שיוך לכיתות">
+            <ReferenceManyField reference="student_klass" target="studentReferenceId">
+                <CommonDatagrid>
+                    <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
+                    <SelectField source="year" choices={yearChoices} />
+                </CommonDatagrid>
+            </ReferenceManyField>
+        </Labeled>
     </>
 }
 
