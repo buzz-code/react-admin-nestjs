@@ -197,6 +197,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * show student klass table in student edit form - maybe even with option to create\update\delete
 * add comment field to students table
 * update react-admin
+* fix teacher report view - check lesson dates with report month dates
 
 # todo
 * add unique validator on client side - https://marmelab.com/react-admin/useUnique.html

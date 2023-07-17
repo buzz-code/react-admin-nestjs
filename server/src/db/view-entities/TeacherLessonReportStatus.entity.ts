@@ -19,6 +19,8 @@ import { Lesson } from "../entities/Lesson.entity";
     .leftJoin(ReportMonth, 'report_months', 'report_months.userId = teachers.user_id')
     .leftJoin(AttReport, 'att_reports', 'att_reports.teacherReferenceId = teachers.id AND att_reports.lessonReferenceId = lessons.id'
       + ' AND att_reports.report_date <= report_months.endDate AND att_reports.report_date >= report_months.startDate')
+    .where('COALESCE(lessons.start_date, report_months.endDate) <= report_months.endDate'
+      + ' AND COALESCE(lessons.end_date, report_months.startDate) >= report_months.startDate')
     .groupBy('teachers.id')
     .addGroupBy('lessons.id')
     .addGroupBy('report_months.id')
