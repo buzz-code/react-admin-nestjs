@@ -204,11 +204,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * move student report to be react
 * put back known_absences table, and use everywhere - in reports & student report
 * add unique validator on client side - https://marmelab.com/react-admin/useUnique.html
+* add student number validation - how to do this with year ? maybe student will need to have a year column too
+* add year filter for dashboard items - student too
+* fix student attendance list year at backend
 * create a table of 'payment tracks' - with name, price and student number limit
 * add field for user to have payment track
-* add student number validation - how to do this with year ? maybe student will need to have a year column too
-* fix student attendance list year at backend
-* add year filter for dashboard items
 * add images table so users can edit images for reports - https://marmelab.com/react-admin/ImageInput.html
 * add user image to export pdf file
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
