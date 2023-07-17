@@ -198,10 +198,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add comment field to students table
 * update react-admin
 * fix teacher report view - check lesson dates with report month dates
+* move student report to be react
 
 # todo
 * add a question to student report - if with grades or not
-* move student report to be react
 * put back known_absences table, and use everywhere - in reports & student report
 * add unique validator on client side - https://marmelab.com/react-admin/useUnique.html
 * add student number validation - how to do this with year ? maybe student will need to have a year column too

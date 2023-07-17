@@ -15,8 +15,10 @@ const filters = [
 ];
 
 const additionalBulkButtons = [
+    // <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
+    //     key='studentReportCard' name='studentReportCard' filename='תעודה' />,
     <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
-        key='studentReportCard' name='studentReportCard' filename='תעודה' />
+        key='studentReportCardReact' name='studentReportCardReact' filename='תעודה' />
 ];
 
 const Datagrid = ({ isAdmin, ...props }) => {

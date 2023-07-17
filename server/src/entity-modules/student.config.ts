@@ -8,6 +8,7 @@ import { AttReport } from "src/db/entities/AttReport.entity";
 import { CommonReportData } from "@shared/utils/report/types";
 import studentReportCard from "../reports/studentReportCard";
 import { BulkToPdfReportGenerator } from "@shared/utils/report/report.generators";
+import studentReportCardReact from "src/reports/studentReportCardReact";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -74,6 +75,7 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
 
     reportsDict = {
         studentReportCard: new BulkToPdfReportGenerator(studentReportCard),
+        studentReportCardReact: new BulkToPdfReportGenerator(studentReportCardReact),
     };
     async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
         if (req.parsed.extra.report in this.reportsDict) {
