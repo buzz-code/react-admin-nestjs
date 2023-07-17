@@ -200,6 +200,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix teacher report view - check lesson dates with report month dates
 
 # todo
+* add a question to student report - if with grades or not
+* move student report to be react
+* put back known_absences table, and use everywhere - in reports & student report
 * add unique validator on client side - https://marmelab.com/react-admin/useUnique.html
 * create a table of 'payment tracks' - with name, price and student number limit
 * add field for user to have payment track
