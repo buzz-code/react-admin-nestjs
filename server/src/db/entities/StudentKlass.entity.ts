@@ -28,6 +28,8 @@ export class StudentKlass implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
   async fillFields() {
+    fillDefaultYearValue(this);
+  
     const dataSource = await getDataSource([Student, Klass, User, KlassType, Teacher]);
 
     this.studentReferenceId = await findOneAndAssignReferenceId(
@@ -36,8 +38,6 @@ export class StudentKlass implements IHasUserId {
     this.klassReferenceId = await findOneAndAssignReferenceId(
       dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
     );
-
-    fillDefaultYearValue(this);
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

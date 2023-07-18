@@ -26,13 +26,13 @@ export class Lesson implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
   async fillFields() {
+    fillDefaultYearValue(this);
+   
     const dataSource = await getDataSource([Teacher, User]);
 
     this.teacherReferenceId = await findOneAndAssignReferenceId(
       dataSource, Teacher, { year: this.year, tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
     );
-
-    fillDefaultYearValue(this);
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

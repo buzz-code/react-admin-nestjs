@@ -200,9 +200,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix teacher report view - check lesson dates with report month dates
 * move student report to be react
 * add a question to student report - if with grades or not
+* move fillDefaultYearValue to be the first item
 
 # todo
-* move fillDefaultYearValue to be the first item
 * add ability for html export for reports for investigations
 * put back known_absences table, and use everywhere - in reports & student report
 * add unique validator on client side - https://marmelab.com/react-admin/useUnique.html

@@ -30,6 +30,8 @@ export class AttReport implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
   async fillFields() {
+    fillDefaultYearValue(this);
+
     const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
 
     this.studentReferenceId = await findOneAndAssignReferenceId(
@@ -44,8 +46,6 @@ export class AttReport implements IHasUserId {
     this.lessonReferenceId = await findOneAndAssignReferenceId(
       dataSource, Lesson, { year: this.year, key: this.lessonId }, this.userId, this.lessonReferenceId, this.lessonId
     );
-
-    fillDefaultYearValue(this);
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
