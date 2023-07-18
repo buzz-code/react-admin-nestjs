@@ -50,8 +50,8 @@ const ShowMatchingAttReportsButton = ({ ...props }) => {
         teacherReferenceId,
         klassReferenceId,
         lessonReferenceId,
-        'reportDate:$gte': filterValues.extra.fromDate,
-        'reportDate:$lte': filterValues.extra.toDate,
+        'reportDate:$gte': filterValues.extra?.fromDate,
+        'reportDate:$lte': filterValues.extra?.toDate,
     };
 
     return (
