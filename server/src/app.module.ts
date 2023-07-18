@@ -4,6 +4,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { AppController } from 'src/app.controller';
 import { AppService } from 'src/app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { RequestContextModule } from 'nestjs-request-context';
 import { LoggerModule } from 'nestjs-pino';
 import { typeOrmModuleConfig } from '@shared/config/typeorm.config';
 import { AuthModule } from '@shared/auth/auth.module';
@@ -16,6 +17,7 @@ import { EntitiesModule } from './entities.module';
 
 @Module({
   imports: [
+    RequestContextModule,
     LoggerModule.forRoot(),
     ThrottlerModule.forRoot({ ttl: 60, limit: 120 }),
     TypeOrmModule.forRoot(typeOrmModuleConfig),
