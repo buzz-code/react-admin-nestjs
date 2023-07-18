@@ -202,10 +202,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add a question to student report - if with grades or not
 * move fillDefaultYearValue to be the first item
 * add ability for html export for reports for investigations
+* add unique validator on client side - https://marmelab.com/react-admin/useUnique.html
 
 # todo
+* think how can we use unique combination for bulk insert- maybe use back req.user
 * put back known_absences table, and use everywhere - in reports & student report
-* add unique validator on client side - https://marmelab.com/react-admin/useUnique.html
 * add student number validation - how to do this with year ? maybe student will need to have a year column too
 * add year filter for dashboard items - student too
 * fix student attendance list year at backend

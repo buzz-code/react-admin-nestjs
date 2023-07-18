@@ -1,4 +1,4 @@
-import { AutocompleteInput, BooleanInput, DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceInput, ReferenceManyField, required, SelectField, TextField, TextInput } from 'react-admin';
+import { AutocompleteInput, BooleanInput, DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceInput, ReferenceManyField, required, SelectField, TextField, TextInput, useUnique } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -43,22 +43,23 @@ const Datagrid = ({ isAdmin, ...props }) => {
 }
 
 const Inputs = ({ isCreate, isAdmin }) => {
+    const unique = useUnique();
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <TextInput source="tz" validate={[required(), maxLength(10)]} />
+        <TextInput source="tz" validate={[required(), maxLength(10), unique()]} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
-        <TextInput source="comment" validate={[required(), maxLength(1000)]} />
+        <TextInput source="comment" validate={[maxLength(1000)]} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
-        <Labeled label="שיוך לכיתות">
+        {!isCreate && <Labeled label="שיוך לכיתות">
             <ReferenceManyField reference="student_klass" target="studentReferenceId">
                 <CommonDatagrid>
                     <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
                     <SelectField source="year" choices={yearChoices} />
                 </CommonDatagrid>
             </ReferenceManyField>
-        </Labeled>
+        </Labeled>}
     </>
 }
 

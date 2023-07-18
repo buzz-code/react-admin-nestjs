@@ -1,4 +1,4 @@
-import { DateField, DateInput, DateTimeInput, maxLength, NumberInput, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, TextField, TextInput, AutocompleteInput, SelectField } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, maxLength, NumberInput, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, TextField, TextInput, AutocompleteInput, SelectField, useUnique } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
@@ -39,10 +39,11 @@ const Datagrid = ({ isAdmin, ...props }) => {
 }
 
 const Inputs = ({ isCreate, isAdmin }) => {
+    const unique = useUnique();
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <NumberInput source="key" validate={required()} />
+        <NumberInput source="key" validate={[required(), unique()]} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
         <ReferenceArrayInput source="klassReferenceIds" reference='klass' />
         <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />
