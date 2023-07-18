@@ -115,7 +115,8 @@ const ReportTableHeaderItem = ({ level, label, value }) => {
     const HeaderTag = `h${level}` as keyof JSX.IntrinsicElements;
 
     return (
-        <HeaderTag style={headerTagStyle}>{label}:
+        <HeaderTag style={headerTagStyle}>
+            {label}:&nbsp;
             <span style={headerValueStyle}>{value}</span>
         </HeaderTag>
     );
