@@ -201,6 +201,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * move student report to be react
 
 # todo
+* move fillDefaultYearValue to be the first item
+* add ability for html export for reports for investigations
 * add a question to student report - if with grades or not
 * put back known_absences table, and use everywhere - in reports & student report
 * add unique validator on client side - https://marmelab.com/react-admin/useUnique.html
