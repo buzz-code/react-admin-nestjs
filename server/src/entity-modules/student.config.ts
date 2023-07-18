@@ -9,6 +9,7 @@ import { CommonReportData } from "@shared/utils/report/types";
 import studentReportCard from "../reports/studentReportCard";
 import { BulkToPdfReportGenerator } from "@shared/utils/report/report.generators";
 import studentReportCardReact from "src/reports/studentReportCardReact";
+import { getCurrentHebrewYear } from "@shared/utils/entity/year.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -80,10 +81,18 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
     async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
         if (req.parsed.extra.report in this.reportsDict) {
             const generator = this.reportsDict[req.parsed.extra.report];
+            const extraParams = {
+                year: req.parsed.extra.year ?? getCurrentHebrewYear(),
+                grades: req.parsed.extra.grades,
+            }
             const params = req.parsed.extra.ids
                 .toString()
                 .split(',')
-                .map(id => ({ userId: req.auth.id, studentId: id }));
+                .map(id => ({
+                    userId: req.auth.id,
+                    studentId: id,
+                    ...extraParams
+                }));
             return {
                 generator,
                 params,

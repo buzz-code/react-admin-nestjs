@@ -1,11 +1,11 @@
-import { DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceInput, ReferenceManyField, required, SelectField, TextField, TextInput } from 'react-admin';
+import { AutocompleteInput, BooleanInput, DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceInput, ReferenceManyField, required, SelectField, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { yearChoices } from '@shared/utils/yearFilter';
+import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 
 const filters = [
@@ -14,11 +14,18 @@ const filters = [
     <TextInput source="name:$cont" alwaysOn />,
 ];
 
+const filterDefaultValues = {
+    ...defaultYearFilter,
+};
+
 const additionalBulkButtons = [
     // <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
     //     key='studentReportCard' name='studentReportCard' filename='תעודה' />,
     <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
-        key='studentReportCardReact' name='studentReportCardReact' filename='תעודה' />
+        key='studentReportCardReact' name='studentReportCardReact' filename='תעודה' defaultRequestValues={filterDefaultValues}>
+        <AutocompleteInput source="year" label="שנה" choices={yearChoices} />
+        <BooleanInput source="grades" label="עם ציונים" />
+    </BulkReportButton>
 ];
 
 const Datagrid = ({ isAdmin, ...props }) => {

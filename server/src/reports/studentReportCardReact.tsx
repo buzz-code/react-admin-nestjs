@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { User } from 'src/db/entities/User.entity';
 import { Student } from 'src/db/entities/Student.entity';
-import { AttReport } from 'src/db/entities/AttReport.entity';
 import { IGetReportDataFunction, ReactToPdfReportGenerator } from '@shared/utils/report/report.generators';
 import { StudentBaseKlass } from 'src/db/view-entities/StudentBaseKlass.entity';
+import { StudentGlobalReport } from 'src/db/view-entities/StudentGlobalReport.entity';
 
 interface AppProps {
     user: User;
     student: Student;
     studentBaseKlass: StudentBaseKlass;
     reportParams: any;
-    reports: AttReport[];
+    reports: StudentGlobalReport[];
     approved_abs_count: any;
     att_grade_effect: any[];
     grade_names: any[];
@@ -176,37 +176,43 @@ const ReportTableContent = ({ reportData, reportParams, approved_abs_count, att_
     );
 }
 
-const ReportItem = ({ reportParams, report, att_grade_effect, grade_names }) => {
+interface ReportItemProps {
+    reportParams: AppProps['reportParams'];
+    report: AppProps['reports'][number];
+    att_grade_effect: AppProps['att_grade_effect'];
+    grade_names: AppProps['grade_names'];
+}
+const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, att_grade_effect, grade_names }) => {
     if (
         !(
-            (!reportParams.forceGrades || (report.grade != undefined && report.grade != null)) &&
-            (!reportParams.forceAtt || (report.howManyLessons))
+            (!reportParams.forceGrades || (report.gradeAvg != undefined && report.gradeAvg != null)) &&
+            (!reportParams.forceAtt || (report.lessonsCount))
         )
     ) {
         return null;
     }
 
-    var att_percents = Math.round(((report.howManyLessons - report.absCount) / report.howManyLessons) * 100)
+    var att_percents = Math.round(((report.lessonsCount - report.absCount) / report.lessonsCount) * 100)
 
     var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents)?.effect ?? 0
-    var isOriginalGrade = report.grade > 100 || report.grade == 0
-    var affected_grade = isOriginalGrade ? report.grade : Math.min(100, report.grade + grade_effect)
+    var isOriginalGrade = report.gradeAvg > 100 || report.gradeAvg == 0
+    var affected_grade = isOriginalGrade ? report.gradeAvg : Math.min(100, report.gradeAvg + grade_effect)
     var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name
 
     return <tr>
         <td style={fullCellStyle}>{report.lesson && report.lesson.name}</td>
         <td style={fullCellStyle}>{report.teacher && report.teacher.name}</td>
 
-        {(report.howManyLessons && report.howManyLessons * 2 == report.absCount)
+        {(report.lessonsCount && report.lessonsCount * 2 == report.absCount)
             ? <>
-                <td style={fullCellStyle}>{report.grade}</td>
+                <td style={fullCellStyle}>{report.gradeAvg}</td>
                 <td style={fullCellStyle}>&nbsp;</td>
             </>
             : <>
                 {reportParams.grades && (
                     <td style={fullCellStyle}>
-                        {(report.grade != undefined && report.grade != null)
-                            ? (matching_grade_name ?? affected_grade)
+                        {(report.gradeAvg != undefined && report.gradeAvg != null)
+                            ? (matching_grade_name ?? (affected_grade + '%'))
                             : <>&nbsp;</>
                         }
                     </td>
@@ -217,8 +223,8 @@ const ReportItem = ({ reportParams, report, att_grade_effect, grade_names }) => 
 }
 
 const ReportAbsTotal = ({ reports, reportParams, approved_abs_count }) => {
-    var reportsNoSpecial = reports.filter(item => item.howManyLessons * 2 != item.absCount)
-    var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.howManyLessons, 0)
+    var reportsNoSpecial = reports.filter(item => item.lessonsCount * 2 != item.absCount)
+    var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.lessonsCount, 0)
     var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.absCount, 0)
     var total_att_count = total_lesson_count - total_abs_count
 
@@ -242,11 +248,17 @@ const ReportAbsTotal = ({ reports, reportParams, approved_abs_count }) => {
     </>
 }
 
-const getReportData: IGetReportDataFunction<any, AppProps> = async (params, dataSource) => {
-    const [user, student, attReports, studentBaseKlass] = await Promise.all([
+interface IReportParams {
+    userId: number;
+    studentId: number;
+    year: number;
+    grades: boolean;
+}
+const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
+    const [user, student, studentReports, studentBaseKlass] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
-        dataSource.getRepository(AttReport).find({
+        dataSource.getRepository(StudentGlobalReport).find({
             where: { studentReferenceId: params.studentId },
             relations: {
                 lesson: true,
@@ -260,8 +272,8 @@ const getReportData: IGetReportDataFunction<any, AppProps> = async (params, data
         user,
         student,
         studentBaseKlass,
-        reportParams: {},
-        reports: attReports,
+        reportParams: params,
+        reports: studentReports,
         approved_abs_count: {},
         att_grade_effect: null,
         grade_names: null,
