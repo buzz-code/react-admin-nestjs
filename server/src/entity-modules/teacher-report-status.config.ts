@@ -9,6 +9,7 @@ import { TeacherReportStatus } from "src/db/view-entities/TeacherReportStatus.en
 import teacherReportFile, { TeacherReportFileData } from "src/reports/teacherReportFile";
 import * as JSZip from 'jszip';
 import { getUserMailAddressFrom, validateUserHasPaid } from "@shared/base-entity/base-entity.util";
+import { getUserIdFromUser } from "@shared/auth/auth.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -37,7 +38,10 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
             const params = req.parsed.extra.ids
                 .toString()
                 .split(',')
-                .map(id => ({ userId: req.auth.id, id }));
+                .map(id => ({
+                    userId: getUserIdFromUser(req.auth),
+                    id,
+                }));
             return {
                 generator,
                 params,

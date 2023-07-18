@@ -10,6 +10,7 @@ import studentReportCard from "../reports/studentReportCard";
 import { BulkToPdfReportGenerator } from "@shared/utils/report/report.generators";
 import studentReportCardReact from "src/reports/studentReportCardReact";
 import { getCurrentHebrewYear } from "@shared/utils/entity/year.util";
+import { getUserIdFromUser } from "@shared/auth/auth.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -89,7 +90,7 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
                 .toString()
                 .split(',')
                 .map(id => ({
-                    userId: req.auth.id,
+                    userId: getUserIdFromUser(req.auth),
                     studentId: id,
                     ...extraParams
                 }));
