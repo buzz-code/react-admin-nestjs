@@ -34,7 +34,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <NumberInput source="key" validate={[required(), unique()]} />
+        <NumberInput source="key" validate={[required(), isCreate && unique()]} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
         <CommonReferenceInput source="klassTypeReferenceId" reference="klass_type" validate={required()} dynamicFilter={{ userId: 'userId' }} />
         <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />

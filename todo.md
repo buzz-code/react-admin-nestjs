@@ -206,6 +206,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * think how can we use unique combination for bulk insert- maybe use back req.user
 
 # todo
+* put back unique for edit records - after they fix https://github.com/marmelab/react-admin/issues/9111
 * put back known_absences table, and use everywhere - in reports & student report
 * add student number validation - how to do this with year ? maybe student will need to have a year column too
 * add year filter for dashboard items - student too
