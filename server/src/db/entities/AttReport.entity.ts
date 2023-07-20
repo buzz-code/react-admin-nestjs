@@ -64,7 +64,7 @@ export class AttReport implements IHasUserId {
   @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
-  @ValidateIf((attReport: AttReport) => !Boolean(attReport.studentTz), { always: true })
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.studentTz) && Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   studentReferenceId: number;
@@ -74,7 +74,7 @@ export class AttReport implements IHasUserId {
   @Column("varchar", { name: "teacher_id", length: 10, nullable: true })
   teacherId: string;
 
-  @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherId), { always: true })
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherId) && Boolean(attReport.teacherReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   teacherReferenceId: number;
@@ -84,7 +84,7 @@ export class AttReport implements IHasUserId {
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number | null;
 
-  @ValidateIf((attReport: AttReport) => !Boolean(attReport.klassId), { always: true })
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.klassId) && Boolean(attReport.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   klassReferenceId: number;
@@ -93,7 +93,7 @@ export class AttReport implements IHasUserId {
   @Column("int", { name: "lesson_id", nullable: true })
   lessonId: number;
 
-  @ValidateIf((attReport: AttReport) => !Boolean(attReport.lessonId), { always: true })
+  @ValidateIf((attReport: AttReport) => !Boolean(attReport.lessonId) && Boolean(attReport.lessonReferenceId), { always: true })
   @Column({ nullable: true })
   lessonReferenceId: number;
 

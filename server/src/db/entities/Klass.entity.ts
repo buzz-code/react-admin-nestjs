@@ -47,7 +47,7 @@ export class Klass implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
-  @IsUniqueCombination(['userId'], [Klass], { always: true })
+  @IsUniqueCombination(['userId'], [Klass, KlassType, User, Teacher], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("int", { name: "key" })
   key: number;
@@ -63,7 +63,7 @@ export class Klass implements IHasUserId {
   @Column("int", { name: "klass_type_id", nullable: true })
   klassTypeId: number | null;
 
-  @ValidateIf((attReport: Klass) => !Boolean(attReport.klassTypeId), { always: true })
+  @ValidateIf((attReport: Klass) => !Boolean(attReport.klassTypeId) && Boolean(attReport.klassTypeReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   klassTypeReferenceId: number;

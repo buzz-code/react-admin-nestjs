@@ -29,7 +29,7 @@ export class StudentKlass implements IHasUserId {
   @BeforeUpdate()
   async fillFields() {
     fillDefaultYearValue(this);
-  
+
     const dataSource = await getDataSource([Student, Klass, User, KlassType, Teacher]);
 
     this.studentReferenceId = await findOneAndAssignReferenceId(
@@ -56,7 +56,7 @@ export class StudentKlass implements IHasUserId {
   @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
-  @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.studentTz), { always: true })
+  @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.studentTz) && Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   studentReferenceId: number;
@@ -66,7 +66,7 @@ export class StudentKlass implements IHasUserId {
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number;
 
-  @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.klassId), { always: true })
+  @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.klassId) && Boolean(attReport.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   klassReferenceId: number;

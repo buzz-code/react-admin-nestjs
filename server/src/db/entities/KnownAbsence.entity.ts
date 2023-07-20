@@ -47,7 +47,7 @@ export class KnownAbsence implements IHasUserId {
   @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
-  @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.studentTz), { always: true })
+  @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.studentTz) && Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   studentReferenceId: number;
