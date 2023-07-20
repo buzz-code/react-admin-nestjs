@@ -59,7 +59,7 @@ export default {
             }
         },
         klass_type: {
-            name: 'סוג כיתה |||| סוגי כיתה',
+            name: 'שיוך כיתה |||| שיוך כיתות',
             fields: {
                 ...generalResourceFieldsTranslation,
                 klassTypeEnum: 'סוג כיתה בדו"ח',

@@ -205,6 +205,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add unique validator on client side - https://marmelab.com/react-admin/useUnique.html
 * think how can we use unique combination for bulk insert- maybe use back req.user
 * add images table so users can edit images for reports - https://marmelab.com/react-admin/ImageInput.html
+* change klass_type to handle track type for klass
 
 # todo
 * add a hack for netfree images

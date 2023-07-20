@@ -18,7 +18,9 @@ function getConfig(): BaseEntityModuleOptions {
                 student: {},
                 teacher: {},
                 lesson: {},
-                klass: {},
+                klass: {
+                    eager: true,
+                },
             }
         },
         exporter: {

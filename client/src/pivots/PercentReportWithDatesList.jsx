@@ -14,6 +14,7 @@ const filters = [
     // <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={{ userId: 'userId' }} />,
+    <CommonReferenceInputFilter source="klass.klassTypeReferenceId" reference="klass_type" dynamicFilter={{ userId: 'userId' }} />,
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ userId: 'userId', teacherReferenceId: 'teacherReferenceId', 'klassReferenceIds:$cont': 'klassReferenceId' }} />,
     <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
