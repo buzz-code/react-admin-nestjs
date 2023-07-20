@@ -38,6 +38,8 @@ export class StudentKlass implements IHasUserId {
     this.klassReferenceId = await findOneAndAssignReferenceId(
       dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
     );
+
+    dataSource.destroy();
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

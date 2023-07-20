@@ -29,6 +29,8 @@ export class KnownAbsence implements IHasUserId {
     this.studentReferenceId = await findOneAndAssignReferenceId(
       dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
     );
+
+    dataSource.destroy();
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

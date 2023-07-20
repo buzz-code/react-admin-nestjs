@@ -34,6 +34,8 @@ export class Klass implements IHasUserId {
     this.teacherReferenceId = await findOneAndAssignReferenceId(
       dataSource, Teacher, { year: this.year, tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
     );
+
+    dataSource.destroy();
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

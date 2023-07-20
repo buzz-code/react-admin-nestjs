@@ -46,6 +46,8 @@ export class AttReport implements IHasUserId {
     this.lessonReferenceId = await findOneAndAssignReferenceId(
       dataSource, Lesson, { year: this.year, key: this.lessonId }, this.userId, this.lessonReferenceId, this.lessonId
     );
+
+    dataSource.destroy();
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
