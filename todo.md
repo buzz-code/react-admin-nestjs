@@ -207,7 +207,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add images table so users can edit images for reports - https://marmelab.com/react-admin/ImageInput.html
 
 # todo
-* add a hack for netfree
+* add a hack for netfree images
+* use import get from 'lodash/get'; everywhere with record[source]
+* add user image to export pdf file
 * create common auto complete and add noOptionsText translation
 * put back unique for edit records - after they fix https://github.com/marmelab/react-admin/issues/9111
 * put back known_absences table, and use everywhere - in reports & student report
@@ -216,7 +218,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix student attendance list year at backend
 * create a table of 'payment tracks' - with name, price and student number limit
 * add field for user to have payment track
-* add user image to export pdf file
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
 * on user creation - register, add default values for report months table
