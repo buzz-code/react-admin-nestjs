@@ -36,6 +36,7 @@ import importFile from '@shared/components/common-entities/import-file';
 import mailAddress from '@shared/components/common-entities/mail-address';
 import recievedMail from '@shared/components/common-entities/recieved-mail';
 import page from '@shared/components/common-entities/page';
+import image from '@shared/components/common-entities/image';
 
 import { isShowUsersData, isEditPagesData, isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
@@ -57,6 +58,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import ImageIcon from '@mui/icons-material/Image';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SettingsPhoneIcon from '@mui/icons-material/SettingsPhone';
 import EmailIcon from '@mui/icons-material/Email';
@@ -92,6 +94,7 @@ const App = () => (
             <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
             <Resource name="text_by_user" {...textByUser} options={{ menuGroup: 'settings' }} icon={RateReviewIcon} />
             <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} icon={AlternateEmailIcon} />
+            <Resource name="image" {...image} options={{ menuGroup: 'settings' }} icon={ImageIcon} />
             <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
 
             {/* <Resource name="grade" {...resourceEntityGuesser} /> */}

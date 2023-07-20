@@ -20,6 +20,7 @@ import { YemotCall } from '@shared/entities/YemotCall.entity';
 import { TextByUser } from '@shared/view-entities/TextByUser.entity';
 import mailAddressConfig from '@shared/utils/mail/mail-address.config';
 import { RecievedMail } from '@shared/entities/RecievedMail.entity';
+import { Image } from "@shared/entities/Image.entity";
 import pageConfig from './entity-modules/page.config';
 import { ReportMonth } from './db/entities/ReportMonth.entity';
 import teacherReportStatusConfig from './entity-modules/teacher-report-status.config';
@@ -54,6 +55,7 @@ import { StudentGlobalReport } from "./db/view-entities/StudentGlobalReport.enti
         BaseEntityModule.register(studentPercentReportConfig),
         BaseEntityModule.register({ entity: AttReportAndGrade }),
         BaseEntityModule.register({ entity: StudentGlobalReport }),
+        BaseEntityModule.register({ entity: Image }),
     ]
 })
 export class EntitiesModule { }

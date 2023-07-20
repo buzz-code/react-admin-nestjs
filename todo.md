@@ -204,8 +204,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add ability for html export for reports for investigations
 * add unique validator on client side - https://marmelab.com/react-admin/useUnique.html
 * think how can we use unique combination for bulk insert- maybe use back req.user
+* add images table so users can edit images for reports - https://marmelab.com/react-admin/ImageInput.html
 
 # todo
+* add a hack for netfree
+* create common auto complete and add noOptionsText translation
 * put back unique for edit records - after they fix https://github.com/marmelab/react-admin/issues/9111
 * put back known_absences table, and use everywhere - in reports & student report
 * add student number validation - how to do this with year ? maybe student will need to have a year column too
@@ -213,7 +216,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix student attendance list year at backend
 * create a table of 'payment tracks' - with name, price and student number limit
 * add field for user to have payment track
-* add images table so users can edit images for reports - https://marmelab.com/react-admin/ImageInput.html
 * add user image to export pdf file
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)

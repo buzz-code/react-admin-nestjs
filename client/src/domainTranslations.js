@@ -273,5 +273,14 @@ export default {
                 gradeAvg: 'ציון ממוצע',
             }
         },
+        image: {
+            name: 'תמונה |||| תמונות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                fileData: 'תמונה',
+                'fileData.src': 'תמונה',
+                imageTarget: 'יעד',
+            }
+        }
     }
 };
