@@ -266,6 +266,7 @@ export default {
                 studentReferenceId: 'תלמידה',
                 teacherReferenceId: 'מורה',
                 klassReferenceId: 'כיתה',
+                'klass.klassTypeReferenceId': 'שיוך כיתה',
                 lessonReferenceId: 'שיעור',
                 lessonsCount: 'סיכום מספר שיעורים',
                 absPercents: 'אחוז חיסור',
