@@ -206,10 +206,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * think how can we use unique combination for bulk insert- maybe use back req.user
 * add images table so users can edit images for reports - https://marmelab.com/react-admin/ImageInput.html
 * change klass_type to handle track type for klass
+* use import get from 'lodash/get'; everywhere with record[source]
 
 # todo
 * add a hack for netfree images
-* use import get from 'lodash/get'; everywhere with record[source]
 * add user image to export pdf file
 * create common auto complete and add noOptionsText translation
 * put back unique for edit records - after they fix https://github.com/marmelab/react-admin/issues/9111
