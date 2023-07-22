@@ -52,8 +52,8 @@ export default {
             name: 'כיתה |||| כיתות',
             fields: {
                 ...generalResourceFieldsTranslation,
-                klassTypeId: 'סוג כיתה',
-                klassTypeReferenceId: 'סוג כיתה',
+                klassTypeId: 'שיוך כיתה',
+                klassTypeReferenceId: 'שיוך כיתה',
                 teacherId: 'מורה',
                 teacherReferenceId: 'מורה',
             }
