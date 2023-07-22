@@ -211,7 +211,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 # todo
 * create common auto complete and add noOptionsText translation
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
+* update react-admin
 * put back unique for edit records - after they fix https://github.com/marmelab/react-admin/issues/9111
+* create custom useUnique to add userId filter when admin
 * add student number validation - how to do this with year ? maybe student will need to have a year column too
 * add year filter for dashboard items - student too
 * fix student attendance list year at backend
