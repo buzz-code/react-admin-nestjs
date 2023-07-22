@@ -209,23 +209,22 @@ https://github.com/tinovyatkin/nest-puppeteer
 * use import get from 'lodash/get'; everywhere with record[source]
 
 # todo
-* add a hack for netfree images
-* add user image to export pdf file
 * create common auto complete and add noOptionsText translation
+* update StudentKlassReport to show klass ids with ReferenceArrayInput
 * put back unique for edit records - after they fix https://github.com/marmelab/react-admin/issues/9111
-* put back known_absences table, and use everywhere - in reports & student report
 * add student number validation - how to do this with year ? maybe student will need to have a year column too
 * add year filter for dashboard items - student too
 * fix student attendance list year at backend
 * create a table of 'payment tracks' - with name, price and student number limit
 * add field for user to have payment track
-* update StudentKlassReport to show klass ids with ReferenceArrayInput
-* when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
+* put back known_absences table, and use everywhere - in reports & student report
 * on user creation - register, add default values for report months table
 * change to use docker swarm for production - with github container repository
 * nest auto delete migration files
 * check docker security issues
 * add option to self connect to yemot phone
+* add user image to export pdf file
+* when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
 * 
 
 # todo later
