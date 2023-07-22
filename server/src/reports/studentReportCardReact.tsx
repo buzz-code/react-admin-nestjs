@@ -4,9 +4,14 @@ import { Student } from 'src/db/entities/Student.entity';
 import { IGetReportDataFunction, ReactToPdfReportGenerator } from '@shared/utils/report/report.generators';
 import { StudentBaseKlass } from 'src/db/view-entities/StudentBaseKlass.entity';
 import { StudentGlobalReport } from 'src/db/view-entities/StudentGlobalReport.entity';
+import { Image, ImageTargetEnum } from '@shared/entities/Image.entity';
 
 interface AppProps {
     user: User;
+    images: {
+        reportLogo: Image;
+        reportBottomLogo: Image;
+    };
     student: Student;
     studentBaseKlass: StudentBaseKlass;
     reportParams: any;
@@ -24,22 +29,44 @@ const App: React.FunctionComponent<AppProps> = (props) => {
     return (
         <div dir='rtl' style={appStyle}>
             <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-            <Header />
+            <Header image={props.images.reportLogo} />
             <ReportTable student={props.student} studentBaseKlass={props.studentBaseKlass}
                 reports={props.reports} reportParams={props.reportParams} approved_abs_count={props.approved_abs_count}
                 att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
             <PersonalNote note={props.reportParams.personalNote} />
             <YomanetNotice />
-            <Footer />
+            <Footer image={props.images.reportBottomLogo} />
         </div>
     );
 }
 
-const Header = () => <div>לוגו</div>;
+const headerImageStyle: React.CSSProperties = {
+    width: '95%',
+    margin: '0 2.5%',
+}
+const Header = ({ image }) => image && (
+    <img src={image.fileData.src} style={headerImageStyle} />
+);
 
-const Footer = () => <div>לוגו תחתי</div>;
+const footerImageWrapperStyle: React.CSSProperties = {
+    position: 'fixed',
+    bottom: 0,
+    right: 0,
+    width: '100%',
+}
+const footerImageStyle: React.CSSProperties = {
+    width: '95%',
+    margin: '0 2.5%',
+}
+const Footer = ({ image }) => image && (
+    <div style={footerImageWrapperStyle}>
+        <img src={image.fileData.src} style={footerImageStyle} />
+    </div>
+);
 
-const PersonalNote = ({ note }) => note && (<h4>{note}</h4>);
+const PersonalNote = ({ note }) => note && (
+    <h4>{note}</h4>
+);
 
 const yomanetNoticeStyle: React.CSSProperties = {
     position: 'absolute',
@@ -256,7 +283,7 @@ interface IReportParams {
     grades: boolean;
 }
 const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
-    const [user, student, studentReports, studentBaseKlass] = await Promise.all([
+    const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
         dataSource.getRepository(StudentGlobalReport).find({
@@ -268,9 +295,12 @@ const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (pa
             }
         }),
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
+        dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportLogo }),
+        dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportBottomLogo }),
     ])
     return {
         user,
+        images: { reportLogo, reportBottomLogo },
         student,
         studentBaseKlass,
         reportParams: params,
