@@ -225,6 +225,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * nest auto delete migration files
 * check docker security issues
 * add option to self connect to yemot phone
+* put back validation for validateUserHasPaid
 * add user image to export pdf file
 * when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
 * 
