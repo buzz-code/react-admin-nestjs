@@ -209,6 +209,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * use import get from 'lodash/get'; everywhere with record[source]
 
 # todo
+* add option to have an explanation row in excel import files
+* add new field to klass_type - teacher name
+* copy validations from att-report entity to grade entity
+* add importer columns to att report & grade
+* update teacher report file to include more details
 * create common auto complete and add noOptionsText translation
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * update react-admin
