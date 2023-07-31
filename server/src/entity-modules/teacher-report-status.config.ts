@@ -41,6 +41,7 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                 .map(id => ({
                     userId: getUserIdFromUser(req.auth),
                     id,
+                    isGrades: req.parsed.extra?.isGrades,
                 }));
             return {
                 generator,
@@ -54,7 +55,11 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
         const params = req.parsed.extra.ids
             .toString()
             .split(',')
-            .map(id => ({ userId: req.auth.id, id }));
+            .map(id => ({
+                userId: req.auth.id,
+                id,
+                isGrades: req.parsed.extra?.isGrades,
+            }));
         switch (req.parsed.extra.action) {
             case 'teacherReportFile': {
                 if (params.length > 1) {

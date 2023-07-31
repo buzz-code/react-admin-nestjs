@@ -39,8 +39,12 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
             lessonStudents[lesson.id] = [];
         }
     }
+
+    const dataCols = params.isGrades ? ['ציונים'] : ['מספר שיעורים', 'חיסורים']
+    const headerRow = ['קוד כיתה', 'ת.ז.', 'שם תלמידה', ...dataCols, 'הערות'];
+
     return lessons.map(lesson => ({
-        headerRow: ['קוד כיתה', 'ת.ז.', 'שם תלמידה', 'ציונים', 'הערות'],
+        headerRow,
         formattedData: lessonStudents[lesson.id].map(sk => (
             [sk.klass.key, sk.student.tz, sk.student.name]
         )),
