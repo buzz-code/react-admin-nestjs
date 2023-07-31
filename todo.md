@@ -208,12 +208,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * change klass_type to handle track type for klass
 * use import get from 'lodash/get'; everywhere with record[source]
 * add option to have a custom email header for some tables - att-report & grade
+* add importer columns to att report & grade
+* update teacher report file to include more details
 
 # todo
 * add new field to klass_type - teacher name
 * copy validations from att-report entity to grade entity
-* add importer columns to att report & grade
-* update teacher report file to include more details
 * create common auto complete and add noOptionsText translation
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * update react-admin
