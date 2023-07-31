@@ -31,6 +31,7 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
                 },
                 relations: {
                     student: true,
+                    klass: true,
                 }
             });
             lessonStudents[lesson.id] = students;
@@ -39,9 +40,19 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
         }
     }
     return lessons.map(lesson => ({
-        headerRow: ['תז', 'שם תלמידה'],
-        formattedData: lessonStudents[lesson.id].map(sk => ([sk.student.tz, sk.student.name])),
+        headerRow: ['קוד כיתה', 'ת.ז.', 'שם תלמידה', 'ציונים', 'הערות'],
+        formattedData: lessonStudents[lesson.id].map(sk => (
+            [sk.klass.key, sk.student.tz, sk.student.name]
+        )),
         sheetName: teacherReportStatus.reportMonthName ?? 'דיווח נוכחות',
+        specialFields: [
+            { cell: { c: 0, r: 0 }, value: 'מורה: ' },
+            { cell: { c: 1, r: 0 }, value: teacher.name },
+            { cell: { c: 2, r: 0 }, value: teacher.tz },
+            { cell: { c: 0, r: 1 }, value: 'שיעור:' },
+            { cell: { c: 1, r: 1 }, value: lesson.name },
+            { cell: { c: 2, r: 1 }, value: lesson.key.toString() },
+        ],
         user,
         teacher,
         lesson,
