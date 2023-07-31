@@ -38,9 +38,25 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'howManyLessons', label: 'מספר שיעורים' },
                     { value: 'absCount', label: 'מספר חיסורים' },
                     { value: 'approvedAbsCount', label: 'מספר חיסורים מאושרים' },
-                    { value: 'sheetName', label: 'חודש דיווח' },
+                    // { value: 'sheetName', label: 'חודש דיווח' },
                     { value: 'comments', label: 'הערות' },
                 ];
+            },
+            getImportFields(entityColumns) {
+                return [
+                    'klassId',
+                    'studentTz',
+                    '',
+                    'howManyLessons',
+                    'absCount',
+                    'comments',
+                ];
+            },
+            getSpecialFields() {
+                return [
+                    { cell: { c: 2, r: 0 }, value: 'teacherId' },
+                    { cell: { c: 2, r: 1 }, value: 'lessonId' },
+                ]
             }
         }
     }

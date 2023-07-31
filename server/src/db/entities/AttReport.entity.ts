@@ -23,6 +23,7 @@ import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")
@@ -31,6 +32,7 @@ export class AttReport implements IHasUserId {
   @BeforeUpdate()
   async fillFields() {
     fillDefaultYearValue(this);
+    fillDefaultReportDateValue(this);
 
     const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
 
@@ -99,7 +101,7 @@ export class AttReport implements IHasUserId {
 
   @Column("date", { name: "report_date" })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  reportDate: string;
+  reportDate: Date;
 
   @Column("int", { name: "how_many_lessons", nullable: true })
   howManyLessons: number | null;

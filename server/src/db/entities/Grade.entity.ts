@@ -19,6 +19,7 @@ import { Lesson } from "./Lesson.entity";
 import { Teacher } from "./Teacher.entity";
 import { KlassType } from "./KlassType.entity";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 
 @Index("grades_users_idx", ["userId"], {})
 @Entity("grades")
@@ -27,7 +28,8 @@ export class Grade implements IHasUserId {
   @BeforeUpdate()
   async fillFields() {
     fillDefaultYearValue(this);
-  
+    fillDefaultReportDateValue(this);
+
     const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
 
     this.studentReferenceId = await findOneAndAssignReferenceId(
@@ -80,7 +82,7 @@ export class Grade implements IHasUserId {
   lessonReferenceId: number;
 
   @Column("date", { name: "report_date" })
-  reportDate: string;
+  reportDate: Date;
 
   @Column("int", { name: "how_many_lessons", nullable: true })
   howManyLessons: number | null;
