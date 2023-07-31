@@ -16,6 +16,11 @@ function getConfig(): BaseEntityModuleOptions {
                 entityColumns.splice(1, 0, '');
                 return entityColumns;
             },
+            getSpecialFields() {
+                return [
+                    {cell: { c: 0, r: 1 },value: 'test'},
+                ]
+            },
         }
     }
 }
