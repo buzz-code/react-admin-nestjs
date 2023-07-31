@@ -207,9 +207,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add images table so users can edit images for reports - https://marmelab.com/react-admin/ImageInput.html
 * change klass_type to handle track type for klass
 * use import get from 'lodash/get'; everywhere with record[source]
+* add option to have a custom email header for some tables - att-report & grade
 
 # todo
-* add option to have an explanation row in excel import files
 * add new field to klass_type - teacher name
 * copy validations from att-report entity to grade entity
 * add importer columns to att report & grade
