@@ -210,6 +210,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add option to have a custom email header for some tables - att-report & grade
 * add importer columns to att report & grade
 * update teacher report file to include more details
+* check why report_date is failing save
 
 # todo
 * add new field to klass_type - teacher name
