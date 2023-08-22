@@ -78,6 +78,7 @@ const App = () => (
         {permissions => (
           <>
             <Resource name="teacher" {...teacher} options={{ menuGroup: 'data' }} icon={BadgeIcon} />
+            <Resource name="klass_type" {...klassType} options={{ menuGroup: 'data' }} icon={CategoryIcon} />
             <Resource name="klass" {...klass} options={{ menuGroup: 'data' }} icon={SupervisedUserCircleIcon} />
             <Resource name="lesson" {...lesson} options={{ menuGroup: 'data' }} icon={SchoolIcon} />
             <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
@@ -90,7 +91,6 @@ const App = () => (
             <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
             <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
 
-            <Resource name="klass_type" {...klassType} options={{ menuGroup: 'settings' }} icon={CategoryIcon} />
             <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
             <Resource name="text_by_user" {...textByUser} options={{ menuGroup: 'settings' }} icon={RateReviewIcon} />
             <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} icon={AlternateEmailIcon} />
