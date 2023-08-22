@@ -5,20 +5,20 @@ function getConfig(): BaseEntityModuleOptions {
     return {
         entity: Grade,
         exporter: {
-            getImportFields(entityColumns) {
-                return [
-                    'klassId',
-                    'studentTz',
-                    '',
-                    'grade',
-                    'comments',
-                ];
-            },
-            getSpecialFields() {
-                return [
-                    { cell: { c: 2, r: 0 }, value: 'teacherId' },
-                    { cell: { c: 2, r: 1 }, value: 'lessonId' },
-                ]
+            getImportDefinition(importFields) {
+                return {
+                    importFields: [
+                        'klassId',
+                        'studentTz',
+                        '',
+                        'grade',
+                        'comments',
+                    ],
+                    specialFields: [
+                        { cell: { c: 2, r: 0 }, value: 'teacherId' },
+                        { cell: { c: 2, r: 1 }, value: 'lessonId' },
+                    ],
+                };
             }
         }
     }

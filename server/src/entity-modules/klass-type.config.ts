@@ -12,15 +12,15 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'name', label: 'שם' },
                 ];
             },
-            getImportFields(entityColumns) {
-                entityColumns.splice(1, 0, '');
-                return entityColumns;
-            },
-            getSpecialFields() {
-                return [
-                    {cell: { c: 0, r: 1 },value: 'test'},
-                ]
-            },
+            getImportDefinition(importFields) {
+                importFields.splice(1, 0, '');
+                return {
+                    importFields,
+                    specialFields: [
+                        { cell: { c: 0, r: 1 }, value: 'test' },
+                    ]
+                };
+            }
         }
     }
 }

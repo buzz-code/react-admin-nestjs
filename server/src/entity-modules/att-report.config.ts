@@ -42,21 +42,21 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'comments', label: 'הערות' },
                 ];
             },
-            getImportFields(entityColumns) {
-                return [
-                    'klassId',
-                    'studentTz',
-                    '',
-                    'howManyLessons',
-                    'absCount',
-                    'comments',
-                ];
-            },
-            getSpecialFields() {
-                return [
-                    { cell: { c: 2, r: 0 }, value: 'teacherId' },
-                    { cell: { c: 2, r: 1 }, value: 'lessonId' },
-                ]
+            getImportDefinition(importFields) {
+                return {
+                    importFields: [
+                        'klassId',
+                        'studentTz',
+                        '',
+                        'howManyLessons',
+                        'absCount',
+                        'comments',
+                    ],
+                    specialFields: [
+                        { cell: { c: 2, r: 0 }, value: 'teacherId' },
+                        { cell: { c: 2, r: 1 }, value: 'lessonId' },
+                    ],
+                };
             }
         }
     }
