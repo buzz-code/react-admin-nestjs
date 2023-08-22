@@ -10,6 +10,7 @@ import teacherReportFile, { TeacherReportFileData } from "src/reports/teacherRep
 import * as JSZip from 'jszip';
 import { getUserMailAddressFrom, validateUserHasPaid } from "@shared/base-entity/base-entity.util";
 import { getUserIdFromUser } from "@shared/auth/auth.util";
+import { getMailAddressForEntity } from "@shared/utils/mail/mail-address.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -56,7 +57,7 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
             .toString()
             .split(',')
             .map(id => ({
-                userId: req.auth.id,
+                userId: getUserIdFromUser(req.auth),
                 id,
                 isGrades: req.parsed.extra?.isGrades,
             }));
@@ -86,12 +87,15 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                                 );
 
                                 const fromAddress = await getUserMailAddressFrom(req.auth, this.dataSource);
+                                const targetEntity = req.parsed.extra?.isGrades ? 'grade' : 'att_report';
+                                const replyToAddress = await getMailAddressForEntity(p.userId, targetEntity, this.dataSource);
                                 await this.mailSendService.sendMail({
                                     to: data[0].teacher.email,
                                     from: fromAddress,
                                     subject: 'קבצי נוכחות למילוי',
                                     html: req.parsed.extra.mailBody ?? 'מורה יקרה, מצורפים קבצים',
                                     attachments,
+                                    replyTo: replyToAddress,
                                 });
                             }
                         }

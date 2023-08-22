@@ -211,6 +211,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add importer columns to att report & grade
 * update teacher report file to include more details
 * check why report_date is failing save
+* add reply to mail address to teacher report file
 
 # todo
 * add new field to klass_type - teacher name
