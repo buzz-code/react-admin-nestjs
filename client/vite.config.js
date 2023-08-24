@@ -15,7 +15,7 @@ export default ({ mode }) => {
         },
         define: {
             "process.env.NODE_ENV": `"${mode}"`,
-            "process.env.REACT_APP_API_URL": `"${process.env.REACT_APP_API_URL}"`,
+            "process.env.REACT_APP_API_URL": `"${process.env.REACT_APP_API_URL ?? ''}"`,
         },
         resolve: {
             alias: {
