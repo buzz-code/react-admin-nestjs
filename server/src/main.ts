@@ -23,7 +23,10 @@ async function bootstrap() {
 
   app.enableCors({
     credentials: true,
-    origin: new RegExp('http(s?)://' + process.env.DOMAIN_NAME),
+    origin: [
+      new RegExp('http(s?)://' + process.env.DOMAIN_NAME),
+      process.env.IP_ADDRESS && new RegExp('http(s?)://' + process.env.IP_ADDRESS + ':[\d]*'),
+    ],
   });
   app.use(bodyParser.json({ limit: '50mb' }));
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
