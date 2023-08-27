@@ -37,7 +37,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'reportDate', label: 'תאריך דיווח' },
                     { value: 'howManyLessons', label: 'מספר שיעורים' },
                     { value: 'absCount', label: 'מספר חיסורים' },
-                    { value: 'approvedAbsCount', label: 'מספר חיסורים מאושרים' },
+                    // { value: 'approvedAbsCount', label: 'מספר חיסורים מאושרים' },
                     // { value: 'sheetName', label: 'חודש דיווח' },
                     { value: 'comments', label: 'הערות' },
                 ];

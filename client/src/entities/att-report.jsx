@@ -36,7 +36,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
             <DateField source="reportDate" />
             <NumberField source="howManyLessons" />
             <NumberField source="absCount" />
-            <NumberField source="approvedAbsCount" />
+            {/* <NumberField source="approvedAbsCount" /> */}
             <TextField source="comments" />
             {/* <TextField source="sheetName" /> */}
             {isAdmin && <DateField showDate showTime source="createdAt" />}
@@ -56,7 +56,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <DateInput source="reportDate" validate={required()} />
         <NumberInput source="howManyLessons" defaultValue={1} />
         <NumberInput source="absCount" defaultValue={0} />
-        <NumberInput source="approvedAbsCount" defaultValue={0} />
+        {/* <NumberInput source="approvedAbsCount" defaultValue={0} /> */}
         <TextInput source="comments" validate={maxLength(500)} />
         <AutocompleteInput source="year" choices={yearChoices} />
         {/* <TextInput source="sheetName" validate={maxLength(100)} /> */}
