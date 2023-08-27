@@ -43,10 +43,12 @@ jobs:
 
       - name: 'Update client service'
         uses: fjogeleit/http-request-action@v1
+        continue-on-error: true
         with:
-          url: 'https://167.235.31.255:9443/api/webhooks/40f04d31-7ed6-42e7-b54f-54ca82a408c4'
+          url: 'https://167.235.31.255:9443/api/webhooks/83c901ca-3ea4-405c-a256-d3632da40bf9'
 
       - name: 'Update server service'
         uses: fjogeleit/http-request-action@v1
+        continue-on-error: true
         with:
-          url: 'https://167.235.31.255:9443/api/webhooks/83c901ca-3ea4-405c-a256-d3632da40bf9'
+          url: 'https://167.235.31.255:9443/api/webhooks/40f04d31-7ed6-42e7-b54f-54ca82a408c4'
