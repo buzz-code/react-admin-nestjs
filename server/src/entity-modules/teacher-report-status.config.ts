@@ -95,7 +95,10 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                                     subject: 'קבצי נוכחות למילוי',
                                     html: req.parsed.extra.mailBody ?? 'מורה יקרה, מצורפים קבצים',
                                     attachments,
-                                    replyTo: replyToAddress,
+                                    replyTo: {
+                                        address: replyToAddress,
+                                        name: fromAddress.name,
+                                    },
                                 });
                             }
                         }
