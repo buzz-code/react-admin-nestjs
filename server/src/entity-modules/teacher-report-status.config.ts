@@ -103,7 +103,7 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                             }
                         }
                     } catch (e) {
-                        console.log('error sending teacher report', e)
+                        console.log('error sending teacher report', e);
                     }
                 }
                 return 'OK';
