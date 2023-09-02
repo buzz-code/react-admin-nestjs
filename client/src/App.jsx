@@ -65,6 +65,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -96,12 +97,13 @@ const App = () => (
             <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} icon={AlternateEmailIcon} />
             <Resource name="image" {...image} options={{ menuGroup: 'settings' }} icon={ImageIcon} />
             <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
+            <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
 
             {/* <Resource name="grade" {...resourceEntityGuesser} /> */}
             {/* <Resource name="known_absence" {...knownAbsence} /> */}
 
             {isAdmin(permissions) && <>
-              <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon}/>
+              <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
               <Resource name="text" {...text} options={{ menuGroup: 'admin' }} />
               <Resource name="yemot_call" {...resourceEntityGuesser} options={{ menuGroup: 'admin' }} icon={SettingsPhoneIcon} />
               <Resource name="recieved_mail" {...recievedMail} options={{ menuGroup: 'admin' }} icon={EmailIcon} />
