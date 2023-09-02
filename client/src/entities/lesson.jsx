@@ -49,7 +49,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />
         <DateInput source="startDate" />
         <DateInput source="endDate" />
-        <AutocompleteInput source="year" choices={yearChoices} />
+        <AutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>

@@ -58,7 +58,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <NumberInput source="absCount" defaultValue={0} />
         {/* <NumberInput source="approvedAbsCount" defaultValue={0} /> */}
         <TextInput source="comments" validate={maxLength(500)} />
-        <AutocompleteInput source="year" choices={yearChoices} />
+        <AutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
         {/* <TextInput source="sheetName" validate={maxLength(100)} /> */}
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}

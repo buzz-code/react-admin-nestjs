@@ -55,7 +55,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {/* <NumberInput source="howManyLessons" /> */}
         <NumberInput source="grade" validate={required()} />
         <TextInput source="comments" validate={maxLength(500)} />
-        <AutocompleteInput source="year" choices={yearChoices} />
+        <AutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
