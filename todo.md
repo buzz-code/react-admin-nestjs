@@ -213,8 +213,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * check why report_date is failing save
 * add reply to mail address to teacher report file
 * add show matching report to uploaded files
+* add year to students query in teacher report file
 
 # todo
+* add ability to import excel files to att-report & grade
+* move code-server & dev env to docker swarm
+* shifi want to add new view - student-by-year, (from student-klass) and use it everywhere
 * add new field to klass_type - teacher name
 * copy validations from att-report entity to grade entity
 * create common auto complete and add noOptionsText translation
