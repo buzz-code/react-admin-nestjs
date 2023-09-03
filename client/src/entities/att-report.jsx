@@ -2,7 +2,7 @@ import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextFiel
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
+import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 
@@ -10,11 +10,11 @@ const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
-    <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ userId: 'userId' }} />,
+    <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={filterByUserId} />,
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
-    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />,
-    <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={{ userId: 'userId' }} />,
-    <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ userId: 'userId', teacherReferenceId: 'teacherReferenceId', 'klassReferenceIds:$cont': 'klassReferenceId' }} />,
+    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
+    <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserId} />,
+    <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ ...filterByUserId, teacherReferenceId: 'teacherReferenceId', 'klassReferenceIds:$cont': 'klassReferenceId' }} />,
     <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
@@ -49,10 +49,10 @@ const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} dynamicFilter={{ userId: 'userId' }} />
-        <CommonReferenceInput source="teacherReferenceId" reference="teacher" validate={required()} dynamicFilter={{ userId: 'userId' }} />
-        <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={{ userId: 'userId' }} />
-        <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} dynamicFilter={{ userId: 'userId', year: 'year' }} />
+        <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} dynamicFilter={filterByUserId} />
+        <CommonReferenceInput source="teacherReferenceId" reference="teacher" validate={required()} dynamicFilter={filterByUserId} />
+        <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserId} />
+        <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} dynamicFilter={{ ...filterByUserId, year: 'year' }} />
         <DateInput source="reportDate" validate={required()} />
         <NumberInput source="howManyLessons" defaultValue={1} />
         <NumberInput source="absCount" defaultValue={0} />

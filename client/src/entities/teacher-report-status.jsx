@@ -1,7 +1,7 @@
 import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField, required, AutocompleteInput, SelectField, BooleanInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
+import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import AttachEmailIcon from '@mui/icons-material/AttachEmail';
@@ -11,8 +11,8 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
-    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />,
-    <CommonReferenceInputFilter source="reportMonthReferenceId" reference="report_month" dynamicFilter={{ userId: 'userId' }} />,
+    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
+    <CommonReferenceInputFilter source="reportMonthReferenceId" reference="report_month" dynamicFilter={filterByUserId} />,
     <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 

@@ -3,7 +3,7 @@ import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
+import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 
@@ -11,8 +11,8 @@ const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
     <NumberInput source="key" />,
     <TextInput source="name:$cont" alwaysOn />,
-    <CommonReferenceInputFilter source="klassReferenceIds:$cont" label="כיתה" reference="klass" dynamicFilter={{ userId: 'userId' }} />,
-    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} alwaysOn />,
+    <CommonReferenceInputFilter source="klassReferenceIds:$cont" label="כיתה" reference="klass" dynamicFilter={filterByUserId} />,
+    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} alwaysOn />,
     <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
@@ -46,7 +46,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <NumberInput source="key" validate={[required(), isCreate && unique()]} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
         <ReferenceArrayInput source="klassReferenceIds" reference='klass' />
-        <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />
+        <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
         <DateInput source="startDate" />
         <DateInput source="endDate" />
         <AutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />

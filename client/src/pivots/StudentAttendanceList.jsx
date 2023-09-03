@@ -1,6 +1,6 @@
 import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
 import { CommonDatagrid } from "@shared/components/crudContainers/CommonList"
-import { CommonReferenceInputFilter } from "@shared/components/fields/CommonReferenceInputFilter";
+import { CommonReferenceInputFilter, filterByUserId } from "@shared/components/fields/CommonReferenceInputFilter";
 import { useIsAdmin } from "@shared/utils/permissionsUtil";
 import { ReferenceField, TextField, useListContext, ReferenceInput, TextInput, AutocompleteInput, SelectField } from "react-admin"
 // import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
@@ -9,8 +9,8 @@ const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
-    <CommonReferenceInputFilter source="extra.klassId" reference="klass" dynamicFilter={{ userId: 'userId' }} alwaysOn />,
-    <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" dynamicFilter={{ userId: 'userId' }} alwaysOn />,
+    <CommonReferenceInputFilter source="extra.klassId" reference="klass" dynamicFilter={filterByUserId} alwaysOn />,
+    <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" dynamicFilter={filterByUserId} alwaysOn />,
     // <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
