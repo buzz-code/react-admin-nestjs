@@ -10,11 +10,10 @@ import { Student } from "../entities/Student.entity";
     .addSelect('students.user_id', 'user_id')
     .addSelect('students.tz', 'tz')
     .addSelect('students.name', 'name')
-    .addSelect('student_klasses.year', 'year')
+    .addSelect('GROUP_CONCAT(DISTINCT student_klasses.year)', 'year')
     .from(StudentKlass, 'student_klasses')
     .leftJoin(Student, 'students', 'students.id = student_klasses.studentReferenceId')
     .groupBy('students.id')
-    .addGroupBy('student_klasses.year')
 })
 export class StudentByYear implements IHasUserId {
   @Column()
@@ -29,8 +28,8 @@ export class StudentByYear implements IHasUserId {
   @Column({ name: 'name' })
   name: string;
 
-  @Column({ nullable: true })
-  year: number;
+  @Column('simple-array', { nullable: true })
+  year: string[];
 
   // @ManyToOne(() => Student, { createForeignKeyConstraints: false })
   // @JoinColumn({ name: 'id' })
