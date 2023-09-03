@@ -7,6 +7,7 @@ import { getI18nProvider } from "@shared/providers/i18nProvider";
 import authProvider from "@shared/providers/authProvider";
 import theme from "@shared/providers/themeProvider";
 import RTLStyle from "@shared/components/layout/RTLStyle";
+import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 
 import { Dashboard, Layout } from 'src/GeneralLayout';
 
@@ -97,7 +98,7 @@ const App = () => (
             <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} icon={AlternateEmailIcon} />
             <Resource name="image" {...image} options={{ menuGroup: 'settings' }} icon={ImageIcon} />
             <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
-            <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
+            <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
 
             {/* <Resource name="grade" {...resourceEntityGuesser} /> */}
             {/* <Resource name="known_absence" {...knownAbsence} /> */}

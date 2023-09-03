@@ -10,7 +10,7 @@ const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
-    <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={{ userId: 'userId' }} />,
+    <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ userId: 'userId' }} />,
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={{ userId: 'userId' }} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={{ userId: 'userId' }} />,
@@ -27,7 +27,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
         <CommonDatagrid {...props}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
+            <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student_by_year" optionalTarget="tz" />
             <TextField source="studentBaseKlass.klassName" />
             <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
@@ -49,7 +49,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <CommonReferenceInput source="studentReferenceId" reference="student" validate={required()} dynamicFilter={{ userId: 'userId' }} />
+        <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} dynamicFilter={{ userId: 'userId' }} />
         <CommonReferenceInput source="teacherReferenceId" reference="teacher" validate={required()} dynamicFilter={{ userId: 'userId' }} />
         <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={{ userId: 'userId' }} />
         <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} dynamicFilter={{ userId: 'userId', year: 'year' }} />

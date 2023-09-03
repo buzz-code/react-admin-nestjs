@@ -7,7 +7,7 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
-    <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={{ userId: 'userId' }} />,
+    <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ userId: 'userId' }} />,
     <DateInput source="reportDate" />,
     <NumberInput source="absnceCount" />,
     <NumberInput source="absnceCode" />,
@@ -21,7 +21,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
         <CommonDatagrid {...props}>
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
+            <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student_by_year" optionalTarget="tz" />
             <DateField source="reportDate" />
             <NumberField source="absnceCount" />
             <NumberField source="absnceCode" />
@@ -38,7 +38,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <CommonReferenceInput source="studentReferenceId" reference="student" validate={required()} dynamicFilter={{ userId: 'userId' }} />
+        <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} dynamicFilter={{ userId: 'userId' }} />
         <DateInput source="reportDate" validate={required()} />
         <NumberInput source="absnceCount" />
         <NumberInput source="absnceCode" />
