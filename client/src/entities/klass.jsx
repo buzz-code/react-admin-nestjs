@@ -1,4 +1,4 @@
-import { AutocompleteInput, SelectField, TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateTimeInput, NumberInput, required, maxLength, useUnique } from 'react-admin';
+import { SelectField, TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateTimeInput, NumberInput, required, maxLength, useUnique } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
@@ -13,7 +13,7 @@ const filters = [
     <TextInput source="name:$cont" alwaysOn />,
     <CommonReferenceInputFilter source="klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
-    <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
 const filterDefaultValues = {
@@ -45,7 +45,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <TextInput source="name" validate={[required(), maxLength(500)]} />
         <CommonReferenceInput source="klassTypeReferenceId" reference="klass_type" validate={required()} dynamicFilter={filterByUserId} />
         <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
-        <AutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
+        <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>

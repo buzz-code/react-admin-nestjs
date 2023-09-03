@@ -1,11 +1,12 @@
-import { ReferenceField, TextField, AutocompleteInput, SelectField } from 'react-admin';
+import { ReferenceField, TextField, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
+import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 
 const filters = [
-    <AutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
 const filterDefaultValues = {

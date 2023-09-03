@@ -1,4 +1,4 @@
-import { AutocompleteInput, BooleanInput, DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceInput, ReferenceManyField, required, SelectField, TextField, TextInput, useUnique } from 'react-admin';
+import { BooleanInput, DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceInput, ReferenceManyField, required, SelectField, TextField, TextInput, useUnique } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -7,6 +7,7 @@ import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
+import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -23,7 +24,7 @@ const additionalBulkButtons = [
     //     key='studentReportCard' name='studentReportCard' filename='תעודה' />,
     <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
         key='studentReportCardReact' name='studentReportCardReact' filename='תעודה' defaultRequestValues={filterDefaultValues}>
-        <AutocompleteInput source="year" label="שנה" choices={yearChoices} />
+        <CommonAutocompleteInput source="year" label="שנה" choices={yearChoices} />
         <BooleanInput source="grades" label="עם ציונים" />
     </BulkReportButton>
 ];

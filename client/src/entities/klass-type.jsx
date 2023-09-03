@@ -1,8 +1,9 @@
-import { NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateTimeInput, AutocompleteInput, required, maxLength } from 'react-admin';
+import { NumberInput, TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateTimeInput, required, maxLength } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
+import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -32,7 +33,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
         <NumberInput source="key" validate={required()} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
-        <AutocompleteInput source="klassTypeEnum" choices={klassTypeEnum.map(item => ({ id: item, name: item }))} />
+        <CommonAutocompleteInput source="klassTypeEnum" choices={klassTypeEnum.map(item => ({ id: item, name: item }))} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
