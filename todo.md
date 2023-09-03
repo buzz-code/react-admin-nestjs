@@ -221,6 +221,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 # todo
 * add year filter for dashboard items - student too
 * fix student attendance list year at backend
+* create a table of 'payment tracks' - with name, price and student number limit
+* add field for user to have payment track
+* add student number validation - how to do this with year ? maybe student will need to have a year column too
 * add ability to import excel files to att-report & grade
 * move code-server & dev env to docker swarm
 * add new field to klass_type - teacher name
@@ -229,9 +232,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update react-admin
 * put back unique for edit records - after they fix https://github.com/marmelab/react-admin/issues/9111
 * create custom useUnique to add userId filter when admin
-* create a table of 'payment tracks' - with name, price and student number limit
-* add field for user to have payment track
-* add student number validation - how to do this with year ? maybe student will need to have a year column too
 * put back known_absences table, and use everywhere - in reports & student report
 * on user creation - register, add default values for report months table
 * nest auto delete migration files
