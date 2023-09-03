@@ -216,9 +216,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add year to students query in teacher report file
 * add new view - student-by-year, (from student-klass) and use it everywhere
 * change to use docker swarm for production - with github container repository
+* create common auto complete and add noOptionsText translation
 
 # todo
-* create common auto complete and add noOptionsText translation
 * add year filter for dashboard items - student too
 * fix student attendance list year at backend
 * add ability to import excel files to att-report & grade
