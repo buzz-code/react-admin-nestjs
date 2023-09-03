@@ -214,26 +214,26 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add reply to mail address to teacher report file
 * add show matching report to uploaded files
 * add year to students query in teacher report file
+* add new view - student-by-year, (from student-klass) and use it everywhere
+* change to use docker swarm for production - with github container repository
 
 # todo
+* create common auto complete and add noOptionsText translation
+* add year filter for dashboard items - student too
+* fix student attendance list year at backend
 * add ability to import excel files to att-report & grade
 * move code-server & dev env to docker swarm
-* shifi want to add new view - student-by-year, (from student-klass) and use it everywhere
 * add new field to klass_type - teacher name
 * copy validations from att-report entity to grade entity
-* create common auto complete and add noOptionsText translation
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * update react-admin
 * put back unique for edit records - after they fix https://github.com/marmelab/react-admin/issues/9111
 * create custom useUnique to add userId filter when admin
-* add student number validation - how to do this with year ? maybe student will need to have a year column too
-* add year filter for dashboard items - student too
-* fix student attendance list year at backend
 * create a table of 'payment tracks' - with name, price and student number limit
 * add field for user to have payment track
+* add student number validation - how to do this with year ? maybe student will need to have a year column too
 * put back known_absences table, and use everywhere - in reports & student report
 * on user creation - register, add default values for report months table
-* change to use docker swarm for production - with github container repository
 * nest auto delete migration files
 * check docker security issues
 * add option to self connect to yemot phone
