@@ -283,6 +283,16 @@ export default {
                 'fileData.src': 'תמונה',
                 imageTarget: 'יעד',
             }
+        },
+        payment_track: {
+            name: 'מסלול תשלום |||| מסלולי תשלום',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                description: 'תיאור',
+                monthlyPrice: 'מחיר חודשי',
+                annualPrice: 'מחיר שנתי',
+                studentNumberLimit: 'מספר תלמידות',
+            }
         }
     }
 };
