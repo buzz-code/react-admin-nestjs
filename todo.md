@@ -217,10 +217,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add new view - student-by-year, (from student-klass) and use it everywhere
 * change to use docker swarm for production - with github container repository
 * create common auto complete and add noOptionsText translation
+* fix student attendance list year at backend
 
 # todo
 * add year filter for dashboard items - student too
-* fix student attendance list year at backend
 * create a table of 'payment tracks' - with name, price and student number limit
 * add field for user to have payment track
 * add student number validation - how to do this with year ? maybe student will need to have a year column too

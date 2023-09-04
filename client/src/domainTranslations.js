@@ -218,13 +218,14 @@ export default {
                 importFileIds: 'קבצים מצורפים',
             }
         },
-        'student/pivot?extra.pivot=StudentAttendance': {
+        'student_by_year/pivot?extra.pivot=StudentAttendance': {
             name: 'דוח נוכחות (פיבוט)',
             fields: {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
                 'extra.klassId': 'כיתה',
                 'extra.lessonId': 'שיעור',
+                'year:$cont': 'שנה',
             }
         },
         report_month: {
