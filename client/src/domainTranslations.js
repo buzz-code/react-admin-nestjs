@@ -155,6 +155,7 @@ export default {
                 paymentMethod: 'אופן התשלום',
                 mailAddressAlias: 'כתובת המייל ממנה יישלחו מיילים',
                 mailAddressTitle: 'שם כתובת המייל',
+                paymentTrackId: 'תוכנית',
             }
         },
         yemot_call: {

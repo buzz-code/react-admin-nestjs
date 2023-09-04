@@ -218,12 +218,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * change to use docker swarm for production - with github container repository
 * create common auto complete and add noOptionsText translation
 * fix student attendance list year at backend
+* create a table of 'payment tracks' - with name, price and student number limit
+* add field for user to have payment track
 
 # todo
 * add year filter for dashboard items - student too
-* create a table of 'payment tracks' - with name, price and student number limit
-* add field for user to have payment track
-* add student number validation - how to do this with year ? maybe student will need to have a year column too
+* add student number validation - based on student-by-year view
 * add ability to import excel files to att-report & grade
 * move code-server & dev env to docker swarm
 * add new field to klass_type - teacher name
