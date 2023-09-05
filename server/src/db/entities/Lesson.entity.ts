@@ -18,6 +18,7 @@ import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { Type } from "class-transformer";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -57,6 +58,7 @@ export class Lesson implements IHasUserId {
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
+  @Type(() => String)
   @IsOptional({ always: true })
   @MaxLength(450, { always: true })
   @Column("varchar", { name: "klasses", nullable: true, length: 450 })
