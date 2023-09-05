@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  In,
   Index,
   JoinColumn,
   ManyToOne,
@@ -12,8 +13,10 @@ import {
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Teacher } from "./Teacher.entity";
+import { Klass } from "./Klass.entity";
+import { KlassType } from "./KlassType.entity";
 import { User } from "./User.entity";
-import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
+import { findManyAndAssignReferenceIds, findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
@@ -28,8 +31,13 @@ export class Lesson implements IHasUserId {
   @BeforeUpdate()
   async fillFields() {
     fillDefaultYearValue(this);
-   
-    const dataSource = await getDataSource([Teacher, User]);
+
+    const dataSource = await getDataSource([Teacher, Klass, KlassType, User]);
+
+    const klassesArray = (typeof this.klasses === 'string' && this.klasses.includes(',')) ? this.klasses.split(',') : [this.klasses];
+    this.klassReferenceIds = await findManyAndAssignReferenceIds(
+      dataSource, Klass, { year: this.year, key: In(klassesArray) }, this.userId, this.klassReferenceIds, this.klasses
+    );
 
     this.teacherReferenceId = await findOneAndAssignReferenceId(
       dataSource, Teacher, { tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
