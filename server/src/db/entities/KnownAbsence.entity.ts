@@ -27,7 +27,7 @@ export class KnownAbsence implements IHasUserId {
     const dataSource = await getDataSource([Student, User]);
 
     this.studentReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+      dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
     );
 
     dataSource.destroy();

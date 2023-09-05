@@ -33,7 +33,7 @@ export class StudentKlass implements IHasUserId {
     const dataSource = await getDataSource([Student, Klass, User, KlassType, Teacher]);
 
     this.studentReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+      dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
     );
     this.klassReferenceId = await findOneAndAssignReferenceId(
       dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId

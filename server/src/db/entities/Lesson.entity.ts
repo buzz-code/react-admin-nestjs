@@ -32,7 +32,7 @@ export class Lesson implements IHasUserId {
     const dataSource = await getDataSource([Teacher, User]);
 
     this.teacherReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Teacher, { year: this.year, tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
+      dataSource, Teacher, { tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
     );
 
     dataSource.destroy();

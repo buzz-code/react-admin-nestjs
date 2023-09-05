@@ -33,10 +33,10 @@ export class Grade implements IHasUserId {
     const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
 
     this.studentReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+      dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
     );
     this.teacherReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Teacher, { year: this.year, tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
+      dataSource, Teacher, { tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
     );
     this.klassReferenceId = await findOneAndAssignReferenceId(
       dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
