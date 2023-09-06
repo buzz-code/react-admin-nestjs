@@ -220,9 +220,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix student attendance list year at backend
 * create a table of 'payment tracks' - with name, price and student number limit
 * add field for user to have payment track
+* add year filter for dashboard items - student too
 
 # todo
-* add year filter for dashboard items - student too
 * add student number validation - based on student-by-year view
 * add ability to import excel files to att-report & grade
 * move code-server & dev env to docker swarm

@@ -109,6 +109,14 @@ export default {
                 comment: 'הערה',
             }
         },
+        student_by_year: {
+            name: 'תלמידה |||| תלמידות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                tz: 'תז',
+                year: 'שנה',
+            }
+        },
         teacher: {
             name: 'מורה |||| מורות',
             fields: {
