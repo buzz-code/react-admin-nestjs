@@ -4,12 +4,12 @@ RUN apk add git
 
 WORKDIR /app
 
-COPY package*.json /app/
-COPY yarn.lock /app/
+# COPY package*.json /app/
+# COPY yarn.lock /app/
 
-RUN yarn install
+# RUN yarn install
 
-COPY . .
+# COPY . .
 
 CMD ["yarn", "start"]
 
