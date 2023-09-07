@@ -3,6 +3,7 @@ import {
   BeforeUpdate,
   Column,
   CreateDateColumn,
+  DataSource,
   Entity,
   Index,
   JoinColumn,
@@ -24,13 +25,16 @@ export class KnownAbsence implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
   async fillFields() {
-    const dataSource = await getDataSource([Student, User]);
+    let dataSource: DataSource;
+    try {
+      dataSource = await getDataSource([Student, User]);
 
-    this.studentReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
-    );
-
-    dataSource.destroy();
+      this.studentReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+      );
+    } finally {
+      dataSource.destroy();
+    }
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

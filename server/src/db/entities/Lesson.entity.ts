@@ -3,6 +3,7 @@ import {
   BeforeUpdate,
   Column,
   CreateDateColumn,
+  DataSource,
   Entity,
   In,
   Index,
@@ -32,18 +33,21 @@ export class Lesson implements IHasUserId {
   async fillFields() {
     fillDefaultYearValue(this);
 
-    const dataSource = await getDataSource([Teacher, Klass, KlassType, User]);
+    let dataSource: DataSource;
+    try {
+      dataSource = await getDataSource([Teacher, Klass, KlassType, User]);
 
-    const klassesArray = (typeof this.klasses === 'string' && this.klasses.includes(',')) ? this.klasses.split(',') : [this.klasses];
-    this.klassReferenceIds = await findManyAndAssignReferenceIds(
-      dataSource, Klass, { year: this.year, key: In(klassesArray) }, this.userId, this.klassReferenceIds, this.klasses
-    );
+      const klassesArray = (typeof this.klasses === 'string' && this.klasses.includes(',')) ? this.klasses.split(',') : [this.klasses];
+      this.klassReferenceIds = await findManyAndAssignReferenceIds(
+        dataSource, Klass, { year: this.year, key: In(klassesArray) }, this.userId, this.klassReferenceIds, this.klasses
+      );
 
-    this.teacherReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Teacher, { tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
-    );
-
-    dataSource.destroy();
+      this.teacherReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Teacher, { tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
+      );
+    } finally {
+      dataSource.destroy();
+    }
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

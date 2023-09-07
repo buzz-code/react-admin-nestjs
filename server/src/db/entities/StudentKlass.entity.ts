@@ -3,6 +3,7 @@ import {
   BeforeUpdate,
   Column,
   CreateDateColumn,
+  DataSource,
   Entity,
   Index,
   JoinColumn,
@@ -30,16 +31,19 @@ export class StudentKlass implements IHasUserId {
   async fillFields() {
     fillDefaultYearValue(this);
 
-    const dataSource = await getDataSource([Student, Klass, User, KlassType, Teacher]);
+    let dataSource: DataSource;
+    try {
+      dataSource = await getDataSource([Student, Klass, User, KlassType, Teacher]);
 
-    this.studentReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
-    );
-    this.klassReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
-    );
-
-    dataSource.destroy();
+      this.studentReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+      );
+      this.klassReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
+      );
+    } finally {
+      dataSource.destroy();
+    }
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
