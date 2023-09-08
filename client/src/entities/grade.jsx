@@ -62,6 +62,10 @@ const Inputs = ({ isCreate, isAdmin }) => {
     </>
 }
 
+const importer = {
+    fields: ['studentTz', 'teacherId', 'klassId', 'lessonId', 'year', 'reportDate', 'grade', 'comments']
+}
+
 const entity = {
     Datagrid,
     Inputs,
