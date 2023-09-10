@@ -46,7 +46,7 @@ export class Lesson implements IHasUserId {
         dataSource, Teacher, { tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
       );
     } finally {
-      dataSource.destroy();
+      dataSource?.destroy();
     }
   }
 

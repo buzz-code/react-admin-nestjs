@@ -45,7 +45,7 @@ export class StudentKlass implements IHasUserId {
         dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
       );
     } finally {
-      dataSource.destroy();
+      dataSource?.destroy();
     }
   }
 

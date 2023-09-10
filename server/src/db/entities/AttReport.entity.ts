@@ -52,7 +52,7 @@ export class AttReport implements IHasUserId {
         dataSource, Lesson, { year: this.year, key: this.lessonId }, this.userId, this.lessonReferenceId, this.lessonId
       );
     } finally {
-      dataSource.destroy();
+      dataSource?.destroy();
     }
   }
 

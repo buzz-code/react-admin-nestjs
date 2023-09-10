@@ -33,7 +33,7 @@ export class KnownAbsence implements IHasUserId {
         dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
       );
     } finally {
-      dataSource.destroy();
+      dataSource?.destroy();
     }
   }
 
