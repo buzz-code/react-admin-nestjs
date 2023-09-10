@@ -223,6 +223,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add year filter for dashboard items - student too
 * add ability to import excel files to att-report & grade
 * add student number validation - based on student-by-year view
+* add comment field to lesson table
 
 # todo
 * move code-server & dev env to docker swarm
