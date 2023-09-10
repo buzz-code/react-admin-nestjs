@@ -222,9 +222,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add field for user to have payment track
 * add year filter for dashboard items - student too
 * add ability to import excel files to att-report & grade
+* add student number validation - based on student-by-year view
 
 # todo
-* add student number validation - based on student-by-year view
 * move code-server & dev env to docker swarm
 * add new field to klass_type - teacher name
 * copy validations from att-report entity to grade entity
