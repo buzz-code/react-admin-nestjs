@@ -226,6 +226,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add comment field to lesson table
 
 # todo
+* return IsUniqueCombination
 * move code-server & dev env to docker swarm
 * add new field to klass_type - teacher name
 * copy validations from att-report entity to grade entity
