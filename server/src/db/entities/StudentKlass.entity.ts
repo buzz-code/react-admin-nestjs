@@ -22,6 +22,9 @@ import { ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { MaxCountByUserLimit } from "@shared/utils/validation/max-count-by-user-limit";
+import { StudentByYear } from "../view-entities/StudentByYear.entity";
+import { PaymentTrack } from "@shared/entities/PaymentTrack.entity";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Entity("student_klasses")
@@ -46,6 +49,12 @@ export class StudentKlass implements IHasUserId {
     }
   }
 
+  @MaxCountByUserLimit(StudentByYear, (userId, dataSource: DataSource) =>
+    dataSource.getRepository(User).findOne({ where: { id: userId }, select: { paymentTrackId: true } })
+      .then(user => user?.paymentTrackId)
+      .then(ptid => dataSource.getRepository(PaymentTrack).findOne({ where: { id: ptid }, select: { studentNumberLimit: true } }))
+      .then(pt => pt?.studentNumberLimit ?? 0)
+    , [User, PaymentTrack], 'studentReferenceId', { always: true, message: 'הגעת להגבלת הכמות לטבלת שיוך תלמידות, אנא פני לאחראית כדי להגדיל את החבילה' })
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
