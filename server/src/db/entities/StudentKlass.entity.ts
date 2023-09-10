@@ -52,7 +52,10 @@ export class StudentKlass implements IHasUserId {
   @MaxCountByUserLimit(StudentByYear, (userId, dataSource: DataSource) =>
     dataSource.getRepository(User).findOne({ where: { id: userId }, select: { paymentTrackId: true } })
       .then(user => user?.paymentTrackId)
-      .then(ptid => dataSource.getRepository(PaymentTrack).findOne({ where: { id: ptid }, select: { studentNumberLimit: true } }))
+      .then(ptid => ptid
+        ? dataSource.getRepository(PaymentTrack).findOne({ where: { id: ptid }, select: { studentNumberLimit: true } })
+        : dataSource.getRepository(PaymentTrack).find({ order: { studentNumberLimit: 'asc' }, take: 1, select: { studentNumberLimit: true } }).then(res => res[0])
+      )
       .then(pt => pt?.studentNumberLimit ?? 0)
     , [User, PaymentTrack], 'studentReferenceId', { always: true, message: 'הגעת להגבלת הכמות לטבלת שיוך תלמידות, אנא פני לאחראית כדי להגדיל את החבילה' })
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
