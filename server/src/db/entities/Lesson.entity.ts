@@ -91,6 +91,11 @@ export class Lesson implements IHasUserId {
   @Column("date", { name: "end_date", nullable: true })
   endDate: string | null;
 
+  @IsOptional({ always: true })
+  @MaxLength(1000, { always: true })
+  @Column("varchar", { name: "comment", nullable: true, length: 1000 })
+  comment: string;
+
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 
