@@ -121,8 +121,8 @@ const App = () => (
               <Resource name="page" {...page} options={{ menuGroup: 'admin' }} icon={AutoStoriesIcon} />
             </>}
 
-            {isEditPaymentTracksData(permissions) && <>
-              <Resource name="payment_track" {...paymentTrack} options={{ menuGroup: 'admin' }} icon={MonetizationOnIcon} />
+            {(isEditPaymentTracksData(permissions) || isShowUsersData(permissions)) && <>
+              <Resource name="payment_track" {...paymentTrack} list={isEditPaymentTracksData(permissions) ? paymentTrack.list : null} options={{ menuGroup: 'admin' }} icon={MonetizationOnIcon} />
             </>}
 
             <CustomRoutes>
