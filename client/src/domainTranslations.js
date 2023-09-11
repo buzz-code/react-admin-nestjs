@@ -63,6 +63,8 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 klassTypeEnum: 'סוג כיתה בדו"ח',
+                teacherId: 'מורה אחראית',
+                teacherReferenceId: 'מורה אחראית',
             }
         },
         known_absence: {

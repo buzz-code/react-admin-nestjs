@@ -224,11 +224,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add ability to import excel files to att-report & grade
 * add student number validation - based on student-by-year view
 * add comment field to lesson table
+* add new field to klass_type - teacher name
 
 # todo
 * return IsUniqueCombination
 * move code-server & dev env to docker swarm
-* add new field to klass_type - teacher name
 * copy validations from att-report entity to grade entity
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * update react-admin

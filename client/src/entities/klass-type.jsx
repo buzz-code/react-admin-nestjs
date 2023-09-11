@@ -4,6 +4,8 @@ import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
+import { filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -19,6 +21,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
             <TextField source="key" />
             <TextField source="name" />
             <TextField source="klassTypeEnum" />
+            <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -34,6 +37,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <NumberInput source="key" validate={required()} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
         <CommonAutocompleteInput source="klassTypeEnum" choices={klassTypeEnum.map(item => ({ id: item, name: item }))} />
+        <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
@@ -42,7 +46,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['key', 'name'],
+    fields: ['key', 'name', 'klassTypeEnum', 'teacherId'],
 }
 
 const entity = {
