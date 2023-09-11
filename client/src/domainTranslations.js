@@ -91,6 +91,7 @@ export default {
                 teacherReferenceId: 'מורה',
                 startDate: 'תאריך התחלה',
                 endDate: 'תאריך סיום',
+                comment: 'הערה',
             }
         },
         student_klass: {
