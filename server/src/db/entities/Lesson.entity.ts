@@ -22,6 +22,7 @@ import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { cleanDateFields } from "@shared/utils/entity/deafultValues.util";
 import { Type } from "class-transformer";
 
 @Index("lessons_users_idx", ["userId"], {})
@@ -32,6 +33,7 @@ export class Lesson implements IHasUserId {
   @BeforeUpdate()
   async fillFields() {
     fillDefaultYearValue(this);
+    cleanDateFields(this, ['startDate', 'endDate']);
 
     let dataSource: DataSource;
     try {
