@@ -1,6 +1,9 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
+  DataSource,
   Entity,
   Index,
   JoinColumn,
@@ -13,6 +16,8 @@ import { User } from "src/db/entities/User.entity";
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
+import { Teacher } from "./Teacher.entity";
 
 export enum KlassTypeEnum {
   baseKlass = 'כיתת אם',
@@ -24,6 +29,22 @@ export enum KlassTypeEnum {
 @Index("klass_types_users_idx", ["userId"], {})
 @Entity("klass_types")
 export class KlassType implements IHasUserId {
+  @BeforeInsert()
+  @BeforeUpdate()
+  async fillFields() {
+
+    let dataSource: DataSource;
+    try {
+      dataSource = await getDataSource([Teacher, User]);
+
+      this.teacherReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Teacher, { tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
+      );
+    } finally {
+      dataSource?.destroy();
+    }
+  }
+
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
@@ -42,6 +63,12 @@ export class KlassType implements IHasUserId {
 
   @Column('varchar', { default: KlassTypeEnum.other })
   klassTypeEnum: KlassTypeEnum;
+
+  @Column("varchar", { name: "teacher_id", length: 10, nullable: true })
+  teacherId: string;
+
+  @Column({ nullable: true })
+  teacherReferenceId: number;
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;

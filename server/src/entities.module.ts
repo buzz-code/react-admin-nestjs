@@ -27,7 +27,8 @@ import teacherReportStatusConfig from './entity-modules/teacher-report-status.co
 import studentPercentReportConfig from './entity-modules/student-percent-report.config';
 import { AttReportAndGrade } from "./db/view-entities/AttReportAndGrade.entity";
 import { StudentGlobalReport } from "./db/view-entities/StudentGlobalReport.entity";
-import { StudentByYear } from "./db/view-entities/StudentByYear.entity";
+import studentByYearConfig from "./entity-modules/student-by-year.config";
+import paymentTrackConfig from "./entity-modules/payment-track.config";
 
 @Module({
     imports: [
@@ -57,7 +58,8 @@ import { StudentByYear } from "./db/view-entities/StudentByYear.entity";
         BaseEntityModule.register({ entity: AttReportAndGrade }),
         BaseEntityModule.register({ entity: StudentGlobalReport }),
         BaseEntityModule.register({ entity: Image }),
-        BaseEntityModule.register({ entity: StudentByYear }),
+        BaseEntityModule.register(studentByYearConfig),
+        BaseEntityModule.register(paymentTrackConfig),
     ]
 })
 export class EntitiesModule { }

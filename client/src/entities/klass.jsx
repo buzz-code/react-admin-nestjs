@@ -28,7 +28,7 @@ const Datagrid = ({ isAdmin, ...props }) => {
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <TextField source="key" />
             <TextField source="name" />
-            <MultiReferenceField source="klassTypeReferenceId" sortBy="klassType.name" reference="klass_type" optionalSource="klassTypeId" optionalTarget="id" />
+            <MultiReferenceField source="klassTypeReferenceId" sortBy="klassType.name" reference="klass_type" optionalSource="klassTypeId" optionalTarget="key" />
             <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" reference="teacher" optionalSource="teacherId" optionalTarget="tz" />
             <SelectField source="year" choices={yearChoices} />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
@@ -55,7 +55,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['key', 'name', 'klassTypeId', 'teacherId'],
+    fields: ['key', 'name', 'klassTypeId', 'teacherId', 'year'],
 }
 
 const entity = {

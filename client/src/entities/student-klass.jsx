@@ -45,7 +45,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 }
 
 const importer = {
-    fields: ['studentTz', 'klassId'],
+    fields: ['studentTz', 'klassId', 'year'],
 }
 
 const entity = {

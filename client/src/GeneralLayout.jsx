@@ -12,6 +12,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 import BaseLayout from "@shared/components/layout/Layout";
 import BaseDashboard from '@shared/components/views/Dashboard';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 
 const customMenuItems = [
     <MenuItemLink key="tutorial" to="/tutorial" primaryText="מדריך למשתמש" leftIcon={<HelpIcon />} />,
@@ -38,8 +39,8 @@ export const Layout = (props) => (
 );
 
 const dashboardItems = [
-    { resource: 'att_report', icon: ListIcon },
-    { resource: 'student', icon: ListIcon },
+    { resource: 'att_report', icon: ListIcon, filter: defaultYearFilter },
+    { resource: 'student_by_year', icon: ListIcon, filter: { 'year:$cont': defaultYearFilter.year } },
 ];
 
 export const Dashboard = () => (

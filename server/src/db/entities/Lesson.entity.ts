@@ -3,7 +3,9 @@ import {
   BeforeUpdate,
   Column,
   CreateDateColumn,
+  DataSource,
   Entity,
+  In,
   Index,
   JoinColumn,
   ManyToOne,
@@ -12,12 +14,16 @@ import {
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Teacher } from "./Teacher.entity";
+import { Klass } from "./Klass.entity";
+import { KlassType } from "./KlassType.entity";
 import { User } from "./User.entity";
-import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
+import { findManyAndAssignReferenceIds, findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { cleanDateFields } from "@shared/utils/entity/deafultValues.util";
+import { Type } from "class-transformer";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -27,14 +33,23 @@ export class Lesson implements IHasUserId {
   @BeforeUpdate()
   async fillFields() {
     fillDefaultYearValue(this);
-   
-    const dataSource = await getDataSource([Teacher, User]);
+    cleanDateFields(this, ['startDate', 'endDate']);
 
-    this.teacherReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Teacher, { year: this.year, tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
-    );
+    let dataSource: DataSource;
+    try {
+      dataSource = await getDataSource([Teacher, Klass, KlassType, User]);
 
-    dataSource.destroy();
+      const klassesArray = (typeof this.klasses === 'string' && this.klasses.includes(',')) ? this.klasses.split(',') : [this.klasses];
+      this.klassReferenceIds = await findManyAndAssignReferenceIds(
+        dataSource, Klass, { year: this.year, key: In(klassesArray) }, this.userId, this.klassReferenceIds, this.klasses
+      );
+
+      this.teacherReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Teacher, { tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
+      );
+    } finally {
+      dataSource?.destroy();
+    }
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -57,6 +72,7 @@ export class Lesson implements IHasUserId {
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
+  @Type(() => String)
   @IsOptional({ always: true })
   @MaxLength(450, { always: true })
   @Column("varchar", { name: "klasses", nullable: true, length: 450 })
@@ -76,6 +92,11 @@ export class Lesson implements IHasUserId {
 
   @Column("date", { name: "end_date", nullable: true })
   endDate: string | null;
+
+  @IsOptional({ always: true })
+  @MaxLength(1000, { always: true })
+  @Column("varchar", { name: "comment", nullable: true, length: 1000 })
+  comment: string;
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;

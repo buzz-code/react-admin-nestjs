@@ -38,8 +38,9 @@ import mailAddress from '@shared/components/common-entities/mail-address';
 import recievedMail from '@shared/components/common-entities/recieved-mail';
 import page from '@shared/components/common-entities/page';
 import image from '@shared/components/common-entities/image';
+import paymentTrack from '@shared/components/common-entities/payment-track';
 
-import { isShowUsersData, isEditPagesData, isAdmin } from "@shared/utils/permissionsUtil";
+import { isShowUsersData, isEditPagesData, isEditPaymentTracksData, isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
@@ -67,6 +68,7 @@ import LogoDevIcon from '@mui/icons-material/LogoDev';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -117,6 +119,10 @@ const App = () => (
 
             {isEditPagesData(permissions) && <>
               <Resource name="page" {...page} options={{ menuGroup: 'admin' }} icon={AutoStoriesIcon} />
+            </>}
+
+            {(isEditPaymentTracksData(permissions) || isShowUsersData(permissions)) && <>
+              <Resource name="payment_track" {...paymentTrack} list={isEditPaymentTracksData(permissions) ? paymentTrack.list : null} options={{ menuGroup: 'admin' }} icon={MonetizationOnIcon} />
             </>}
 
             <CustomRoutes>

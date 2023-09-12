@@ -63,6 +63,8 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 klassTypeEnum: 'סוג כיתה בדו"ח',
+                teacherId: 'מורה אחראית',
+                teacherReferenceId: 'מורה אחראית',
             }
         },
         known_absence: {
@@ -89,6 +91,7 @@ export default {
                 teacherReferenceId: 'מורה',
                 startDate: 'תאריך התחלה',
                 endDate: 'תאריך סיום',
+                comment: 'הערה',
             }
         },
         student_klass: {
@@ -107,6 +110,14 @@ export default {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
                 comment: 'הערה',
+            }
+        },
+        student_by_year: {
+            name: 'תלמידה |||| תלמידות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                tz: 'תז',
+                year: 'שנה',
             }
         },
         teacher: {
@@ -155,6 +166,7 @@ export default {
                 paymentMethod: 'אופן התשלום',
                 mailAddressAlias: 'כתובת המייל ממנה יישלחו מיילים',
                 mailAddressTitle: 'שם כתובת המייל',
+                paymentTrackId: 'תוכנית',
             }
         },
         yemot_call: {
@@ -218,13 +230,14 @@ export default {
                 importFileIds: 'קבצים מצורפים',
             }
         },
-        'student/pivot?extra.pivot=StudentAttendance': {
+        'student_by_year/pivot?extra.pivot=StudentAttendance': {
             name: 'דוח נוכחות (פיבוט)',
             fields: {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
                 'extra.klassId': 'כיתה',
                 'extra.lessonId': 'שיעור',
+                'year:$cont': 'שנה',
             }
         },
         report_month: {
@@ -281,6 +294,16 @@ export default {
                 fileData: 'תמונה',
                 'fileData.src': 'תמונה',
                 imageTarget: 'יעד',
+            }
+        },
+        payment_track: {
+            name: 'מסלול תשלום |||| מסלולי תשלום',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                description: 'תיאור',
+                monthlyPrice: 'מחיר חודשי',
+                annualPrice: 'מחיר שנתי',
+                studentNumberLimit: 'מספר תלמידות',
             }
         }
     }

@@ -3,6 +3,7 @@ import {
   BeforeUpdate,
   Column,
   CreateDateColumn,
+  DataSource,
   Entity,
   Index,
   JoinColumn,
@@ -30,22 +31,25 @@ export class Grade implements IHasUserId {
     fillDefaultYearValue(this);
     fillDefaultReportDateValue(this);
 
-    const dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
+    let dataSource: DataSource;
+    try {
+      dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
 
-    this.studentReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
-    );
-    this.teacherReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Teacher, { year: this.year, tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
-    );
-    this.klassReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
-    );
-    this.lessonReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Lesson, { year: this.year, key: this.lessonId }, this.userId, this.lessonReferenceId, this.lessonId
-    );
-
-    dataSource.destroy();
+      this.studentReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+      );
+      this.teacherReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Teacher, { tz: this.teacherId }, this.userId, this.teacherReferenceId, this.teacherId
+      );
+      this.klassReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
+      );
+      this.lessonReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Lesson, { year: this.year, key: this.lessonId }, this.userId, this.lessonReferenceId, this.lessonId
+      );
+    } finally {
+      dataSource?.destroy();
+    }
   }
 
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

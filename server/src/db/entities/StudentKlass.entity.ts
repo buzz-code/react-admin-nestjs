@@ -3,6 +3,7 @@ import {
   BeforeUpdate,
   Column,
   CreateDateColumn,
+  DataSource,
   Entity,
   Index,
   JoinColumn,
@@ -21,6 +22,9 @@ import { ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { MaxCountByUserLimit } from "@shared/utils/validation/max-count-by-user-limit";
+import { StudentByYear } from "../view-entities/StudentByYear.entity";
+import { PaymentTrack } from "@shared/entities/PaymentTrack.entity";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Entity("student_klasses")
@@ -30,18 +34,30 @@ export class StudentKlass implements IHasUserId {
   async fillFields() {
     fillDefaultYearValue(this);
 
-    const dataSource = await getDataSource([Student, Klass, User, KlassType, Teacher]);
+    let dataSource: DataSource;
+    try {
+      dataSource = await getDataSource([Student, Klass, User, KlassType, Teacher]);
 
-    this.studentReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Student, { year: this.year, tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
-    );
-    this.klassReferenceId = await findOneAndAssignReferenceId(
-      dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
-    );
-
-    dataSource.destroy();
+      this.studentReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+      );
+      this.klassReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
+      );
+    } finally {
+      dataSource?.destroy();
+    }
   }
 
+  @MaxCountByUserLimit(StudentByYear, (userId, dataSource: DataSource) =>
+    dataSource.getRepository(User).findOne({ where: { id: userId }, select: { paymentTrackId: true } })
+      .then(user => user?.paymentTrackId)
+      .then(ptid => ptid
+        ? dataSource.getRepository(PaymentTrack).findOne({ where: { id: ptid }, select: { studentNumberLimit: true } })
+        : dataSource.getRepository(PaymentTrack).find({ order: { studentNumberLimit: 'asc' }, take: 1, select: { studentNumberLimit: true } }).then(res => res[0])
+      )
+      .then(pt => pt?.studentNumberLimit ?? 0)
+    , [User, PaymentTrack], 'studentReferenceId', { always: true, message: 'הגעת להגבלת הכמות לטבלת שיוך תלמידות, אנא פני לאחראית כדי להגדיל את החבילה' })
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
