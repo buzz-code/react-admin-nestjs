@@ -29,9 +29,10 @@ const additionalBulkButtons = [
     </BulkReportButton>
 ];
 
-const Datagrid = ({ isAdmin, ...props }) => {
+const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
         <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
+            {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <TextField source="tz" />

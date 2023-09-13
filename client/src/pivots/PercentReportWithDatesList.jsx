@@ -24,9 +24,10 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
-const Datagrid = ({ isAdmin, ...props }) => {
+const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
         <CommonDatagrid {...props}>
+            {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student_by_year" optionalTarget="tz" />

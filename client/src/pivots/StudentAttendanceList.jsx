@@ -1,7 +1,6 @@
 import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
 import { CommonDatagrid } from "@shared/components/crudContainers/CommonList"
 import { CommonReferenceInputFilter, filterByUserIdAndYear } from "@shared/components/fields/CommonReferenceInputFilter";
-import { useIsAdmin } from "@shared/utils/permissionsUtil";
 import { ReferenceField, TextField, useListContext, ReferenceInput, TextInput } from "react-admin"
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
@@ -20,9 +19,8 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
-const Datagrid = ({ ...props }) => {
+const Datagrid = ({ isAdmin, children, ...props }) => {
     const { data } = useListContext();
-    const isAdmin = useIsAdmin();
 
     const columns = [
         isAdmin && <TextField key="id" source="id" />,
@@ -37,6 +35,7 @@ const Datagrid = ({ ...props }) => {
 
     return (
         <CommonDatagrid {...props}>
+            {children}
             {columns}
         </CommonDatagrid>
     );
