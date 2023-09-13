@@ -21,6 +21,10 @@ import { Teacher } from "./Teacher.entity";
 import { KlassType } from "./KlassType.entity";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
+import { IsOptional, ValidateIf } from "class-validator";
+import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { CrudValidationGroups } from "@dataui/crud";
+import { StudentBaseKlass } from "../view-entities/StudentBaseKlass.entity";
 
 @Index("grades_users_idx", ["userId"], {})
 @Entity("grades")
@@ -61,31 +65,46 @@ export class Grade implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
+  @ValidateIf((grade: Grade) => !Boolean(grade.studentReferenceId), { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
+  @ValidateIf((grade: Grade) => !Boolean(grade.studentTz) && Boolean(grade.studentReferenceId), { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   studentReferenceId: number;
 
+  @ValidateIf((grade: Grade) => !Boolean(grade.teacherReferenceId), { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "teacher_id", length: 10, nullable: true })
   teacherId: string;
 
+  @ValidateIf((grade: Grade) => !Boolean(grade.teacherId) && Boolean(grade.teacherReferenceId), { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   teacherReferenceId: number;
 
+  @ValidateIf((grade: Grade) => !Boolean(grade.klassReferenceId), { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number | null;
 
+  @ValidateIf((grade: Grade) => !Boolean(grade.klassId) && Boolean(grade.klassReferenceId), { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   klassReferenceId: number;
 
+  @ValidateIf((grade: Grade) => !Boolean(grade.lessonReferenceId), { always: true })
   @Column("int", { name: "lesson_id", nullable: true })
   lessonId: number;
 
+  @ValidateIf((grade: Grade) => !Boolean(grade.lessonId) && Boolean(grade.lessonReferenceId), { always: true })
   @Column({ nullable: true })
   lessonReferenceId: number;
 
   @Column("date", { name: "report_date" })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   reportDate: Date;
 
   @Column("int", { name: "how_many_lessons", nullable: true })
@@ -94,6 +113,8 @@ export class Grade implements IHasUserId {
   @Column("int", { name: "grade", default: () => "'0'" })
   grade: number;
 
+  @IsOptional({ always: true })
+  @MaxLength(500, { always: true })
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;
 
@@ -109,4 +130,24 @@ export class Grade implements IHasUserId {
   })
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
   user: User;
+
+  @ManyToOne(() => Student, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'studentReferenceId' })
+  student: Student;
+
+  @ManyToOne(() => StudentBaseKlass, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'studentReferenceId', referencedColumnName: 'id' })
+  studentBaseKlass: StudentBaseKlass;
+
+  @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'teacherReferenceId' })
+  teacher: Teacher;
+
+  @ManyToOne(() => Lesson, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'lessonReferenceId' })
+  lesson: Lesson;
+
+  @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'klassReferenceId' })
+  klass: Klass;
 }
