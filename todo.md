@@ -225,11 +225,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add student number validation - based on student-by-year view
 * add comment field to lesson table
 * add new field to klass_type - teacher name
-
-# todo
 * return IsUniqueCombination
 * move code-server & dev env to docker swarm
 * copy validations from att-report entity to grade entity
+
+# todo
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * update react-admin
 * put back unique for edit records - after they fix https://github.com/marmelab/react-admin/issues/9111
