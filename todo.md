@@ -228,10 +228,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * return IsUniqueCombination
 * move code-server & dev env to docker swarm
 * copy validations from att-report entity to grade entity
+* update react-admin
 
 # todo
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
-* update react-admin
 * put back unique for edit records - after they fix https://github.com/marmelab/react-admin/issues/9111
 * create custom useUnique to add userId filter when admin
 * put back known_absences table, and use everywhere - in reports & student report
