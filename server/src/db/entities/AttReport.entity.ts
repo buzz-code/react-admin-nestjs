@@ -22,9 +22,10 @@ import { User } from "./User.entity";
 import { KlassType } from "./KlassType.entity";
 import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
+import { Type } from "class-transformer";
 
 @Index("att_users_idx", ["userId"], {})
 @Entity("att_reports")
@@ -87,6 +88,9 @@ export class AttReport implements IHasUserId {
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number | null;
 
@@ -96,6 +100,9 @@ export class AttReport implements IHasUserId {
   klassReferenceId: number;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.lessonReferenceId), { always: true })
+  @IsOptional({ always: true })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "lesson_id", nullable: true })
   lessonId: number;
 
@@ -107,12 +114,21 @@ export class AttReport implements IHasUserId {
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   reportDate: Date;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "how_many_lessons", nullable: true })
   howManyLessons: number | null;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "abs_count", default: () => "'0'" })
   absCount: number;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "approved_abs_count", default: () => "'0'" })
   approvedAbsCount: number;
 

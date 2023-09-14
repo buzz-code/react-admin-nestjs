@@ -22,9 +22,10 @@ import { KlassType } from "./KlassType.entity";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 import { IsOptional, ValidateIf } from "class-validator";
-import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { CrudValidationGroups } from "@dataui/crud";
 import { StudentBaseKlass } from "../view-entities/StudentBaseKlass.entity";
+import { Type } from "class-transformer";
 
 @Index("grades_users_idx", ["userId"], {})
 @Entity("grades")
@@ -87,6 +88,9 @@ export class Grade implements IHasUserId {
 
   @ValidateIf((grade: Grade) => !Boolean(grade.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number | null;
 
@@ -96,6 +100,9 @@ export class Grade implements IHasUserId {
   klassReferenceId: number;
 
   @ValidateIf((grade: Grade) => !Boolean(grade.lessonReferenceId), { always: true })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "lesson_id", nullable: true })
   lessonId: number;
 
@@ -107,9 +114,15 @@ export class Grade implements IHasUserId {
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   reportDate: Date;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "how_many_lessons", nullable: true })
   howManyLessons: number | null;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "grade", default: () => "'0'" })
   grade: number;
 

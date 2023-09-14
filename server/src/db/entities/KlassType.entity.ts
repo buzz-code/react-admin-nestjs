@@ -15,9 +15,10 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { Teacher } from "./Teacher.entity";
+import { Type } from "class-transformer";
 
 export enum KlassTypeEnum {
   baseKlass = 'כיתת אם',
@@ -52,6 +53,9 @@ export class KlassType implements IHasUserId {
   userId: number;
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "key" })
   key: number;
 

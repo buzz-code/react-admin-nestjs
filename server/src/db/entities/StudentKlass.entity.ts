@@ -18,13 +18,14 @@ import { User } from "./User.entity";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
-import { ValidateIf } from "class-validator";
+import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty } from "@shared/utils/validation/class-validator-he";
+import { IsNotEmpty, IsNumber } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { MaxCountByUserLimit } from "@shared/utils/validation/max-count-by-user-limit";
 import { StudentByYear } from "../view-entities/StudentByYear.entity";
 import { PaymentTrack } from "@shared/entities/PaymentTrack.entity";
+import { Type } from "class-transformer";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Entity("student_klasses")
@@ -79,6 +80,9 @@ export class StudentKlass implements IHasUserId {
 
   @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number;
 
