@@ -120,13 +120,13 @@ export class AttReport implements IHasUserId {
   @Column("int", { name: "how_many_lessons", nullable: true })
   howManyLessons: number | null;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "abs_count", default: () => "'0'" })
   absCount: number;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "approved_abs_count", default: () => "'0'" })
