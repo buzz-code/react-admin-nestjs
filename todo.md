@@ -230,6 +230,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * copy validations from att-report entity to grade entity
 * update react-admin
 * put back unique for edit records
+* translate field names in class-validator errors
 
 # todo
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
