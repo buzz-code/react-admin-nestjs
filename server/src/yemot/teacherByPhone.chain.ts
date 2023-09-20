@@ -3,6 +3,7 @@ import { YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface
 
 class CheckIfTeacherDefinedHandler extends HandlerBase {
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
+        console.log('tempp req.params.teacher', req.params.teacher)
         if (req.params.teacher !== undefined) {
             // Exit the chain early if teacher is already defined
             return next(true);
@@ -15,6 +16,7 @@ class CheckIfTeacherDefinedHandler extends HandlerBase {
 class GetTeacherFromPhoneHandler extends HandlerBase {
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         const teacher = await req.getTeacherByPhone(req.params.ApiPhone);
+        console.log('tempp GetTeacherFromPhoneHandler', teacher)
         if (teacher) {
             req.params.teacher = teacher;
             res.send(res.getText('welcomeForTeacher', teacher.name)) 
