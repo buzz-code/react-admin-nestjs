@@ -16,9 +16,9 @@ function getKlassFromKlassId(req: YemotRequest) {
     return req.getKlassByKlassId(req.params.klassId);
 };
 const klassFromLessonHandler = new Handler(async (req, res, next) => {
-    if (req.params.teacher?.data === undefined) {
+    if (req.params.klass?.data === undefined) {
         if (req.params.lesson.data.klassReferenceIds?.length === 1) {
-            req.params.teacher = {
+            req.params.klass = {
                 id: req.params.lesson.data.klassReferenceIds[0]
             };
         }
