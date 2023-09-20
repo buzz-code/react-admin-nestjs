@@ -14,7 +14,7 @@ class CheckIfTeacherDefinedHandler extends HandlerBase {
 
 class GetTeacherFromPhoneHandler extends HandlerBase {
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
-        const teacher = await req.getTeacherByPhone(req.params.phone);
+        const teacher = await req.getTeacherByPhone(req.params.ApiPhone);
         if (teacher) {
             req.params.teacher = teacher;
             res.send(res.getText('welcomeForTeacher', teacher.name)) 
