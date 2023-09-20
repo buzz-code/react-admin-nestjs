@@ -19,7 +19,7 @@ class GetTeacherFromPhoneHandler extends HandlerBase {
         console.log('tempp GetTeacherFromPhoneHandler', teacher)
         if (teacher) {
             req.params.teacher = teacher;
-            res.send(res.getText('welcomeForTeacher', teacher.name)) 
+            res.send(res.getText('welcomeForTeacher', teacher.name))
             return next();
         } else {
             res.send(res.getText('phoneIsNotRecognizedInTheSystem'));
@@ -29,7 +29,7 @@ class GetTeacherFromPhoneHandler extends HandlerBase {
 }
 
 // Create the chain with the appropriate handlers
-export default new Chain([
+export default new Chain('teacher by phone', [
     new CheckIfTeacherDefinedHandler(),
     new GetTeacherFromPhoneHandler(),
 ]);

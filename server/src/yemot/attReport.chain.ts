@@ -179,7 +179,7 @@ class IterateStudentsHandler extends HandlerBase {
 
     constructor(private properties: IReportProperty[]) {
         super();
-        this.studentChain = new Chain([
+        this.studentChain = new Chain('iterate students', [
             new ValidateAbsCountHandler(properties),
             new SaveAndGoToNextStudent(properties),
         ]);
@@ -202,7 +202,7 @@ class IterateStudentsHandler extends HandlerBase {
 
 
 export default function getReportChain(getExistingReports: GetExistingReportsFunction, properties: IReportProperty[]) {
-    return new Chain([
+    return new Chain('get report chain', [
         new GetSheetNameHandler(),
         new GetExistingReportsHandler(getExistingReports),
         new CheckExistingReportsHandler(),

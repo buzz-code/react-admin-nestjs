@@ -82,7 +82,7 @@ const reportTypeChain = getReportTypeChain(attReportChain, gradeReportChain);
 
 
 // todo: add exeption handler and res.send('dataWasNotSaved');
-export default new Chain([
+export default new Chain('yemot chain', [
     teacherByPhoneChain,
     lessonChain,
     klassFromLessonHandler,

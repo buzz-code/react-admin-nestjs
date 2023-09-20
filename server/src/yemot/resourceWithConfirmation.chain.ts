@@ -83,7 +83,7 @@ class ConfirmResourceHandler extends HandlerBase {
 
 // Create the chain with the appropriate handlers
 export default function getResourceConfirmationChain(resource: string, getResource: (req: YemotRequest) => Promise<any>) {
-    return new Chain([
+    return new Chain('resource with confirmation', [
         new CheckIfResourceDefinedHandler(resource),
         new AskForResourceIdHandler(resource),
         new GetResourceFromResourceIdHandler(resource, getResource),
