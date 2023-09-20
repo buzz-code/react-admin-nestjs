@@ -12,19 +12,21 @@ function getLessonFromLessonId(req: YemotRequest) {
 const lessonChain = getResourceConfirmationChain('lesson', getLessonFromLessonId);
 
 
-function getKlassFromKlassId(req: YemotRequest) {
-    return req.getKlassByKlassId(req.params.klassId);
-};
 const klassFromLessonHandler = new Handler(async (req, res, next) => {
     if (req.params.klass?.data === undefined) {
         if (req.params.lesson.data.klassReferenceIds?.length === 1) {
+            const klass = await req.getKlassByKlassId(req.params.klassId, req.params.lesson.data.klassReferenceIds[0]);
             req.params.klass = {
-                id: req.params.lesson.data.klassReferenceIds[0]
+                id: klass.key,
+                data: klass,
             };
         }
     }
     return next();
 });
+function getKlassFromKlassId(req: YemotRequest) {
+    return req.getKlassByKlassId(req.params.klassId);
+};
 const klassChain = getResourceConfirmationChain('klass', getKlassFromKlassId);
 
 
