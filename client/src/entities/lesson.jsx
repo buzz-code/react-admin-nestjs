@@ -7,6 +7,7 @@ import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } fro
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -48,7 +49,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
         <NumberInput source="key" validate={[required(), unique()]} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
-        <ReferenceArrayInput source="klassReferenceIds" reference='klass' />
+        <CommonReferenceArrayInput source="klassReferenceIds" reference='klass' dynamicFilter={filterByUserIdAndYear} />
         <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
         <DateInput source="startDate" />
         <DateInput source="endDate" />
