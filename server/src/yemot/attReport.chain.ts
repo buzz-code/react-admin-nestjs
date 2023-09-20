@@ -69,8 +69,6 @@ class CheckExistingReportsHandler extends HandlerBase {
 class CheckHowManyLessonsHandler extends HandlerBase {
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.howManyLessons === undefined) {
-            res.getText('howManyLessons').then(res => console.log('text for howManyLessons is: ', res))
-            console.log('temppp going to return')
             return res.send(res.getText('howManyLessons'), 'howManyLessons');
         } else if (req.params.howManyLessons === '0') {
             res.send(res.getText('tryAgain'));
