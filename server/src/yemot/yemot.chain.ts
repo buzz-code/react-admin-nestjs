@@ -40,7 +40,7 @@ const createBaseReportHandler = new Handler(async (req, res, next) => {
             reportDate: new Date(),
         };
     }
-    next();
+    return next();
 });
 
 
