@@ -39,6 +39,7 @@ import recievedMail from '@shared/components/common-entities/recieved-mail';
 import page from '@shared/components/common-entities/page';
 import image from '@shared/components/common-entities/image';
 import paymentTrack from '@shared/components/common-entities/payment-track';
+import yemotCall from '@shared/components/common-entities/yemot-call';
 
 import { isShowUsersData, isEditPagesData, isEditPaymentTracksData, isAdmin } from "@shared/utils/permissionsUtil";
 import YemotSimulator from "@shared/components/views/YemotSimulator";
@@ -108,7 +109,7 @@ const App = () => (
             {isAdmin(permissions) && <>
               <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
               <Resource name="text" {...text} options={{ menuGroup: 'admin' }} />
-              <Resource name="yemot_call" {...resourceEntityGuesser} options={{ menuGroup: 'admin' }} icon={SettingsPhoneIcon} />
+              <Resource name="yemot_call" {...yemotCall} options={{ menuGroup: 'admin' }} icon={SettingsPhoneIcon} />
               <Resource name="recieved_mail" {...recievedMail} options={{ menuGroup: 'admin' }} icon={EmailIcon} />
               <Resource name="audit_log" {...auditLog} options={{ menuGroup: 'admin' }} icon={LogoDevIcon} />
             </>}
