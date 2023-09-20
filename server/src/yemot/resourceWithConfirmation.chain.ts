@@ -11,6 +11,7 @@ class CheckIfResourceDefinedHandler extends HandlerBase {
         }
         if (req.params[this.resource].data !== undefined) {
             // Exit the chain early if resource is already defined
+            res.clear();
             return next(true);
         } else {
             return next();
