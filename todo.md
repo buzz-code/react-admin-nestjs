@@ -234,6 +234,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * send student name on the phone before asking for absCount
 * use studentReferenceId for idsToSkip
 * absCount is 0 check why
+* handle response from yemot when having an array
 
 # todo
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
