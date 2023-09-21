@@ -57,11 +57,11 @@ class CheckExistingReportsHandler extends HandlerBase {
                 return res.send(res.getText('askIfSkipExistingReports'), 'isSkipExistingReports');
             } else if (req.params.idsToSkip === undefined) {
                 if (req.params.isSkipExistingReports === '1') {
-                    req.params.idsToSkip = new Set(req.params.existingReports.map(item => item.student_tz));
+                    req.params.idsToSkip = [...new Set(req.params.existingReports.map(item => item.student_tz))];
                 }
             }
         }
-        req.params.idsToSkip ??= new Set();
+        req.params.idsToSkip ??= [];
         return next();
     }
 }
@@ -82,7 +82,7 @@ class LoadStudentListHandler extends HandlerBase {
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.students === undefined) {
             const studentList = await req.getStudentsByKlassId(req.params.baseReport.klassReferenceId);
-            req.params.students = studentList.filter(item => !req.params.idsToSkip.has(item.tz));
+            req.params.students = studentList.filter(item => !req.params.idsToSkip.includes(item.tz));
         }
         return next();
     }

@@ -37,7 +37,7 @@ const createBaseReportHandler = new Handler(async (req, res, next) => {
             teacherReferenceId: req.params.teacher.id,
             klassReferenceId: req.params.klass.data.id,
             lessonReferenceId: req.params.lesson.data.id,
-            reportDate: new Date(),
+            reportDate: new Date().toISOString().slice(0, 10),
         };
     }
     return next();
