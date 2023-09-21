@@ -14,7 +14,7 @@ describe("attReport chain", () => {
             message: 'absCount',
             field: 'abs_count',
             validate(req: YemotRequest) {
-                return req.params.absCount > 0 && req.params.absCount <= req.params.howManyLessons;
+                return req.params.absCount >= 0 && req.params.absCount <= req.params.howManyLessons;
             }
         }
     ]
@@ -34,7 +34,7 @@ describe("attReport chain", () => {
 
         next = jest.fn();
 
-        chain = getReportChain(getExistingReports, properties);
+        chain = getReportChain(getExistingReports, 'att', properties);
     });
 
     describe("GetSheetNameHandler", () => {
@@ -120,7 +120,7 @@ describe("attReport chain", () => {
     describe('CheckExistingReportsHandler', () => {
         beforeEach(() => {
             req.params.sheetName = 'someSheetName';
-            req.params.existingReports = [{ student_tz: '123' }, { student_tz: '456' }];
+            req.params.existingReports = [{ studentReferenceId: '123' }, { studentReferenceId: '456' }];
             chain.handlers.length = 3;
         });
 
@@ -155,7 +155,7 @@ describe("attReport chain", () => {
 
             await chain.handleRequest(req, res, next);
 
-            expect(req.params.idsToSkip).toEqual(new Set(['123', '456']));
+            expect(req.params.idsToSkip).toEqual(['123', '456']);
             expect(next).toHaveBeenCalled();
         });
 
@@ -164,7 +164,7 @@ describe("attReport chain", () => {
 
             await chain.handleRequest(req, res, next);
 
-            expect(req.params.idsToSkip).toEqual(new Set());
+            expect(req.params.idsToSkip).toEqual([]);
             expect(next).toHaveBeenCalled();
         });
     });
@@ -239,7 +239,7 @@ describe("attReport chain", () => {
         it('should load student list if not defined and idsToSkip is empty set', async () => {
             // Arrange
             req.params.students = undefined;
-            req.params.idsToSkip = new Set();
+            req.params.idsToSkip = [];
             req.getStudentsByKlassId = jest.fn().mockResolvedValue([{ tz: '111111111' }, { tz: '222222222' }]);
 
             // Act
@@ -255,8 +255,8 @@ describe("attReport chain", () => {
         it('should load student list if not defined and idsToSkip is filled set', async () => {
             // Arrange
             req.params.students = undefined;
-            req.params.idsToSkip = new Set(['333333333']);
-            req.getStudentsByKlassId = jest.fn().mockResolvedValue([{ tz: '111111111' }, { tz: '222222222' }, { tz: '333333333' }]);
+            req.params.idsToSkip = ['333333333'];
+            req.getStudentsByKlassId = jest.fn().mockResolvedValue([{ id: '111111111' }, { id: '222222222' }, { id: '333333333' }]);
 
             // Act
             await chain.handleRequest(req, res, next);
@@ -264,7 +264,7 @@ describe("attReport chain", () => {
             // Assert
             expect(res.send).not.toHaveBeenCalled();
             expect(req.getStudentsByKlassId).toHaveBeenCalledWith(req.params.baseReport.klassReferenceId);
-            expect(req.params.students).toEqual([{ tz: '111111111' }, { tz: '222222222' }]);
+            expect(req.params.students).toEqual([{ id: '111111111' }, { id: '222222222' }]);
             expect(next).toHaveBeenCalled();
         });
     });
@@ -284,6 +284,7 @@ describe("attReport chain", () => {
             req.params.students = [{ tz: '111111111' }, { tz: '222222222' }];
             chain.handlers.length = 6;
             req.saveReport = jest.fn();
+            req.deleteExistingReports = jest.fn();
             next.mockClear();
         });
 
@@ -295,7 +296,10 @@ describe("attReport chain", () => {
             expect(req.params.existing).toEqual([]);
             expect(next).toHaveBeenCalledTimes(0);
             const response = await res.getResponse();
-            expect(response).toEqual(util.read_v2("absCount", "absCount"));
+            expect(response).toEqual(util.send(
+                util.id_list_message_v2("nextStudent"),
+                util.read_v2("absCount", "absCount")
+            ));
         });
 
         it('when there are no more students to iterate, should call the next handler', async () => {
@@ -307,7 +311,7 @@ describe("attReport chain", () => {
         });
 
         it('when there is an absCount, should validate its value', async () => {
-            req.params.absCount = 0;
+            req.params.absCount = -1;
 
             await chain.handleRequest(req, res, next);
 
@@ -353,7 +357,10 @@ describe("attReport chain", () => {
             expect(req.params.studentIndex).toEqual(1);
             expect(next).toHaveBeenCalledTimes(0);
             const response = await res.getResponse();
-            expect(response).toEqual(util.read_v2("absCount", "absCount"));
+            expect(response).toEqual(util.send(
+                util.id_list_message_v2("nextStudent"),
+                util.read_v2("absCount", "absCount")
+            ));
         });
 
         it('when there is a valid absCount, should save and go to next student', async () => {
@@ -367,7 +374,10 @@ describe("attReport chain", () => {
             expect(req.saveReport).toHaveBeenCalled();
             expect(next).toHaveBeenCalledTimes(0);
             const response = await res.getResponse();
-            expect(response).toEqual(util.read_v2("absCount", "absCount"));
+            expect(response).toEqual(util.send(
+                util.id_list_message_v2("nextStudent"),
+                util.read_v2("absCount", "absCount")
+            ));
         });
     });
 });

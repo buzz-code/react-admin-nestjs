@@ -34,10 +34,10 @@ describe('lesson chain of responsibility', () => {
                         req.params[resource + 'Id'] = defaultLesson.id;
                         break;
                     case `confirm${pascalCase(resource)}`:
-                        req.params[resource + 'Confirm'] = true;
+                        req.params[resource + 'Confirm'] = '1';
                         break;
                 }
-                if (res.continueMock) {
+                                if (res.continueMock) {
                     await chain.handleRequest(req, res, next);
                 }
             }),
@@ -58,10 +58,11 @@ describe('lesson chain of responsibility', () => {
     test('lesson is confirmed, should set lesson and exit chain', async () => {
         req.params[resource + 'Id'] = defaultLesson.id;
         req.params[resource].dataToConfirm = defaultLesson;
-        req.params[resource + 'Confirm'] = true;
+        req.params[resource + 'Confirm'] = '1';
 
-        await chain.handleRequest(req, res, next);
+                await chain.handleRequest(req, res, next);
 
+        expect(res.send).not.toHaveBeenCalled();
         expect(next).toHaveBeenCalled();
         expect(req.params[resource].data).toEqual(defaultLesson);
     });
@@ -90,7 +91,7 @@ describe('lesson chain of responsibility', () => {
             id: 'math101',
             name: 'Mathematics 101'
         };
-        req.params[resource + 'Confirm'] = false;
+        req.params[resource + 'Confirm'] = '0';
         res.continueMock = true;
 
         await chain.handleRequest(req, res, next);
@@ -98,7 +99,7 @@ describe('lesson chain of responsibility', () => {
         expect(res.send).toBeCalledTimes(2);
         expect(res.send).toHaveBeenNthCalledWith(1, `type${pascalCase(resource)}Id`, resource + 'Id');
         expect(req.getLessonFromLessonId).toHaveBeenCalledWith(defaultLesson.id);
-        expect(req.params[resource].dataToConfirm).toEqual(defaultLesson);
+        expect(req.params[resource].dataToConfirm).toEqual(undefined);
         expect(res.send).toHaveBeenNthCalledWith(2, `confirm${pascalCase(resource)}`, resource + 'Confirm');
         expect(next).toHaveBeenCalled();
         expect(req.params[resource].data).toEqual(defaultLesson);

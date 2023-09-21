@@ -77,7 +77,7 @@ class ConfirmResourceHandler extends HandlerBase {
             delete req.params[this.resource + 'Id'];
             delete req.params[this.resource].dataToConfirm;
             delete req.params[this.resource + 'Confirm'];
-            return res.send(res.getText(`type${pascalCase(this.resource)}Id`));
+            return res.send(res.getText(`type${pascalCase(this.resource)}Id`), this.resource + 'Id');
         }
     }
 }

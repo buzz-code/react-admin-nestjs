@@ -3,11 +3,11 @@ import { YemotRequest, YemotResponse, YemotResponseMock } from "@shared/utils/ye
 import getReportTypeChain from './reportType.chain';
 import util from '@shared/utils/yemot/yemot.util';
 
-async function getExistingReports(userId: string, klassId: string, lessonId: string, sheetName: string) {
+async function getExistingReports(req: YemotRequest, klassId: string, lessonId: string, sheetName: string) {
     return [];
 }
-const attReportChain = getReportChain(getExistingReports, []);
-const gradeReportChain = getReportChain(getExistingReports, []);
+const attReportChain = getReportChain(getExistingReports, 'att', []);
+const gradeReportChain = getReportChain(getExistingReports, 'grade', []);
 const reportTypeChain = getReportTypeChain(attReportChain, gradeReportChain);
 
 describe('reportChain', () => {

@@ -98,7 +98,7 @@ class ValidateAbsCountHandler extends HandlerBase {
         while (req.params.propertyIndex < this.properties.length) {
             const prop = this.properties[req.params.propertyIndex];
             if (req.params[prop.name] === undefined) {
-                return res.send(res.getText(prop.message), prop.name);
+                                return res.send(res.getText(prop.message), prop.name);
             } else if (!req.params[prop.name + 'Validated']) {
                 if (this.isSideMenu(req.params[prop.name], req, res)) {
                     if (res.messages.length) {
@@ -108,6 +108,7 @@ class ValidateAbsCountHandler extends HandlerBase {
                 }
                 req.params[prop.name + 'Validated'] = prop.validate(req);
                 if (!req.params[prop.name + 'Validated']) {
+                    res.clear();
                     res.send(res.getText('tryAgain'));
                     return res.send(res.getText(prop.message), prop.name);
                 }
@@ -123,11 +124,14 @@ class ValidateAbsCountHandler extends HandlerBase {
             req.params.sideMenu = undefined;
         }
         if (value === '*') {
+            res.clear();
             res.send(res.getText('sideMenu'), 'sideMenu');
         } else if (value === '*4') {
+            res.clear();
             req.params.studentIndex--;
             req.params.studentIndex = Math.max(0, req.params.studentIndex);
         } else if (value === '*6') {
+            res.clear();
             req.params.studentIndex++;
         } else {
             return false;
@@ -189,7 +193,7 @@ class IterateStudentsHandler extends HandlerBase {
             req.params.existing ??= req.params.existingReports.filter(item => item.studentReferenceId === req.params.student.id);
 
             res.send(res.getText('nextStudent', req.params.student.name));
-            return this.studentChain.handleRequest(req, res, () => {
+                        return this.studentChain.handleRequest(req, res, () => {
                 clearStudentData(req, this.properties);
 
                 return this.handleRequest(req, res, next);
