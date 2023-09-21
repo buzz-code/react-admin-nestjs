@@ -1,5 +1,5 @@
 import { Chain, HandlerBase } from "@shared/utils/yemot/chain.interface";
-import { YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
+import { ReportType, YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
 import { AttReport } from "src/db/entities/AttReport.entity";
 
 type GetExistingReportsFunction = (req: YemotRequest, klassId: string, lessonId: string, sheetName: string) =>
@@ -136,12 +136,12 @@ class ValidateAbsCountHandler extends HandlerBase {
     }
 }
 class SaveAndGoToNextStudent extends HandlerBase {
-    constructor(private properties: IReportProperty[]) {
+    constructor(private properties: IReportProperty[], private reportType: ReportType) {
         super();
     }
 
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
-        await req.deleteExistingReports(req.params.existing);
+        await req.deleteExistingReports(req.params.existing, this.reportType);
         const attReport: AttReport = {
             ...req.params.baseReport,
             howManyLessons: req.params.howManyLessons,
@@ -173,11 +173,11 @@ function clearStudentData(req: YemotRequest, properties: IReportProperty[]) {
 class IterateStudentsHandler extends HandlerBase {
     studentChain: Chain;
 
-    constructor(private properties: IReportProperty[]) {
+    constructor(private properties: IReportProperty[], private reportType: ReportType) {
         super();
         this.studentChain = new Chain('iterate students', [
             new ValidateAbsCountHandler(properties),
-            new SaveAndGoToNextStudent(properties),
+            new SaveAndGoToNextStudent(properties, this.reportType),
         ]);
     }
 
@@ -186,7 +186,7 @@ class IterateStudentsHandler extends HandlerBase {
         if (req.params.studentIndex < req.params.students.length) {
             res.clear();
             req.params.student ??= req.params.students[req.params.studentIndex];
-            req.params.existing ??= req.params.existingReports.filter(item => item.studentReferenceId == req.params.student.id);
+            req.params.existing ??= req.params.existingReports.filter(item => item.studentReferenceId === req.params.student.id);
 
             res.send(res.getText('nextStudent', req.params.student.name));
             return this.studentChain.handleRequest(req, res, () => {
@@ -200,13 +200,13 @@ class IterateStudentsHandler extends HandlerBase {
 }
 
 
-export default function getReportChain(getExistingReports: GetExistingReportsFunction, properties: IReportProperty[]) {
+export default function getReportChain(getExistingReports: GetExistingReportsFunction, reportType: ReportType, properties: IReportProperty[]) {
     return new Chain('get report chain', [
         new GetSheetNameHandler(),
         new GetExistingReportsHandler(getExistingReports),
         new CheckExistingReportsHandler(),
         new CheckHowManyLessonsHandler(),
         new LoadStudentListHandler(),
-        new IterateStudentsHandler(properties),
+        new IterateStudentsHandler(properties, reportType),
     ]);
 }

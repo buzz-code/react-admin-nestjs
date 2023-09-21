@@ -62,7 +62,7 @@ const attProperties: IReportProperty[] = [
         }
     }
 ]
-const attReportChain = getReportChain(getExistingAttReports, attProperties);
+const attReportChain = getReportChain(getExistingAttReports, 'att', attProperties);
 async function getExistingGradeReports(req: YemotRequest, klassId: string, lessonId: string, sheetName: string) {
     return req.getExistingGradeReports(klassId, lessonId, sheetName);
 }
@@ -76,7 +76,7 @@ const gradeProperties: IReportProperty[] = [
         }
     }
 ]
-const gradeReportChain = getReportChain(getExistingGradeReports, gradeProperties);
+const gradeReportChain = getReportChain(getExistingGradeReports, 'grade', gradeProperties);
 
 const reportTypeChain = getReportTypeChain(attReportChain, gradeReportChain);
 
