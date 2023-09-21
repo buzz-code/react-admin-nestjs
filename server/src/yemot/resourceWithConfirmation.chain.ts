@@ -70,6 +70,7 @@ class ConfirmResourceHandler extends HandlerBase {
         if (req.params[this.resource + 'Confirm'] === '1') {
             // Set the resource and exit the chain if confirmed
             req.params[this.resource].data = req.params[this.resource].dataToConfirm;
+            delete req.params[this.resource].dataToConfirm;
             return next();
         } else {
             // If not confirmed, ask for resource ID again
