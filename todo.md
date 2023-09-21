@@ -233,6 +233,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * translate field names in class-validator errors
 * send student name on the phone before asking for absCount
 * use studentReferenceId for idsToSkip
+* absCount is 0 check why
 
 # todo
 * update StudentKlassReport to show klass ids with ReferenceArrayInput

@@ -56,7 +56,7 @@ const attProperties: IReportProperty[] = [
     {
         name: 'absCount',
         message: 'absCount',
-        field: 'abs_count',
+        field: 'absCount',
         validate(req: YemotRequest) {
             return req.params.absCount > 0 && req.params.absCount <= req.params.howManyLessons;
         }
