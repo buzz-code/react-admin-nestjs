@@ -231,6 +231,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update react-admin
 * put back unique for edit records
 * translate field names in class-validator errors
+* send student name on the phone before asking for absCount
 
 # todo
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
