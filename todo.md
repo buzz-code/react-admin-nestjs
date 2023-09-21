@@ -232,6 +232,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * put back unique for edit records
 * translate field names in class-validator errors
 * send student name on the phone before asking for absCount
+* use studentReferenceId for idsToSkip
 
 # todo
 * update StudentKlassReport to show klass ids with ReferenceArrayInput

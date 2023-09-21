@@ -57,7 +57,7 @@ class CheckExistingReportsHandler extends HandlerBase {
                 return res.send(res.getText('askIfSkipExistingReports'), 'isSkipExistingReports');
             } else if (req.params.idsToSkip === undefined) {
                 if (req.params.isSkipExistingReports === '1') {
-                    req.params.idsToSkip = [...new Set(req.params.existingReports.map(item => item.student_tz))];
+                    req.params.idsToSkip = [...new Set(req.params.existingReports.map(item => item.studentReferenceId))];
                 }
             }
         }
@@ -82,7 +82,7 @@ class LoadStudentListHandler extends HandlerBase {
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params.students === undefined) {
             const studentList = await req.getStudentsByKlassId(req.params.baseReport.klassReferenceId);
-            req.params.students = studentList.filter(item => !req.params.idsToSkip.includes(item.tz));
+            req.params.students = studentList.filter(item => !req.params.idsToSkip.includes(item.id));
         }
         return next();
     }
@@ -141,9 +141,7 @@ class SaveAndGoToNextStudent extends HandlerBase {
     }
 
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
-        if (req.params.existing.length) {
-            await req.deleteExistingReports(req.params.existingReports);
-        }
+        await req.deleteExistingReports(req.params.existing);
         const attReport: AttReport = {
             ...req.params.baseReport,
             howManyLessons: req.params.howManyLessons,
@@ -188,8 +186,8 @@ class IterateStudentsHandler extends HandlerBase {
         if (req.params.studentIndex < req.params.students.length) {
             res.clear();
             req.params.student ??= req.params.students[req.params.studentIndex];
-            req.params.existing ??= req.params.existingReports.filter(item => item.student_tz == req.params.student.tz);
-            
+            req.params.existing ??= req.params.existingReports.filter(item => item.studentReferenceId == req.params.student.id);
+
             res.send(res.getText('nextStudent', req.params.student.name));
             return this.studentChain.handleRequest(req, res, () => {
                 clearStudentData(req, this.properties);
