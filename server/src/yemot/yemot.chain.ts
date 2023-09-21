@@ -33,7 +33,7 @@ const klassChain = getResourceConfirmationChain('klass', getKlassFromKlassId);
 const createBaseReportHandler = new Handler(async (req, res, next) => {
     if (req.params.baseReport === undefined) {
         req.params.baseReport = {
-            userId: req.params.userId,
+            userId: req.getUserId(),
             teacherReferenceId: req.params.teacher.id,
             klassReferenceId: req.params.klass.data.id,
             lessonReferenceId: req.params.lesson.data.id,
