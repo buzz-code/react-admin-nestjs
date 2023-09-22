@@ -28,6 +28,7 @@ import { StudentBaseKlass } from "../view-entities/StudentBaseKlass.entity";
 import { Type } from "class-transformer";
 
 @Index("grades_users_idx", ["userId"], {})
+@Index("grades_user_lesson_klass_year_idx", ["userId", "lessonReferenceId", "klassReferenceId", "year"], {})
 @Entity("grades")
 export class Grade implements IHasUserId {
   @BeforeInsert()

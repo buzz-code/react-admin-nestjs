@@ -28,6 +28,7 @@ import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.u
 import { Type } from "class-transformer";
 
 @Index("att_users_idx", ["userId"], {})
+@Index("att_user_sheet_name_lession_klass_year_idx", ["userId", "sheetName", "lessonReferenceId", "klassReferenceId", "year"], {})
 @Entity("att_reports")
 export class AttReport implements IHasUserId {
   @BeforeInsert()

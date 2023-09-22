@@ -17,6 +17,8 @@ import { Type } from "class-transformer";
 
 @Index("teachers_users_idx", ["userId"], {})
 @Index(["userId", "tz", "year"], { unique: true })
+@Index("teachers_user_id_phone_idx", ["userId", "phone"])
+@Index("teachers_user_id_phone2_idx", ["userId", "phone2"])
 @Entity("teachers")
 export class Teacher implements IHasUserId {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

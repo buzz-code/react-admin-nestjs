@@ -23,6 +23,7 @@ import { Type } from "class-transformer";
 
 @Index("klasses_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
+@Index("klasses_user_id_key_idx", ["userId", "key"])
 @Entity("klasses")
 export class Klass implements IHasUserId {
   @BeforeInsert()

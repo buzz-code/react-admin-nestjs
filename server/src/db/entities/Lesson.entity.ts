@@ -27,6 +27,7 @@ import { Type } from "class-transformer";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
+@Index("lessons_user_id_key_idx", ["userId", "key"])
 @Entity("lessons")
 export class Lesson implements IHasUserId {
   @BeforeInsert()

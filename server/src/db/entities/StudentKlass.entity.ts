@@ -28,6 +28,7 @@ import { PaymentTrack } from "@shared/entities/PaymentTrack.entity";
 import { Type } from "class-transformer";
 
 @Index("student_klasses_users_idx", ["userId"], {})
+@Index("student_klasses_user_klass_year_idx", ["userId", "klassReferenceId", "year"], {})
 @Entity("student_klasses")
 export class StudentKlass implements IHasUserId {
   @BeforeInsert()
