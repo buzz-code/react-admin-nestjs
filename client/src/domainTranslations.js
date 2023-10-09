@@ -305,6 +305,17 @@ export default {
                 annualPrice: 'מחיר שנתי',
                 studentNumberLimit: 'מספר תלמידות',
             }
+        },
+        teacher_salary_report: {
+            name: 'דוח שכר למורה',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                teacherReferenceId: 'מורה',
+                lessonReferenceId: 'שיעור',
+                klassReferenceId: 'כיתה',
+                reportMonthReferenceId: 'תקופת דיווח',
+                howManyLessons: 'מספר שיעורים',
+            }
         }
     }
 };

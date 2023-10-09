@@ -24,6 +24,7 @@ import teacher from "src/entities/teacher";
 import studentKlassesReport from "src/entities/student-klasses-report";
 import reportMonth from "src/entities/report-month";
 import teacherReportStatus from "src/entities/teacher-report-status";
+import teacherSalaryReport from "src/entities/teacher-salary-report";
 import studentPercentReport from "src/entities/student-percent-report";
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
@@ -70,6 +71,7 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -95,6 +97,7 @@ const App = () => (
 
             <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
             <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
+            <Resource name="teacher_salary_report" {...teacherSalaryReport} options={{ menuGroup: 'report' }} icon={LocalAtmIcon} />
 
             <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
             <Resource name="text_by_user" {...textByUser} options={{ menuGroup: 'settings' }} icon={RateReviewIcon} />
