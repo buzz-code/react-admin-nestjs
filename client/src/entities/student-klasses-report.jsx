@@ -1,6 +1,6 @@
 import { ReferenceField, TextField, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
-import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
+import { MultiReferenceArrayField, MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
@@ -21,13 +21,17 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <MultiReferenceField source="studentReferenceId" sortBy="studentName" optionalSource="studentTz" reference="student_by_year" optionalTarget="tz" />
             <MultiReferenceField label="תז תלמידה" source="studentReferenceId" sortBy="studentName" optionalSource="studentTz" reference="student_by_year" optionalTarget="tz">
-                <TextField source="tz"/>
+                <TextField source="tz" />
             </MultiReferenceField>
             <SelectField source="year" choices={yearChoices} />
-            <TextField source="klasses1" />
+            {/* <TextField source="klasses1" />
             <TextField source="klasses2" />
             <TextField source="klasses3" />
-            <TextField source="klassesNull" />
+            <TextField source="klassesNull" /> */}
+            <MultiReferenceArrayField source="klassReferenceId1" sortBy="name" reference="klass" target="id" />
+            <MultiReferenceArrayField source="klassReferenceId2" sortBy="name" reference="klass" target="id" />
+            <MultiReferenceArrayField source="klassReferenceId3" sortBy="name" reference="klass" target="id" />
+            <MultiReferenceArrayField source="klassReferenceIdNull" sortBy="name" reference="klass" target="id" />
         </CommonDatagrid>
     );
 }

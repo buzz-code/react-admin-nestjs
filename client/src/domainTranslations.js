@@ -187,6 +187,10 @@ export default {
                 klasses2: 'מסלול',
                 klasses3: 'התמחות',
                 klassesNull: 'אחר',
+                klassReferenceId1: 'כיתת אם',
+                klassReferenceId2: 'מסלול',
+                klassReferenceId3: 'התמחות',
+                klassReferenceIdNull: 'אחר',
             }
         },
         import_file: {

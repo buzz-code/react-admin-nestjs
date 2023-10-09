@@ -237,9 +237,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * handle response from yemot when having an array
 * yemot call - increase history column size & put back step data
 * create script file to fix reference ids & run in production - save for later
+* update StudentKlassReport to show klass ids with ReferenceArrayInput
 
 # todo
-* update StudentKlassReport to show klass ids with ReferenceArrayInput
 * create custom useUnique to add userId filter when admin
 * put back known_absences table, and use everywhere - in reports & student report
 * on user creation - register, add default values for report months table

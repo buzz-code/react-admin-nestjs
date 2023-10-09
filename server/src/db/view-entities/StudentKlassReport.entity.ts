@@ -14,10 +14,17 @@ import { Student } from "../entities/Student.entity";
     .addSelect('students.name', 'studentName')
     .addSelect('student_klasses.user_id', 'user_id')
     .addSelect('student_klasses.year', 'year')
+
     .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', klasses.name, null) SEPARATOR ', ')`, 'klasses_1')
     .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.track}', klasses.name, null) SEPARATOR ', ')`, 'klasses_2')
     .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.speciality}', klasses.name, null) SEPARATOR ', ')`, 'klasses_3')
     .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.other}' || klass_types.klassTypeEnum is null, klasses.name, null) SEPARATOR ', ')`, 'klasses_null')
+
+    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', student_klasses.klassReferenceId, null) SEPARATOR ',')`, 'klassReferenceId_1')
+    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.track}', student_klasses.klassReferenceId, null) SEPARATOR ',')`, 'klassReferenceId_2')
+    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.speciality}', student_klasses.klassReferenceId, null) SEPARATOR ',')`, 'klassReferenceId_3')
+    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.other}' || klass_types.klassTypeEnum is null, student_klasses.klassReferenceId, null) SEPARATOR ',')`, 'klassReferenceId_null')
+
     .from(StudentKlass, 'student_klasses')
     .leftJoin(Klass, 'klasses', 'klasses.id = student_klasses.klassReferenceId OR (klasses.key = student_klasses.klass_id AND klasses.user_id = student_klasses.user_id)')
     .leftJoin(KlassType, 'klass_types', 'klass_types.id = klasses.klassTypeReferenceId OR (klass_types.id = klasses.klass_type_id AND klass_types.user_id = klasses.user_id)')
@@ -57,6 +64,18 @@ export class StudentKlassReport implements IHasUserId {
 
   @Column({ name: "klasses_null" })
   klassesNull: string;
+
+  @Column('simple-array', { name: 'klassReferenceId_1' })
+  klassReferenceId1: string[];
+
+  @Column('simple-array', { name: 'klassReferenceId_2' })
+  klassReferenceId2: string[];
+
+  @Column('simple-array', { name: 'klassReferenceId_3' })
+  klassReferenceId3: string[];
+
+  @Column('simple-array', { name: 'klassReferenceId_null' })
+  klassReferenceIdNull: string[];
 
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
   user: User;
