@@ -7,7 +7,8 @@ import { TeacherLessonReportStatus } from "./TeacherLessonReportStatus.entity";
 @ViewEntity("teacher_report_status", {
   expression: (dataSource: DataSource) => dataSource
     .createQueryBuilder()
-    .select('CONCAT(tlrs.userId, "_", tlrs.teacherId, "_", COALESCE(tlrs.reportMonthId, "null"))', 'id')
+    .select('CONCAT(COALESCE(tlrs.userId, "null"), "_", COALESCE(tlrs.teacherId, "null"), "_", ' +
+      'COALESCE(tlrs.reportMonthId, "null"))', 'id')
     .addSelect('tlrs.userId', 'userId')
     .addSelect('tlrs.teacherId', 'teacherId')
     .addSelect('teacher.name', 'teacherName')

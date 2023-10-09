@@ -29,7 +29,7 @@ import { AttReportAndGrade } from "./db/view-entities/AttReportAndGrade.entity";
 import { StudentGlobalReport } from "./db/view-entities/StudentGlobalReport.entity";
 import studentByYearConfig from "./entity-modules/student-by-year.config";
 import paymentTrackConfig from "./entity-modules/payment-track.config";
-import { TeacherSalaryReport } from "./db/view-entities/TeacherSalaryReport.entity";
+import teacherSalaryReportConfig from "./entity-modules/teacher-salary-report.config";
 
 @Module({
     imports: [
@@ -61,7 +61,7 @@ import { TeacherSalaryReport } from "./db/view-entities/TeacherSalaryReport.enti
         BaseEntityModule.register({ entity: Image }),
         BaseEntityModule.register(studentByYearConfig),
         BaseEntityModule.register(paymentTrackConfig),
-        BaseEntityModule.register({ entity: TeacherSalaryReport })
+        BaseEntityModule.register(teacherSalaryReportConfig),
     ]
 })
 export class EntitiesModule { }

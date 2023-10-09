@@ -1,4 +1,4 @@
-import { Column, DataSource, JoinColumn, ManyToOne, ViewEntity } from "typeorm";
+import { Column, DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { AttReport } from "../entities/AttReport.entity";
 import { ReportMonth } from "../entities/ReportMonth.entity";
@@ -9,7 +9,10 @@ import { Klass } from "../entities/Klass.entity";
 @ViewEntity("teacher_salary_report", {
   expression: (dataSource: DataSource) => dataSource
     .createQueryBuilder()
-    .select('CONCAT(att_reports.user_id, "_", att_reports.teacherReferenceId, "_", att_reports.lessonReferenceId, "_", att_reports.klassReferenceId, "_", att_reports.how_many_lessons, "_", att_reports.year)', 'id')
+    .select('CONCAT(COALESCE(att_reports.user_id, "null"), "_", COALESCE(att_reports.teacherReferenceId, "null"), "_", ' +
+      'COALESCE(att_reports.lessonReferenceId, "null"), "_", COALESCE(att_reports.klassReferenceId, "null"), "_", ' +
+      'COALESCE(att_reports.how_many_lessons, "null"), "_", COALESCE(att_reports.year, "null"), "_", ' +
+      'COALESCE(report_months.id, "null"))', 'id')
     .addSelect('att_reports.user_id', 'userId')
     .addSelect('att_reports.teacherReferenceId', 'teacherReferenceId')
     .addSelect('att_reports.lessonReferenceId', 'lessonReferenceId')
@@ -22,7 +25,8 @@ import { Klass } from "../entities/Klass.entity";
     .leftJoin(ReportMonth, 'report_months', 'att_reports.user_id = report_months.userId AND att_reports.report_date <= report_months.endDate AND att_reports.report_date >= report_months.startDate')
 })
 export class TeacherSalaryReport implements IHasUserId {
-  @Column()
+  @ViewColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column()
