@@ -236,6 +236,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * absCount is 0 check why
 * handle response from yemot when having an array
 * yemot call - increase history column size & put back step data
+* create script file to fix reference ids & run in production - save for later
 
 # todo
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
