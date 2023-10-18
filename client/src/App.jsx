@@ -48,6 +48,7 @@ import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
 import Tutorial from '@shared/components/views/Tutorial';
 import PageList from '@shared/components/views/PageList';
+import ScannerUpload from '@shared/components/views/ScannerUpload';
 
 import BadgeIcon from '@mui/icons-material/Badge';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
@@ -134,6 +135,7 @@ const App = () => (
               <Route path="/yemot-simulator" element={<YemotSimulator />} />
               <Route path="/tutorial" element={<Tutorial />} />
               <Route path="/pages-view" element={<PageList />} />
+              <Route path="/scanner-upload" element={<ScannerUpload />} />
             </CustomRoutes>
 
             <CustomRoutes noLayout>
