@@ -28,10 +28,10 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="klasses2" />
             <TextField source="klasses3" />
             <TextField source="klassesNull" /> */}
-            <MultiReferenceArrayField source="klassReferenceId1" sortBy="name" reference="klass" target="id" />
-            <MultiReferenceArrayField source="klassReferenceId2" sortBy="name" reference="klass" target="id" />
-            <MultiReferenceArrayField source="klassReferenceId3" sortBy="name" reference="klass" target="id" />
-            <MultiReferenceArrayField source="klassReferenceIdNull" sortBy="name" reference="klass" target="id" />
+            <MultiReferenceArrayField source="klassReferenceId1" sort="name" reference="klass" target="id" />
+            <MultiReferenceArrayField source="klassReferenceId2" sort="name" reference="klass" target="id" />
+            <MultiReferenceArrayField source="klassReferenceId3" sort="name" reference="klass" target="id" />
+            <MultiReferenceArrayField source="klassReferenceIdNull" sort="name" reference="klass" target="id" />
         </CommonDatagrid>
     );
 }
