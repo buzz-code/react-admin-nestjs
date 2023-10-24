@@ -8,7 +8,7 @@ import { TeacherLessonReportStatus } from "./TeacherLessonReportStatus.entity";
   expression: (dataSource: DataSource) => dataSource
     .createQueryBuilder()
     .select('CONCAT(COALESCE(tlrs.userId, "null"), "_", COALESCE(tlrs.teacherId, "null"), "_", ' +
-      'COALESCE(tlrs.reportMonthId, "null"))', 'id')
+      'COALESCE(tlrs.reportMonthId, "null"), "_", COALESCE(tlrs.year, "null"))', 'id')
     .addSelect('tlrs.userId', 'userId')
     .addSelect('tlrs.teacherId', 'teacherId')
     .addSelect('teacher.name', 'teacherName')
