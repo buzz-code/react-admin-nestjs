@@ -13,7 +13,7 @@ export interface TeacherReportFileData extends IDataToExcelReportGenerator {
     lesson: Lesson,
 }
 const getReportData: IGetReportDataFunction = async (params, dataSource): Promise<TeacherReportFileData[]> => {
-    const [userId, teacherId, reportMonthId] = params.id.split('_');
+    const [userId, teacherId, reportMonthId, year] = params.id.split('_');
     const [user, teacher, teacherReportStatus] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Teacher).findOneBy({ id: teacherId }),
@@ -33,6 +33,11 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
                 relations: {
                     student: true,
                     klass: true,
+                },
+                order: {
+                    student: {
+                        name: 'ASC'
+                    }
                 }
             });
             lessonStudents[lesson.id] = students;
