@@ -20,8 +20,8 @@ function getConfig(): BaseEntityModuleOptions {
                 return [
                     { value: 'teacherName', label: 'מורה' },
                     { value: 'reportMonthName', label: 'תקופת דיווח' },
-                    { value: 'reportedLessons', label: 'שיעורים שדווחו' },
-                    { value: 'notReportedLessons', label: 'שיעורים שלא דווחו' },
+                    { value: 'reportedLessonNames', label: 'שיעורים שדווחו' },
+                    { value: 'notReportedLessonNames', label: 'שיעורים שלא דווחו' },
                 ];
             }
         },

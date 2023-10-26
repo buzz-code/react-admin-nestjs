@@ -41,8 +41,8 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <ReferenceField source="teacherReferenceId" reference="teacher" sortBy='teacherName' />
             <ReferenceField source="reportMonthReferenceId" reference="report_month" sortBy='reportMonthName' />
             <SelectField source="year" choices={yearChoices} />
-            <ReferenceArrayField source="reportedLessons" reference="lesson" />
-            <ReferenceArrayField source="notReportedLessons" reference="lesson" />
+            <ReferenceArrayField source="reportedLessons" reference="lesson" sortBy="reportedLessonNames" />
+            <ReferenceArrayField source="notReportedLessons" reference="lesson" sortBy="notReportedLessonNames" />
         </CommonDatagrid>
     );
 }

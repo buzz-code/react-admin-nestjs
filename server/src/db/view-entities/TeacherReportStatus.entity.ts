@@ -15,8 +15,10 @@ import { TeacherLessonReportStatus } from "./TeacherLessonReportStatus.entity";
     .addSelect('tlrs.reportMonthId', 'reportMonthId')
     .addSelect('tlrs.year', 'year')
     .addSelect('rm.name', 'reportMonthName')
-    .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 1 THEN tlrs.lessonId END ORDER BY tlrs.lessonId)', 'reportedLessons')
-    .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonId END ORDER BY tlrs.lessonId)', 'notReportedLessons')
+    .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 1 THEN tlrs.lessonId END ORDER BY tlrs.lessonName)', 'reportedLessons')
+    .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonId END ORDER BY tlrs.lessonName)', 'notReportedLessons')
+    .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 1 THEN tlrs.lessonName END ORDER BY tlrs.lessonName SEPARATOR ", ")', 'reportedLessonNames')
+    .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonName END ORDER BY tlrs.lessonName SEPARATOR ", ")', 'notReportedLessonNames')
     .from(TeacherLessonReportStatus, 'tlrs')
     .leftJoin(Teacher, 'teacher', 'tlrs.teacherId = teacher.id')
     .leftJoin(ReportMonth, 'rm', 'tlrs.reportMonthId = rm.id')
@@ -55,4 +57,10 @@ export class TeacherReportStatus implements IHasUserId {
 
   @Column('simple-array')
   notReportedLessons: number[];
+
+  @Column()
+  reportedLessonNames: string;
+
+  @Column()
+  notReportedLessonNames: string;
 }

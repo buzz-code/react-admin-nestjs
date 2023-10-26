@@ -239,11 +239,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * create script file to fix reference ids & run in production - save for later
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * add scanner upload page
+* teacher report - add lesson name to export file, and not only lesson id
 
 # todo
 * add teacher name & lesson name parameters to teacher report file mail subject & body
 * make teacher-report mail subject & body editable via texts table
-* teacher report - add lesson name to export file, and not only lesson id
 * show report month in att report table - create a view for this
 * create custom useUnique to add userId filter when admin
 * put back known_absences table, and use everywhere - in reports & student report
