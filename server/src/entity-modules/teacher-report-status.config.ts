@@ -70,37 +70,35 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                 const generator = teacherReportFile;
                 for (const p of params) {
                     try {
-                        const data = (await generator.getReportData(p, this.dataSource)) as TeacherReportFileData[];
-                        if (data.length) {
-                            if (data[0].teacher.email) {
-                                const zipFileBuffer = await generator.getFileBuffer(data);
-                                const zipContent = await JSZip.loadAsync(zipFileBuffer);
+                        const [data] = (await generator.getReportData(p, this.dataSource)) as TeacherReportFileData[];
+                        if (data?.teacher?.email) {
+                            const zipFileBuffer = await generator.getFileBuffer([data]);
+                            const zipContent = await JSZip.loadAsync(zipFileBuffer);
 
-                                const attachments: ISendMailOptions['attachments'] = await Promise.all(
-                                    Object.values(zipContent.files)
-                                        .map(
-                                            async (file) => ({
-                                                filename: file.name,
-                                                content: await file.async('nodebuffer')
-                                            })
-                                        )
-                                );
+                            const attachments: ISendMailOptions['attachments'] = await Promise.all(
+                                Object.values(zipContent.files)
+                                    .map(
+                                        async (file) => ({
+                                            filename: file.name,
+                                            content: await file.async('nodebuffer')
+                                        })
+                                    )
+                            );
 
-                                const fromAddress = await getUserMailAddressFrom(req.auth, this.dataSource);
-                                const targetEntity = req.parsed.extra?.isGrades ? 'grade' : 'att_report';
-                                const replyToAddress = await getMailAddressForEntity(p.userId, targetEntity, this.dataSource);
-                                await this.mailSendService.sendMail({
-                                    to: data[0].teacher.email,
-                                    from: fromAddress,
-                                    subject: 'קבצי נוכחות למילוי',
-                                    html: req.parsed.extra.mailBody ?? 'מורה יקרה, מצורפים קבצים',
-                                    attachments,
-                                    replyTo: {
-                                        address: replyToAddress,
-                                        name: fromAddress.name,
-                                    },
-                                });
-                            }
+                            const fromAddress = await getUserMailAddressFrom(req.auth, this.dataSource);
+                            const targetEntity = req.parsed.extra?.isGrades ? 'grade' : 'att_report';
+                            const replyToAddress = await getMailAddressForEntity(p.userId, targetEntity, this.dataSource);
+                            await this.mailSendService.sendMail({
+                                to: data.teacher.email,
+                                from: fromAddress,
+                                subject: 'קבצי נוכחות למילוי',
+                                html: req.parsed.extra.mailBody,
+                                attachments,
+                                replyTo: {
+                                    address: replyToAddress,
+                                    name: fromAddress.name,
+                                },
+                            });
                         }
                     } catch (e) {
                         console.log('error sending teacher report', e);
