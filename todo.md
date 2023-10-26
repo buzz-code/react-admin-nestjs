@@ -241,9 +241,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add scanner upload page
 * teacher report - add lesson name to export file, and not only lesson id
 * create att report with report month view
+* add teacher name & lesson name parameters to teacher report file mail subject & body
 
 # todo
-* add teacher name & lesson name parameters to teacher report file mail subject & body
 * make teacher-report mail subject & body editable via texts table
 * show report month in att report table
 * create custom useUnique to add userId filter when admin
