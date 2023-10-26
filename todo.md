@@ -241,6 +241,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add scanner upload page
 
 # todo
+* add teacher name & lesson name parameters to teacher report file mail subject & body
+* make teacher-report mail subject & body editable via texts table
+* teacher report - add lesson name to export file, and not only lesson id
+* show report month in att report table - create a view for this
 * create custom useUnique to add userId filter when admin
 * put back known_absences table, and use everywhere - in reports & student report
 * on user creation - register, add default values for report months table
