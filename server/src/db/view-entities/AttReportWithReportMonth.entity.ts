@@ -15,7 +15,7 @@ export class AttReportWithReportMonth implements IHasUserId {
   @Column()
   id: number;
 
-  @Column()
+  @Column({ name: 'user_id' })
   userId: number;
 
   @Column()

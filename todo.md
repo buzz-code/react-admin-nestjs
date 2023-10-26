@@ -240,11 +240,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update StudentKlassReport to show klass ids with ReferenceArrayInput
 * add scanner upload page
 * teacher report - add lesson name to export file, and not only lesson id
+* create att report with report month view
 
 # todo
 * add teacher name & lesson name parameters to teacher report file mail subject & body
 * make teacher-report mail subject & body editable via texts table
-* show report month in att report table - create a view for this
+* show report month in att report table
 * create custom useUnique to add userId filter when admin
 * put back known_absences table, and use everywhere - in reports & student report
 * on user creation - register, add default values for report months table
