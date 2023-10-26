@@ -71,9 +71,9 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                 const generator = teacherReportFile;
                 for (const p of params) {
                     try {
-                        const [data] = (await generator.getReportData(p, this.dataSource)) as TeacherReportFileData[];
-                        if (data?.teacher?.email) {
-                            const zipFileBuffer = await generator.getFileBuffer([data]);
+                        const filesData = (await generator.getReportData(p, this.dataSource)) as TeacherReportFileData[];
+                        if (filesData[0]?.teacher?.email) {
+                            const zipFileBuffer = await generator.getFileBuffer(filesData);
                             const zipContent = await JSZip.loadAsync(zipFileBuffer);
 
                             const attachments: ISendMailOptions['attachments'] = await Promise.all(
@@ -89,12 +89,12 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                             const fromAddress = await getUserMailAddressFrom(req.auth, this.dataSource);
                             const targetEntity = req.parsed.extra?.isGrades ? 'grade' : 'att_report';
                             const replyToAddress = await getMailAddressForEntity(p.userId, targetEntity, this.dataSource);
-                            const textParams = [data.teacher.name, data.lesson.name, data.teacherReportStatus.reportMonthName];
+                            const textParams = [filesData[0].teacher.name, filesData[0].teacherReportStatus.reportMonthName, filesData.map(item => item.lesson.name).join(', ')];
                             const mailSubject = FormatString(req.parsed.extra.mailSubject, textParams);
                             const mailBody = FormatString(req.parsed.extra.mailBody, textParams);
 
                             await this.mailSendService.sendMail({
-                                to: data.teacher.email,
+                                to: filesData[0].teacher.email,
                                 from: fromAddress,
                                 subject: mailSubject,
                                 html: mailBody,
