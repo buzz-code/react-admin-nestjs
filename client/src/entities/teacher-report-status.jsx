@@ -1,4 +1,4 @@
-import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField, required, SelectField, BooleanInput } from 'react-admin';
+import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField, required, SelectField, BooleanInput, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
@@ -21,12 +21,14 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
+const defaultMailSubject = 'קבצי נוכחות למילוי';
 const defaultMailBody = 'מורה יקרה, מצורפים קבצים';
 const additionalBulkButtons = [
     <BulkReportButton label='הורדת אקסל למורה' icon={<BrowserUpdatedIcon />} name='teacherReportFile' >
         <BooleanInput source="isGrades" label="קובץ ציונים" />
     </BulkReportButton>,
     <BulkActionButton label='שליחת אקסל למורה' icon={<AttachEmailIcon />} name='teacherReportFile' >
+        <TextInput key="mailSubject" source="mailSubject" label="נושא המייל" validate={required()} defaultValue={defaultMailSubject} />
         <RichTextInput key="mailBody" source="mailBody" label="תוכן המייל" validate={required()} defaultValue={defaultMailBody} />
         <BooleanInput source="isGrades" label="קובץ ציונים" />
     </BulkActionButton>,

@@ -11,6 +11,7 @@ import * as JSZip from 'jszip';
 import { getUserMailAddressFrom, validateUserHasPaid } from "@shared/base-entity/base-entity.util";
 import { getUserIdFromUser } from "@shared/auth/auth.util";
 import { getMailAddressForEntity } from "@shared/utils/mail/mail-address.util";
+import { FormatString } from "@shared/utils/yemot/yemot.interface";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -88,11 +89,15 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                             const fromAddress = await getUserMailAddressFrom(req.auth, this.dataSource);
                             const targetEntity = req.parsed.extra?.isGrades ? 'grade' : 'att_report';
                             const replyToAddress = await getMailAddressForEntity(p.userId, targetEntity, this.dataSource);
+                            const textParams = [data.teacher.name, data.lesson.name, data.teacherReportStatus.reportMonthName];
+                            const mailSubject = FormatString(req.parsed.extra.mailSubject, textParams);
+                            const mailBody = FormatString(req.parsed.extra.mailBody, textParams);
+
                             await this.mailSendService.sendMail({
                                 to: data.teacher.email,
                                 from: fromAddress,
-                                subject: 'קבצי נוכחות למילוי',
-                                html: req.parsed.extra.mailBody,
+                                subject: mailSubject,
+                                html: mailBody,
                                 attachments,
                                 replyTo: {
                                     address: replyToAddress,
