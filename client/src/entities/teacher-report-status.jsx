@@ -21,8 +21,8 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
-const defaultMailSubject = 'קבצי נוכחות למילוי';
-const defaultMailBody = 'מורה יקרה, מצורפים קבצים';
+const defaultMailSubject = 'תזכורת לשליחת דווח נוכחות';
+const defaultMailBody = 'שלום המורה {0} היקרה, תזכורת לשלוח נתוני נוכחות עבור השיעורים {2} בתודה ההנהלה';
 const additionalBulkButtons = [
     <BulkReportButton label='הורדת אקסל למורה' icon={<BrowserUpdatedIcon />} name='teacherReportFile' >
         <BooleanInput source="isGrades" label="קובץ ציונים" />
