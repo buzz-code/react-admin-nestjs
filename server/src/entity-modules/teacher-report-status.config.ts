@@ -37,14 +37,7 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
     async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
         if (req.parsed.extra.report in this.reportsDict) {
             const generator = this.reportsDict[req.parsed.extra.report];
-            const params = req.parsed.extra.ids
-                .toString()
-                .split(',')
-                .map(id => ({
-                    userId: getUserIdFromUser(req.auth),
-                    id,
-                    isGrades: req.parsed.extra?.isGrades,
-                }));
+            const params = getReportParams(req);
             return {
                 generator,
                 params,
@@ -54,14 +47,7 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
     }
 
     async doAction(req: CrudRequest<any, any>): Promise<any> {
-        const params = req.parsed.extra.ids
-            .toString()
-            .split(',')
-            .map(id => ({
-                userId: getUserIdFromUser(req.auth),
-                id,
-                isGrades: req.parsed.extra?.isGrades,
-            }));
+        const params = getReportParams(req);
         switch (req.parsed.extra.action) {
             case 'teacherReportFile': {
                 if (params.length > 1) {
@@ -114,6 +100,18 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
         }
         return super.doAction(req);
     }
+}
+
+function getReportParams(req: CrudRequest<any, any>) {
+    const params = req.parsed.extra.ids
+        .toString()
+        .split(',')
+        .map(id => ({
+            userId: getUserIdFromUser(req.auth),
+            id,
+            isGrades: req.parsed.extra?.isGrades,
+        }));
+    return params;
 }
 
 export default getConfig();
