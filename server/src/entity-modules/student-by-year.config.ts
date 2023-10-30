@@ -18,6 +18,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
         const studentIds = data.map(item => item.id);
         const studentMap = data.reduce((a, b) => ({ ...a, [b.id]: b }), {});
         const yearFilter = filter.find(item => item.field === 'year');
+        const klassReferenceIdFilter = filter.find(item => item.field === 'klassReferenceIds');
 
         switch (pivotName) {
             case 'StudentAttendance': {
@@ -31,7 +32,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                         where: {
                             userId: data[0].userId,
                             studentReferenceId: In(studentIds),
-                            klassReferenceId: extra?.klassId,
+                            klassReferenceId: klassReferenceIdFilter?.value,
                             lessonReferenceId: extra?.lessonId,
                             year: yearFilter?.value,
                         },

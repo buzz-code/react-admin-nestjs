@@ -242,6 +242,7 @@ export default {
                 'extra.klassId': 'כיתה',
                 'extra.lessonId': 'שיעור',
                 'year:$cont': 'שנה',
+                'klassReferenceIds:$cont': 'כיתה',
             }
         },
         report_month: {

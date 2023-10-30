@@ -11,6 +11,7 @@ import { Student } from "../entities/Student.entity";
     .addSelect('students.tz', 'tz')
     .addSelect('students.name', 'name')
     .addSelect('GROUP_CONCAT(DISTINCT student_klasses.year)', 'year')
+    .addSelect('GROUP_CONCAT(DISTINCT student_klasses.klassReferenceId)', 'klassReferenceIds')
     .from(StudentKlass, 'student_klasses')
     .leftJoin(Student, 'students', 'students.id = student_klasses.studentReferenceId')
     .groupBy('students.id')
@@ -30,6 +31,9 @@ export class StudentByYear implements IHasUserId {
 
   @Column('simple-array', { nullable: true })
   year: string[];
+
+  @Column('simple-array', { nullable: true })
+  klassReferenceIds: string[];
 
   // @ManyToOne(() => Student, { createForeignKeyConstraints: false })
   // @JoinColumn({ name: 'id' })

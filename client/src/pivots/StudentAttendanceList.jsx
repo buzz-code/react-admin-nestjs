@@ -10,7 +10,7 @@ const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
-    <CommonReferenceInputFilter source="extra.klassId" reference="klass" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
+    <CommonReferenceInputFilter source="klassReferenceIds:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
     <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
     <CommonAutocompleteInput source="year:$cont" choices={yearChoices} alwaysOn />,
 ];
