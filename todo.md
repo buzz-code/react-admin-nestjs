@@ -246,10 +246,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * student attendance pivot should filter by klass
 * show report month in att report table - add a new view for this
 * on user creation - register, add default values for report months table
+* create custom useUnique to add userId filter when admin
 
 # todo
 * make teacher-report mail subject & body editable via texts table
-* create custom useUnique to add userId filter when admin
 * put back known_absences table, and use everywhere - in reports & student report
 * nest auto delete migration files
 * check docker security issues
