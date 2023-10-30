@@ -6,6 +6,7 @@ import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } fro
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { Inputs } from './att-report';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -53,8 +54,10 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
 
 const entity = {
     Datagrid,
+    Inputs,
     filters,
     filterDefaultValues,
+    editResource: 'att_report',
 };
 
 export default getResourceComponents(entity);

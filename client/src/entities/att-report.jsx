@@ -47,7 +47,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
     );
 }
 
-const Inputs = ({ isCreate, isAdmin }) => {
+export const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
