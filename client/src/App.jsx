@@ -13,6 +13,7 @@ import { Dashboard, Layout } from 'src/GeneralLayout';
 
 import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityGuesser';
 import attReport from "src/entities/att-report";
+import attReportWithReportMonth from './entities/att-report-with-report-month';
 import grade from "src/entities/grade";
 import klass from "src/entities/klass";
 import klassType from "src/entities/klass-type";
@@ -93,7 +94,7 @@ const App = () => (
               <Route path="student-attendance" element={<StudentAttendanceList />} />
             </Resource>
             <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={GroupWorkIcon} />
-            <Resource name="att_report" {...attReport} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
+            <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
             <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
 
             <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
@@ -105,6 +106,7 @@ const App = () => (
             <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} icon={AlternateEmailIcon} />
             <Resource name="image" {...image} options={{ menuGroup: 'settings' }} icon={ImageIcon} />
             <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
+            <Resource name="att_report" {...attReport} options={{ menuGroup: 'settings' }} icon={ViewListIcon} />
             <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
 
             {/* <Resource name="grade" {...resourceEntityGuesser} /> */}

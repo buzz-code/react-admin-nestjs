@@ -29,6 +29,28 @@ export default {
                 sheetName: 'חודש דיווח',
             }
         },
+        att_report_with_report_month: {
+            name: 'רשומת נוכחות |||| נוכחות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                studentTz: 'תלמידה',
+                studentReferenceId: 'תלמידה',
+                'studentBaseKlass.klassName': 'כיתת בסיס',
+                teacherId: 'מורה',
+                teacherReferenceId: 'מורה',
+                klassId: 'כיתה',
+                klassReferenceId: 'כיתה',
+                lessonId: 'שיעור',
+                lessonReferenceId: 'שיעור',
+                reportMonthReferenceId: 'חודש דיווח',
+                reportDate: 'תאריך דיווח',
+                howManyLessons: 'מספר שיעורים',
+                absCount: 'חיסורים',
+                approvedAbsCount: 'חיסורים מאושרים',
+                comments: 'הערה',
+                sheetName: 'חודש דיווח',
+            }
+        },
         grade: {
             name: 'רשומת ציונים |||| ציונים',
             fields: {

@@ -244,10 +244,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add teacher name & lesson name parameters to teacher report file mail subject & body
 * add ability to send teacher report file for specific lesson
 * student attendance pivot should filter by klass
+* show report month in att report table - add a new view for this
 
 # todo
 * make teacher-report mail subject & body editable via texts table
-* show report month in att report table - add a new view for this
 * create custom useUnique to add userId filter when admin
 * put back known_absences table, and use everywhere - in reports & student report
 * on user creation - register, add default values for report months table

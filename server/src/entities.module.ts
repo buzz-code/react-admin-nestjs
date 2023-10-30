@@ -30,11 +30,13 @@ import { StudentGlobalReport } from "./db/view-entities/StudentGlobalReport.enti
 import studentByYearConfig from "./entity-modules/student-by-year.config";
 import paymentTrackConfig from "./entity-modules/payment-track.config";
 import teacherSalaryReportConfig from "./entity-modules/teacher-salary-report.config";
+import attReportWithReportMonthConfig from "./entity-modules/att-report-with-report-month.config";
 
 @Module({
     imports: [
         BaseEntityModule.register(userConfig),
         BaseEntityModule.register(attReportConfig),
+        BaseEntityModule.register(attReportWithReportMonthConfig),
         BaseEntityModule.register(gradeConfig),
         BaseEntityModule.register(klassConfig),
         BaseEntityModule.register(klassTypeConfig),

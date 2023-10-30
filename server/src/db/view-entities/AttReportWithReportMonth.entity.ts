@@ -1,4 +1,4 @@
-import { Column, DataSource, ViewEntity } from "typeorm";
+import { Column, DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { AttReport } from "../entities/AttReport.entity";
 import { ReportMonth } from "../entities/ReportMonth.entity";
@@ -11,8 +11,9 @@ import { ReportMonth } from "../entities/ReportMonth.entity";
     .from(AttReport, 'att_reports')
     .leftJoin(ReportMonth, 'report_months', 'att_reports.user_id = report_months.userId AND att_reports.report_date <= report_months.endDate AND att_reports.report_date >= report_months.startDate')
 })
-export class AttReportWithReportMonth implements IHasUserId {
-  @Column()
+export class AttReportWithReportMonth extends AttReport implements IHasUserId {
+  @ViewColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column({ name: 'user_id' })
@@ -20,4 +21,8 @@ export class AttReportWithReportMonth implements IHasUserId {
 
   @Column()
   reportMonthReferenceId: number;
+
+  @ManyToOne(() => ReportMonth, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'reportMonthReferenceId' })
+  reportMonth: ReportMonth;
 }
