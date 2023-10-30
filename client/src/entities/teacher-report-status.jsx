@@ -30,6 +30,7 @@ const additionalBulkButtons = [
     <BulkActionButton label='שליחת אקסל למורה' icon={<AttachEmailIcon />} name='teacherReportFile' >
         <TextInput key="mailSubject" source="mailSubject" label="נושא המייל" validate={required()} defaultValue={defaultMailSubject} />
         <RichTextInput key="mailBody" source="mailBody" label="תוכן המייל" validate={required()} defaultValue={defaultMailBody} />
+        <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" label="שיעור" dynamicFilter={filterByUserId} />,
         <BooleanInput source="isGrades" label="קובץ ציונים" />
     </BulkActionButton>,
 ];

@@ -110,6 +110,7 @@ function getReportParams(req: CrudRequest<any, any>) {
             userId: getUserIdFromUser(req.auth),
             id,
             isGrades: req.parsed.extra?.isGrades,
+            lessonReferenceId: req.parsed.extra?.lessonReferenceId,
         }));
     return params;
 }

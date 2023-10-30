@@ -242,6 +242,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * teacher report - add lesson name to export file, and not only lesson id
 * create att report with report month view
 * add teacher name & lesson name parameters to teacher report file mail subject & body
+* add ability to send teacher report file for specific lesson
 
 # todo
 * make teacher-report mail subject & body editable via texts table

@@ -20,9 +20,18 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
         dataSource.getRepository(Teacher).findOneBy({ id: teacherId }),
         dataSource.getRepository(TeacherReportStatus).findOneBy({ id: params.id }),
     ])
+    const lessonFilter = { id: In(teacherReportStatus.notReportedLessons) };
+    if (params.lessonReferenceId) {
+        if (teacherReportStatus.notReportedLessons?.includes(String(params.lessonReferenceId))) {
+            lessonFilter.id = params.lessonReferenceId;
+        } else {
+            return [];
+        }
+    }
     const [lessons] = await Promise.all([
-        dataSource.getRepository(Lesson).findBy({ id: In(teacherReportStatus.notReportedLessons) }),
+        dataSource.getRepository(Lesson).findBy(lessonFilter),
     ]);
+
     const lessonStudents: { [key: number]: StudentKlass[] } = {};
     for (const lesson of lessons) {
         if (lesson.klassReferenceIds?.length) {

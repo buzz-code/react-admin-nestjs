@@ -53,10 +53,10 @@ export class TeacherReportStatus implements IHasUserId {
   reportMonthName: string;
 
   @Column('simple-array')
-  reportedLessons: number[];
+  reportedLessons: string[];
 
   @Column('simple-array')
-  notReportedLessons: number[];
+  notReportedLessons: string[];
 
   @Column()
   reportedLessonNames: string;
