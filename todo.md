@@ -253,13 +253,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * on user creation - register, add default values for report months table
 * nest auto delete migration files
 * check docker security issues
-* add option to self connect to yemot phone
 * put back validation for validateUserHasPaid
-* add user image to export pdf file
-* when sending att email import - if already has this data - should send back error and not save (maybe use unique validation, like in mail address)
 * 
 
 # todo later
+* add user image to export pdf file
+* add option to self connect to yemot phone
 * make dashboard items configurable - implement todos
 * split report generators to different files - one for each generator - maybe
 * if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
