@@ -4,11 +4,22 @@ import { ParsedRequestParams } from '@dataui/crud-request';
 import { StudentByYear } from "src/db/view-entities/StudentByYear.entity";
 import { In } from "typeorm";
 import { AttReport } from "src/db/entities/AttReport.entity";
+import { IHeader } from "@shared/utils/exporter/types";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
         entity: StudentByYear,
         service: StudentByYearService,
+        exporter: {
+            getExportHeaders(): IHeader[] {
+                return [
+                    { value: 'id', label: 'מזהה' },
+                    { value: 'tz', label: 'תעודת זהות' },
+                    { value: 'name', label: 'שם' },
+                    { value: 'year', label: 'שנה' },
+                ];
+            },
+        }
     }
 }
 
