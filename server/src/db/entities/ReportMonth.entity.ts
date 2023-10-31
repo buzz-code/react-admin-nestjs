@@ -10,6 +10,12 @@ import {
 import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
 
 
+export enum ReportMonthSemester {
+  first = 'א',
+  second = 'ב',
+  fullYear = 'שנתי',
+}
+
 @Entity()
 export class ReportMonth {
   @PrimaryGeneratedColumn()
@@ -31,6 +37,11 @@ export class ReportMonth {
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
   endDate: Date;
+
+  @IsOptional({ always: true })
+  @MaxLength(255, { always: true })
+  @Column({ default: ReportMonthSemester.fullYear })
+  semester: ReportMonthSemester;
 
   @CreateDateColumn()
   createdAt: Date;

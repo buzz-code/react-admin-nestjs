@@ -273,6 +273,7 @@ export default {
                 ...generalResourceFieldsTranslation,
                 startDate: 'תאריך התחלה',
                 endDate: 'תאריך סיום',
+                semester: 'מחצית',
             }
         },
         teacher_report_status: {
