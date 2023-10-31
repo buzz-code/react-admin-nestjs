@@ -249,6 +249,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * create custom useUnique to add userId filter when admin
 * add a new field to report month - first half, second half, full year, the field will be named 'semester'
 * add to pivot filters of: dates, semester, report month
+* fix delete for att_report_with_report_month
 
 # todo
 * add a new table - known absences reasons
