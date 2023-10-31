@@ -248,9 +248,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * on user creation - register, add default values for report months table
 * create custom useUnique to add userId filter when admin
 * add a new field to report month - first half, second half, full year, the field will be named 'semester'
+* add to pivot filters of: dates, semester, report month
 
 # todo
-* add to pivot filters of: dates, semester, report month
 * add a new table - known absences reasons
 * add known absences table - student, klass, lesson, date, count, comment, reason, isApproved - default true
 * add ability to import known absences from excel file

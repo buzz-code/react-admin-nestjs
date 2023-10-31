@@ -1,10 +1,11 @@
 import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
 import { CommonDatagrid } from "@shared/components/crudContainers/CommonList"
-import { CommonReferenceInputFilter, filterByUserIdAndYear } from "@shared/components/fields/CommonReferenceInputFilter";
-import { ReferenceField, TextField, useListContext, ReferenceInput, TextInput } from "react-admin"
+import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from "@shared/components/fields/CommonReferenceInputFilter";
+import { ReferenceField, TextField, useListContext, ReferenceInput, TextInput, DateInput } from "react-admin"
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonSelectArrayField } from "@shared/components/fields/CommonSelectArrayField";
+import { semesterChoices } from "src/entities/report-month";
 
 const filters = [
     ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
@@ -13,6 +14,10 @@ const filters = [
     <CommonReferenceInputFilter source="klassReferenceIds:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
     <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
     <CommonAutocompleteInput source="year:$cont" choices={yearChoices} alwaysOn />,
+    <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
+    <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,
+    <CommonReferenceInputFilter source="extra.reportMonthReferenceId" label="תקופת דיווח" reference="report_month" dynamicFilter={filterByUserId} />,
+    <CommonAutocompleteInput source="extra.semester" label="מחצית" choices={semesterChoices} />,
 ];
 
 const filterDefaultValues = {

@@ -29,6 +29,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
 }
 
 const semesterEnum = ['א', 'ב', 'שנתי'];
+export const semesterChoices = semesterEnum.map(item => ({ id: item, name: item }));
 
 const Inputs = ({ isCreate, isAdmin }) => {
     return <>
@@ -37,7 +38,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <TextInput source="name" validate={[required(), maxLength(500)]} />
         <DateInput source="startDate" validate={required()} />
         <DateInput source="endDate" validate={required()} />
-        <CommonAutocompleteInput source="semester" choices={semesterEnum.map(item => ({ id: item, name: item }))} />
+        <CommonAutocompleteInput source="semester" choices={semesterChoices} validate={required()} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>

@@ -2,9 +2,11 @@ import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { ParsedRequestParams } from '@dataui/crud-request';
 import { StudentByYear } from "src/db/view-entities/StudentByYear.entity";
-import { In } from "typeorm";
-import { AttReport } from "src/db/entities/AttReport.entity";
+import { FindOptionsWhere, In } from "typeorm";
 import { IHeader } from "@shared/utils/exporter/types";
+import { AttReportWithReportMonth } from "src/db/view-entities/AttReportWithReportMonth.entity";
+import { getReportDateFilter } from "@shared/utils/entity/filters.util";
+import { ReportMonth, ReportMonthSemester } from "src/db/entities/ReportMonth.entity";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -38,7 +40,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                 }
 
                 const pivotData = await this.dataSource
-                    .getRepository(AttReport)
+                    .getRepository(AttReportWithReportMonth)
                     .find({
                         where: {
                             userId: data[0].userId,
@@ -46,9 +48,12 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                             klassReferenceId: klassReferenceIdFilter?.value,
                             lessonReferenceId: extra?.lessonId,
                             year: yearFilter?.value,
+                            reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
+                            reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                         },
                         relations: {
                             lesson: true,
+                            reportMonth: true,
                         }
                     });
 
@@ -78,5 +83,19 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
         }
     }
 }
+
+const Utils = {
+    getReportMonthFilter(id: number, semester: ReportMonthSemester): FindOptionsWhere<ReportMonth> {
+        const filter = { id, semester };
+        for (const key in filter) {
+            if (!filter[key]) {
+                delete filter[key];
+            }
+        }
+        if (Object.keys(filter).length > 0) {
+            return filter;
+        }
+    },
+};
 
 export default getConfig();
