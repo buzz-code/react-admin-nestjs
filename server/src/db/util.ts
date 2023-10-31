@@ -30,7 +30,7 @@ function getUpdateTableSql(tableName: string, joinType: EnumJoinTypes) {
         `${joinTableAlias}.user_id = ${tableName}.user_id`,
     ];
 
-    if (joinType !== EnumJoinTypes.klassTypes && joinType !== EnumJoinTypes.teachers) {
+    if (joinType !== EnumJoinTypes.klassTypes && joinType !== EnumJoinTypes.teachers && joinType !== EnumJoinTypes.students) {
         joinTableFields.push(`${joinTableAlias}.year = ${tableName}.year`);
     }
     if (joinType === EnumJoinTypes.teachers) {
@@ -76,7 +76,7 @@ function getSql() {
 
         update student_klasses
             join students students on (
-                students.user_id = student_klasses.user_id AND students.year = student_klasses.year AND students.tz = student_klasses.student_tz
+                students.user_id = student_klasses.user_id AND students.tz = student_klasses.student_tz
             )
         set studentReferenceId = students.id
         where studentReferenceId is null
@@ -103,7 +103,7 @@ function getSql() {
 
         update known_absences
             join students students on (
-                students.user_id = known_absences.user_id AND students.year = known_absences.year AND students.tz = known_absences.student_tz
+                students.user_id = known_absences.user_id AND students.tz = known_absences.student_tz
             )
         set studentReferenceId = students.id
         where studentReferenceId is null
@@ -139,7 +139,7 @@ function getSql() {
 
         update grades
             join students students on (
-                students.user_id = grades.user_id AND students.year = grades.year AND students.tz = grades.student_tz
+                students.user_id = grades.user_id AND students.tz = grades.student_tz
             )
         set studentReferenceId = students.id
         where studentReferenceId is null
