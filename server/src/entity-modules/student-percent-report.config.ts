@@ -1,10 +1,10 @@
 import { CrudRequest } from "@dataui/crud";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
+import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { IHeader } from "@shared/utils/exporter/types";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
-import { Between, FindOperator, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 
 const getPercentsFormatter = (value: string) =>
     row =>
@@ -58,7 +58,6 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
 
         switch (pivotName) {
             case 'PercentReportWithDates': {
-                const reportDate = Utils.getReportDateFilter(extra?.fromDate, extra?.toDate);
                 const pivotData = await this.dataSource
                     .getRepository(AttReportAndGrade)
                     .find({
@@ -69,7 +68,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                                 teacherReferenceId: Utils.getNumericValueOrNull(teacherReferenceId),
                                 klassReferenceId: Utils.getNumericValueOrNull(klassReferenceId),
                                 lessonReferenceId: Utils.getNumericValueOrNull(lessonReferenceId),
-                                reportDate,
+                                reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                             });
                         })
                     });
@@ -113,17 +112,6 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
 }
 
 const Utils = {
-    getReportDateFilter(fromDate: Date, toDate: Date): FindOperator<any> {
-        if (fromDate && toDate) {
-            return Between(fromDate, toDate);
-        }
-        if (fromDate) {
-            return MoreThanOrEqual(fromDate);
-        }
-        if (toDate) {
-            return LessThanOrEqual(toDate);
-        }
-    },
     getNumericValueOrNull(val: string): number {
         return val === 'null' ? null : Number(val);
     },
