@@ -38,7 +38,7 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
             const students = await dataSource.getRepository(StudentKlass).find({
                 where: {
                     klassReferenceId: In(lesson.klassReferenceIds),
-                    year: lesson.year,
+                    year: teacherReportStatus.year,
                     studentReferenceId: Not(IsNull()),
                 },
                 relations: {
