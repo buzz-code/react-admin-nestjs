@@ -58,6 +58,7 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                 for (const p of params) {
                     try {
                         const filesData = (await generator.getReportData(p, this.dataSource)) as TeacherReportFileData[];
+                        console.log('filesData teacher', filesData[0]?.teacher);
                         if (filesData[0]?.teacher?.email) {
                             const zipFileBuffer = await generator.getFileBuffer(filesData);
                             const zipContent = await JSZip.loadAsync(zipFileBuffer);
@@ -92,7 +93,7 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                             });
                         }
                     } catch (e) {
-                        console.log('error sending teacher report', e);
+                        console.log('error sending teacher report', e, params, req.parsed.extra);
                     }
                 }
                 return 'OK';
