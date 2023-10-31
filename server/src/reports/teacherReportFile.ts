@@ -20,6 +20,10 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
         dataSource.getRepository(Teacher).findOneBy({ id: teacherId }),
         dataSource.getRepository(TeacherReportStatus).findOneBy({ id: params.id }),
     ])
+    if (teacherReportStatus.notReportedLessons?.length === 0) {
+        return [];
+    }
+
     const lessonFilter = { id: In(teacherReportStatus.notReportedLessons) };
     if (params.lessonReferenceId) {
         if (teacherReportStatus.notReportedLessons?.includes(String(params.lessonReferenceId))) {
