@@ -4,7 +4,7 @@ import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { TeacherReportStatus } from 'src/db/view-entities/TeacherReportStatus.entity';
 import { Teacher } from 'src/db/entities/Teacher.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
-import { In } from 'typeorm';
+import { In, IsNull, Not } from 'typeorm';
 
 
 export interface TeacherReportFileData extends IDataToExcelReportGenerator {
@@ -39,6 +39,7 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
                 where: {
                     klassReferenceId: In(lesson.klassReferenceIds),
                     year: lesson.year,
+                    studentReferenceId: Not(IsNull()),
                 },
                 relations: {
                     student: true,
