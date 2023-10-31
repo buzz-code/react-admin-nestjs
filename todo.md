@@ -250,6 +250,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 
 # todo
 * make teacher-report mail subject & body editable via texts table
+* think how to show errors for sending teacher report file
 * put back known_absences table, and use everywhere - in reports & student report
 * nest auto delete migration files
 * check docker security issues
