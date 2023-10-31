@@ -249,6 +249,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * create custom useUnique to add userId filter when admin
 
 # todo
+* add a new field to report month - first half, second half, full year, the field will be named 'semester'
+* add to pivot filters of: dates, semester, report month
+* add a new table - known absences reasons
+* add known absences table - student, klass, lesson, date, count, comment, reason, isApproved - default true
+* add ability to import known absences from excel file
+* add a view for known absences with report month
+* add known absences to student pivot - filter by klass, dates, semester, report month
 * make teacher-report mail subject & body editable via texts table
 * think how to show errors for sending teacher report file
 * put back known_absences table, and use everywhere - in reports & student report
