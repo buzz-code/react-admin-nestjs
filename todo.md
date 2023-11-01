@@ -252,17 +252,17 @@ https://github.com/tinovyatkin/nest-puppeteer
 * fix delete for att_report_with_report_month
 * add known absences table - student, klass, lesson, date, count, comment, reason, isApproved - default true
 * add ability to import known absences from excel file
-
-# todo
-* add a new table - known absences reasons
 * add a view for known absences with report month
 * add known absences to student pivot - filter by klass, dates, semester, report month
+
+# todo
 * make teacher-report mail subject & body editable via texts table
 * think how to show errors for sending teacher report file
-* put back known_absences table, and use everywhere - in reports & student report
 * nest auto delete migration files
 * check docker security issues
 * put back validation for validateUserHasPaid
+* use known absences in all student reports
+* add a new table - known absences reasons
 * 
 
 # todo later
