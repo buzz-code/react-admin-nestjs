@@ -254,9 +254,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add ability to import known absences from excel file
 * add a view for known absences with report month
 * add known absences to student pivot - filter by klass, dates, semester, report month
+* make teacher-report mail subject & body editable via texts table
 
 # todo
-* make teacher-report mail subject & body editable via texts table
 * think how to show errors for sending teacher report file
 * nest auto delete migration files
 * check docker security issues

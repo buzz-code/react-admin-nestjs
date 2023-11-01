@@ -1,4 +1,4 @@
-import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField, required, SelectField, BooleanInput, TextInput } from 'react-admin';
+import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField, required, SelectField, BooleanInput, TextInput, useGetList } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
@@ -21,21 +21,23 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
-const defaultMailSubject = 'תזכורת לשליחת דווח נוכחות';
-const defaultMailBody = 'שלום המורה {0} היקרה, תזכורת לשלוח נתוני נוכחות עבור השיעורים {2} בתודה ההנהלה';
-const additionalBulkButtons = [
-    <BulkReportButton label='הורדת אקסל למורה' icon={<BrowserUpdatedIcon />} name='teacherReportFile' >
-        <BooleanInput source="isGrades" label="קובץ ציונים" />
-    </BulkReportButton>,
-    <BulkActionButton label='שליחת אקסל למורה' icon={<AttachEmailIcon />} name='teacherReportFile' >
-        <TextInput key="mailSubject" source="mailSubject" label="נושא המייל" validate={required()} defaultValue={defaultMailSubject} />
-        <RichTextInput key="mailBody" source="mailBody" label="תוכן המייל" validate={required()} defaultValue={defaultMailBody} />
-        <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" label="שיעור" dynamicFilter={filterByUserId} />,
-        <BooleanInput source="isGrades" label="קובץ ציונים" />
-    </BulkActionButton>,
-];
-
 const Datagrid = ({ isAdmin, children, ...props }) => {
+    const { data: subjectText } = useGetList('text_by_user', { page: 1, perPage: 1, filter: { name: 'teacherReportStatusEmailSubject' } });
+    const { data: bodyText } = useGetList('text_by_user', { page: 1, perPage: 1, filter: { name: 'teacherReportStatusEmailBody1' } });
+    const defaultMailSubject = subjectText[0]?.value ?? 'תזכורת לשליחת דווח נוכחות';
+    const defaultMailBody = bodyText[0]?.value ?? 'שלום המורה {0} היקרה, תזכורת לשלוח נתוני נוכחות עבור השיעורים {2} בתודה ההנהלה';
+    const additionalBulkButtons = [
+        <BulkReportButton label='הורדת אקסל למורה' icon={<BrowserUpdatedIcon />} name='teacherReportFile' >
+            <BooleanInput source="isGrades" label="קובץ ציונים" />
+        </BulkReportButton>,
+        <BulkActionButton label='שליחת אקסל למורה' icon={<AttachEmailIcon />} name='teacherReportFile' >
+            <TextInput key="mailSubject" source="mailSubject" label="נושא המייל" validate={required()} defaultValue={defaultMailSubject} />
+            <RichTextInput key="mailBody" source="mailBody" label="תוכן המייל" validate={required()} defaultValue={defaultMailBody} />
+            <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" label="שיעור" dynamicFilter={filterByUserId} />,
+            <BooleanInput source="isGrades" label="קובץ ציונים" />
+        </BulkActionButton>,
+    ];
+
     return (
         <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
             {children}
