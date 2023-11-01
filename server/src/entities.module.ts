@@ -31,6 +31,7 @@ import studentByYearConfig from "./entity-modules/student-by-year.config";
 import paymentTrackConfig from "./entity-modules/payment-track.config";
 import teacherSalaryReportConfig from "./entity-modules/teacher-salary-report.config";
 import attReportWithReportMonthConfig from "./entity-modules/att-report-with-report-month.config";
+import { KnownAbsenceWithReportMonth } from "./db/view-entities/KnownAbsenceWithReportMonth.entity";
 
 @Module({
     imports: [
@@ -64,6 +65,7 @@ import attReportWithReportMonthConfig from "./entity-modules/att-report-with-rep
         BaseEntityModule.register(studentByYearConfig),
         BaseEntityModule.register(paymentTrackConfig),
         BaseEntityModule.register(teacherSalaryReportConfig),
+        BaseEntityModule.register({ entity: KnownAbsenceWithReportMonth }),
     ]
 })
 export class EntitiesModule { }

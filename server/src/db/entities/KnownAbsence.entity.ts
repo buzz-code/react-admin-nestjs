@@ -23,6 +23,7 @@ import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.u
 import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
 import { KlassType } from "./KlassType.entity";
+import { Teacher } from "./Teacher.entity";
 
 @Index("known_users_idx", ["userId"], {})
 @Entity("known_absences")
@@ -34,7 +35,7 @@ export class KnownAbsence implements IHasUserId {
 
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([Student, User, Klass, KlassType, Lesson]);
+      dataSource = await getDataSource([Student, User, Klass, KlassType, Lesson, Teacher]);
 
       this.studentReferenceId = await findOneAndAssignReferenceId(
         dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
@@ -102,7 +103,7 @@ export class KnownAbsence implements IHasUserId {
   @Column("int", { name: "absnce_count", nullable: true })
   absnceCount: number | null;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "absnce_code", nullable: true })
