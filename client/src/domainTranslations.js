@@ -95,12 +95,17 @@ export default {
                 ...generalResourceFieldsTranslation,
                 studentTz: 'תלמידה',
                 studentReferenceId: 'תלמידה',
+                klassId: 'כיתה',
+                klassReferenceId: 'כיתה',
+                lessonId: 'שיעור',
+                lessonReferenceId: 'שיעור',
                 reportDate: 'תאריך דיווח',
                 absnceCount: 'מספר חיסורים',
                 absnceCode: 'קוד חיסור',
                 senderName: 'שולחת',
                 reason: 'סיבה',
                 comment: 'הערה',
+                isApproved: 'מאושר',
             }
         },
         lesson: {

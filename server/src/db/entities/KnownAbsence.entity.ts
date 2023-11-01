@@ -19,6 +19,10 @@ import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { Type } from "class-transformer";
+import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
+import { Klass } from "./Klass.entity";
+import { Lesson } from "./Lesson.entity";
+import { KlassType } from "./KlassType.entity";
 
 @Index("known_users_idx", ["userId"], {})
 @Entity("known_absences")
@@ -26,12 +30,20 @@ export class KnownAbsence implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
   async fillFields() {
+    fillDefaultReportDateValue(this);
+
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([Student, User]);
+      dataSource = await getDataSource([Student, User, Klass, KlassType, Lesson]);
 
       this.studentReferenceId = await findOneAndAssignReferenceId(
         dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+      );
+      this.klassReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
+      );
+      this.lessonReferenceId = await findOneAndAssignReferenceId(
+        dataSource, Lesson, { year: this.year, key: this.lessonId }, this.userId, this.lessonReferenceId, this.lessonId
       );
     } finally {
       dataSource?.destroy();
@@ -57,9 +69,32 @@ export class KnownAbsence implements IHasUserId {
   @Column({ nullable: true })
   studentReferenceId: number;
 
+  @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.klassReferenceId), { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @Column("int", { name: "klass_id", nullable: true })
+  klassId: number | null;
+
+  @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.klassId) && Boolean(attReport.klassReferenceId), { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @Column({ nullable: true })
+  klassReferenceId: number;
+
+  @IsOptional({ always: true })
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @Column("int", { name: "lesson_id", nullable: true })
+  lessonId: number;
+
+  @IsOptional({ always: true })
+  @Column({ nullable: true })
+  lessonReferenceId: number;
+
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("date", { name: "report_date" })
-  reportDate: string;
+  reportDate: Date;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @Type(() => Number)
@@ -88,6 +123,10 @@ export class KnownAbsence implements IHasUserId {
   @Column("varchar", { name: "comment", nullable: true, length: 500 })
   comment: string | null;
 
+  @IsOptional({ always: true })
+  @Column({ default: true })
+  isApproved: boolean;
+
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 
@@ -100,4 +139,16 @@ export class KnownAbsence implements IHasUserId {
   })
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
   user: User;
+
+  @ManyToOne(() => Student, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'studentReferenceId' })
+  student: Student;
+
+  @ManyToOne(() => Lesson, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'lessonReferenceId' })
+  lesson: Lesson;
+
+  @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'klassReferenceId' })
+  klass: Klass;
 }

@@ -58,6 +58,7 @@ import PortraitIcon from '@mui/icons-material/Portrait';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import GradingIcon from '@mui/icons-material/Grading';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import RuleIcon from '@mui/icons-material/Rule';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -96,6 +97,7 @@ const App = () => (
             <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={GroupWorkIcon} />
             <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
             <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
+            <Resource name="known_absence" {...knownAbsence} options={{ menuGroup: 'data' }} icon={PlaylistRemoveIcon} />
 
             <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
             <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
@@ -108,9 +110,6 @@ const App = () => (
             <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
             <Resource name="att_report" {...attReport} options={{ menuGroup: 'settings' }} icon={ViewListIcon} />
             <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
-
-            {/* <Resource name="grade" {...resourceEntityGuesser} /> */}
-            {/* <Resource name="known_absence" {...knownAbsence} /> */}
 
             {isAdmin(permissions) && <>
               <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
