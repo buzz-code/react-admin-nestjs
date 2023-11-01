@@ -7,6 +7,7 @@ import { IHeader } from "@shared/utils/exporter/types";
 import { AttReportWithReportMonth } from "src/db/view-entities/AttReportWithReportMonth.entity";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { ReportMonth, ReportMonthSemester } from "src/db/entities/ReportMonth.entity";
+import { KnownAbsenceWithReportMonth } from "src/db/view-entities/KnownAbsenceWithReportMonth.entity";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -35,6 +36,8 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
 
         switch (pivotName) {
             case 'StudentAttendance': {
+                const headers = {};
+
                 if (yearFilter?.value) {
                     data.forEach(item => item.year = [yearFilter.value]);
                 }
@@ -57,26 +60,47 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                         }
                     });
 
-                const headers = {};
-
                 pivotData.forEach(item => {
                     // if (item.absCount === 0) {
                     //     return;
                     // }
                     const key = `${item.lessonReferenceId}`;
-                    if (studentMap[item.studentReferenceId][key] === undefined) {
-                        studentMap[item.studentReferenceId][key] = 0;
-
-                        if (!headers[key]) {
-                            headers[key] = {
-                                value: key,
-                                label: `${item.lesson?.name}`
-                            };
-                        }
-                    }
+                    headers[key] ??= { value: key, label: `${item.lesson?.name}` };
+                    studentMap[item.studentReferenceId][key] ??= 0;
                     studentMap[item.studentReferenceId][key] += item.absCount;
-                    studentMap[item.studentReferenceId].total = (studentMap[item.studentReferenceId].total || 0) + item.absCount;
+                    studentMap[item.studentReferenceId].total ??= 0;
+                    studentMap[item.studentReferenceId].total += item.absCount;
                 });
+
+                const totalAbsencesData = await this.dataSource
+                    .getRepository(KnownAbsenceWithReportMonth)
+                    .find({
+                        where: {
+                            isApproved: true,
+                            userId: data[0].userId,
+                            studentReferenceId: In(studentIds),
+                            klassReferenceId: klassReferenceIdFilter?.value,
+                            reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
+                            reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
+                        },
+                        relations: {
+                            reportMonth: true,
+                        }
+                    });
+
+                totalAbsencesData.forEach(item => {
+                    studentMap[item.studentReferenceId].totalKnownAbsences ??= 0;
+                    studentMap[item.studentReferenceId].totalKnownAbsences += item.absnceCount;
+                });
+
+                headers['total'] = {
+                    value: 'total',
+                    label: 'סה"כ'
+                };
+                headers['totalKnownAbsences'] = {
+                    value: 'totalKnownAbsences',
+                    label: 'סה"כ חיסורים מאושרים'
+                };
 
                 (data[0] as any).headers = Object.values(headers);
             }
