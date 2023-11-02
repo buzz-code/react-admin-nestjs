@@ -4,20 +4,26 @@ import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { TeacherReportStatus } from 'src/db/view-entities/TeacherReportStatus.entity';
 import { Teacher } from 'src/db/entities/Teacher.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
-import { In, IsNull, Not } from 'typeorm';
+import { FindOptionsWhere, In, IsNull, Not } from 'typeorm';
 
 
+export interface TeacherReportFileParams {
+    id: string;
+    userId: number;
+    lessonReferenceId?: number;
+    isGrades?: boolean;
+}
 export interface TeacherReportFileData extends IDataToExcelReportGenerator {
     user: User,
     teacher: Teacher,
     lesson: Lesson,
     teacherReportStatus: TeacherReportStatus,
 }
-const getReportData: IGetReportDataFunction = async (params, dataSource): Promise<TeacherReportFileData[]> => {
+const getReportData: IGetReportDataFunction = async (params: TeacherReportFileParams, dataSource): Promise<TeacherReportFileData[]> => {
     const [userId, teacherId, reportMonthId, year] = params.id.split('_');
     const [user, teacher, teacherReportStatus] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
-        dataSource.getRepository(Teacher).findOneBy({ id: teacherId }),
+        dataSource.getRepository(Teacher).findOneBy({ id: Number(teacherId) }),
         dataSource.getRepository(TeacherReportStatus).findOneBy({ id: params.id }),
     ])
     if (teacherReportStatus.notReportedLessons?.length === 0) {
@@ -25,7 +31,7 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
         return [];
     }
 
-    const lessonFilter = { id: In(teacherReportStatus.notReportedLessons) };
+    const lessonFilter: FindOptionsWhere<Lesson> = { id: In(teacherReportStatus.notReportedLessons) };
     if (params.lessonReferenceId) {
         if (teacherReportStatus.notReportedLessons?.includes(String(params.lessonReferenceId))) {
             lessonFilter.id = params.lessonReferenceId;

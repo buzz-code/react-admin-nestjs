@@ -6,7 +6,7 @@ import { IHeader } from "@shared/utils/exporter/types";
 import { BulkToZipReportGenerator, DataToExcelReportGenerator } from "@shared/utils/report/report.generators";
 import { CommonReportData } from "@shared/utils/report/types";
 import { TeacherReportStatus } from "src/db/view-entities/TeacherReportStatus.entity";
-import teacherReportFile, { TeacherReportFileData } from "src/reports/teacherReportFile";
+import teacherReportFile, { TeacherReportFileData, TeacherReportFileParams } from "src/reports/teacherReportFile";
 import * as JSZip from 'jszip';
 import { getUserMailAddressFrom, validateUserHasPaid } from "@shared/base-entity/base-entity.util";
 import { getUserIdFromUser } from "@shared/auth/auth.util";
@@ -105,16 +105,18 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
     }
 }
 
-function getReportParams(req: CrudRequest<any, any>) {
+function getReportParams(req: CrudRequest<any, any>): TeacherReportFileParams[] {
     console.log('teacher report file params: ', req.parsed.extra);
+    const isGrades = req.parsed.extra?.isGrades;
+    const lessonReferenceId = parseInt(req.parsed.extra?.lessonReferenceId);
     const params = req.parsed.extra.ids
         .toString()
         .split(',')
         .map(id => ({
             userId: getUserIdFromUser(req.auth),
             id,
-            isGrades: req.parsed.extra?.isGrades,
-            lessonReferenceId: req.parsed.extra?.lessonReferenceId,
+            isGrades,
+            lessonReferenceId: isNaN(lessonReferenceId) ? undefined : lessonReferenceId,
         }));
     return params;
 }
