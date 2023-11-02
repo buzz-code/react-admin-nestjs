@@ -91,9 +91,11 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                                     name: fromAddress.name,
                                 },
                             });
+                        } else {
+                            console.log('teacher report file: no email for teacher', filesData[0]?.teacher);
                         }
                     } catch (e) {
-                        console.log('error sending teacher report', e, params, req.parsed.extra);
+                        console.log('error sending teacher report file', e, params, req.parsed.extra);
                     }
                 }
                 return 'OK';
@@ -104,6 +106,7 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
 }
 
 function getReportParams(req: CrudRequest<any, any>) {
+    console.log('teacher report file params: ', req.parsed.extra);
     const params = req.parsed.extra.ids
         .toString()
         .split(',')
