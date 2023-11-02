@@ -21,6 +21,7 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
         dataSource.getRepository(TeacherReportStatus).findOneBy({ id: params.id }),
     ])
     if (teacherReportStatus.notReportedLessons?.length === 0) {
+        console.log('teacher report file: no lessons to report')
         return [];
     }
 
@@ -29,12 +30,15 @@ const getReportData: IGetReportDataFunction = async (params, dataSource): Promis
         if (teacherReportStatus.notReportedLessons?.includes(String(params.lessonReferenceId))) {
             lessonFilter.id = params.lessonReferenceId;
         } else {
+            console.log('teacher report file: lesson not in notReportedLessons')
             return [];
         }
     }
     const [lessons] = await Promise.all([
         dataSource.getRepository(Lesson).findBy(lessonFilter),
     ]);
+
+    console.log('teacher report file: lessons', lessons.length)
 
     const lessonStudents: { [key: number]: StudentKlass[] } = {};
     for (const lesson of lessons) {
