@@ -257,6 +257,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make teacher-report mail subject & body editable via texts table
 
 # todo
+* add option to filter user input filter
 * think how to show errors for sending teacher report file
 * nest auto delete migration files
 * check docker security issues
