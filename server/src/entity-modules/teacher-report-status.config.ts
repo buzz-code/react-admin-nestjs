@@ -54,11 +54,17 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                     await validateUserHasPaid(req.auth, this.dataSource, 'בחשבון חינמי אפשר לשלוח רק מייל אחד בכל פעם');
                 }
 
+                const responses = [];
                 const generator = teacherReportFile;
                 for (const p of params) {
                     try {
                         const filesData = (await generator.getReportData(p, this.dataSource)) as TeacherReportFileData[];
-                        console.log('filesData teacher', filesData[0]?.teacher);
+
+                        if (!filesData[0]?.teacher) {
+                            responses.push('אין נתונים לשליחה');
+                            continue;
+                        }
+
                         if (filesData[0]?.teacher?.email) {
                             const zipFileBuffer = await generator.getFileBuffer(filesData);
                             const zipContent = await JSZip.loadAsync(zipFileBuffer);
@@ -91,14 +97,18 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
                                     name: fromAddress.name,
                                 },
                             });
+                            responses.push(`${filesData[0].teacher.name} - נשלח בהצלחה, ${attachments.length} קבצים`);
                         } else {
                             console.log('teacher report file: no email for teacher', filesData[0]?.teacher);
+                            responses.push('לא ניתן לשלוח מייל למורה זו - אין כתובת מייל');
                         }
                     } catch (e) {
                         console.log('error sending teacher report file', e, params, req.parsed.extra);
+                        responses.push('שגיאה בשליחת מייל');
                     }
                 }
-                return 'OK';
+                return 'סטטוס מיילים: '
+                    + responses.map((response, i) => `(${i + 1}) ${response}`).join('\n');
             }
         }
         return super.doAction(req);
