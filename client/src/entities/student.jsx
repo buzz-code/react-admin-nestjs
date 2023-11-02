@@ -1,4 +1,4 @@
-import { BooleanInput, DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceInput, ReferenceManyField, required, SelectField, TextField, TextInput } from 'react-admin';
+import { BooleanInput, DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceManyField, required, SelectField, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -9,9 +9,10 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { useUnique } from '@shared/utils/useUnique';
+import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
 ];

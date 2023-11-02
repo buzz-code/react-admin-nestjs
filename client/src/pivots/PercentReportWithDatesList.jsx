@@ -1,4 +1,4 @@
-import { DateInput, NumberField, TextField, ReferenceField, ReferenceInput, useRecordContext, SelectField, useListFilterContext } from 'react-admin';
+import { DateInput, NumberField, TextField, ReferenceField, useRecordContext, SelectField, useListFilterContext } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -8,7 +8,7 @@ import { ShowMatchingRecordsButton } from '@shared/components/fields/ShowMatchin
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,

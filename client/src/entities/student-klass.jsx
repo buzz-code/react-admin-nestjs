@@ -1,4 +1,4 @@
-import { DateField, DateTimeInput, ReferenceField, ReferenceInput, required, TextField, TextInput, SelectField } from 'react-admin';
+import { DateField, DateTimeInput, ReferenceField, required, TextField, TextInput, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -8,7 +8,7 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,

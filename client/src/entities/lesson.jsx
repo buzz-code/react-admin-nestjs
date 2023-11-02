@@ -1,4 +1,4 @@
-import { DateField, DateInput, DateTimeInput, maxLength, NumberInput, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, TextField, TextInput, SelectField } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, maxLength, NumberInput, ReferenceArrayField, ReferenceArrayInput, ReferenceField, required, TextField, TextInput, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField, MultiReferenceArrayField } from '@shared/components/fields/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
@@ -11,7 +11,7 @@ import CommonReferenceArrayInput from '@shared/components/fields/CommonReference
 import { useUnique } from '@shared/utils/useUnique';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <NumberInput source="key" />,
     <TextInput source="name:$cont" alwaysOn />,
     <CommonReferenceInputFilter source="klassReferenceIds:$cont" label="כיתה" reference="klass" dynamicFilter={filterByUserIdAndYear} />,

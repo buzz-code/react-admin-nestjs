@@ -1,14 +1,14 @@
 import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
 import { CommonDatagrid } from "@shared/components/crudContainers/CommonList"
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from "@shared/components/fields/CommonReferenceInputFilter";
-import { ReferenceField, TextField, useListContext, ReferenceInput, TextInput, DateInput } from "react-admin"
+import { ReferenceField, TextField, useListContext, TextInput, DateInput } from "react-admin"
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonSelectArrayField } from "@shared/components/fields/CommonSelectArrayField";
 import { semesterChoices } from "src/entities/report-month";
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
     <CommonReferenceInputFilter source="klassReferenceIds:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} alwaysOn />,

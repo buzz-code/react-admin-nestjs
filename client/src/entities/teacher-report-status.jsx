@@ -1,4 +1,4 @@
-import { ReferenceField, ReferenceInput, ReferenceArrayField, TextField, required, SelectField, BooleanInput, TextInput, useGetList } from 'react-admin';
+import { ReferenceField, ReferenceArrayField, TextField, required, SelectField, BooleanInput, TextInput, useGetList } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
@@ -11,7 +11,7 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="reportMonthReferenceId" reference="report_month" dynamicFilter={filterByUserId} />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,

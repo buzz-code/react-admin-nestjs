@@ -1,4 +1,4 @@
-import { SelectField, TextField, TextInput, ReferenceField, ReferenceInput, DateField, DateTimeInput, NumberInput, required, maxLength } from 'react-admin';
+import { SelectField, TextField, TextInput, ReferenceField, DateField, DateTimeInput, NumberInput, required, maxLength } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
@@ -10,7 +10,7 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { useUnique } from '@shared/utils/useUnique';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <NumberInput source="key" />,
     <TextInput source="name:$cont" alwaysOn />,
     <CommonReferenceInputFilter source="klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,

@@ -1,4 +1,4 @@
-import { BooleanField, BooleanInput, DateField, DateInput, DateTimeInput, maxLength, NumberField, NumberInput, ReferenceField, ReferenceInput, required, TextField, TextInput } from 'react-admin';
+import { BooleanField, BooleanInput, DateField, DateInput, DateTimeInput, maxLength, NumberField, NumberInput, ReferenceField, required, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -6,7 +6,7 @@ import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/f
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserId} />,

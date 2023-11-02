@@ -1,4 +1,4 @@
-import { DateField, DateInput, NumberField, TextField, TextInput, ReferenceField, ReferenceInput, SelectField } from 'react-admin';
+import { DateField, DateInput, NumberField, TextField, TextInput, ReferenceField, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -9,7 +9,7 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { Inputs } from './att-report';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <ReferenceInput source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,
