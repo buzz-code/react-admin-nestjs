@@ -26,7 +26,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
         dataSource.getRepository(Teacher).findOneBy({ id: Number(teacherId) }),
         dataSource.getRepository(TeacherReportStatus).findOneBy({ id: params.id }),
     ])
-    if (teacherReportStatus.notReportedLessons?.length ?? 0 === 0) {
+    if ((teacherReportStatus.notReportedLessons?.length ?? 0) === 0) {
         console.log('teacher report file: no lessons to report')
         return [];
     }
