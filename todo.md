@@ -257,11 +257,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make teacher-report mail subject & body editable via texts table
 * add option to filter user input filter
 * think how to show errors for sending teacher report file
+* put back validation for validateUserHasPaid
 
 # todo
 * nest auto delete migration files
 * check docker security issues
-* put back validation for validateUserHasPaid
 * use known absences in all student reports
 * add a new table - known absences reasons
 * 
