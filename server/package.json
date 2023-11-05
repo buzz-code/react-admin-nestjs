@@ -25,7 +25,8 @@
     "typeorm:run": "npm run typeorm:cli -- migration:run",
     "typeorm:generate": "npm run typeorm:cli -- migration:generate",
     "typeorm:create": "npm run typeorm:cli-no-d -- migration:create",
-    "typeorm:revert": "npm run typeorm:cli -- migration:revert"
+    "typeorm:revert": "npm run typeorm:cli -- migration:revert",
+    "clean-migrations": "node helpers/clean-migrations"
   },
   "dependencies": {
     "@dataui/crud": "^5.2.3",
