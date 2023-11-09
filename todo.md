@@ -260,6 +260,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * put back validation for validateUserHasPaid
 * nest auto delete migration files
 * auto width excel file columns on export
+* split report generators to different files - one for each generator - maybe
 
 # todo
 * check docker security issues
@@ -271,7 +272,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add user image to export pdf file
 * add option to self connect to yemot phone
 * make dashboard items configurable - implement todos
-* split report generators to different files - one for each generator - maybe
 * if teacher doesn't have email - she will get a phone call - https://f2.freeivr.co.il/topic/55/api-%D7%92%D7%99%D7%A9%D7%AA-%D7%9E%D7%A4%D7%AA%D7%97%D7%99%D7%9D-%D7%9C%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA/55?_=1683832902133
 * להציג את השיחות של ימות המשיח בצורה יפה
 * add settings & profile page
