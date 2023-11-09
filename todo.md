@@ -279,13 +279,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add gzip to caddy
 * change to typescript on client side
 * add custom prefix to common components
-* https://github.com/bigbasket/ra-components
-* date-time inputs https://www.npmjs.com/package/react-admin-date-inputs-refactor?activeTab=readme https://www.npmjs.com/package/@mpampin/react-admin-date-inputs https://www.npmjs.com/package/@sklinet/react-admin-date-inputs?activeTab=readme https://www.npmjs.com/package/react-admin-date-picker?activeTab=readme https://www.npmjs.com/package/react-admin-material-datepicker?activeTab=readme
-* permissions - https://www.npmjs.com/package/@blackbox-vision/ra-rbac
 * improve nestjs = https://wanago.io/2021/05/03/api-nestjs-cpu-intensive-tasks-queues/
-* add compact ui - https://github.com/ValentinnDimitroff/ra-compact-ui
 * add unit testing
 * add complex queries
-* rich text editor - https://www.npmjs.com/package/ra-richtext-tiptap https://www.npmjs.com/package/ra-input-rich-text?activeTab=readme
-* clipboard - https://www.npmjs.com/package/react-admin-clipboard-list-field
 * 
