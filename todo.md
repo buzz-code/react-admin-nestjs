@@ -259,6 +259,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * think how to show errors for sending teacher report file
 * put back validation for validateUserHasPaid
 * nest auto delete migration files
+* auto width excel file columns on export
 
 # todo
 * check docker security issues
