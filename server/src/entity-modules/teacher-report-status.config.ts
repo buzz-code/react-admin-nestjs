@@ -3,7 +3,7 @@ import { ISendMailOptions } from "@nestjs-modules/mailer";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
-import { BulkToZipReportGenerator, DataToExcelReportGenerator } from "@shared/utils/report/report.generators";
+import { BulkToZipReportGenerator } from "@shared/utils/report/bulk-to-zip.generator";
 import { CommonReportData } from "@shared/utils/report/types";
 import { TeacherReportStatus } from "src/db/view-entities/TeacherReportStatus.entity";
 import teacherReportFile, { TeacherReportFileData, TeacherReportFileParams } from "src/reports/teacherReportFile";

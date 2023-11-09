@@ -7,7 +7,7 @@ import { In } from "typeorm";
 import { AttReport } from "src/db/entities/AttReport.entity";
 import { CommonReportData } from "@shared/utils/report/types";
 import studentReportCard from "../reports/studentReportCard";
-import { BulkToPdfReportGenerator } from "@shared/utils/report/report.generators";
+import { BulkToPdfReportGenerator } from "@shared/utils/report/bulk-to-pdf.generator";
 import studentReportCardReact from "src/reports/studentReportCardReact";
 import { getCurrentHebrewYear } from "@shared/utils/entity/year.util";
 import { getUserIdFromUser } from "@shared/auth/auth.util";

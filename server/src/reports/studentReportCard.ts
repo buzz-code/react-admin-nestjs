@@ -2,7 +2,8 @@ import * as React from 'react';
 import { User } from 'src/db/entities/User.entity';
 import { Student } from 'src/db/entities/Student.entity';
 import { AttReport } from 'src/db/entities/AttReport.entity';
-import { EjsToPdfReportGenerator, IGetReportDataFunction, ReactToPdfReportGenerator } from '@shared/utils/report/report.generators';
+import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
+import { EjsToPdfReportGenerator } from '@shared/utils/report/ejs-to-pdf.generator';
 import { StudentBaseKlass } from 'src/db/view-entities/StudentBaseKlass.entity';
 
 const reportTemplate = `

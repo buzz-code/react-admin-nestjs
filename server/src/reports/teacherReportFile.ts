@@ -1,5 +1,7 @@
 import { User } from 'src/db/entities/User.entity';
-import { BulkToZipReportGenerator, DataToExcelReportGenerator, IDataToExcelReportGenerator, IGetReportDataFunction, ReactToPdfReportGenerator } from '@shared/utils/report/report.generators';
+import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
+import { DataToExcelReportGenerator, IDataToExcelReportGenerator } from '@shared/utils/report/data-to-excel.generator';
+import { BulkToZipReportGenerator } from '@shared/utils/report/bulk-to-zip.generator';
 import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { TeacherReportStatus } from 'src/db/view-entities/TeacherReportStatus.entity';
 import { Teacher } from 'src/db/entities/Teacher.entity';

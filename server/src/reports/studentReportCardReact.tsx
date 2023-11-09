@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { User } from 'src/db/entities/User.entity';
 import { Student } from 'src/db/entities/Student.entity';
-import { IGetReportDataFunction, ReactToPdfReportGenerator } from '@shared/utils/report/report.generators';
+import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
+import { ReactToPdfReportGenerator } from '@shared/utils/report/react-to-pdf.generator';
 import { StudentBaseKlass } from 'src/db/view-entities/StudentBaseKlass.entity';
 import { StudentGlobalReport } from 'src/db/view-entities/StudentGlobalReport.entity';
 import { Image, ImageTargetEnum } from '@shared/entities/Image.entity';
