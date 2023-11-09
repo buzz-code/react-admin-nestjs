@@ -270,6 +270,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * 
 
 # todo later
+* use ra-components
 * add user image to export pdf file
 * add option to self connect to yemot phone
 * make dashboard items configurable - implement todos
