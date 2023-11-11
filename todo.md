@@ -267,6 +267,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add percent view for students
 * use known absences in all student reports
 * add a new table - known absences reasons
+* add unit testing to more places, including client side
 * 
 
 # todo later
@@ -281,5 +282,4 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add gzip to caddy
 * change to typescript on client side
 * add custom prefix to common components
-* add unit testing
 * 
