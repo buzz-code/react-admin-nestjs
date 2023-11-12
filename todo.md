@@ -261,9 +261,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * nest auto delete migration files
 * auto width excel file columns on export
 * split report generators to different files - one for each generator - maybe
+* flip scanner upload logic
 
 # todo
-* flip scanner upload logic
 * check docker security issues
 * add percent view for students
 * use known absences in all student reports
