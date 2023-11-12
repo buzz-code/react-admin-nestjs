@@ -263,6 +263,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * split report generators to different files - one for each generator - maybe
 
 # todo
+* flip scanner upload logic
 * check docker security issues
 * add percent view for students
 * use known absences in all student reports
