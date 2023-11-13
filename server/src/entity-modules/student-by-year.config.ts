@@ -8,6 +8,7 @@ import { AttReportWithReportMonth } from "src/db/view-entities/AttReportWithRepo
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { ReportMonth, ReportMonthSemester } from "src/db/entities/ReportMonth.entity";
 import { KnownAbsenceWithReportMonth } from "src/db/view-entities/KnownAbsenceWithReportMonth.entity";
+import { Klass } from "src/db/entities/Klass.entity";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -33,6 +34,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
         const studentMap = data.reduce((a, b) => ({ ...a, [b.id]: b }), {});
         const yearFilter = filter.find(item => item.field === 'year');
         const klassReferenceIdFilter = filter.find(item => item.field === 'klassReferenceIds');
+        const klassTypeReferenceIdFilter = filter.find(item => item.field === 'klassTypeReferenceIds');
 
         switch (pivotName) {
             case 'StudentAttendance': {
@@ -49,12 +51,14 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                             userId: data[0].userId,
                             studentReferenceId: In(studentIds),
                             klassReferenceId: klassReferenceIdFilter?.value,
+                            klass: Utils.getKlassFilter(klassTypeReferenceIdFilter?.value),
                             lessonReferenceId: extra?.lessonId,
                             year: yearFilter?.value,
                             reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                             reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                         },
                         relations: {
+                            klass: true,
                             lesson: true,
                             reportMonth: true,
                         }
@@ -120,6 +124,11 @@ const Utils = {
             return filter;
         }
     },
+    getKlassFilter(klassTypeReferenceId: number): FindOptionsWhere<Klass> {
+        if (klassTypeReferenceId) {
+            return { klassTypeReferenceId };
+        }
+    }
 };
 
 export default getConfig();

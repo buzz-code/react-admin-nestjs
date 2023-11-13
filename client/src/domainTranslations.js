@@ -270,6 +270,7 @@ export default {
                 'extra.lessonId': 'שיעור',
                 'year:$cont': 'שנה',
                 'klassReferenceIds:$cont': 'כיתה',
+                'klassTypeReferenceIds:$cont': 'שיוך כיתה',
             }
         },
         report_month: {

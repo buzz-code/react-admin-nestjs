@@ -12,6 +12,7 @@ const filters = [
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
     <CommonReferenceInputFilter source="klassReferenceIds:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
+    <CommonReferenceInputFilter source="klassTypeReferenceIds:$cont" reference="klass_type" dynamicFilter={filterByUserId} alwaysOn />,
     <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
     <CommonAutocompleteInput source="year:$cont" choices={yearChoices} alwaysOn />,
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
