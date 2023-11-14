@@ -51,14 +51,14 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                             userId: data[0].userId,
                             studentReferenceId: In(studentIds),
                             klassReferenceId: klassReferenceIdFilter?.value,
-                            // klass: Utils.getKlassFilter(klassTypeReferenceIdFilter?.value),
+                            klass: Utils.getKlassFilter(klassTypeReferenceIdFilter?.value),
                             lessonReferenceId: extra?.lessonId,
                             year: yearFilter?.value,
                             reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                             reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                         },
                         relations: {
-                            // klass: true,
+                            klass: true,
                             lesson: true,
                             reportMonth: true,
                         }
@@ -84,12 +84,12 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                             userId: data[0].userId,
                             studentReferenceId: In(studentIds),
                             klassReferenceId: klassReferenceIdFilter?.value,
-                            // klass: Utils.getKlassFilter(klassTypeReferenceIdFilter?.value),
+                            klass: Utils.getKlassFilter(klassTypeReferenceIdFilter?.value),
                             reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                             reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                         },
                         relations: {
-                            // klass: true,
+                            klass: true,
                             reportMonth: true,
                         }
                     });
