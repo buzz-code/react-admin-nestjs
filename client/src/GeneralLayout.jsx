@@ -10,17 +10,19 @@ import PersonIcon from '@mui/icons-material/Person';
 import DatasetIcon from '@mui/icons-material/Dataset';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+// import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 
 import BaseLayout from "@shared/components/layout/Layout";
 import BaseDashboard from '@shared/components/views/Dashboard';
 import { defaultYearFilter } from '@shared/utils/yearFilter';
-import { isScannerUpload } from '../shared/utils/permissionsUtil';
+import { isInLessonReport, isScannerUpload } from '../shared/utils/permissionsUtil';
 
 const customMenuItems = [
     <MenuItemLink key="tutorial" to="/tutorial" primaryText="מדריך למשתמש" leftIcon={<HelpIcon />} />,
     <MenuItemLink key="pages-view" to="/pages-view" primaryText="הסברים נוספים" leftIcon={<ImportContactsIcon />} />,
     ({ isAdmin }) => isAdmin && <MenuItemLink key="yemot-simulator" to="/yemot-simulator" primaryText="סימולטור" leftIcon={<CallIcon />} />,
     ({ permissions }) => isScannerUpload(permissions) && <MenuItemLink key="scanner-upload" to="/scanner-upload" primaryText="העלאת קבצי סורק" leftIcon={<DocumentScannerIcon />} />,
+    ({ permissions }) => isInLessonReport(permissions) && <MenuItemLink key="in-lesson-report" to="/in-lesson-report" primaryText="דיווח בזמן השיעור" leftIcon={<DatasetIcon />} />,
     // <MenuItemLink key="settings" to="/settings" primaryText="הגדרות" leftIcon={<SettingsIcon />} />,
     // <MenuItemLink key="profile" to="/profile" primaryText="פרופיל" leftIcon={<PersonIcon />} />,
 ];

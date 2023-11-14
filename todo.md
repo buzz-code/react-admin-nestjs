@@ -262,6 +262,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * auto width excel file columns on export
 * split report generators to different files - one for each generator - maybe
 * flip scanner upload logic
+* add in lesson report screen
 
 # todo
 * check docker security issues
