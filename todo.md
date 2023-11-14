@@ -265,6 +265,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add in lesson report screen
 
 # todo
+* update icon for in-lesson-report
 * check docker security issues
 * add percent view for students
 * use known absences in all student reports
