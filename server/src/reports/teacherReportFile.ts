@@ -56,6 +56,9 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
                     klassReferenceId: In(lesson.klassReferenceIds),
                     year: teacherReportStatus.year,
                     studentReferenceId: Not(IsNull()),
+                    student: {
+                        id: Not(IsNull())
+                    }
                 },
                 relations: {
                     student: true,
