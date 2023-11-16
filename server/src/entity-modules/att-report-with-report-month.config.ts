@@ -8,9 +8,7 @@ function getConfig(): BaseEntityModuleOptions {
         entity: AttReportWithReportMonth,
         query: {
             join: {
-                studentBaseKlass: {
-                    eager: true
-                },
+                studentBaseKlass: { eager: true },
                 student: {},
                 teacher: {},
                 lesson: {},
@@ -21,6 +19,7 @@ function getConfig(): BaseEntityModuleOptions {
         exporter: {
             processReqForExport(req: CrudRequest, innerFunc) {
                 req.options.query.join = {
+                    studentBaseKlass: { eager: true },
                     student: { eager: true },
                     teacher: { eager: true },
                     klass: { eager: true },
