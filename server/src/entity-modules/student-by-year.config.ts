@@ -51,7 +51,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                             userId: data[0].userId,
                             studentReferenceId: In(studentIds),
                             klassReferenceId: klassReferenceIdFilter?.value,
-                            klass: Utils.getKlassFilter(klassTypeReferenceIdFilter?.value),
+                            klass: Utils.getKlassFilter(extra.isCheckKlassType, klassTypeReferenceIdFilter?.value),
                             lessonReferenceId: extra?.lessonId,
                             year: yearFilter?.value,
                             reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
@@ -84,7 +84,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                             userId: data[0].userId,
                             studentReferenceId: In(studentIds),
                             klassReferenceId: klassReferenceIdFilter?.value,
-                            klass: Utils.getKlassFilter(klassTypeReferenceIdFilter?.value),
+                            klass: Utils.getKlassFilter(extra.isCheckKlassType, klassTypeReferenceIdFilter?.value),
                             reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                             reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                         },
@@ -126,8 +126,8 @@ const Utils = {
             return filter;
         }
     },
-    getKlassFilter(klassTypeReferenceId: number): FindOptionsWhere<Klass> {
-        if (klassTypeReferenceId) {
+    getKlassFilter(isCheckKlassType: Boolean, klassTypeReferenceId: number): FindOptionsWhere<Klass> {
+        if (isCheckKlassType && klassTypeReferenceId) {
             return { klassTypeReferenceId };
         }
     }

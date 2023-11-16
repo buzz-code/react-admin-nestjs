@@ -1,7 +1,7 @@
 import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
 import { CommonDatagrid } from "@shared/components/crudContainers/CommonList"
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from "@shared/components/fields/CommonReferenceInputFilter";
-import { ReferenceField, TextField, useListContext, TextInput, DateInput } from "react-admin"
+import { ReferenceField, TextField, useListContext, TextInput, DateInput, BooleanInput } from "react-admin"
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonSelectArrayField } from "@shared/components/fields/CommonSelectArrayField";
@@ -19,10 +19,14 @@ const filters = [
     <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="extra.reportMonthReferenceId" label="תקופת דיווח" reference="report_month" dynamicFilter={filterByUserId} />,
     <CommonAutocompleteInput source="extra.semester" label="מחצית" choices={semesterChoices} />,
+    <BooleanInput source="extra.isCheckKlassType" label="סינון לפי שיוך כיתה" />,
 ];
 
 const filterDefaultValues = {
     ...defaultYearFilter,
+    extra: {
+        isCheckKlassType: true,
+    },
 };
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
