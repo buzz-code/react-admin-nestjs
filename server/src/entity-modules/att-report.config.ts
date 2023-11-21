@@ -55,6 +55,7 @@ function getConfig(): BaseEntityModuleOptions {
                     specialFields: [
                         { cell: { c: 2, r: 0 }, value: 'teacherId' },
                         { cell: { c: 2, r: 1 }, value: 'lessonId' },
+                        { cell: { c: 4, r: 0 }, value: 'reportDate' },
                     ],
                     hardCodedFields: [
                         { field: 'reportDate', value: new Date() },

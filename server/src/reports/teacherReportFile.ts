@@ -89,6 +89,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
             { cell: { c: 0, r: 0 }, value: 'מורה: ' },
             { cell: { c: 1, r: 0 }, value: teacher.name },
             { cell: { c: 2, r: 0 }, value: teacher.tz },
+            { cell: { c: 3, r: 0 }, value: 'תאריך: (ניתן להשאיר ריק)' },
             { cell: { c: 0, r: 1 }, value: 'שיעור:' },
             { cell: { c: 1, r: 1 }, value: lesson.name },
             { cell: { c: 2, r: 1 }, value: lesson.key.toString() },
