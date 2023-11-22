@@ -74,6 +74,8 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     studentMap[item.studentReferenceId][key] += item.absCount;
                     studentMap[item.studentReferenceId].total ??= 0;
                     studentMap[item.studentReferenceId].total += item.absCount;
+                    studentMap[item.studentReferenceId].totalLessons ??= 0;
+                    studentMap[item.studentReferenceId].totalLessons += item.howManyLessons;
                 });
 
                 const totalAbsencesData = await this.dataSource
@@ -107,6 +109,10 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     value: 'totalKnownAbsences',
                     label: 'סה"כ חיסורים מאושרים'
                 };
+                // headers['totalLessons'] = {
+                //     value: 'totalLessons',
+                //     label: 'סה"כ שיעורים'
+                // };
 
                 (data[0] as any).headers = Object.values(headers);
             }
