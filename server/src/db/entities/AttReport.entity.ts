@@ -123,14 +123,14 @@ export class AttReport implements IHasUserId {
 
   @IsOptional({ always: true })
   @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
-  @Column("int", { name: "abs_count", default: () => "'0'" })
+  @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
+  @Column("float", { name: "abs_count", default: () => "'0'" })
   absCount: number;
 
   @IsOptional({ always: true })
   @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
-  @Column("int", { name: "approved_abs_count", default: () => "'0'" })
+  @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
+  @Column("float", { name: "approved_abs_count", default: () => "'0'" })
   approvedAbsCount: number;
 
   @IsOptional({ always: true })
