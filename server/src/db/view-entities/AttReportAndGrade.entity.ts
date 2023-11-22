@@ -53,7 +53,7 @@ export class AttReportAndGrade implements IHasUserId {
   @Column()
   type: string;
 
-  @Column("int", { name: "user_id" })
+  @Column({ name: "user_id" })
   userId: number;
 
   @Column({ nullable: true })
@@ -74,16 +74,16 @@ export class AttReportAndGrade implements IHasUserId {
   @Column("date", { name: "report_date" })
   reportDate: string;
 
-  @Column("int", { name: "how_many_lessons", nullable: true })
+  @Column({ name: "how_many_lessons", nullable: true })
   howManyLessons: number | null;
 
-  @Column("int", { name: "abs_count" })
+  @Column({ name: "abs_count" })
   absCount: number;
 
-  @Column("int", { name: "approved_abs_count" })
+  @Column({ name: "approved_abs_count" })
   approvedAbsCount: number;
 
-  @Column("int", { name: "grade" })
+  @Column({ name: "grade" })
   grade: number;
 
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
