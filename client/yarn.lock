@@ -2016,6 +2016,11 @@ functions-have-names@^1.2.2:
   resolved "https://registry.yarnpkg.com/functions-have-names/-/functions-have-names-1.2.3.tgz#0404fe4ee2ba2f607f0e0ec3c80bae994133b834"
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
 
+gematriya@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/gematriya/-/gematriya-2.0.0.tgz#bdc93285a84f05e51fa962b18dc44beceb0f38c3"
+  integrity sha512-i+G3iGTn/vmojZkvS0dDPcw46tREqS10mztDOVoG6AACZzqp0eOpvIYaAOqZEiH4ee0Rkgt1Sf6jWM1GobJIeg==
+
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
@@ -2381,6 +2386,13 @@ jest-util@^29.3.1:
     ci-info "^3.2.0"
     graceful-fs "^4.2.9"
     picomatch "^2.2.3"
+
+jewish-date@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/jewish-date/-/jewish-date-2.0.8.tgz#430b655070f00f955e53173f91bcbc422bd8fd15"
+  integrity sha512-gBKBSuTJpXRzUthT7l+ixLz3hPFVAxnRDpUPr+mQGZEDqbwYP9zpKWn4F+0sNfb/EU8C8kkEzKxPXiKrfNCJ+g==
+  dependencies:
+    gematriya "^2.0.0"
 
 js-sha3@0.8.0:
   version "0.8.0"
