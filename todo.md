@@ -263,6 +263,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * split report generators to different files - one for each generator - maybe
 * flip scanner upload logic
 * add in lesson report screen
+* add hebrew date field
 
 # todo
 * update icon for in-lesson-report

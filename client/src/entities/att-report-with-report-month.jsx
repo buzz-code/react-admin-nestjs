@@ -7,6 +7,7 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { Inputs } from './att-report';
+import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -41,6 +42,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             <MultiReferenceField source="reportMonthReferenceId" sortBy="reportMonth.name" reference="report_month" />
             <SelectField source="year" choices={yearChoices} />
             <DateField source="reportDate" />
+            <CommonHebrewDateField source="reportDate" />
             <NumberField source="howManyLessons" />
             <NumberField source="absCount" />
             {/* <NumberField source="approvedAbsCount" /> */}
