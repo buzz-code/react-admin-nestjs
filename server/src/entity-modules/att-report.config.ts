@@ -8,9 +8,7 @@ function getConfig(): BaseEntityModuleOptions {
         entity: AttReport,
         query: {
             join: {
-                studentBaseKlass: {
-                    eager: true
-                },
+                studentBaseKlass: { eager: true },
                 student: {},
                 teacher: {},
                 lesson: {},

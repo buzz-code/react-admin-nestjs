@@ -9,7 +9,6 @@ import { KlassType, KlassTypeEnum } from "../entities/KlassType.entity";
   expression: (dataSource: DataSource) => dataSource
     .createQueryBuilder()
     .select('studentReferenceId', 'id')
-    .addSelect('student_tz', 'tz')
     .addSelect('student_klasses.user_id', 'user_id')
     .addSelect('student_klasses.year', 'year')
     .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', klasses.name, null) SEPARATOR ', ')`, 'base_klass')
@@ -17,7 +16,6 @@ import { KlassType, KlassTypeEnum } from "../entities/KlassType.entity";
     .leftJoin(Klass, 'klasses', 'klasses.id = student_klasses.klassReferenceId OR (klasses.key = student_klasses.klass_id AND klasses.user_id = student_klasses.user_id)')
     .leftJoin(KlassType, 'klass_types', 'klass_types.id = klasses.klassTypeReferenceId OR (klass_types.id = klasses.klass_type_id AND klass_types.user_id = klasses.user_id)')
     .groupBy('studentReferenceId')
-    .addGroupBy('student_tz')
     .addGroupBy('user_id')
     .addGroupBy('year')
 })
@@ -30,9 +28,6 @@ export class StudentBaseKlass implements IHasUserId {
 
   @Column({ nullable: true })
   year: number;
-
-  @Column("varchar", { name: "tz", length: 10 })
-  tz: string;
 
   @Column({ name: "base_klass" })
   klassName: string;

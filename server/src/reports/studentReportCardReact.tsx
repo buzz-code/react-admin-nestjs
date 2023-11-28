@@ -103,7 +103,7 @@ const ReportTable = ({ student, studentBaseKlass, reports, reportParams, approve
     ];
     const baseHeader = [
         { level: 2, label: 'שם התלמידה', value: student?.name },
-        { level: 2, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.studentBaseKlass },
+        { level: 2, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
     ]
 
     return (

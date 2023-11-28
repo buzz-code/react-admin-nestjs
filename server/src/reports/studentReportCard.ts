@@ -116,7 +116,7 @@ const reportTemplate = `
                 <% } %>
                 <% if (studentBaseKlass && !reportParams.groupByKlass) { %>
                     <h2>כיתה: 
-                        <span class="value"><%= studentBaseKlass.studentBaseKlass %></span>
+                        <span class="value"><%= studentBaseKlass.klassName %></span>
                     </h2>
                 <% } %>
             </div>
