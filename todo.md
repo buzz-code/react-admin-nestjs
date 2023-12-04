@@ -266,6 +266,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add hebrew date field
 
 # todo
+* make it possible to use bulk action for readonly datagrids, for example student-klasses-report
 * update icon for in-lesson-report
 * check docker security issues
 * add percent view for students
