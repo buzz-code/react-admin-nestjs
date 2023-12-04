@@ -1,7 +1,15 @@
 import { CrudRequest } from "@dataui/crud";
-import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
+import { In } from "typeorm";
+import { getUserIdFromUser } from "@shared/auth/auth.util";
+import { BaseEntityService } from "@shared/base-entity/base-entity.service";
+import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
+import { BulkToPdfReportGenerator } from "@shared/utils/report/bulk-to-pdf.generator";
+import { CommonReportData } from "@shared/utils/report/types";
 import { StudentKlass } from "src/db/entities/StudentKlass.entity";
+import { generateStudentReportCard } from "src/reports/reportGenerator";
+import studentReportCard from "src/reports/studentReportCard";
+import studentReportCardReact from "src/reports/studentReportCardReact";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -27,6 +35,27 @@ function getConfig(): BaseEntityModuleOptions {
                 ];
             }
         },
+        service: StudentKlassService
+    }
+}
+
+class StudentKlassService<T extends Entity | StudentKlass> extends BaseEntityService<T> {
+    reportsDict = {
+        studentReportCard: new BulkToPdfReportGenerator(studentReportCard),
+        studentReportCardReact: new BulkToPdfReportGenerator(studentReportCardReact),
+    };
+    async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
+        if (req.parsed.extra.report in this.reportsDict) {
+            const userId = getUserIdFromUser(req.auth);
+            const generator = this.reportsDict[req.parsed.extra.report];
+            const ids = req.parsed.extra.ids.toString().split(',');
+            const studentIds = await this.dataSource.getRepository(StudentKlass)
+                .find({ where: { id: In(ids) }, select: { studentReferenceId: true } })
+                .then(res => res.map(item => item.studentReferenceId));
+            const extraParams = { ...req.parsed.extra, ids: studentIds };
+            return generateStudentReportCard(userId, extraParams, generator);
+        }
+        return super.getReportData(req);
     }
 }
 
