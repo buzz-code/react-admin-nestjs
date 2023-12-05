@@ -109,10 +109,10 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     value: 'totalKnownAbsences',
                     label: 'סה"כ חיסורים מאושרים'
                 };
-                // headers['totalLessons'] = {
-                //     value: 'totalLessons',
-                //     label: 'סה"כ שיעורים'
-                // };
+                headers['totalLessons'] = {
+                    value: 'totalLessons',
+                    label: 'סה"כ שיעורים'
+                };
 
                 (data[0] as any).headers = Object.values(headers);
             }
