@@ -89,6 +89,7 @@ export class Lesson implements IHasUserId {
   teacherId: string;
 
   @Column({ nullable: true })
+  @Index()
   teacherReferenceId: number;
 
   @Column("date", { name: "start_date", nullable: true })

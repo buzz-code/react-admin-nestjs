@@ -75,6 +75,7 @@ export class Grade implements IHasUserId {
   @ValidateIf((grade: Grade) => !Boolean(grade.studentTz) && Boolean(grade.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
+  @Index()
   studentReferenceId: number;
 
   @ValidateIf((grade: Grade) => !Boolean(grade.teacherReferenceId), { always: true })
@@ -85,6 +86,7 @@ export class Grade implements IHasUserId {
   @ValidateIf((grade: Grade) => !Boolean(grade.teacherId) && Boolean(grade.teacherReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
+  @Index()
   teacherReferenceId: number;
 
   @ValidateIf((grade: Grade) => !Boolean(grade.klassReferenceId), { always: true })
@@ -98,6 +100,7 @@ export class Grade implements IHasUserId {
   @ValidateIf((grade: Grade) => !Boolean(grade.klassId) && Boolean(grade.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
+  @Index()
   klassReferenceId: number;
 
   @ValidateIf((grade: Grade) => !Boolean(grade.lessonReferenceId), { always: true })
@@ -109,10 +112,12 @@ export class Grade implements IHasUserId {
 
   @ValidateIf((grade: Grade) => !Boolean(grade.lessonId) && Boolean(grade.lessonReferenceId), { always: true })
   @Column({ nullable: true })
+  @Index()
   lessonReferenceId: number;
 
   @Column("date", { name: "report_date" })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @Index()
   reportDate: Date;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })

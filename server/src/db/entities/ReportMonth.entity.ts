@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -22,6 +23,7 @@ export class ReportMonth {
   id: number;
 
   @Column()
+  @Index()
   userId: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
@@ -32,10 +34,12 @@ export class ReportMonth {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
+  @Index()
   startDate: Date;
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
+  @Index()
   endDate: Date;
 
   @IsOptional({ always: true })

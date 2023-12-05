@@ -75,6 +75,7 @@ export class AttReport implements IHasUserId {
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.studentTz) && Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
+  @Index()
   studentReferenceId: number;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherReferenceId), { always: true })
@@ -85,6 +86,7 @@ export class AttReport implements IHasUserId {
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherId) && Boolean(attReport.teacherReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
+  @Index()
   teacherReferenceId: number;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.klassReferenceId), { always: true })
@@ -98,6 +100,7 @@ export class AttReport implements IHasUserId {
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.klassId) && Boolean(attReport.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
+  @Index()
   klassReferenceId: number;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.lessonReferenceId), { always: true })
@@ -109,10 +112,12 @@ export class AttReport implements IHasUserId {
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.lessonId) && Boolean(attReport.lessonReferenceId), { always: true })
   @Column({ nullable: true })
+  @Index()
   lessonReferenceId: number;
 
   @Column("date", { name: "report_date" })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @Index()
   reportDate: Date;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
