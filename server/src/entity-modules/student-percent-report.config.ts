@@ -18,9 +18,8 @@ function getConfig(): BaseEntityModuleOptions {
                 student: {},
                 teacher: {},
                 lesson: {},
-                klass: {
-                    eager: true,
-                },
+                klass: { eager: true },
+                studentBaseKlass: { eager: true },
             }
         },
         exporter: {
@@ -29,7 +28,8 @@ function getConfig(): BaseEntityModuleOptions {
                     student: { eager: true },
                     teacher: { eager: true },
                     klass: { eager: true },
-                    lesson: { eager: true }
+                    lesson: { eager: true },
+                    studentBaseKlass: { eager: true },
                 };
                 return innerFunc(req);
             },
@@ -37,6 +37,7 @@ function getConfig(): BaseEntityModuleOptions {
                 return [
                     { value: 'teacher.name', label: 'שם המורה' },
                     { value: 'student.name', label: 'שם התלמידה' },
+                    { value: 'studentBaseKlass.klassName', label: 'כיתת בסיס' },
                     { value: 'klass.name', label: 'כיתה' },
                     { value: 'lesson.name', label: 'שיעור' },
                     { value: 'lessonsCount', label: 'מספר שיעורים' },

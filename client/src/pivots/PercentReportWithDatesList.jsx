@@ -1,4 +1,4 @@
-import { DateInput, NumberField, TextField, ReferenceField, useRecordContext, SelectField, useListFilterContext } from 'react-admin';
+import { DateInput, NumberField, TextField, ReferenceField, useRecordContext, SelectField, useListFilterContext, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -12,7 +12,7 @@ const filters = [
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,
-    // <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
+    <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonReferenceInputFilter source="klass.klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
@@ -31,7 +31,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student_by_year" optionalTarget="tz" />
-            {/* <TextField source="studentBaseKlass.klassName" /> */}
+            <TextField source="studentBaseKlass.klassName" />
             <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />

@@ -5,6 +5,7 @@ import { Teacher } from "../entities/Teacher.entity";
 import { Lesson } from "../entities/Lesson.entity";
 import { Klass } from "../entities/Klass.entity";
 import { StudentGlobalReport } from "./StudentGlobalReport.entity";
+import { StudentBaseKlass } from "./StudentBaseKlass.entity";
 
 @ViewEntity("student_percent_report", {
   expression: (dataSource: DataSource) => dataSource
@@ -18,8 +19,8 @@ import { StudentGlobalReport } from "./StudentGlobalReport.entity";
     .addSelect('lessonReferenceId')
     .addSelect('lessons_count')
     .addSelect('abs_count')
-    .addSelect('COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1)','abs_percents')
-    .addSelect('(1 - COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1))','att_percents')
+    .addSelect('COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1)', 'abs_percents')
+    .addSelect('(1 - COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1))', 'att_percents')
     .addSelect('grade_avg / 100', 'grade_avg')
     .from(StudentGlobalReport, 'sgr')
 })
@@ -73,4 +74,8 @@ export class StudentPercentReport implements IHasUserId {
   @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
+
+  @ManyToOne(() => StudentBaseKlass, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'studentReferenceId', referencedColumnName: 'id' })
+  studentBaseKlass: StudentBaseKlass;
 }

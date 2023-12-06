@@ -314,6 +314,7 @@ export default {
                 teacherReferenceId: 'מורה',
                 klassReferenceId: 'כיתה',
                 'klass.klassTypeReferenceId': 'שיוך כיתה',
+                'studentBaseKlass.klassName': 'כיתת בסיס',
                 lessonReferenceId: 'שיעור',
                 lessonsCount: 'סיכום מספר שיעורים',
                 absPercents: 'אחוז חיסור',
