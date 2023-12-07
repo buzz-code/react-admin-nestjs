@@ -264,6 +264,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * flip scanner upload logic
 * add in lesson report screen
 * add hebrew date field
+* add slider input
+* use slider input in in-lesson-report
 
 # todo
 * make it possible to use bulk action for readonly datagrids, for example student-klasses-report
