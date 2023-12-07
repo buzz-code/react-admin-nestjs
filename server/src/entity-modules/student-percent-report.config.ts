@@ -8,7 +8,7 @@ import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.
 
 const getPercentsFormatter = (value: string) =>
     row =>
-        row[value] && !isNaN(row[value]) ? `${Number(row[value]) * 100}%` : null;
+        row[value] && !isNaN(row[value]) ? `${Math.round(Number(row[value]) * 100)}%` : null;
 
 function getConfig(): BaseEntityModuleOptions {
     return {
