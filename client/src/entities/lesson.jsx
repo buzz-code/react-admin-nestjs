@@ -32,7 +32,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="key" />
             <TextField source="name" />
             <MultiReferenceArrayField source="klassReferenceIds" reference="klass" optionalSource="klasses" optionalTarget="key" />
-            <MultiReferenceField source="teacherReferenceId" sort="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
+            <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             <DateField source="startDate" />
             <DateField source="endDate" />
             <SelectField source="year" choices={yearChoices} />
