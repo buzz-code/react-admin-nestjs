@@ -268,6 +268,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * use slider input in in-lesson-report
 
 # todo
+* add lateCount for in-lesson-report, like the absCount
 * make it possible to use bulk action for readonly datagrids, for example student-klasses-report
 * update icon for in-lesson-report
 * check docker security issues
