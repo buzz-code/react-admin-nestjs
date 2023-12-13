@@ -9,6 +9,7 @@ import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { ReportMonth, ReportMonthSemester } from "src/db/entities/ReportMonth.entity";
 import { KnownAbsenceWithReportMonth } from "src/db/view-entities/KnownAbsenceWithReportMonth.entity";
 import { Klass } from "src/db/entities/Klass.entity";
+import { formatPercent } from "@shared/utils/formatting/formatter.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -101,6 +102,12 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     studentMap[item.studentReferenceId].totalKnownAbsences += item.absnceCount;
                 });
 
+                Object.values(studentMap).forEach((student: any) => {
+                    const unApprovedAbsences = (student.total ?? 0) - (student.totalKnownAbsences ?? 0);
+                    const totalLessons = student.totalLessons ?? 1;
+                    student.absencePercentage = formatPercent(unApprovedAbsences / totalLessons);
+                });
+
                 headers['total'] = {
                     value: 'total',
                     label: 'סה"כ'
@@ -112,6 +119,10 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                 headers['totalLessons'] = {
                     value: 'totalLessons',
                     label: 'סה"כ שיעורים'
+                };
+                headers['absencePercentage'] = {
+                    value: 'absencePercentage',
+                    label: 'אחוז חיסורים'
                 };
 
                 (data[0] as any).headers = Object.values(headers);
