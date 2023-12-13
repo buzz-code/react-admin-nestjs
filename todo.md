@@ -269,6 +269,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add lateCount for in-lesson-report, like the absCount
 
 # todo
+* update student report card to latest version - both the ejs & react
 * check why cannot view pdf with jpg image - see image in troubleshoot folder, this is related to pdf-lib package
 * make it possible to use bulk action for readonly datagrids, for example student-klasses-report
 * check docker security issues
