@@ -3,12 +3,9 @@ import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { IHeader } from "@shared/utils/exporter/types";
+import { getPercentsFormatter } from "@shared/utils/formatting/formatter.util";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
-
-const getPercentsFormatter = (value: string) =>
-    row =>
-        row[value] && !isNaN(row[value]) ? `${Math.round(Number(row[value]) * 100)}%` : null;
 
 function getConfig(): BaseEntityModuleOptions {
     return {
