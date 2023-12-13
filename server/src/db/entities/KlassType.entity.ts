@@ -67,6 +67,7 @@ export class KlassType implements IHasUserId {
   name: string;
 
   @Column('varchar', { default: KlassTypeEnum.other })
+  @Index()
   klassTypeEnum: KlassTypeEnum;
 
   @Column("varchar", { name: "teacher_id", length: 10, nullable: true })
