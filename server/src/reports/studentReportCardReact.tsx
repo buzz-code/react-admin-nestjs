@@ -312,6 +312,6 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
     };
 }
 
-const getReportName = data => `תעודה לתלמידה ${data.student?.name} כיתה ${data.studentBaseKlass?.klassName}`;
+export const getReportName = data => `תעודה לתלמידה ${data.student?.name} כיתה ${data.studentBaseKlass?.klassName}`;
 
 export default new ReactToPdfReportGenerator(getReportName, getReportData, App);

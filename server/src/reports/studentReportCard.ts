@@ -1,5 +1,5 @@
 import { EjsToPdfReportGenerator } from '@shared/utils/report/ejs-to-pdf.generator';
-import { getReportData } from './studentReportCardReact';
+import { getReportData, getReportName } from './studentReportCardReact';
 
 const reportTemplate = `
 <!DOCTYPE html>
@@ -229,7 +229,5 @@ const reportTemplate = `
 const reportOptions: ejs.Options = {
     compileDebug: true,
 };
-
-const getReportName = data => `תעודה לתלמידה ${data.student?.name} כיתה ${data.studentBaseKlass?.klassName}`;
 
 export default new EjsToPdfReportGenerator(getReportName, getReportData, reportTemplate, reportOptions);
