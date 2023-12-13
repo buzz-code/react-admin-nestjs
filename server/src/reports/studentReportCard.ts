@@ -1,10 +1,5 @@
-import * as React from 'react';
-import { User } from 'src/db/entities/User.entity';
-import { Student } from 'src/db/entities/Student.entity';
-import { AttReport } from 'src/db/entities/AttReport.entity';
-import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { EjsToPdfReportGenerator } from '@shared/utils/report/ejs-to-pdf.generator';
-import { StudentBaseKlass } from 'src/db/view-entities/StudentBaseKlass.entity';
+import { getReportData } from './studentReportCardReact';
 
 const reportTemplate = `
 <!DOCTYPE html>
@@ -234,30 +229,6 @@ const reportTemplate = `
 const reportOptions: ejs.Options = {
     compileDebug: true,
 };
-
-const getReportData: IGetReportDataFunction = async (params, dataSource) => {
-    const [user, student, attReports, studentBaseKlass] = await Promise.all([
-        dataSource.getRepository(User).findOneBy({ id: params.userId }),
-        dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
-        dataSource.getRepository(AttReport).find({
-            where: { studentReferenceId: params.studentId },
-            relations: {
-                lesson: true,
-                klass: true,
-                teacher: true,
-            }
-        }),
-        dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
-    ])
-    return {
-        user,
-        student,
-        studentBaseKlass,
-        reportParams: {},
-        reports: attReports,
-        approved_abs_count: {},
-    };
-}
 
 const getReportName = data => `תעודה לתלמידה ${data.student?.name} כיתה ${data.studentBaseKlass?.klassName}`;
 

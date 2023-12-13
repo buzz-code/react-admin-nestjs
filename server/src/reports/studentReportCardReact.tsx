@@ -277,13 +277,13 @@ const ReportAbsTotal = ({ reports, reportParams, approved_abs_count }) => {
     </>
 }
 
-interface IReportParams {
+export interface IReportParams {
     userId: number;
     studentId: number;
     year: number;
     grades: boolean;
 }
-const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
+export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
     const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
