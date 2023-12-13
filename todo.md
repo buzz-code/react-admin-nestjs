@@ -266,19 +266,18 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add hebrew date field
 * add slider input
 * use slider input in in-lesson-report
+* add lateCount for in-lesson-report, like the absCount
 
 # todo
-* add lateCount for in-lesson-report, like the absCount
 * make it possible to use bulk action for readonly datagrids, for example student-klasses-report
-* update icon for in-lesson-report
 * check docker security issues
 * add percent view for students
 * use known absences in all student reports
-* add a new table - known absences reasons
-* add unit testing to more places, including client side
 * 
 
 # todo later
+* update icon for in-lesson-report
+* add unit testing to more places, including client side
 * use ra-components
 * add user image to export pdf file
 * add option to self connect to yemot phone
