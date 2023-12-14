@@ -94,7 +94,7 @@ const reportTemplate = `
         <% if (reportParams.groupByKlass) { %>
             <% var klasses = {} %>
             <% reports.forEach(item => {
-                klasses[item.klass.name] = klasses[item.klass.name] || { name: item.klass.name, id: item.klass.id, order: item.klass.klassTypeReferenceId, reports: [] }
+                klasses[item.klass.name] = klasses[item.klass.name] || { name: item.klass.name, id: item.klass.id, order: item.isBaseKlass ? -1 : 1, reports: [] }
                 klasses[item.klass.name].reports.push(item)
             }) %>
             <% reportDataArr = Object.values(klasses).sort((a, b) => a.order - b.order) %>
