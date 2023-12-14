@@ -351,6 +351,21 @@ export default {
                 reportMonthReferenceId: 'תקופת דיווח',
                 howManyLessons: 'מספר שיעורים',
             }
-        }
+        },
+        grade_name: {
+            name: 'שם ציון |||| שמות ציונים',
+            fields: {
+                ...generalResourceFieldsTranslation,
+            }
+        },
+        att_grade_effect: {
+            name: 'קשר נוכחות ציון',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                percents: 'אחוז חיסור',
+                count: 'מספר חיסורים',
+                effect: 'השפעה',
+            }
+        },
     }
 };

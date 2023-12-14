@@ -32,6 +32,8 @@ import paymentTrackConfig from "./entity-modules/payment-track.config";
 import teacherSalaryReportConfig from "./entity-modules/teacher-salary-report.config";
 import attReportWithReportMonthConfig from "./entity-modules/att-report-with-report-month.config";
 import { KnownAbsenceWithReportMonth } from "./db/view-entities/KnownAbsenceWithReportMonth.entity";
+import { GradeName } from "./db/entities/GradeName.entity";
+import { AttGradeEffect } from "./db/entities/AttGradeEffect";
 
 @Module({
     imports: [
@@ -66,6 +68,8 @@ import { KnownAbsenceWithReportMonth } from "./db/view-entities/KnownAbsenceWith
         BaseEntityModule.register(paymentTrackConfig),
         BaseEntityModule.register(teacherSalaryReportConfig),
         BaseEntityModule.register({ entity: KnownAbsenceWithReportMonth }),
+        BaseEntityModule.register({ entity: GradeName }),
+        BaseEntityModule.register({ entity: AttGradeEffect }),
     ]
 })
 export class EntitiesModule { }

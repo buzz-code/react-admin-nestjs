@@ -27,6 +27,8 @@ import reportMonth from "src/entities/report-month";
 import teacherReportStatus from "src/entities/teacher-report-status";
 import teacherSalaryReport from "src/entities/teacher-salary-report";
 import studentPercentReport from "src/entities/student-percent-report";
+import gradeName from "src/entities/grade-name";
+import attGradeEffect from './entities/att-grade-effect';
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
 import PercentReportWithDatesList from 'src/pivots/PercentReportWithDatesList';
@@ -67,6 +69,8 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import ImageIcon from '@mui/icons-material/Image';
+import LabelIcon from '@mui/icons-material/Label';
+import CalculateIcon from '@mui/icons-material/Calculate';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SettingsPhoneIcon from '@mui/icons-material/SettingsPhone';
 import EmailIcon from '@mui/icons-material/Email';
@@ -111,6 +115,8 @@ const App = () => (
             <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
             <Resource name="att_report" {...attReport} options={{ menuGroup: 'settings' }} icon={ViewListIcon} />
             <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
+            <Resource name="grade_name" {...gradeName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
+            <Resource name="att_grade_effect" {...attGradeEffect} options={{ menuGroup: 'settings' }} icon={CalculateIcon} />
 
             {isAdmin(permissions) && <>
               <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
