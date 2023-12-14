@@ -50,10 +50,11 @@ const Header = ({ image }) => image && (
 );
 
 const footerImageWrapperStyle: React.CSSProperties = {
-    position: 'fixed',
+    position: 'static',
     bottom: 0,
     right: 0,
     width: '100%',
+    paddingTop: '1rem',
 }
 const footerImageStyle: React.CSSProperties = {
     width: '95%',
@@ -87,23 +88,23 @@ const containerStyle: React.CSSProperties = {
     paddingTop: 2,
 }
 const ReportTable = ({ student, studentBaseKlass, reports, reportParams, approved_abs_count, att_grade_effect, grade_names }) => {
-    let reportDataArr: any[] = [{ reports }];
+    let reportDataArr: any[] = [{ reports, id: studentBaseKlass.id }];
     if (reportParams.groupByKlass) {
-        const klasses = {}
+        const klasses: Record<number, any> = {}
         reports.forEach(item => {
-            klasses[item.klass.name] = klasses[item.klass.name] || { name: item.klass.name, reports: [] }
+            klasses[item.klass.name] = klasses[item.klass.name] || { name: item.klass.name, id: item.klass.id, order: item.klass.klassTypeReferenceId, reports: [] }
             klasses[item.klass.name].reports.push(item)
         })
-        reportDataArr = Object.values(klasses)
-            .sort((a, b) => (a as any).name?.trim()?.localeCompare((b as any).name?.trim()))
+        reportDataArr = Object.values(klasses).sort((a, b) => a.order - b.order)
     }
 
     const studentCommentHeader = [
         { level: 1, label: 'התמחות', value: student?.comment }
     ];
     const baseHeader = [
-        { level: 2, label: 'שם התלמידה', value: student?.name },
-        { level: 2, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
+        { level: 4, label: 'שם התלמידה', value: student?.name },
+        { level: 4, label: 'מספר תז', value: student?.tz },
+        { level: 4, label: '', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
     ]
 
     return (
@@ -123,7 +124,7 @@ const headerWrapperStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'space-around',
     paddingBottom: 4,
-    paddingInline: '20%',
+    paddingInline: '20px',
 }
 const ReportTableHeaderWrapper = ({ items }) => (
     <div style={headerWrapperStyle}>
@@ -144,12 +145,16 @@ const ReportTableHeaderItem = ({ level, label, value }) => {
 
     return (
         <HeaderTag style={headerTagStyle}>
-            {label}:&nbsp;
+            {label && <>{label}:&nbsp;</>}
             <span style={headerValueStyle}>{value}</span>
         </HeaderTag>
     );
 };
 
+const reportDataWrapperStyle: React.CSSProperties = {
+    pageBreakInside: 'avoid',
+    paddingTop: '2rem',
+}
 const commonTableStyle: React.CSSProperties = {
     border: '1px solid black',
     padding: 4,
@@ -176,11 +181,11 @@ const emptyCellStyle: React.CSSProperties = {
 }
 const ReportTableContent = ({ reportData, reportParams, approved_abs_count, att_grade_effect, grade_names }) => {
     const reportTableHeader = [
-        { level: 2, label: 'כיתה', value: reportParams.groupByKlass && reportData.name }
+        { level: 4, label: '', value: reportParams.groupByKlass && reportData.name }
     ]
 
     return (
-        <>
+        <div style={reportDataWrapperStyle}>
             <ReportTableHeaderWrapper items={reportTableHeader} />
             <table style={tableStyle}>
                 {reportData.reports.length > 0 && <>
@@ -197,11 +202,11 @@ const ReportTableContent = ({ reportData, reportParams, approved_abs_count, att_
                     ))}
 
                     {!reportParams.hideAbsTotal && (
-                        <ReportAbsTotal reports={reportData.reports} reportParams={reportParams} approved_abs_count={approved_abs_count} />
+                        <ReportAbsTotal id={reportData.id} reports={reportData.reports} reportParams={reportParams} approved_abs_count={approved_abs_count} />
                     )}
                 </>}
             </table>
-        </>
+        </div>
     );
 }
 
@@ -221,9 +226,9 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
         return null;
     }
 
-    var att_percents = Math.round(((report.lessonsCount - report.absCount) / report.lessonsCount) * 100)
+    var att_percents = Math.round((((report.lessonsCount ?? 1) - (report.absCount ?? 0)) / (report.lessonsCount ?? 1)) * 100)
 
-    var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents)?.effect ?? 0
+    var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents || item.count >= report.absCount)?.effect ?? 0
     var isOriginalGrade = report.gradeAvg > 100 || report.gradeAvg == 0
     var affected_grade = isOriginalGrade ? report.gradeAvg : Math.min(100, report.gradeAvg + grade_effect)
     var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name
@@ -251,11 +256,15 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
     </tr>;
 }
 
-const ReportAbsTotal = ({ reports, reportParams, approved_abs_count }) => {
+const ReportAbsTotal = ({ id, reports, reportParams, approved_abs_count }) => {
     var reportsNoSpecial = reports.filter(item => item.lessonsCount * 2 != item.absCount)
     var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.lessonsCount, 0)
     var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.absCount, 0)
     var total_att_count = total_lesson_count - total_abs_count
+    var approved_abs_value = approved_abs_count?.[id]
+    if (!reportParams.groupByKlass) {
+        approved_abs_value = Object.values(approved_abs_count)[0]
+    }
 
     return <>
         <tr>
@@ -271,7 +280,13 @@ const ReportAbsTotal = ({ reports, reportParams, approved_abs_count }) => {
             <th style={thStyle}>&nbsp;</th>
             {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
             <th style={thStyle}>
-                {Math.round(((total_att_count + (approved_abs_count?.total || 0)) / total_lesson_count) * 100)}%
+                {Math.round(
+                    (
+                        (
+                            total_att_count + (approved_abs_value || 0)
+                        ) / total_lesson_count
+                    ) * 100
+                )}%
             </th>
         </tr>
     </>

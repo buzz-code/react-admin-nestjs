@@ -33,13 +33,17 @@ const reportTemplate = `
                 -ms-justify-content: space-around;
                 justify-content: space-around;
                 padding-bottom: 4px;
-                padding-inline: 20%;
+                padding-inline: 20px;
             }
-            h1, h2, h3 {
+            h1, h2, h3, h4 {
                 margin: 0;
             }
             .value {
                 font-weight: normal;
+            }
+            .report-data-wrapper {
+                page-break-inside: avoid;
+                padding-top: 2rem;
             }
             table {
                 border-collapse: collapse;
@@ -64,10 +68,11 @@ const reportTemplate = `
                 min-width: 60px;
             }
             .end-image {
-                position: fixed;
+                position: static;
                 bottom: 0;
                 right: 0;
                 width: 100%;
+                padding-top: 1rem;
             }
             small.notice {
                 position: absolute;
@@ -85,14 +90,14 @@ const reportTemplate = `
         <%- include('header', { img }); %>
         <% */ %>
 
-        <% var reportDataArr = [{reports}] %>
+        <% var reportDataArr = [{reports, id: studentBaseKlass.id}] %>
         <% if (reportParams.groupByKlass) { %>
             <% var klasses = {} %>
             <% reports.forEach(item => {
-                klasses[item.klass.name] = klasses[item.klass.name] || { name: item.klass.name, reports: [] }
+                klasses[item.klass.name] = klasses[item.klass.name] || { name: item.klass.name, id: item.klass.id, order: item.klass.klassTypeReferenceId, reports: [] }
                 klasses[item.klass.name].reports.push(item)
             }) %>
-            <% reportDataArr = Object.values(klasses).sort((a, b) => a.name?.trim()?.localeCompare(b.name?.trim())) %>
+            <% reportDataArr = Object.values(klasses).sort((a, b) => a.order - b.order) %>
         <% } %>
 
         <div class="container">
@@ -105,109 +110,124 @@ const reportTemplate = `
             </div>
             <div class="header-wrapper">
                 <% if (student) { %>
-                    <h2>שם התלמידה: 
+                    <h4>שם התלמידה: 
                         <span class="value"><%= student.name %></span>
-                    </h2>
+                    </h4>
+                    <h4>מספר תז: 
+                        <span class="value"><%= student.tz %></span>
+                    </h4>
                 <% } %>
                 <% if (studentBaseKlass && !reportParams.groupByKlass) { %>
-                    <h2>כיתה: 
+                    <h4> 
                         <span class="value"><%= studentBaseKlass.klassName %></span>
-                    </h2>
+                    </h4>
                 <% } %>
             </div>
 
             <% reportDataArr.forEach(reportData => { %>
-                <div class="header-wrapper">
-                    <% if (reportParams.groupByKlass) { %>
-                        <h2>כיתה: 
-                            <span class="value"><%= reportData.name %></span>
-                        </h2>
-                    <% } %>
-                </div>
-    
-                <% var reports = reportData.reports %>
-                <table>
-                <% if (reports.length > 0) { %>
-                    <tr>
-                        <th>מקצוע</th>
-                        <th>שם המורה</th>
-                        <% if (reportParams.grades) { %>
-                            <th>ציון</th>
+                <div class="report-data-wrapper">
+                    <div class="header-wrapper">
+                        <% if (reportParams.groupByKlass) { %>
+                            <h4>
+                                <span class="value"><%= reportData.name %></span>
+                            </h4>
                         <% } %>
-                        <th>אחוז נוכחות</th>
-                    </tr>
-                    <% reports.forEach((report, index) => { %>
-                        <% if (
-                            (!reportParams.forceGrades || (report.grade != undefined && report.grade != null)) &&
-                            (!reportParams.forceAtt || (report.howManyLessons))
-                        ) { %>
-                            <tr>
-                                <td class="full-cell"><%= report.lesson && report.lesson.name %></td>
-                                <td class="full-cell"><%= report.teacher && report.teacher.name %></td>
+                    </div>
+    
+                    <% var reports = reportData.reports %>
+                    <table>
+                    <% if (reports.length > 0) { %>
+                        <tr>
+                            <th>מקצוע</th>
+                            <th>שם המורה</th>
+                            <% if (reportParams.grades) { %>
+                                <th>ציון</th>
+                            <% } %>
+                            <th>אחוז נוכחות</th>
+                        </tr>
+                        <% reports.forEach((report, index) => { %>
+                            <% if (
+                                (!reportParams.forceGrades || (report.grade != undefined && report.grade != null)) &&
+                                (!reportParams.forceAtt || (report.lessonsCount))
+                            ) { %>
+                                <tr>
+                                    <td class="full-cell"><%= report.lesson && report.lesson.name %></td>
+                                    <td class="full-cell"><%= report.teacher && report.teacher.name %></td>
 
-                                <% var att_percents = Math.round(((report.howManyLessons - report.absCount) / report.howManyLessons) * 100) %> 
-                                
-                                <% if (report.howManyLessons && report.howManyLessons * 2 == report.absCount) { %>
-                                    <td class="full-cell"><%= report.grade %></td>
-                                    <td class="full-cell">&nbsp;</td>
-                                <% } else { %>
-                                    <% if (reportParams.grades) { %>
-                                        <td class="full-cell">
-                                        <% if (report.grade != undefined && report.grade != null) { %>
-                                            <% var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents)?.effect ?? 0 %> 
-                                            <% var isOriginalGrade = report.grade > 100 || report.grade == 0 %>
-                                            <% var affected_grade = isOriginalGrade ? report.grade : Math.min(100, report.grade + grade_effect) %> 
-                                            <% var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name %> 
+                                    <% var att_percents = Math.round((((report.lessonsCount ?? 1) - (report.absCount ?? 0)) / (report.lessonsCount ?? 1)) * 100) %> 
+                                    
+                                    <% if (report.lessonsCount && report.lessonsCount * 2 == report.absCount) { %>
+                                        <td class="full-cell"><%= report.grade %></td>
+                                        <td class="full-cell">&nbsp;</td>
+                                    <% } else { %>
+                                        <% if (reportParams.grades) { %>
+                                            <td class="full-cell">
+                                            <% if (report.grade != undefined && report.grade != null) { %>
+                                                <% var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents || item.count >= report.absCount)?.effect ?? 0 %> 
+                                                <% var isOriginalGrade = report.grade > 100 || report.grade == 0 %>
+                                                <% var affected_grade = isOriginalGrade ? report.grade : Math.min(100, report.grade + grade_effect) %> 
+                                                <% var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name %> 
 
-                                            <% if (matching_grade_name) { %> 
-                                                <%= matching_grade_name %>
-                                            <% } else { %> 
-                                                <%= affected_grade %>%
-                                            <% } %> 
-                                        <% } else { %>
-                                            &nbsp;
+                                                <% if (matching_grade_name) { %> 
+                                                    <%= matching_grade_name %>
+                                                <% } else { %> 
+                                                    <%= affected_grade %>%
+                                                <% } %> 
+                                            <% } else { %>
+                                                &nbsp;
+                                            <% } %>
+                                            </td>
                                         <% } %>
-                                        </td>
+                                        <td class="full-cell"><%= att_percents %>%</td>
                                     <% } %>
-                                    <td class="full-cell"><%= att_percents %>%</td>
+                                </tr>
+                            <% } %>
+                        <% }) %>
+                        <% if (!reportParams.hideAbsTotal) { %>
+                            <tr>
+                                <th>אחוז נוכחות כללי</th>
+                                <th>&nbsp;</th>
+                                <% if (reportParams.grades) { %>
+                                    <th>&nbsp;</th>
                                 <% } %>
+
+                                <% var reportsNoSpecial = reports.filter(item => item.lessonsCount * 2 != item.absCount) %>
+                                <% var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.lessonsCount, 0) %> 
+                                <% var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.absCount, 0) %> 
+                                <% var total_att_count = total_lesson_count - total_abs_count %> 
+
+                                <th>
+                                    <%= 
+                                        Math.round(((total_att_count) / total_lesson_count) * 100)
+                                    %>%
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>נוכחות בקיזוז חיסורים מאושרים</th>
+                                <th>&nbsp;</th>
+                                <% if (reportParams.grades) { %>
+                                    <th>&nbsp;</th>
+                                <% } %>
+                                <th>
+                                    <% var approved_abs_value = approved_abs_count?.[reportData.id] %>
+                                    <% if (!reportParams.groupByKlass) { %>
+                                        <% approved_abs_value = Object.values(approved_abs_count)[0] %>
+                                    <% } %>
+                                    <%= 
+                                        Math.round(
+                                            (
+                                                (
+                                                    total_att_count + (approved_abs_value || 0)
+                                                ) / total_lesson_count
+                                            ) * 100
+                                        )
+                                    %>%
+                                </th>
                             </tr>
                         <% } %>
-                    <% }) %>
-                    <% if (!reportParams.hideAbsTotal) { %>
-                        <tr>
-                            <th>אחוז נוכחות כללי</th>
-                            <th>&nbsp;</th>
-                            <% if (reportParams.grades) { %>
-                                <th>&nbsp;</th>
-                            <% } %>
-
-                            <% var reportsNoSpecial = reports.filter(item => item.howManyLessons * 2 != item.absCount) %>
-                            <% var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.howManyLessons, 0) %> 
-                            <% var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.absCount, 0) %> 
-                            <% var total_att_count = total_lesson_count - total_abs_count %> 
-
-                            <th>
-                                <%= 
-                                    Math.round(((total_att_count) / total_lesson_count) * 100)
-                                %>%
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>נוכחות בקיזוז חיסורים מאושרים</th>
-                            <th>&nbsp;</th>
-                            <% if (reportParams.grades) { %>
-                                <th>&nbsp;</th>
-                            <% } %>
-                            <th>
-                                <%= 
-                                    Math.round(((total_att_count + (approved_abs_count?.total || 0)) / total_lesson_count) * 100)
-                                %>%
-                            </th>
-                        </tr>
                     <% } %>
-                <% } %>
-                </table>
+                    </table>
+                </div>
             <% }) %>
 
             <% if (reportParams.personalNote) { %>
