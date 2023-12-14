@@ -9,7 +9,7 @@ export default ({ filterDefaultValues }) => (
         name='studentReportCardReact' filename='תעודה' defaultRequestValues={filterDefaultValues}>
         <CommonAutocompleteInput source="year" label="שנה" choices={yearChoices} />
         <BooleanInput source="grades" label="עם ציונים" />
-        <TextInput source="personalNote" label="הערה לתלמידה" />
+        <TextInput source="personalNote" label="הערה לתלמידה" defaultValue='' />
         <BooleanInput source="groupByKlass" label="קבץ לפי כיתה" />
         <BooleanInput source="hideAbsTotal" label="הסתר סיכום כללי" />
         <BooleanInput source="forceGrades" label="הצג רק שורות שכוללות ציונים" />
