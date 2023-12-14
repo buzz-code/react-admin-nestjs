@@ -6,6 +6,9 @@ import { ReactToPdfReportGenerator } from '@shared/utils/report/react-to-pdf.gen
 import { StudentBaseKlass } from 'src/db/view-entities/StudentBaseKlass.entity';
 import { StudentGlobalReport } from 'src/db/view-entities/StudentGlobalReport.entity';
 import { Image, ImageTargetEnum } from '@shared/entities/Image.entity';
+import { GradeName } from 'src/db/entities/GradeName.entity';
+import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
+import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 
 interface AppProps {
     user: User;
@@ -17,9 +20,9 @@ interface AppProps {
     studentBaseKlass: StudentBaseKlass;
     reportParams: IReportParams;
     reports: StudentGlobalReport[];
-    approved_abs_count: any;
-    att_grade_effect: any[];
-    grade_names: any[];
+    approved_abs_count: Record<number, number>;
+    att_grade_effect: AttGradeEffect[];
+    grade_names: GradeName[];
 };
 const appStyle: React.CSSProperties = {
     fontFamily: '"Roboto", sans-serif',
@@ -332,7 +335,7 @@ export interface IReportParams {
     forceAtt?: boolean;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
-    const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo] = await Promise.all([
+    const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, approved_abs_count, att_grade_effect, grade_names] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
         dataSource.getRepository(StudentGlobalReport).find({
@@ -346,6 +349,10 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportLogo }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportBottomLogo }),
+        dataSource.getRepository(KnownAbsence).findBy({ studentReferenceId: params.studentId })
+            .then(res => res.reduce((acc, item) => ({ ...acc, [item.klassReferenceId]: (acc[item.klassReferenceId] || 0) + item.absnceCount }), {})),
+        dataSource.getRepository(AttGradeEffect).find({ where: { userId: params.userId }, order: { percents: 'DESC', count: 'DESC' } }),
+        dataSource.getRepository(GradeName).find({ where: { userId: params.userId }, order: { key: 'DESC' } }),
     ])
     return {
         user,
@@ -354,9 +361,9 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         studentBaseKlass,
         reportParams: params,
         reports: studentReports,
-        approved_abs_count: {},
-        att_grade_effect: null,
-        grade_names: null,
+        approved_abs_count,
+        att_grade_effect,
+        grade_names,
     };
 }
 
