@@ -95,6 +95,7 @@ export class KnownAbsence implements IHasUserId {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("date", { name: "report_date" })
+  @Type(() => Date)
   reportDate: Date;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })

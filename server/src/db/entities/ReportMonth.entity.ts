@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { Type } from "class-transformer";
 
 
 export enum ReportMonthSemester {
@@ -34,11 +35,13 @@ export class ReportMonth {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
+  @Type(() => Date)
   @Index()
   startDate: Date;
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
+  @Type(() => Date)
   @Index()
   endDate: Date;
 

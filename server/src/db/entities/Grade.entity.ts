@@ -117,6 +117,7 @@ export class Grade implements IHasUserId {
 
   @Column("date", { name: "report_date" })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @Type(() => Date)
   @Index()
   reportDate: Date;
 
