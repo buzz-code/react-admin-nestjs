@@ -1,11 +1,10 @@
-import { ReferenceField, TextField, SelectField, BooleanInput } from 'react-admin';
+import { ReferenceField, TextField, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceArrayField, MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
-import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
-import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
 
 const filters = [
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
@@ -16,11 +15,7 @@ const filterDefaultValues = {
 };
 
 const additionalBulkButtons = [
-    <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
-        key='studentReportCardReact' name='studentReportCardReact' filename='תעודה' defaultRequestValues={filterDefaultValues}>
-        <CommonAutocompleteInput source="year" label="שנה" choices={yearChoices} />
-        <BooleanInput source="grades" label="עם ציונים" />
-    </BulkReportButton>
+    <StudentReportCardReactButton key='studentReportCardReact' filterDefaultValues={filterDefaultValues} />,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {

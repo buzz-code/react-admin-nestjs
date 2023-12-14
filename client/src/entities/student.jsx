@@ -1,15 +1,13 @@
-import { BooleanInput, DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceManyField, required, SelectField, TextField, TextInput } from 'react-admin';
+import { DateField, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceManyField, required, SelectField, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
-import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { useUnique } from '@shared/utils/useUnique';
 import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
+import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -24,11 +22,7 @@ const filterDefaultValues = {
 const additionalBulkButtons = [
     // <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
     //     key='studentReportCard' name='studentReportCard' filename='תעודה' />,
-    <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
-        key='studentReportCardReact' name='studentReportCardReact' filename='תעודה' defaultRequestValues={filterDefaultValues}>
-        <CommonAutocompleteInput source="year" label="שנה" choices={yearChoices} />
-        <BooleanInput source="grades" label="עם ציונים" />
-    </BulkReportButton>
+    <StudentReportCardReactButton key='studentReportCardReact' filterDefaultValues={filterDefaultValues} />,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
