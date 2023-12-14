@@ -15,7 +15,7 @@ interface AppProps {
     };
     student: Student;
     studentBaseKlass: StudentBaseKlass;
-    reportParams: any;
+    reportParams: IReportParams;
     reports: StudentGlobalReport[];
     approved_abs_count: any;
     att_grade_effect: any[];
@@ -45,7 +45,7 @@ const headerImageStyle: React.CSSProperties = {
     width: '95%',
     margin: '0 2.5%',
 }
-const Header = ({ image }) => image && (
+const Header = ({ image }: { image: Image }) => image && (
     <img src={image.fileData.src} style={headerImageStyle} />
 );
 
@@ -60,13 +60,13 @@ const footerImageStyle: React.CSSProperties = {
     width: '95%',
     margin: '0 2.5%',
 }
-const Footer = ({ image }) => image && (
+const Footer = ({ image }: { image: Image }) => image && (
     <div style={footerImageWrapperStyle}>
         <img src={image.fileData.src} style={footerImageStyle} />
     </div>
 );
 
-const PersonalNote = ({ note }) => note && (
+const PersonalNote = ({ note }: { note: string }) => note && (
     <h4>{note}</h4>
 );
 
@@ -87,10 +87,25 @@ const containerStyle: React.CSSProperties = {
     textAlign: 'center',
     paddingTop: 2,
 }
-const ReportTable = ({ student, studentBaseKlass, reports, reportParams, approved_abs_count, att_grade_effect, grade_names }) => {
-    let reportDataArr: any[] = [{ reports, id: studentBaseKlass.id }];
+interface ReportTableProps {
+    student: AppProps['student'];
+    studentBaseKlass: AppProps['studentBaseKlass'];
+    reports: AppProps['reports'];
+    reportParams: AppProps['reportParams'];
+    approved_abs_count: AppProps['approved_abs_count'];
+    att_grade_effect: AppProps['att_grade_effect'];
+    grade_names: AppProps['grade_names'];
+}
+interface ReportDataArrItem {
+    reports: AppProps['reports'];
+    id: number;
+    name?: string;
+    order?: number;
+}
+const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, reports, reportParams, approved_abs_count, att_grade_effect, grade_names }) => {
+    let reportDataArr: ReportDataArrItem[] = [{ reports, id: studentBaseKlass.id }];
     if (reportParams.groupByKlass) {
-        const klasses: Record<number, any> = {}
+        const klasses: Record<number, ReportDataArrItem> = {}
         reports.forEach(item => {
             klasses[item.klass.name] = klasses[item.klass.name] || { name: item.klass.name, id: item.klass.id, order: item.isBaseKlass ? -1 : 1, reports: [] }
             klasses[item.klass.name].reports.push(item)
@@ -179,7 +194,14 @@ const emptyCellStyle: React.CSSProperties = {
     ...commonTableStyle,
     minWidth: 60,
 }
-const ReportTableContent = ({ reportData, reportParams, approved_abs_count, att_grade_effect, grade_names }) => {
+interface ReportTableContentProps {
+    reportData: ReportDataArrItem;
+    reportParams: AppProps['reportParams'];
+    approved_abs_count: AppProps['approved_abs_count'];
+    att_grade_effect: AppProps['att_grade_effect'];
+    grade_names: AppProps['grade_names'];
+}
+const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ reportData, reportParams, approved_abs_count, att_grade_effect, grade_names }) => {
     const reportTableHeader = [
         { level: 4, label: '', value: reportParams.groupByKlass && reportData.name }
     ]
@@ -256,7 +278,13 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
     </tr>;
 }
 
-const ReportAbsTotal = ({ id, reports, reportParams, approved_abs_count }) => {
+interface ReportAbsTotalProps {
+    id: number;
+    reports: AppProps['reports'];
+    reportParams: AppProps['reportParams'];
+    approved_abs_count: AppProps['approved_abs_count'];
+}
+const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, reports, reportParams, approved_abs_count }) => {
     var reportsNoSpecial = reports.filter(item => item.lessonsCount * 2 != item.absCount)
     var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.lessonsCount, 0)
     var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.absCount, 0)
@@ -297,6 +325,11 @@ export interface IReportParams {
     studentId: number;
     year: number;
     grades: boolean;
+    personalNote?: string;
+    groupByKlass?: boolean;
+    hideAbsTotal?: boolean;
+    forceGrades?: boolean;
+    forceAtt?: boolean;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
     const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo] = await Promise.all([
