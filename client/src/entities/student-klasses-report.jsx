@@ -5,8 +5,11 @@ import { getResourceComponents } from '@shared/components/crudContainers/CommonE
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
+import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
 
 const filters = [
+    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={filterByUserId} />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 

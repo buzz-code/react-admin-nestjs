@@ -30,6 +30,9 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
+            <MultiReferenceField label="תז תלמידה" source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz">
+                <TextField source="tz" />
+            </MultiReferenceField>
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
             <SelectField source="year" choices={yearChoices} />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
