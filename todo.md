@@ -270,10 +270,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update student report card to latest version - both the ejs & react
 * student report card - order by klass type - first base klass then others
 * add grade-att linking table, like in old website
+* support bulk actions in readonly datagrids
 
 # todo
 * check why cannot view pdf with jpg image - see image in troubleshoot folder, this is related to pdf-lib package
-* make it possible to use bulk action for readonly datagrids, for example student-klasses-report
 * check docker security issues
 * add percent view for students
 * use known absences in all student reports
