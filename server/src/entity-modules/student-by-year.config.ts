@@ -105,6 +105,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                 Object.values(studentMap).forEach((student: any) => {
                     const unApprovedAbsences = (student.total ?? 0) - (student.totalKnownAbsences ?? 0);
                     const totalLessons = student.totalLessons ?? 1;
+                    student.unApprovedAbsences = unApprovedAbsences;
                     student.absencePercentage = formatPercent(unApprovedAbsences / totalLessons);
                 });
 
@@ -114,7 +115,11 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                 };
                 headers['totalKnownAbsences'] = {
                     value: 'totalKnownAbsences',
-                    label: 'סה"כ חיסורים מאושרים'
+                    label: 'חיסורים מאושרים'
+                };
+                headers['unApprovedAbsences'] = {
+                    value: 'unApprovedAbsences',
+                    label: 'חיסורים לא מאושרים'
                 };
                 headers['totalLessons'] = {
                     value: 'totalLessons',
