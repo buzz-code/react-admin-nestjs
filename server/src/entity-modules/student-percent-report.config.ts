@@ -60,12 +60,14 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     .getRepository(AttReportAndGrade)
                     .find({
                         where: sprIds.map(id => {
-                            const [studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId] = id.split('_');
+                            const [studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId, userId, year] = id.split('_');
                             return ({
                                 studentReferenceId: Utils.getNumericValueOrNull(studentReferenceId),
                                 teacherReferenceId: Utils.getNumericValueOrNull(teacherReferenceId),
                                 klassReferenceId: Utils.getNumericValueOrNull(klassReferenceId),
                                 lessonReferenceId: Utils.getNumericValueOrNull(lessonReferenceId),
+                                userId: Utils.getNumericValueOrNull(userId),
+                                year: Utils.getNumericValueOrNull(year),
                                 reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                             });
                         })
@@ -73,7 +75,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
 
                 const pivotDataMap: Record<string, AttReportAndGrade[]> = {};
                 pivotData.forEach(item => {
-                    const id = [item.studentReferenceId, item.teacherReferenceId, item.klassReferenceId, item.lessonReferenceId].map(String).join('_');
+                    const id = [item.studentReferenceId, item.teacherReferenceId, item.klassReferenceId, item.lessonReferenceId, item.userId, item.year].map(String).join('_');
                     pivotDataMap[id] ??= [];
                     pivotDataMap[id].push(item);
                 });
