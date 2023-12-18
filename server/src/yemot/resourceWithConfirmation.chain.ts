@@ -49,12 +49,13 @@ class AskForResourceConfirmHandler extends HandlerBase {
 
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         if (req.params[this.resource + 'Confirm'] === undefined) {
-            if (req.params[this.resource].dataToConfirm != null) {
+            if (req.params[this.resource].dataToConfirm) {
                 delete req.params[this.resource].data;
                 return res.send(res.getText(`confirm${pascalCase(this.resource)}`, req.params[this.resource].dataToConfirm.name), this.resource + 'Confirm');
             } else {
                 // If resource is null, ask for resource ID again
                 delete req.params[this.resource + 'Id'];
+                delete req.params[this.resource].dataToConfirm;
                 res.send(res.getText('tryAgain'));
                 return res.send(res.getText(`type${pascalCase(this.resource)}Id`), this.resource + 'Id');
             }

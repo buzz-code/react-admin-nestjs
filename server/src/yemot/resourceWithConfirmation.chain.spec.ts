@@ -37,7 +37,7 @@ describe('lesson chain of responsibility', () => {
                         req.params[resource + 'Confirm'] = '1';
                         break;
                 }
-                                if (res.continueMock) {
+                if (res.continueMock) {
                     await chain.handleRequest(req, res, next);
                 }
             }),
@@ -60,7 +60,7 @@ describe('lesson chain of responsibility', () => {
         req.params[resource].dataToConfirm = defaultLesson;
         req.params[resource + 'Confirm'] = '1';
 
-                await chain.handleRequest(req, res, next);
+        await chain.handleRequest(req, res, next);
 
         expect(res.send).not.toHaveBeenCalled();
         expect(next).toHaveBeenCalled();
@@ -111,7 +111,7 @@ describe('lesson chain of responsibility', () => {
 
         await chain.handleRequest(req, res, next);
 
-        expect(req.params[resource].dataToConfirm).toBeNull();
+        expect(req.params[resource].dataToConfirm).toBeFalsy();
         expect(next).not.toHaveBeenCalled();
         expect(req.getLessonFromLessonId).toHaveBeenCalledWith('123');
         expect(res.send).toHaveBeenCalledWith(`type${pascalCase(resource)}Id`, resource + 'Id');
