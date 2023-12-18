@@ -276,7 +276,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * check why cannot view pdf with jpg image - see image in troubleshoot folder, this is related to pdf-lib package
 * check docker security issues
 * add percent view for students
+* add success boolean to import file table
 * use known absences in all student reports
+* try to use winston logger, or set pino to show request time
 * 
 
 # todo later
