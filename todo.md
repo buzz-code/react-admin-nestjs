@@ -271,6 +271,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * student report card - order by klass type - first base klass then others
 * add grade-att linking table, like in old website
 * support bulk actions in readonly datagrids
+* add roadmap compnent
 
 # todo
 * check why cannot view pdf with jpg image - see image in troubleshoot folder, this is related to pdf-lib package

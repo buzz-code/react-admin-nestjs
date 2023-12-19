@@ -8,6 +8,7 @@ import authProvider from "@shared/providers/authProvider";
 import theme from "@shared/providers/themeProvider";
 import RTLStyle from "@shared/components/layout/RTLStyle";
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
+import roadmapFeatures from 'src/roadmapFeatures';
 
 import { Dashboard, Layout } from 'src/GeneralLayout';
 
@@ -53,6 +54,7 @@ import Tutorial from '@shared/components/views/Tutorial';
 import PageList from '@shared/components/views/PageList';
 import ScannerUpload from '@shared/components/views/ScannerUpload';
 import InLessonReport from '@shared/components/views/InLessonReport';
+import Roadmap from '@shared/components/views/Roadmap';
 
 import BadgeIcon from '@mui/icons-material/Badge';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
@@ -145,6 +147,7 @@ const App = () => (
               <Route path="/pages-view" element={<PageList />} />
               <Route path="/scanner-upload" element={<ScannerUpload />} />
               <Route path="/in-lesson-report" element={<InLessonReport />} />
+              <Route path="/roadmap" element={<Roadmap features={roadmapFeatures} />} />
             </CustomRoutes>
 
             <CustomRoutes noLayout>

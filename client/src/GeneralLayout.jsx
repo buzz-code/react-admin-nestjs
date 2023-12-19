@@ -10,6 +10,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import DatasetIcon from '@mui/icons-material/Dataset';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import MapIcon from '@mui/icons-material/Map';
 // import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 
 import BaseLayout from "@shared/components/layout/Layout";
@@ -23,6 +24,7 @@ const customMenuItems = [
     ({ isAdmin }) => isAdmin && <MenuItemLink key="yemot-simulator" to="/yemot-simulator" primaryText="סימולטור" leftIcon={<CallIcon />} />,
     ({ permissions }) => isScannerUpload(permissions) && <MenuItemLink key="scanner-upload" to="/scanner-upload" primaryText="העלאת קבצי סורק" leftIcon={<DocumentScannerIcon />} />,
     ({ permissions }) => isInLessonReport(permissions) && <MenuItemLink key="in-lesson-report" to="/in-lesson-report" primaryText="דיווח בזמן השיעור" leftIcon={<DatasetIcon />} />,
+    <MenuItemLink key="roadmap" to="/roadmap" primaryText="פיתוחים עתידיים" leftIcon={<MapIcon />} />,
     // <MenuItemLink key="settings" to="/settings" primaryText="הגדרות" leftIcon={<SettingsIcon />} />,
     // <MenuItemLink key="profile" to="/profile" primaryText="פרופיל" leftIcon={<PersonIcon />} />,
 ];
