@@ -6,6 +6,7 @@ import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { TeacherReportStatus } from 'src/db/view-entities/TeacherReportStatus.entity';
 import { Teacher } from 'src/db/entities/Teacher.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
+import { ReportMonth } from 'src/db/entities/ReportMonth.entity';
 import { FindOptionsWhere, In, IsNull, Not } from 'typeorm';
 
 
@@ -20,13 +21,15 @@ export interface TeacherReportFileData extends IDataToExcelReportGenerator {
     teacher: Teacher,
     lesson: Lesson,
     teacherReportStatus: TeacherReportStatus,
+    reportMonth: ReportMonth,
 }
 const getReportData: IGetReportDataFunction = async (params: TeacherReportFileParams, dataSource): Promise<TeacherReportFileData[]> => {
     const [userId, teacherId, reportMonthId, year] = params.id.split('_');
-    const [user, teacher, teacherReportStatus] = await Promise.all([
+    const [user, teacher, teacherReportStatus, reportMonth] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Teacher).findOneBy({ id: Number(teacherId) }),
         dataSource.getRepository(TeacherReportStatus).findOneBy({ id: params.id }),
+        dataSource.getRepository(ReportMonth).findOneBy({ id: Number(reportMonthId) }),
     ])
     if ((teacherReportStatus.notReportedLessons?.length ?? 0) === 0) {
         console.log('teacher report file: no lessons to report')
@@ -98,10 +101,11 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
         teacher,
         lesson,
         teacherReportStatus,
+        reportMonth,
     }));
 }
 
-const getReportName = (data: TeacherReportFileData) => `קובץ נוכחות למורה ${data.teacher?.name} לשיעור ${data.lesson?.name}`;
+const getReportName = (data: TeacherReportFileData) => `קובץ נוכחות למורה ${data.teacher?.name} לשיעור ${data.lesson?.name} - ${data.reportMonth?.name}`;
 
 const generator = new DataToExcelReportGenerator(getReportName);
 
