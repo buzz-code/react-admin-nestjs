@@ -17,6 +17,7 @@ export interface TeacherReportFileParams {
     isGrades?: boolean;
 }
 export interface TeacherReportFileData extends IDataToExcelReportGenerator {
+    fileTitle: string;
     user: User,
     teacher: Teacher,
     lesson: Lesson,
@@ -83,6 +84,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
     const headerRow = ['קוד כיתה', 'ת.ז.', 'שם תלמידה', ...dataCols, 'הערות'];
 
     return lessons.map(lesson => ({
+        fileTitle: params.isGrades ? 'קובץ ציונים' : 'קובץ נוכחות',
         headerRow,
         formattedData: lessonStudents[lesson.id].map(sk => (
             [sk.klass.key, sk.student.tz, sk.student.name]
@@ -105,7 +107,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
     }));
 }
 
-const getReportName = (data: TeacherReportFileData) => `קובץ נוכחות למורה ${data.teacher?.name} לשיעור ${data.lesson?.name} - ${data.reportMonth?.name}`;
+const getReportName = (data: TeacherReportFileData) => `${data.fileTitle} למורה ${data.teacher?.name} לשיעור ${data.lesson?.name} - ${data.reportMonth?.name}`;
 
 const generator = new DataToExcelReportGenerator(getReportName);
 
