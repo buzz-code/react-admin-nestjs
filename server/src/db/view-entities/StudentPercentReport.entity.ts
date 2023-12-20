@@ -50,6 +50,9 @@ export class StudentPercentReport implements IHasUserId {
   @Column({ name: 'lessons_count' })
   lessonsCount: number;
 
+  @Column({ name: 'abs_count' })
+  absCount: number;
+
   @Column({ name: 'abs_percents' })
   absPercents: number;
 
