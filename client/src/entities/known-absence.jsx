@@ -41,13 +41,15 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
     );
 }
 
+const lessonKeyAndName = item => `${item.name} (${item.key})`;
+
 const Inputs = ({ isCreate, isAdmin }) => {
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
         <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} dynamicFilter={filterByUserId} />
         <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserId} />
-        <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserId} />
+        <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserId} optionText={lessonKeyAndName} />
         <DateInput source="reportDate" validate={required()} />
         <NumberInput source="absnceCount" validate={required()} />
         <NumberInput source="absnceCode" />
