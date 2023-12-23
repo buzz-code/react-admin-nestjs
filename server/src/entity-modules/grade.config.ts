@@ -12,6 +12,7 @@ function getConfig(): BaseEntityModuleOptions {
                         'studentTz',
                         '',
                         'grade',
+                        'estimation',
                         'comments',
                     ],
                     specialFields: [

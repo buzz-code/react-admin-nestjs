@@ -67,6 +67,7 @@ export default {
                 reportDate: 'תאריך דיווח',
                 howManyLessons: 'מספר שיעורים',
                 grade: 'ציון',
+                estimation: 'הערכה',
                 comments: 'הערה',
             }
         },

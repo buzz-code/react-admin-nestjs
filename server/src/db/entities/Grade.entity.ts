@@ -135,6 +135,11 @@ export class Grade implements IHasUserId {
 
   @IsOptional({ always: true })
   @MaxLength(500, { always: true })
+  @Column("varchar", { name: "estimation", nullable: true, length: 500 })
+  estimation: string | null;
+
+  @IsOptional({ always: true })
+  @MaxLength(500, { always: true })
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;
 

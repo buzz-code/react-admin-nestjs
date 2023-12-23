@@ -38,6 +38,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <DateField source="reportDate" />
             {/* <NumberField source="howManyLessons" /> */}
             <NumberField source="grade" />
+            <TextField source="estimation" />
             <TextField source="comments" />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
