@@ -38,6 +38,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'klass.name', label: 'כיתה' },
                     { value: 'lesson.name', label: 'שיעור' },
                     { value: 'lessonsCount', label: 'מספר שיעורים' },
+                    { value: 'absCount', label: 'מספר חיסורים' },
                     { value: getPercentsFormatter('absPercents'), label: 'אחוז חיסור' },
                     { value: getPercentsFormatter('attPercents'), label: 'אחוז נוכחות' },
                     { value: getPercentsFormatter('gradeAvg'), label: 'ציון ממוצע' },
