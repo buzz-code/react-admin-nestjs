@@ -121,7 +121,7 @@ export class Grade implements IHasUserId {
   @Index()
   reportDate: Date;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "how_many_lessons", nullable: true })
