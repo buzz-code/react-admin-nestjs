@@ -274,6 +274,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add roadmap compnent
 
 # todo
+* make end-of-page image in student report card stick to the bottom of the page
 * check why cannot view pdf with jpg image - see image in troubleshoot folder, this is related to pdf-lib package
 * check docker security issues
 * add percent view for students
