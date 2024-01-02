@@ -19,6 +19,7 @@ import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { Type } from "class-transformer";
+import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
@@ -31,6 +32,7 @@ export class KnownAbsence implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
   async fillFields() {
+    fillDefaultYearValue(this);
     fillDefaultReportDateValue(this);
 
     let dataSource: DataSource;
