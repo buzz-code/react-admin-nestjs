@@ -106,7 +106,7 @@ interface ReportDataArrItem {
     order?: number;
 }
 const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, reports, reportParams, approved_abs_count, att_grade_effect, grade_names }) => {
-    let reportDataArr: ReportDataArrItem[] = [{ reports, id: studentBaseKlass.id }];
+    let reportDataArr: ReportDataArrItem[] = [{ reports, id: studentBaseKlass?.id }];
     if (reportParams.groupByKlass) {
         const klasses: Record<number, ReportDataArrItem> = {}
         reports.forEach(item => {
