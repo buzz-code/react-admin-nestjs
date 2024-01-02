@@ -141,7 +141,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
 const headerWrapperStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'space-around',
-    paddingBottom: 4,
+    paddingBottom: 8,
     paddingInline: '20px',
 }
 const ReportTableHeaderWrapper = ({ items }) => (
