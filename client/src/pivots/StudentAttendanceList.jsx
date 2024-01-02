@@ -1,5 +1,5 @@
 import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
-import { CommonDatagrid } from "@shared/components/crudContainers/CommonList"
+import { CommonDatagrid, getPivotColumns } from "@shared/components/crudContainers/CommonList"
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from "@shared/components/fields/CommonReferenceInputFilter";
 import { ReferenceField, TextField, useListContext, TextInput, DateInput, BooleanInput } from "react-admin"
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
@@ -32,21 +32,15 @@ const filterDefaultValues = {
 const Datagrid = ({ isAdmin, children, ...props }) => {
     const { data } = useListContext();
 
-    const columns = [
-        isAdmin && <TextField key="id" source="id" />,
-        isAdmin && <ReferenceField key="userId" source="userId" reference="user" />,
-        <TextField key="tz" source="tz" />,
-        <TextField key="name" source="name" />,
-        <CommonSelectArrayField key="year" source="year" choices={yearChoices} />,
-        ...(data?.[0]?.headers?.map(item => (
-            <TextField key={item.value} source={item.value} label={item.label} sortable={false} />
-        )) ?? []),
-    ]
-
     return (
-        <CommonDatagrid {...props}>
+        <CommonDatagrid pivot {...props}>
             {children}
-            {columns}
+            {isAdmin && <TextField key="id" source="id" />}
+            {isAdmin && <ReferenceField key="userId" source="userId" reference="user" />}
+            <TextField key="tz" source="tz" />
+            <TextField key="name" source="name" />
+            <CommonSelectArrayField key="year" source="year" choices={yearChoices} />
+            {getPivotColumns(data)}
         </CommonDatagrid>
     );
 }
