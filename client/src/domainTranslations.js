@@ -316,6 +316,7 @@ export default {
                 lessonReferenceId: 'שיעור',
                 lessonsCount: 'סיכום מספר שיעורים',
                 absCount: 'סיכום מספר חיסורים',
+                approvedAbsCount: 'מספר חיסורים מאושרים',
                 absPercents: 'אחוז חיסור',
                 attPercents: 'אחוז נוכחות',
                 gradeAvg: 'ציון ממוצע',

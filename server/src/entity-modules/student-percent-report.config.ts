@@ -4,6 +4,7 @@ import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { IHeader } from "@shared/utils/exporter/types";
 import { getPercentsFormatter } from "@shared/utils/formatting/formatter.util";
+import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
 
@@ -81,13 +82,37 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     pivotDataMap[id].push(item);
                 });
 
+                const totalAbsencesData = await this.dataSource
+                    .getRepository(KnownAbsence)
+                    .find({
+                        where: sprIds.map(id => {
+                            const [studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId, userId, year] = id.split('_');
+                            return {
+                                isApproved: true,
+                                userId: Utils.getNumericValueOrNull(userId),
+                                studentReferenceId: Utils.getNumericValueOrNull(studentReferenceId),
+                                reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
+                                year: Utils.getNumericValueOrNull(year),
+                            };
+                        }),
+                    });
+
+                const totalAbsencesDataMap: Record<string, KnownAbsence[]> = {};
+                totalAbsencesData.forEach(item => {
+                    const id = [item.studentReferenceId, item.klassReferenceId, item.lessonReferenceId, item.userId, item.year].map(String).join('_');
+                    totalAbsencesDataMap[id] ??= [];
+                    totalAbsencesDataMap[id].push(item);
+                });
+
                 Object.entries(sprMap).forEach(([key, val]) => {
                     const arr = pivotDataMap[key] ?? [];
                     val.lessonsCount = Utils.calcSum(arr, item => item.howManyLessons);
-                    const absCount = Utils.calcSum(arr, item => item.absCount);
-                    val.absPercents = Utils.roundFractional(absCount / (val.lessonsCount || 1));
+                    val.absCount = Utils.calcSum(arr, item => item.absCount);
+                    val.absPercents = Utils.roundFractional(val.absCount / (val.lessonsCount || 1));
                     val.attPercents = 1 - val.absPercents;
                     val.gradeAvg = Utils.calcAvg(arr, item => item.grade);
+                    const knownAbsArr = totalAbsencesDataMap[[val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_')] ?? [];
+                    (val as any).approvedAbsCount = Utils.calcSum(knownAbsArr, item => item.absnceCount);
                 });
             }
         }

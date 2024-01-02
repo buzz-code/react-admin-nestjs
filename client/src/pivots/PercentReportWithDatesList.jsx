@@ -38,6 +38,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <SelectField source="year" choices={yearChoices} />
             <NumberField source="lessonsCount" />
             <NumberField source="absCount" />
+            <NumberField source="approvedAbsCount" />
             <NumberField source="absPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="attPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="gradeAvg" options={{ style: 'percent', maximumFractionDigits: 2 }} />

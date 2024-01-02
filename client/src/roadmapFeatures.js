@@ -8,6 +8,7 @@ export default [
     { html: 'הוספת עמודת חיסורים לא מאושרים לדוח נוכחות', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת כיתת בסיס בדוח אחוזים לתלמידה', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת שדה תאריך עברי לטבלת נוכחות', status: 'בוצע', statusColor: 'success' },
+    { html: 'הוספת חיסורים מאושרים לדוח אחוזים לתלמידה', status: 'בוצע', statusColor: 'success' },
 
     // { html: 'הגדרת תקופת זמן לפי תאריכים', status: 'בקרוב', statusColor: 'warning' },
     // { html: 'הגדרת תקופת זמן לפי יום בשבוע', status: 'בוצע', statusColor: 'success' },
