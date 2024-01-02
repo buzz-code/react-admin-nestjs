@@ -122,7 +122,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
     const baseHeader = [
         { level: 4, label: 'שם התלמידה', value: student?.name },
         reportParams.showStudentTz && { level: 4, label: 'מספר תז', value: student?.tz },
-        { level: 4, label: '', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
+        { level: 4, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
     ]
 
     return (
