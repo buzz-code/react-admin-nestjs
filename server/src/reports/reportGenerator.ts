@@ -11,6 +11,7 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
         hideAbsTotal: reqExtra.hideAbsTotal,
         forceGrades: reqExtra.forceGrades,
         forceAtt: reqExtra.forceAtt,
+        showStudentTz: reqExtra.showStudentTz,
     };
     const params = reqExtra.ids
         .toString()

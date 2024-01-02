@@ -121,7 +121,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
     ];
     const baseHeader = [
         { level: 4, label: 'שם התלמידה', value: student?.name },
-        { level: 4, label: 'מספר תז', value: student?.tz },
+        reportParams.showStudentTz && { level: 4, label: 'מספר תז', value: student?.tz },
         { level: 4, label: '', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
     ]
 
@@ -146,7 +146,7 @@ const headerWrapperStyle: React.CSSProperties = {
 }
 const ReportTableHeaderWrapper = ({ items }) => (
     <div style={headerWrapperStyle}>
-        {items.map((item, index) => <ReportTableHeaderItem key={index} {...item} />)}
+        {items.filter(Boolean).map((item, index) => <ReportTableHeaderItem key={index} {...item} />)}
     </div>
 )
 
@@ -333,6 +333,7 @@ export interface IReportParams {
     hideAbsTotal?: boolean;
     forceGrades?: boolean;
     forceAtt?: boolean;
+    showStudentTz?: boolean;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
     const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, approved_abs_count, att_grade_effect, grade_names] = await Promise.all([
