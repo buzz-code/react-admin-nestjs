@@ -81,7 +81,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
     }
 
     const dataCols = params.isGrades ? ['ציונים'] : ['מספר שיעורים', 'חיסורים'];
-    const commentCols = params.isGrades ? ['הערכה', 'הערות'] : ['הערות'];
+    const commentCols = params.isGrades ? ['דרך ארץ', 'צניעות'] : ['הערות'];
     const headerRow = ['קוד כיתה', 'ת.ז.', 'שם תלמידה', ...dataCols, ...commentCols];
 
     return lessons.map(lesson => ({
