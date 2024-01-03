@@ -217,8 +217,8 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
                     <tr>
                         <th style={thStyle}>מקצוע</th>
                         <th style={thStyle}>שם המורה</th>
-                        {reportParams.grades && <th style={thStyle}>ציון</th>}
                         <th style={thStyle}>אחוז נוכחות</th>
+                        {reportParams.grades && <th style={thStyle}>ציון</th>}
                     </tr>
 
                     {reportData.reports.map((item, index) => (
@@ -264,10 +264,11 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
 
         {(report.lessonsCount && report.lessonsCount * 2 == report.absCount)
             ? <>
-                <td style={fullCellStyle}>{report.gradeAvg}</td>
                 <td style={fullCellStyle}>&nbsp;</td>
+                <td style={fullCellStyle}>{report.gradeAvg}</td>
             </>
             : <>
+                <td style={fullCellStyle}>{att_percents}%</td>
                 {reportParams.grades && (
                     <td style={fullCellStyle}>
                         {(report.gradeAvg != undefined && report.gradeAvg != null)
@@ -276,7 +277,6 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
                         }
                     </td>
                 )}
-                <td style={fullCellStyle}>{att_percents}%</td>
             </>}
     </tr>;
 }
@@ -301,15 +301,14 @@ const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, repo
         <tr>
             <th style={thStyle}>אחוז נוכחות כללי</th>
             <th style={thStyle}>&nbsp;</th>
-            {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
             <th style={thStyle}>
                 {Math.round(((total_att_count) / total_lesson_count) * 100)}%
             </th>
+            {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
         </tr>
         <tr>
             <th style={thStyle}>נוכחות בקיזוז חיסורים מאושרים</th>
             <th style={thStyle}>&nbsp;</th>
-            {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
             <th style={thStyle}>
                 {Math.round(
                     (
@@ -319,6 +318,7 @@ const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, repo
                     ) * 100
                 )}%
             </th>
+            {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
         </tr>
     </>
 }
