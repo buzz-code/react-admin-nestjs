@@ -3641,6 +3641,11 @@ gauge@^3.0.0:
     strip-ansi "^6.0.1"
     wide-align "^1.1.2"
 
+gematriya@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/gematriya/-/gematriya-2.0.0.tgz#bdc93285a84f05e51fa962b18dc44beceb0f38c3"
+  integrity sha512-i+G3iGTn/vmojZkvS0dDPcw46tREqS10mztDOVoG6AACZzqp0eOpvIYaAOqZEiH4ee0Rkgt1Sf6jWM1GobJIeg==
+
 generate-function@^2.3.1:
   version "2.3.1"
   resolved "https://registry.npmjs.org/generate-function/-/generate-function-2.3.1.tgz"
@@ -4652,6 +4657,13 @@ jest@^29.4.3:
     "@jest/types" "^29.4.3"
     import-local "^3.0.2"
     jest-cli "^29.4.3"
+
+jewish-date@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/jewish-date/-/jewish-date-2.0.8.tgz#430b655070f00f955e53173f91bcbc422bd8fd15"
+  integrity sha512-gBKBSuTJpXRzUthT7l+ixLz3hPFVAxnRDpUPr+mQGZEDqbwYP9zpKWn4F+0sNfb/EU8C8kkEzKxPXiKrfNCJ+g==
+  dependencies:
+    gematriya "^2.0.0"
 
 js-beautify@^1.6.14:
   version "1.14.7"
