@@ -9,6 +9,7 @@ import { Image, ImageTargetEnum } from '@shared/entities/Image.entity';
 import { GradeName } from 'src/db/entities/GradeName.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
+import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
 
 interface AppProps {
     user: User;
@@ -123,6 +124,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
         { level: 4, label: 'שם התלמידה', value: student?.name },
         reportParams.showStudentTz && { level: 4, label: 'מספר תז', value: student?.tz },
         { level: 4, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
+        { level: 4, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
     ]
 
     return (
