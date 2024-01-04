@@ -272,9 +272,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add grade-att linking table, like in old website
 * support bulk actions in readonly datagrids
 * add roadmap compnent
+* make end-of-page image in student report card stick to the bottom of the page
 
 # todo
-* make end-of-page image in student report card stick to the bottom of the page
 * check why cannot view pdf with jpg image - see image in troubleshoot folder, this is related to pdf-lib package
 * check docker security issues
 * add percent view for students

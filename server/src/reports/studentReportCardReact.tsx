@@ -28,19 +28,27 @@ interface AppProps {
 const appStyle: React.CSSProperties = {
     fontFamily: '"Roboto", sans-serif',
     fontSize: 12,
-    minHeight: '21cm',
+    height: 'calc(100vh - 16px)',
 }
 const App: React.FunctionComponent<AppProps> = (props) => {
     return (
         <div dir='rtl' style={appStyle}>
             <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-            <Header image={props.images.reportLogo} />
-            <ReportTable student={props.student} studentBaseKlass={props.studentBaseKlass}
-                reports={props.reports} reportParams={props.reportParams} approved_abs_count={props.approved_abs_count}
-                att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
-            <PersonalNote note={props.reportParams.personalNote} />
-            <YomanetNotice />
-            <Footer image={props.images.reportBottomLogo} />
+            <table>
+                <thead><tr><th>
+                    <Header image={props.images.reportLogo} />
+                </th></tr></thead>
+                <tbody><tr><td>
+                    <ReportTable student={props.student} studentBaseKlass={props.studentBaseKlass}
+                        reports={props.reports} reportParams={props.reportParams} approved_abs_count={props.approved_abs_count}
+                        att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
+                    <PersonalNote note={props.reportParams.personalNote} />
+                    <YomanetNotice />
+                </td></tr></tbody>
+                <tfoot><tr><td>
+                    <Footer image={props.images.reportBottomLogo} />
+                </td></tr></tfoot>
+            </table>
         </div>
     );
 }
@@ -53,20 +61,31 @@ const Header = ({ image }: { image: Image }) => image && (
     <img src={image.fileData.src} style={headerImageStyle} />
 );
 
+const footerContainerStyle: React.CSSProperties = {
+    paddingTop: '1rem',
+}
 const footerImageWrapperStyle: React.CSSProperties = {
-    position: 'static',
+    position: 'fixed',
     bottom: 0,
     right: 0,
     width: '100%',
-    paddingTop: '1rem',
+}
+const placeHolderFooterImageWrapperStyle: React.CSSProperties = {
+    width: '100%',
+    visibility: 'hidden',
 }
 const footerImageStyle: React.CSSProperties = {
     width: '95%',
     margin: '0 2.5%',
 }
 const Footer = ({ image }: { image: Image }) => image && (
-    <div style={footerImageWrapperStyle}>
-        <img src={image.fileData.src} style={footerImageStyle} />
+    <div style={footerContainerStyle}>
+        <div style={placeHolderFooterImageWrapperStyle}>
+            <img src={image.fileData.src} style={footerImageStyle} />
+        </div>
+        <div style={footerImageWrapperStyle}>
+            <img src={image.fileData.src} style={footerImageStyle} />
+        </div>
     </div>
 );
 
