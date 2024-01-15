@@ -275,7 +275,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make end-of-page image in student report card stick to the bottom of the page
 
 # todo
-* check why cannot view pdf with jpg image - see image in troubleshoot folder, this is related to pdf-lib package
+* add teacher report table for grades
 * check docker security issues
 * add percent view for students
 * add success boolean to import file table
@@ -284,6 +284,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * 
 
 # todo later
+* check why cannot view pdf with jpg image - see image in troubleshoot folder, this is related to pdf-lib package
 * update icon for in-lesson-report
 * add unit testing to more places, including client side
 * use ra-components
