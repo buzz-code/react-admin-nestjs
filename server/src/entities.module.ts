@@ -14,7 +14,7 @@ import teacherConfig from './entity-modules/teacher.config';
 import textConfig from './entity-modules/text.config';
 import studentKlassReportConfig from './entity-modules/student-klass-report.config';
 import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass.entity';
-import { AuditLog } from '@shared/entities/AuditLog.entity';
+import auditLogConfig from "./entity-modules/audit-log.config";
 import { ImportFile } from '@shared/entities/ImportFile.entity';
 import { YemotCall } from '@shared/entities/YemotCall.entity';
 import { TextByUser } from '@shared/view-entities/TextByUser.entity';
@@ -51,7 +51,7 @@ import { AttGradeEffect } from "./db/entities/AttGradeEffect";
         BaseEntityModule.register(textConfig),
         BaseEntityModule.register(studentKlassReportConfig),
         BaseEntityModule.register({ entity: StudentBaseKlass }),
-        BaseEntityModule.register({ entity: AuditLog }),
+        BaseEntityModule.register(auditLogConfig),
         BaseEntityModule.register({ entity: ImportFile }),
         BaseEntityModule.register({ entity: YemotCall }),
         BaseEntityModule.register(mailAddressConfig),
