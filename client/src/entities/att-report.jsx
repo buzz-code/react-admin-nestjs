@@ -16,6 +16,7 @@ const filters = [
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
+    <CommonReferenceInputFilter source="klass.klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ ...filterByUserIdAndYear, teacherReferenceId: 'teacherReferenceId', 'klassReferenceIds:$cont': 'klassReferenceId' }} />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
@@ -34,6 +35,9 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="studentBaseKlass.klassName" />
             <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
+            <MultiReferenceField source="klassReferenceId" label='resources.att_report.fields.klass.klassTypeReferenceId' sortable={false} optionalSource="klassId" reference="klass" optionalTarget="key" >
+                <MultiReferenceField source='klassTypeReferenceId' reference='klass_type' />
+            </MultiReferenceField>
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
             <SelectField source="year" choices={yearChoices} />
             <DateField source="reportDate" />
