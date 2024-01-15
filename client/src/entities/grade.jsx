@@ -23,7 +23,7 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
-const Datagrid = ({ isAdmin, children, ...props }) => {
+export const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
         <CommonDatagrid {...props}>
             {children}
