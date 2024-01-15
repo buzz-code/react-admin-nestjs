@@ -10,9 +10,10 @@ export default [
     { html: 'הוספת שדה תאריך עברי לטבלת נוכחות', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת חיסורים מאושרים לדוח אחוזים לתלמידה', status: 'בוצע', statusColor: 'success' },
     { html: 'סידור לוגו תחתון בתעודה', status: 'בוצע', statusColor: 'success' },
+    { html: 'הוספת טופס ציונים', status: 'בוצע', statusColor: 'success' },
 
     // { html: 'הגדרת תקופת זמן לפי תאריכים', status: 'בקרוב', statusColor: 'warning' },
     // { html: 'הגדרת תקופת זמן לפי יום בשבוע', status: 'בוצע', statusColor: 'success' },
     // { html: 'הגדרת תקופת זמן לפי יום בשנה', status: 'נדרשת חשיבה נוספת', statusColor: 'primary' },
     // { html: 'יצירת דוחות נוכחות לפי תקופת זמן', status: 'לא יבוצע', statusColor: 'error' },
-];
+].reverse();
