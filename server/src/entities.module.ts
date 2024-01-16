@@ -34,6 +34,7 @@ import attReportWithReportMonthConfig from "./entity-modules/att-report-with-rep
 import { KnownAbsenceWithReportMonth } from "./db/view-entities/KnownAbsenceWithReportMonth.entity";
 import { GradeName } from "./db/entities/GradeName.entity";
 import { AttGradeEffect } from "./db/entities/AttGradeEffect";
+import teacherGradeReportStatusConfig from "./entity-modules/teacher-grade-report-status.config";
 
 @Module({
     imports: [
@@ -59,6 +60,7 @@ import { AttGradeEffect } from "./db/entities/AttGradeEffect";
         BaseEntityModule.register(pageConfig),
         BaseEntityModule.register({ entity: ReportMonth }),
         BaseEntityModule.register(teacherReportStatusConfig),
+        BaseEntityModule.register(teacherGradeReportStatusConfig),
         BaseEntityModule.register({ entity: TextByUser }),
         BaseEntityModule.register(studentPercentReportConfig),
         BaseEntityModule.register({ entity: AttReportAndGrade }),

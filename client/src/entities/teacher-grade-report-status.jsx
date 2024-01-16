@@ -24,8 +24,8 @@ const filterDefaultValues = {
 const Datagrid = ({ isAdmin, children, ...props }) => {
     const { data: subjectText } = useGetList('text_by_user', { page: 1, perPage: 1, filter: { name: 'teacherReportStatusEmailSubject' } });
     const { data: bodyText } = useGetList('text_by_user', { page: 1, perPage: 1, filter: { name: 'teacherReportStatusEmailBody1' } });
-    const defaultMailSubject = subjectText?.[0]?.value ?? 'תזכורת לשליחת דווח נוכחות';
-    const defaultMailBody = bodyText?.[0]?.value ?? 'שלום המורה {0} היקרה, תזכורת לשלוח נתוני נוכחות עבור השיעורים {2} בתודה ההנהלה';
+    const defaultMailSubject = subjectText?.[0]?.value ?? 'תזכורת לשליחת דווח ציונים';
+    const defaultMailBody = bodyText?.[0]?.value ?? 'שלום המורה {0} היקרה, תזכורת לשלוח נתוני ציונים עבור השיעורים {2} בתודה ההנהלה';
     const additionalBulkButtons = [
         <BulkReportButton label='הורדת אקסל למורה' icon={<BrowserUpdatedIcon />} name='teacherReportFile' >
             {/* <BooleanInput source="isGrades" label="קובץ ציונים" /> */}
