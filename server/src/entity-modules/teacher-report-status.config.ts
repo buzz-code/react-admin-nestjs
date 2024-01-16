@@ -1,17 +1,12 @@
 import { CrudRequest } from "@dataui/crud";
-import { ISendMailOptions } from "@nestjs-modules/mailer";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
 import { BulkToZipReportGenerator } from "@shared/utils/report/bulk-to-zip.generator";
 import { CommonReportData } from "@shared/utils/report/types";
 import { TeacherReportStatus } from "src/db/view-entities/TeacherReportStatus.entity";
-import teacherReportFile, { TeacherReportFileData, TeacherReportFileParams } from "src/reports/teacherReportFile";
-import * as JSZip from 'jszip';
-import { getUserMailAddressFrom, validateUserHasPaid } from "@shared/base-entity/base-entity.util";
-import { getUserIdFromUser } from "@shared/auth/auth.util";
-import { getMailAddressForEntity } from "@shared/utils/mail/mail-address.util";
-import { FormatString } from "@shared/utils/yemot/yemot.interface";
+import teacherReportFile from "src/reports/teacherReportFile";
+import { getTeacherStatusFileReportParams, sendTeacherReportFileMail } from "src/reports/reportGenerator";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -37,7 +32,7 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
     async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
         if (req.parsed.extra.report in this.reportsDict) {
             const generator = this.reportsDict[req.parsed.extra.report];
-            const params = getReportParams(req);
+            const params = getTeacherStatusFileReportParams(req);
             return {
                 generator,
                 params,
@@ -47,88 +42,13 @@ class TeacherReportStatusService<T extends Entity | TeacherReportStatus> extends
     }
 
     async doAction(req: CrudRequest<any, any>): Promise<any> {
-        const params = getReportParams(req);
         switch (req.parsed.extra.action) {
             case 'teacherReportFile': {
-                if (params.length > 1) {
-                    await validateUserHasPaid(req.auth, this.dataSource, 'בחשבון חינמי אפשר לשלוח רק מייל אחד בכל פעם');
-                }
-
-                const responses = [];
-                const generator = teacherReportFile;
-                for (const p of params) {
-                    try {
-                        const filesData = (await generator.getReportData(p, this.dataSource)) as TeacherReportFileData[];
-
-                        if (!filesData[0]?.teacher) {
-                            responses.push('אין נתונים לשליחה');
-                            continue;
-                        }
-
-                        if (filesData[0]?.teacher?.email) {
-                            const zipFileBuffer = await generator.getFileBuffer(filesData);
-                            const zipContent = await JSZip.loadAsync(zipFileBuffer);
-
-                            const attachments: ISendMailOptions['attachments'] = await Promise.all(
-                                Object.values(zipContent.files)
-                                    .map(
-                                        async (file) => ({
-                                            filename: file.name,
-                                            content: await file.async('nodebuffer')
-                                        })
-                                    )
-                            );
-
-                            const fromAddress = await getUserMailAddressFrom(req.auth, this.dataSource);
-                            const targetEntity = req.parsed.extra?.isGrades ? 'grade' : 'att_report';
-                            const replyToAddress = await getMailAddressForEntity(p.userId, targetEntity, this.dataSource);
-                            const textParams = [filesData[0].teacher.name, filesData[0].teacherReportStatus.reportMonthName, filesData.map(item => item.lesson.name).join(', ')];
-                            const mailSubject = FormatString(req.parsed.extra.mailSubject, textParams);
-                            const mailBody = FormatString(req.parsed.extra.mailBody, textParams);
-
-                            await this.mailSendService.sendMail({
-                                to: filesData[0].teacher.email,
-                                from: fromAddress,
-                                subject: mailSubject,
-                                html: mailBody,
-                                attachments,
-                                replyTo: {
-                                    address: replyToAddress,
-                                    name: fromAddress.name,
-                                },
-                            });
-                            responses.push(`${filesData[0].teacher.name} - נשלח בהצלחה, ${attachments.length} קבצים`);
-                        } else {
-                            console.log('teacher report file: no email for teacher', filesData[0]?.teacher);
-                            responses.push('לא ניתן לשלוח מייל למורה זו - אין כתובת מייל');
-                        }
-                    } catch (e) {
-                        console.log('error sending teacher report file', e, params, req.parsed.extra);
-                        responses.push('שגיאה בשליחת מייל');
-                    }
-                }
-                return 'סטטוס מיילים: '
-                    + responses.map((response, i) => `(${i + 1}) ${response}`).join('\n');
+                return sendTeacherReportFileMail(req, this.dataSource, this.mailSendService);
             }
         }
         return super.doAction(req);
     }
-}
-
-function getReportParams(req: CrudRequest<any, any>): TeacherReportFileParams[] {
-    console.log('teacher report file params: ', req.parsed.extra);
-    const isGrades = req.parsed.extra?.isGrades;
-    const lessonReferenceId = parseInt(req.parsed.extra?.lessonReferenceId);
-    const params = req.parsed.extra.ids
-        .toString()
-        .split(',')
-        .map(id => ({
-            userId: getUserIdFromUser(req.auth),
-            id,
-            isGrades,
-            lessonReferenceId: isNaN(lessonReferenceId) ? undefined : lessonReferenceId,
-        }));
-    return params;
 }
 
 export default getConfig();
