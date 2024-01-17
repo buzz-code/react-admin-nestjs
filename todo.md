@@ -273,9 +273,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * support bulk actions in readonly datagrids
 * add roadmap compnent
 * make end-of-page image in student report card stick to the bottom of the page
+* add teacher report table for grades
 
 # todo
-* add teacher report table for grades
+* make github action to run tests on pull request
+* add more unit tests
 * check docker security issues
 * add percent view for students
 * add success boolean to import file table
