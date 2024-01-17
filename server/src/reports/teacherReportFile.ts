@@ -4,6 +4,7 @@ import { DataToExcelReportGenerator, IDataToExcelReportGenerator } from '@shared
 import { BulkToZipReportGenerator } from '@shared/utils/report/bulk-to-zip.generator';
 import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { TeacherReportStatus } from 'src/db/view-entities/TeacherReportStatus.entity';
+import { TeacherGradeReportStatus } from 'src/db/view-entities/TeacherGradeReportStatus.entity';
 import { Teacher } from 'src/db/entities/Teacher.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
 import { ReportMonth } from 'src/db/entities/ReportMonth.entity';
@@ -26,10 +27,11 @@ export interface TeacherReportFileData extends IDataToExcelReportGenerator {
 }
 const getReportData: IGetReportDataFunction = async (params: TeacherReportFileParams, dataSource): Promise<TeacherReportFileData[]> => {
     const [userId, teacherId, reportMonthId, year] = params.id.split('_');
+    const teacherReportTable = params.isGrades ? TeacherGradeReportStatus : TeacherReportStatus;
     const [user, teacher, teacherReportStatus, reportMonth] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Teacher).findOneBy({ id: Number(teacherId) }),
-        dataSource.getRepository(TeacherReportStatus).findOneBy({ id: params.id }),
+        dataSource.getRepository(teacherReportTable).findOneBy({ id: params.id }),
         dataSource.getRepository(ReportMonth).findOneBy({ id: Number(reportMonthId) }),
     ])
     if ((teacherReportStatus.notReportedLessons?.length ?? 0) === 0) {
