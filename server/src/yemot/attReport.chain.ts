@@ -148,7 +148,7 @@ class GetParamsDataHandler extends HandlerBase {
     }
 }
 class SaveAndGoToNextStudent extends HandlerBase {
-    constructor(private properties: IReportProperty[], private reportType: ReportType) {
+    constructor(private properties: IReportProperty[], private reportType: ReportType, private beforeSave?: (report: AttReport | Grade) => void) {
         super();
     }
 
@@ -166,6 +166,8 @@ class SaveAndGoToNextStudent extends HandlerBase {
         for (const prop of this.properties) {
             report[prop.field] = req.params[prop.name];
         }
+        
+        this.beforeSave?.(report);
         await req.saveReport(report, this.reportType);
 
         req.params.studentIndex++;
@@ -186,11 +188,11 @@ function clearStudentData(req: YemotRequest, properties: IReportProperty[]) {
 class IterateStudentsHandler extends HandlerBase {
     studentChain: Chain;
 
-    constructor(private properties: IReportProperty[], private reportType: ReportType) {
+    constructor(private properties: IReportProperty[], private reportType: ReportType, beforeSave?: (report: AttReport | Grade) => void) {
         super();
         this.studentChain = new Chain('iterate students', [
             new GetParamsDataHandler(properties),
-            new SaveAndGoToNextStudent(properties, this.reportType),
+            new SaveAndGoToNextStudent(properties, this.reportType, beforeSave),
         ]);
     }
 
@@ -213,13 +215,13 @@ class IterateStudentsHandler extends HandlerBase {
 }
 
 
-export default function getReportChain(getExistingReports: GetExistingReportsFunction, reportType: ReportType, properties: IReportProperty[]) {
+export default function getReportChain(getExistingReports: GetExistingReportsFunction, reportType: ReportType, properties: IReportProperty[], beforeSave?: (report: AttReport | Grade) => void) {
     return new Chain('get report chain', [
         new GetSheetNameHandler(),
         new GetExistingReportsHandler(getExistingReports),
         new CheckExistingReportsHandler(),
         new CheckHowManyLessonsHandler(reportType),
         new LoadStudentListHandler(),
-        new IterateStudentsHandler(properties, reportType),
+        new IterateStudentsHandler(properties, reportType, beforeSave),
     ]);
 }

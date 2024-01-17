@@ -4,6 +4,7 @@ import getReportTypeChain from "./reportType.chain";
 import getResourceConfirmationChain from "./resourceWithConfirmation.chain";
 import teacherByPhoneChain from "./teacherByPhone.chain";
 import { YemotRequest } from "@shared/utils/yemot/yemot.interface";
+import { AttReport } from "src/db/entities/AttReport.entity";
 
 
 function getLessonFromLessonId(req: YemotRequest) {
@@ -60,9 +61,23 @@ const attProperties: IReportProperty[] = [
         validate(req: YemotRequest) {
             return req.params.absCount >= 0 && req.params.absCount <= req.params.howManyLessons;
         }
+    },
+    {
+        name: 'lateCount',
+        message: 'lateCount',
+        field: 'lateCount',
+        validate(req: YemotRequest) {
+            return req.params.lateCount >= 0 && req.params.lateCount <= req.params.howManyLessons;
+        }
     }
 ]
-const attReportChain = getReportChain(getExistingAttReports, 'att', attProperties);
+const beforeAttSave = (report: AttReport & { lateCount: number }) => {
+    report.absCount = isNaN(report.absCount) ? 0 : Number(report.absCount);
+    report.lateCount = isNaN(report.lateCount) ? 0 : Number(report.lateCount);
+    report.absCount += report.lateCount * 0.3;
+    delete report.lateCount;
+}
+const attReportChain = getReportChain(getExistingAttReports, 'att', attProperties, beforeAttSave);
 async function getExistingGradeReports(req: YemotRequest, klassId: string, lessonId: string, sheetName: string) {
     return req.getExistingGradeReports(klassId, lessonId, sheetName);
 }
