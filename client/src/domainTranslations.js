@@ -291,6 +291,16 @@ export default {
                 notReportedLessons: 'שיעורים שלא דווחו',
             }
         },
+        teacher_grade_report_status: {
+            name: 'ציונים למורה',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                teacherReferenceId: 'מורה',
+                reportMonthReferenceId: 'תקופת דיווח',
+                reportedLessons: 'שיעורים שדווחו',
+                notReportedLessons: 'שיעורים שלא דווחו',
+            }
+        },
         student_percent_report: {
             name: 'דוח אחוזים כללי',
             fields: {
