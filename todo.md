@@ -274,6 +274,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add roadmap compnent
 * make end-of-page image in student report card stick to the bottom of the page
 * add teacher report table for grades
+* add late count to yemot report chain
 
 # todo
 * make github action to run tests on pull request
