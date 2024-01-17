@@ -1,6 +1,7 @@
 import { Chain, HandlerBase } from "@shared/utils/yemot/chain.interface";
 import { ReportType, YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
 import { AttReport } from "src/db/entities/AttReport.entity";
+import { Grade } from "src/db/entities/Grade.entity";
 
 type GetExistingReportsFunction = (req: YemotRequest, klassId: string, lessonId: string, sheetName: string) =>
     Promise<Array<any>>;
@@ -67,7 +68,14 @@ class CheckExistingReportsHandler extends HandlerBase {
 }
 
 class CheckHowManyLessonsHandler extends HandlerBase {
+    constructor(private reportType: ReportType) {
+        super();
+    }
+
     handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
+        if (this.reportType === 'grade') {
+            return next();
+        }
         if (req.params.howManyLessons === undefined) {
             return res.send(res.getText('howManyLessons'), 'howManyLessons');
         } else if (req.params.howManyLessons === '0') {
@@ -88,7 +96,7 @@ class LoadStudentListHandler extends HandlerBase {
     }
 }
 
-class ValidateAbsCountHandler extends HandlerBase {
+class GetParamsDataHandler extends HandlerBase {
     constructor(private properties: IReportProperty[]) {
         super();
     }
@@ -98,7 +106,7 @@ class ValidateAbsCountHandler extends HandlerBase {
         while (req.params.propertyIndex < this.properties.length) {
             const prop = this.properties[req.params.propertyIndex];
             if (req.params[prop.name] === undefined) {
-                                return res.send(res.getText(prop.message), prop.name);
+                return res.send(res.getText(prop.message), prop.name);
             } else if (!req.params[prop.name + 'Validated']) {
                 if (this.isSideMenu(req.params[prop.name], req, res)) {
                     if (res.messages.length) {
@@ -146,18 +154,19 @@ class SaveAndGoToNextStudent extends HandlerBase {
 
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         await req.deleteExistingReports(req.params.existing, this.reportType);
-        const attReport: AttReport = {
+        const report: AttReport | Grade = {
             ...req.params.baseReport,
-            howManyLessons: req.params.howManyLessons,
             studentTz: req.params.student.tz,
-            // approved_abs_count: req.params.approvedAbsCount || '0',
             comments: '',
             sheetName: req.params.sheetName,
         };
-        for (const prop of this.properties) {
-            attReport[prop.field] = req.params[prop.name];
+        if (this.reportType === 'att') {
+            report.howManyLessons = Number(req.params.howManyLessons);
         }
-        await req.saveReport(attReport);
+        for (const prop of this.properties) {
+            report[prop.field] = req.params[prop.name];
+        }
+        await req.saveReport(report, this.reportType);
 
         req.params.studentIndex++;
         clearStudentData(req, this.properties);
@@ -180,7 +189,7 @@ class IterateStudentsHandler extends HandlerBase {
     constructor(private properties: IReportProperty[], private reportType: ReportType) {
         super();
         this.studentChain = new Chain('iterate students', [
-            new ValidateAbsCountHandler(properties),
+            new GetParamsDataHandler(properties),
             new SaveAndGoToNextStudent(properties, this.reportType),
         ]);
     }
@@ -193,7 +202,7 @@ class IterateStudentsHandler extends HandlerBase {
             req.params.existing ??= req.params.existingReports.filter(item => item.studentReferenceId === req.params.student.id);
 
             res.send(res.getText('nextStudent', req.params.student.name));
-                        return this.studentChain.handleRequest(req, res, () => {
+            return this.studentChain.handleRequest(req, res, () => {
                 clearStudentData(req, this.properties);
 
                 return this.handleRequest(req, res, next);
@@ -209,7 +218,7 @@ export default function getReportChain(getExistingReports: GetExistingReportsFun
         new GetSheetNameHandler(),
         new GetExistingReportsHandler(getExistingReports),
         new CheckExistingReportsHandler(),
-        new CheckHowManyLessonsHandler(),
+        new CheckHowManyLessonsHandler(reportType),
         new LoadStudentListHandler(),
         new IterateStudentsHandler(properties, reportType),
     ]);
