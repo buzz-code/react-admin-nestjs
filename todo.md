@@ -278,9 +278,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 # todo
 * make github action to run tests on pull request
 * add more unit tests
+* add success boolean to import file table
+* update in lesson report to have multiple lessons
 * check docker security issues
 * add percent view for students
-* add success boolean to import file table
 * use known absences in all student reports
 * try to use winston logger, or set pino to show request time
 * 
