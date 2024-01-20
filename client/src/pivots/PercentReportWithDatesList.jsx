@@ -42,6 +42,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <NumberField source="absPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="attPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="gradeAvg" options={{ style: 'percent', maximumFractionDigits: 2 }} />
+            <MultiReferenceField source="gradeEffectId" reference='grade_effect_by_user' sortable={false} />
             <ShowMatchingAttReportsButton />
         </CommonDatagrid>
     );

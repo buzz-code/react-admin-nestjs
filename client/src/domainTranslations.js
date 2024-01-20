@@ -332,6 +332,7 @@ export default {
                 absPercents: 'אחוז חיסור',
                 attPercents: 'אחוז נוכחות',
                 gradeAvg: 'ציון ממוצע',
+                gradeEffectId: 'קשר נוכחות ציון',
             }
         },
         image: {
