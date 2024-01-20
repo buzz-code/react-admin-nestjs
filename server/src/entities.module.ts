@@ -35,7 +35,7 @@ import { KnownAbsenceWithReportMonth } from "./db/view-entities/KnownAbsenceWith
 import { GradeName } from "./db/entities/GradeName.entity";
 import { AttGradeEffect } from "./db/entities/AttGradeEffect";
 import teacherGradeReportStatusConfig from "./entity-modules/teacher-grade-report-status.config";
-// import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entity";
+import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entity";
 
 @Module({
     imports: [
@@ -73,7 +73,7 @@ import teacherGradeReportStatusConfig from "./entity-modules/teacher-grade-repor
         BaseEntityModule.register({ entity: KnownAbsenceWithReportMonth }),
         BaseEntityModule.register({ entity: GradeName }),
         BaseEntityModule.register({ entity: AttGradeEffect }),
-        // BaseEntityModule.register({ entity: GradeEffectByUser }),
+        BaseEntityModule.register({ entity: GradeEffectByUser }),
     ]
 })
 export class EntitiesModule { }
