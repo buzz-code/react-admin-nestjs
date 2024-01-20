@@ -13,6 +13,7 @@ export default [
     { html: 'הוספת טופס ציונים', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת שיוך כיתה לטבלת נוכחות', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת אפשרות לדיווח איחורים בטלפון', status: 'בוצע', statusColor: 'success' },
+    { html: 'הצגת קשר נוכחות ציון בדוח אחוזים לתלמידה', status: 'בוצע', statusColor: 'success' },
 
     // { html: 'הגדרת תקופת זמן לפי תאריכים', status: 'בקרוב', statusColor: 'warning' },
     // { html: 'הגדרת תקופת זמן לפי יום בשבוע', status: 'בוצע', statusColor: 'success' },
