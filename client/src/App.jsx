@@ -121,6 +121,7 @@ const App = () => (
             <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
             <Resource name="grade_name" {...gradeName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
             <Resource name="att_grade_effect" {...attGradeEffect} options={{ menuGroup: 'settings' }} icon={CalculateIcon} />
+            <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
 
             {isAdmin(permissions) && <>
               <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />

@@ -379,5 +379,13 @@ export default {
                 effect: 'השפעה',
             }
         },
+        grade_effect_by_user: {
+            name: 'קשר נוכחות ציון מורחב',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                number: 'אחוז חיסור',
+                effect: 'השפעה',
+            }
+        },
     }
 };
