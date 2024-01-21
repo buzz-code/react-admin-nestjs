@@ -277,6 +277,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add late count to yemot report chain
 
 # todo
+* make each menu icon unique
 * make github action to run tests on pull request
 * add more unit tests
 * add success boolean to import file table

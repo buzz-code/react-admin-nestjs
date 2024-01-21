@@ -106,7 +106,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     const unApprovedAbsences = (student.total ?? 0) - (student.totalKnownAbsences ?? 0);
                     const totalLessons = student.totalLessons ?? 1;
                     student.unApprovedAbsences = unApprovedAbsences;
-                    student.absencePercentage = formatPercent(unApprovedAbsences / totalLessons);
+                    student.absencePercentage = formatPercent(unApprovedAbsences / totalLessons, 2);
                 });
 
                 headers['total'] = {
