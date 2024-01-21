@@ -277,6 +277,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add late count to yemot report chain
 
 # todo
+* check elk logs are rotated - verify this
+* make sure db backup is saving only 7
+* delete old docker logs
 * make each menu icon unique
 * make github action to run tests on pull request
 * add more unit tests
