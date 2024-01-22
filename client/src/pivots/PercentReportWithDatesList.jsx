@@ -27,7 +27,7 @@ const filterDefaultValues = {
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
     const isAbsCountEffect = useIsAbsCountEffect();
-    
+
     return (
         <CommonDatagrid {...props}>
             {children}
@@ -46,9 +46,9 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <NumberField source="attPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="gradeAvg" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             {isAbsCountEffect ? (
-                <MultiReferenceField source="gradeEffectId" reference='grade_effect_by_user' sortable={false} />
-            ) : (
                 <MultiReferenceField source="absCountEffectId" reference='abs_count_effect_by_user' sortable={false} />
+            ) : (
+                <MultiReferenceField source="gradeEffectId" reference='grade_effect_by_user' sortable={false} />
             )}
             <ShowMatchingAttReportsButton />
         </CommonDatagrid>
