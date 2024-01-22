@@ -333,6 +333,7 @@ export default {
                 attPercents: 'אחוז נוכחות',
                 gradeAvg: 'ציון ממוצע',
                 gradeEffectId: 'קשר נוכחות ציון',
+                absCountEffectId: 'קשר נוכחות ציון',
             }
         },
         image: {
@@ -385,6 +386,14 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 number: 'אחוז חיסור',
+                effect: 'השפעה',
+            }
+        },
+        abs_count_effect_by_user: {
+            name: 'קשר נוכחות חיסור מורחב',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                number: 'מספר חיסורים',
                 effect: 'השפעה',
             }
         },

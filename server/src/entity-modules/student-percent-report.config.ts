@@ -112,6 +112,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     val.attPercents = 1 - val.absPercents;
                     val.gradeAvg = Utils.calcAvg(arr, item => item.grade);
                     (val as any).gradeEffectId = `${val.userId}_${Math.floor(val.attPercents * 100)}`;
+                    (val as any).absCountEffectId = `${val.userId}_${val.absCount}`;
                     const knownAbsArr = totalAbsencesDataMap[[val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_')] ?? [];
                     (val as any).approvedAbsCount = Utils.calcSum(knownAbsArr, item => item.absnceCount);
                 });

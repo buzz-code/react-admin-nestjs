@@ -1,4 +1,4 @@
-import { DateInput, NumberField, TextField, ReferenceField, useRecordContext, SelectField, useListFilterContext, TextInput } from 'react-admin';
+import { DateInput, NumberField, TextField, ReferenceField, useRecordContext, SelectField, useListFilterContext, TextInput, useAuthState, usePermissions } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -6,6 +6,7 @@ import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } fro
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import { ShowMatchingRecordsButton } from '@shared/components/fields/ShowMatchingRecordsButton';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { useIsAbsCountEffect } from '@shared/utils/permissionsUtil';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -25,6 +26,8 @@ const filterDefaultValues = {
 };
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
+    const isAbsCountEffect = useIsAbsCountEffect();
+    
     return (
         <CommonDatagrid {...props}>
             {children}
@@ -42,7 +45,11 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <NumberField source="absPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="attPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="gradeAvg" options={{ style: 'percent', maximumFractionDigits: 2 }} />
-            <MultiReferenceField source="gradeEffectId" reference='grade_effect_by_user' sortable={false} />
+            {isAbsCountEffect ? (
+                <MultiReferenceField source="gradeEffectId" reference='grade_effect_by_user' sortable={false} />
+            ) : (
+                <MultiReferenceField source="absCountEffectId" reference='abs_count_effect_by_user' sortable={false} />
+            )}
             <ShowMatchingAttReportsButton />
         </CommonDatagrid>
     );

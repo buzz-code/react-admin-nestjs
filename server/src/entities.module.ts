@@ -36,6 +36,7 @@ import { GradeName } from "./db/entities/GradeName.entity";
 import { AttGradeEffect } from "./db/entities/AttGradeEffect";
 import teacherGradeReportStatusConfig from "./entity-modules/teacher-grade-report-status.config";
 import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entity";
+import { AbsCountEffectByUser } from "@shared/view-entities/AbsCountEffectByUser.entity";
 
 @Module({
     imports: [
@@ -74,6 +75,7 @@ import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entit
         BaseEntityModule.register({ entity: GradeName }),
         BaseEntityModule.register({ entity: AttGradeEffect }),
         BaseEntityModule.register({ entity: GradeEffectByUser }),
+        BaseEntityModule.register({ entity: AbsCountEffectByUser }),
     ]
 })
 export class EntitiesModule { }
