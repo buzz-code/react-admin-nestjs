@@ -50,11 +50,16 @@ function getConfig(): BaseEntityModuleOptions {
     }
 }
 
+interface StudentPercentReportWithDates extends StudentPercentReport {
+    gradeEffectId?: string;
+    absCountEffectId?: string;
+    approvedAbsCount?: number;
+}
 class StudentPercentReportService<T extends Entity | StudentPercentReport> extends BaseEntityService<T> {
     protected async populatePivotData(pivotName: string, list: T[], extra: any) {
         const data = list as StudentPercentReport[];
         const sprIds = data.map(item => item.id);
-        const sprMap: Record<string, StudentPercentReport> = data.reduce((a, b) => ({ ...a, [b.id]: b }), {});
+        const sprMap: Record<string, StudentPercentReportWithDates> = data.reduce((a, b) => ({ ...a, [b.id]: b }), {});
 
         switch (pivotName) {
             case 'PercentReportWithDates': {
@@ -111,10 +116,10 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     val.absPercents = Utils.roundFractional(val.absCount / (val.lessonsCount || 1));
                     val.attPercents = 1 - val.absPercents;
                     val.gradeAvg = Utils.calcAvg(arr, item => item.grade);
-                    (val as any).gradeEffectId = `${val.userId}_${Math.floor(val.attPercents * 100)}`;
-                    (val as any).absCountEffectId = `${val.userId}_${val.absCount}`;
+                    val.gradeEffectId = `${val.userId}_${Math.floor(val.attPercents * 100)}`;
+                    val.absCountEffectId = `${val.userId}_${val.absCount}`;
                     const knownAbsArr = totalAbsencesDataMap[[val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_')] ?? [];
-                    (val as any).approvedAbsCount = Utils.calcSum(knownAbsArr, item => item.absnceCount);
+                    val.approvedAbsCount = Utils.calcSum(knownAbsArr, item => item.absnceCount);
                 });
             }
         }
