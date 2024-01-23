@@ -51,9 +51,10 @@ function getConfig(): BaseEntityModuleOptions {
 }
 
 interface StudentPercentReportWithDates extends StudentPercentReport {
+    approvedAbsCount?: number;
+    unapprovedAbsCount?: number;
     gradeEffectId?: string;
     absCountEffectId?: string;
-    approvedAbsCount?: number;
 }
 class StudentPercentReportService<T extends Entity | StudentPercentReport> extends BaseEntityService<T> {
     protected async populatePivotData(pivotName: string, list: T[], extra: any) {
@@ -113,13 +114,14 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     const arr = pivotDataMap[key] ?? [];
                     val.lessonsCount = Utils.calcSum(arr, item => item.howManyLessons);
                     val.absCount = Utils.calcSum(arr, item => item.absCount);
-                    val.absPercents = Utils.roundFractional(val.absCount / (val.lessonsCount || 1));
+                    const knownAbsArr = totalAbsencesDataMap[[val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_')] ?? [];
+                    val.approvedAbsCount = Utils.calcSum(knownAbsArr, item => item.absnceCount);
+                    val.unapprovedAbsCount = val.absCount - val.approvedAbsCount;
+                    val.absPercents = Utils.roundFractional(val.unapprovedAbsCount / (val.lessonsCount || 1));
                     val.attPercents = 1 - val.absPercents;
                     val.gradeAvg = Utils.calcAvg(arr, item => item.grade);
                     val.gradeEffectId = `${val.userId}_${Math.floor(val.attPercents * 100)}`;
-                    val.absCountEffectId = `${val.userId}_${val.absCount}`;
-                    const knownAbsArr = totalAbsencesDataMap[[val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_')] ?? [];
-                    val.approvedAbsCount = Utils.calcSum(knownAbsArr, item => item.absnceCount);
+                    val.absCountEffectId = `${val.userId}_${val.unapprovedAbsCount}`;
                 });
             }
         }
