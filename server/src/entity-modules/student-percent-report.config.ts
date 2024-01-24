@@ -4,9 +4,12 @@ import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { IHeader } from "@shared/utils/exporter/types";
 import { getPercentsFormatter } from "@shared/utils/formatting/formatter.util";
+import { AbsCountEffectByUser } from "@shared/view-entities/AbsCountEffectByUser.entity";
+import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
+import { DataSource, In } from "typeorm";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -55,6 +58,7 @@ interface StudentPercentReportWithDates extends StudentPercentReport {
     unapprovedAbsCount?: number;
     gradeEffectId?: string;
     absCountEffectId?: string;
+    attGradeEffect?: number;
 }
 class StudentPercentReportService<T extends Entity | StudentPercentReport> extends BaseEntityService<T> {
     protected async populatePivotData(pivotName: string, list: T[], extra: any) {
@@ -123,6 +127,21 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     val.gradeEffectId = `${val.userId}_${Math.floor(val.attPercents * 100)}`;
                     val.absCountEffectId = `${val.userId}_${val.unapprovedAbsCount}`;
                 });
+
+                const uniqueAbsCountEffectIds = Utils.getUniqueValues(Object.values(sprMap), item => item.absCountEffectId);
+                const uniqueGradeEffectIds = Utils.getUniqueValues(Object.values(sprMap), item => item.gradeEffectId);
+                const [absCountEffectsMap, gradeEffectsMap] = await Promise.all([
+                    Utils.fetchAttGradeEffect(this.dataSource, AbsCountEffectByUser, uniqueAbsCountEffectIds),
+                    Utils.fetchAttGradeEffect(this.dataSource, GradeEffectByUser, uniqueGradeEffectIds),
+                ]);
+
+                Object.values(sprMap).forEach(item => {
+                    item.attGradeEffect = gradeEffectsMap[item.gradeEffectId] ?? absCountEffectsMap[item.absCountEffectId];
+                });
+
+                const headers = {};
+                headers['attGradeEffect'] = { value: 'attGradeEffect', label: 'קשר נוכחות ציון' };
+                (data[0] as any).headers = Object.values(headers);
             }
         }
     }
@@ -167,6 +186,21 @@ const Utils = {
     roundFractional(val: number): number {
         return +val.toFixed(4);
     },
+    getUniqueValues<T, S>(arr: T[], getValue: (item: T) => S): S[] {
+        return [...new Set(arr.map(getValue))];
+    },
+    fetchAttGradeEffect(dataSource: DataSource, viewEntity: any, ids: string[]): Promise<Record<string, number>> {
+        return dataSource
+            .getRepository(viewEntity)
+            .find({
+                where: {
+                    id: In(ids),
+                },
+                select: ['id', 'effect'],
+            })
+            .then(arr => Object.fromEntries(arr.map(item => [item.id, item.effect])));
+    }
+
 }
 
 export default getConfig();
