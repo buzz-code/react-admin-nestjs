@@ -275,9 +275,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make end-of-page image in student report card stick to the bottom of the page
 * add teacher report table for grades
 * add late count to yemot report chain
+* check elk logs are rotated - verify this
 
 # todo
-* check elk logs are rotated - verify this
 * make sure db backup is saving only 7
 * delete old docker logs
 * make each menu icon unique
