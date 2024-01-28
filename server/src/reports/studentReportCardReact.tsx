@@ -143,6 +143,8 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
         { level: 3, label: 'שם התלמידה', value: student?.name },
         reportParams.showStudentTz && { level: 3, label: 'מספר תז', value: student?.tz },
         { level: 3, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
+    ];
+    const middleHeader = [
         { level: 3, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
     ];
     const studentSmallCommentHeader = [
@@ -153,6 +155,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
         <div style={containerStyle}>
             <ReportTableHeaderWrapper items={studentCommentHeader} />
             <ReportTableHeaderWrapper items={baseHeader} />
+            <ReportTableHeaderWrapper items={middleHeader} />
             <ReportTableHeaderWrapper items={studentSmallCommentHeader} />
 
             {reportDataArr.map((item, index) => (
