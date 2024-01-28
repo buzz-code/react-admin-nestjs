@@ -205,6 +205,7 @@ const commonTableStyle: React.CSSProperties = {
     border: '1px solid black',
     padding: 4,
     textAlign: 'center',
+    fontSize: 16,
 }
 const tableStyle: React.CSSProperties = {
     ...commonTableStyle,
