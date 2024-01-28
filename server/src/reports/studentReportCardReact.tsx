@@ -140,13 +140,13 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
         !reportParams.downComment && { level: 1, label: 'התמחות', value: student?.comment }
     ];
     const baseHeader = [
-        { level: 4, label: 'שם התלמידה', value: student?.name },
-        reportParams.showStudentTz && { level: 4, label: 'מספר תז', value: student?.tz },
-        { level: 4, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
-        { level: 4, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
+        { level: 3, label: 'שם התלמידה', value: student?.name },
+        reportParams.showStudentTz && { level: 3, label: 'מספר תז', value: student?.tz },
+        { level: 3, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
+        { level: 3, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
     ];
     const studentSmallCommentHeader = [
-        reportParams.downComment && { level: 4, label: '', value: student?.comment }
+        reportParams.downComment && { level: 3, label: '', value: student?.comment }
     ];
 
     return (
@@ -231,7 +231,7 @@ interface ReportTableContentProps {
 }
 const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ reportData, reportParams, approved_abs_count, att_grade_effect, grade_names }) => {
     const reportTableHeader = [
-        { level: 4, label: '', value: reportParams.groupByKlass && reportData.name }
+        { level: 3, label: '', value: reportParams.groupByKlass && reportData.name }
     ]
 
     return (
