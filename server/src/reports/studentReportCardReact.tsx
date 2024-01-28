@@ -137,19 +137,23 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
     }
 
     const studentCommentHeader = [
-        { level: 1, label: 'התמחות', value: student?.comment }
+        !reportParams.downComment && { level: 1, label: 'התמחות', value: student?.comment }
     ];
     const baseHeader = [
         { level: 4, label: 'שם התלמידה', value: student?.name },
         reportParams.showStudentTz && { level: 4, label: 'מספר תז', value: student?.tz },
         { level: 4, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
         { level: 4, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
-    ]
+    ];
+    const studentSmallCommentHeader = [
+        reportParams.downComment && { level: 4, label: '', value: student?.comment }
+    ];
 
     return (
         <div style={containerStyle}>
             <ReportTableHeaderWrapper items={studentCommentHeader} />
             <ReportTableHeaderWrapper items={baseHeader} />
+            <ReportTableHeaderWrapper items={studentSmallCommentHeader} />
 
             {reportDataArr.map((item, index) => (
                 <ReportTableContent key={index} reportData={item} reportParams={reportParams}
@@ -165,7 +169,7 @@ const headerWrapperStyle: React.CSSProperties = {
     paddingBottom: 8,
     paddingInline: '20px',
 }
-const ReportTableHeaderWrapper = ({ items }) => (
+const ReportTableHeaderWrapper = ({ items }) => items?.filter(Boolean).length > 0 && (
     <div style={headerWrapperStyle}>
         {items.filter(Boolean).map((item, index) => <ReportTableHeaderItem key={index} {...item} />)}
     </div>
@@ -355,6 +359,7 @@ export interface IReportParams {
     forceGrades?: boolean;
     forceAtt?: boolean;
     showStudentTz?: boolean;
+    downComment?: boolean;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
     const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, approved_abs_count, att_grade_effect, grade_names] = await Promise.all([

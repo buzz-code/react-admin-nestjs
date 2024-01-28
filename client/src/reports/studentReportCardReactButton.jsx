@@ -15,5 +15,6 @@ export default ({ filterDefaultValues }) => (
         <BooleanInput source="forceGrades" label="הצג רק שורות שכוללות ציונים" />
         <BooleanInput source="forceAtt" label="הצג רק שורות שכוללות נוכחות" />
         <BooleanInput source="showStudentTz" label="הצג תעודת זהות" defaultChecked />
+        <BooleanInput source="downComment" label="הצג הערה מתחת שם תלמידה" />
     </BulkReportButton>
 );

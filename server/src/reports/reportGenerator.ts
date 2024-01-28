@@ -20,6 +20,7 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
         forceGrades: reqExtra.forceGrades,
         forceAtt: reqExtra.forceAtt,
         showStudentTz: reqExtra.showStudentTz,
+        downComment: reqExtra.downComment,
     };
     const params = reqExtra.ids
         .toString()
