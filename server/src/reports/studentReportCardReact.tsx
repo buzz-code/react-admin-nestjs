@@ -172,11 +172,15 @@ const headerWrapperStyle: React.CSSProperties = {
     paddingBottom: 8,
     paddingInline: '20px',
 }
-const ReportTableHeaderWrapper = ({ items }) => items?.filter(Boolean).length > 0 && (
-    <div style={headerWrapperStyle}>
-        {items.filter(Boolean).map((item, index) => <ReportTableHeaderItem key={index} {...item} />)}
-    </div>
-)
+const ReportTableHeaderWrapper = ({ items }) => {
+    const itemsToShow = items.filter(Boolean).filter(item => item.value);
+
+    return itemsToShow.length > 0 && (
+        <div style={headerWrapperStyle}>
+            {itemsToShow.map((item, index) => <ReportTableHeaderItem key={index} {...item} />)}
+        </div>
+    );
+}
 
 const headerTagStyle: React.CSSProperties = {
     margin: 0,
