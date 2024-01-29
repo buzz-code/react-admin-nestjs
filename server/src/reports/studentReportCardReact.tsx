@@ -101,7 +101,11 @@ const yomanetNoticeStyle: React.CSSProperties = {
     transform: 'rotate(90deg)',
     transformOrigin: 'right top',
 };
-const YomanetNotice = () => <small style={yomanetNoticeStyle}>הופק באמצעות תוכנת יומנט</small>;
+const YomanetNotice = () => (
+    <small style={yomanetNoticeStyle}>
+        הופק באמצעות תוכנת יומנט, תאריך הנפקה: {formatHebrewDate(new Date())}
+    </small>
+);
 
 const containerStyle: React.CSSProperties = {
     width: 'calc(100% - 100px)',
@@ -144,9 +148,9 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
         reportParams.showStudentTz && { level: 3, label: 'מספר תז', value: student?.tz },
         { level: 3, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
     ];
-    const middleHeader = [
-        { level: 3, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
-    ];
+    // const middleHeader = [
+    //     { level: 3, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
+    // ];
     const studentSmallCommentHeader = [
         reportParams.downComment && { level: 3, label: '', value: student?.comment }
     ];
@@ -155,7 +159,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
         <div style={containerStyle}>
             <ReportTableHeaderWrapper items={studentCommentHeader} />
             <ReportTableHeaderWrapper items={baseHeader} />
-            <ReportTableHeaderWrapper items={middleHeader} />
+            {/* <ReportTableHeaderWrapper items={middleHeader} /> */}
             <ReportTableHeaderWrapper items={studentSmallCommentHeader} />
 
             {reportDataArr.map((item, index) => (
