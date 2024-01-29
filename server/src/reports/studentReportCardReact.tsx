@@ -203,7 +203,7 @@ const reportDataWrapperStyle: React.CSSProperties = {
 }
 const commonTableStyle: React.CSSProperties = {
     border: '1px solid black',
-    padding: 4,
+    padding: 12,
     textAlign: 'center',
     fontSize: 16,
 }
