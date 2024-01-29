@@ -103,7 +103,7 @@ const yomanetNoticeStyle: React.CSSProperties = {
 };
 const YomanetNotice = () => (
     <small style={yomanetNoticeStyle}>
-        הופק באמצעות תוכנת יומנט, תאריך הנפקה: {formatHebrewDate(new Date())}
+        הופק באמצעות תוכנת יומנט
     </small>
 );
 
@@ -148,18 +148,18 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
         reportParams.showStudentTz && { level: 2, label: 'מספר תז', value: student?.tz },
         { level: 2, label: 'כיתה', value: !reportParams.groupByKlass && studentBaseKlass?.klassName },
     ];
-    // const middleHeader = [
-    //     { level: 2, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
-    // ];
+    const middleHeader = [
+        { level: 3, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
+    ];
     const studentSmallCommentHeader = [
         reportParams.downComment && { level: 2, label: '', value: student?.comment }
     ];
 
     return (
         <div style={containerStyle}>
+            <ReportTableHeaderWrapper items={middleHeader} justify='flex-end' />
             <ReportTableHeaderWrapper items={studentCommentHeader} />
             <ReportTableHeaderWrapper items={baseHeader} />
-            {/* <ReportTableHeaderWrapper items={middleHeader} /> */}
             <ReportTableHeaderWrapper items={studentSmallCommentHeader} />
 
             {reportDataArr.map((item, index) => (
@@ -172,15 +172,19 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
 
 const headerWrapperStyle: React.CSSProperties = {
     display: 'flex',
-    justifyContent: 'space-around',
     paddingBottom: 8,
     paddingInline: '20px',
 }
-const ReportTableHeaderWrapper = ({ items }) => {
+interface ReportTableHeaderWrapperProps {
+    items: { level: number, label: string, value: string }[];
+    align?: React.CSSProperties['alignItems'];
+    justify?: React.CSSProperties['justifyContent'];
+}
+const ReportTableHeaderWrapper: React.FunctionComponent<ReportTableHeaderWrapperProps> = ({ items, align = 'center', justify = 'space-around' }) => {
     const itemsToShow = items.filter(Boolean).filter(item => item.value);
 
     return itemsToShow.length > 0 && (
-        <div style={headerWrapperStyle}>
+        <div style={{ ...headerWrapperStyle, alignItems: align, justifyContent: justify }}>
             {itemsToShow.map((item, index) => <ReportTableHeaderItem key={index} {...item} />)}
         </div>
     );
