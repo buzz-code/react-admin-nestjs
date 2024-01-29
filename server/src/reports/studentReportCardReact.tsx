@@ -202,8 +202,11 @@ const ReportTableHeaderItem = ({ level, label, value }) => {
 };
 
 const reportDataWrapperStyle: React.CSSProperties = {
-    pageBreakInside: 'avoid',
     paddingTop: '2rem',
+}
+const reportDataWrapperStyle2: React.CSSProperties = {
+    pageBreakInside: 'avoid',
+    ...reportDataWrapperStyle,
 }
 const commonTableStyle: React.CSSProperties = {
     border: '1px solid black',
@@ -243,7 +246,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
     ]
 
     return (
-        <div style={reportDataWrapperStyle}>
+        <div style={reportParams.groupByKlass ? reportDataWrapperStyle2 : reportDataWrapperStyle}>
             <ReportTableHeaderWrapper items={reportTableHeader} />
             <table style={tableStyle}>
                 {reportData.reports.length > 0 && <>
