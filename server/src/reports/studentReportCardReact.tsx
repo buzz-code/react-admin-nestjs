@@ -22,6 +22,7 @@ interface AppProps {
     reportParams: IReportParams;
     reports: StudentGlobalReport[];
     approved_abs_count: Record<number, number>;
+    knownAbsByLessonAndKlass: Record<string, number>;
     att_grade_effect: AttGradeEffect[];
     grade_names: GradeName[];
 };
@@ -40,7 +41,8 @@ const App: React.FunctionComponent<AppProps> = (props) => {
                 </th></tr></thead>
                 <tbody><tr><td>
                     <ReportTable student={props.student} studentBaseKlass={props.studentBaseKlass}
-                        reports={props.reports} reportParams={props.reportParams} approved_abs_count={props.approved_abs_count}
+                        reports={props.reports} reportParams={props.reportParams}
+                        approved_abs_count={props.approved_abs_count} knownAbsByLessonAndKlass={props.knownAbsByLessonAndKlass}
                         att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
                     <PersonalNote note={props.reportParams.personalNote} />
                     <YomanetNotice />
@@ -120,6 +122,7 @@ interface ReportTableProps {
     reports: AppProps['reports'];
     reportParams: AppProps['reportParams'];
     approved_abs_count: AppProps['approved_abs_count'];
+    knownAbsByLessonAndKlass: AppProps['knownAbsByLessonAndKlass'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
 }
@@ -129,7 +132,7 @@ interface ReportDataArrItem {
     name?: string;
     order?: number;
 }
-const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, reports, reportParams, approved_abs_count, att_grade_effect, grade_names }) => {
+const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, reports, reportParams, approved_abs_count, knownAbsByLessonAndKlass, att_grade_effect, grade_names }) => {
     let reportDataArr: ReportDataArrItem[] = [{ reports, id: studentBaseKlass?.id }];
     if (reportParams.groupByKlass) {
         const klasses: Record<number, ReportDataArrItem> = {}
@@ -164,7 +167,8 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
 
             {reportDataArr.map((item, index) => (
                 <ReportTableContent key={index} reportData={item} reportParams={reportParams}
-                    approved_abs_count={approved_abs_count} att_grade_effect={att_grade_effect} grade_names={grade_names} />
+                    approved_abs_count={approved_abs_count} knownAbsByLessonAndKlass={knownAbsByLessonAndKlass}
+                    att_grade_effect={att_grade_effect} grade_names={grade_names} />
             ))}
         </div>
     );
@@ -245,10 +249,11 @@ interface ReportTableContentProps {
     reportData: ReportDataArrItem;
     reportParams: AppProps['reportParams'];
     approved_abs_count: AppProps['approved_abs_count'];
+    knownAbsByLessonAndKlass: AppProps['knownAbsByLessonAndKlass'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
 }
-const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ reportData, reportParams, approved_abs_count, att_grade_effect, grade_names }) => {
+const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ reportData, reportParams, approved_abs_count, knownAbsByLessonAndKlass, att_grade_effect, grade_names }) => {
     const reportTableHeader = [
         { level: 2, label: '', value: reportParams.groupByKlass && reportData.name }
     ]
@@ -267,7 +272,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
 
                     {reportData.reports.map((item, index) => (
                         <ReportItem key={index} reportParams={reportParams} report={item}
-                            att_grade_effect={att_grade_effect} grade_names={grade_names} />
+                            knownAbsByLessonAndKlass={knownAbsByLessonAndKlass} att_grade_effect={att_grade_effect} grade_names={grade_names} />
                     ))}
 
                     {!reportParams.hideAbsTotal && (
@@ -282,10 +287,11 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
 interface ReportItemProps {
     reportParams: AppProps['reportParams'];
     report: AppProps['reports'][number];
+    knownAbsByLessonAndKlass: AppProps['knownAbsByLessonAndKlass'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
 }
-const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, att_grade_effect, grade_names }) => {
+const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, knownAbsByLessonAndKlass, att_grade_effect, grade_names }) => {
     if (
         !(
             (!reportParams.forceGrades || (report.gradeAvg != undefined && report.gradeAvg != null)) &&
@@ -295,6 +301,8 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
         return null;
     }
 
+    var knownAbs = knownAbsByLessonAndKlass[`${report.klass.id}_${report.lesson.id}`] ?? 0;
+    report.absCount = report.absCount - knownAbs;
     var att_percents = Math.round((((report.lessonsCount ?? 1) - (report.absCount ?? 0)) / (report.lessonsCount ?? 1)) * 100)
 
     var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents || item.count >= report.absCount)?.effect ?? 0
@@ -381,7 +389,7 @@ export interface IReportParams {
     downComment?: boolean;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
-    const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, approved_abs_count, att_grade_effect, grade_names] = await Promise.all([
+    const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, knownAbsences, att_grade_effect, grade_names] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
         dataSource.getRepository(StudentGlobalReport).find({
@@ -395,11 +403,16 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportLogo }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportBottomLogo }),
-        dataSource.getRepository(KnownAbsence).findBy({ studentReferenceId: params.studentId })
-            .then(res => res.reduce((acc, item) => ({ ...acc, [item.klassReferenceId]: (acc[item.klassReferenceId] || 0) + item.absnceCount }), {})),
+        dataSource.getRepository(KnownAbsence).findBy({ studentReferenceId: params.studentId, isApproved: true }),
         dataSource.getRepository(AttGradeEffect).find({ where: { userId: params.userId }, order: { percents: 'DESC', count: 'DESC' } }),
         dataSource.getRepository(GradeName).find({ where: { userId: params.userId }, order: { key: 'DESC' } }),
     ])
+    const approved_abs_count = knownAbsences.reduce((acc, item) => ({ ...acc, [item.klassReferenceId]: (acc[item.klassReferenceId] || 0) + item.absnceCount }), {})
+    const knownAbsByLessonAndKlass = knownAbsences.reduce((acc, item) => {
+        const key = `${item.klassReferenceId}_${item.lessonReferenceId}`
+        acc[key] = (acc[key] || 0) + item.absnceCount
+        return acc;
+    }, {});
     return {
         user,
         images: { reportLogo, reportBottomLogo },
@@ -408,6 +421,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         reportParams: params,
         reports: studentReports,
         approved_abs_count,
+        knownAbsByLessonAndKlass,
         att_grade_effect,
         grade_names,
     };
