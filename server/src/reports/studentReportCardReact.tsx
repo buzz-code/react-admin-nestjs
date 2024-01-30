@@ -302,10 +302,10 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
     }
 
     var knownAbs = knownAbsByLessonAndKlass[`${report.klass.id}_${report.lesson.id}`] ?? 0;
-    report.absCount = report.absCount - knownAbs;
-    var att_percents = Math.round((((report.lessonsCount ?? 1) - (report.absCount ?? 0)) / (report.lessonsCount ?? 1)) * 100)
+    var unKnownAbs = (report.absCount ?? 0) - knownAbs;
+    var att_percents = Math.round((((report.lessonsCount ?? 1) - (unKnownAbs)) / (report.lessonsCount ?? 1)) * 100)
 
-    var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents || item.count >= report.absCount)?.effect ?? 0
+    var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents || item.count >= unKnownAbs)?.effect ?? 0
     var isOriginalGrade = report.gradeAvg > 100 || report.gradeAvg == 0
     var affected_grade = isOriginalGrade ? report.gradeAvg : Math.min(100, report.gradeAvg + grade_effect)
     var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name
