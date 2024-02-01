@@ -27,6 +27,7 @@ import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
 
 @Index("known_users_idx", ["userId"], {})
+@Index(['studentReferenceId', 'year'])
 @Entity("known_absences")
 export class KnownAbsence implements IHasUserId {
   @BeforeInsert()
@@ -70,6 +71,7 @@ export class KnownAbsence implements IHasUserId {
   @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.studentTz) && Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
+  @Index()
   studentReferenceId: number;
 
   @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.klassReferenceId), { always: true })
