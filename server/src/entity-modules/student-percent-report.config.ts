@@ -123,7 +123,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     val.unapprovedAbsCount = val.absCount - val.approvedAbsCount;
                     val.absPercents = Utils.roundFractional(val.unapprovedAbsCount / (val.lessonsCount || 1));
                     val.attPercents = 1 - val.absPercents;
-                    val.gradeAvg = Utils.calcAvg(arr, item => item.grade);
+                    val.gradeAvg = Utils.roundFractional(Utils.calcAvg(arr, item => item.grade) / 100);
                     val.gradeEffectId = `${val.userId}_${Math.floor(val.attPercents * 100)}`;
                     val.absCountEffectId = `${val.userId}_${val.unapprovedAbsCount}`;
                 });
