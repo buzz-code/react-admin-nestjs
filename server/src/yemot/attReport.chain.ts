@@ -11,6 +11,7 @@ export interface IReportProperty {
     message: string;
     field: string;
     validate(req: YemotRequest): boolean;
+    shouldNotAsk?(req: YemotRequest): Promise<boolean>;
 }
 
 class GetSheetNameHandler extends HandlerBase {
@@ -101,24 +102,34 @@ class GetParamsDataHandler extends HandlerBase {
         super();
     }
 
-    handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
+    async shouldAsk(property: IReportProperty, req: YemotRequest) {
+        if (!property.shouldNotAsk) {
+            return true;
+        }
+        return property.shouldNotAsk(req).then(result => !result);
+    }
+
+    async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         req.params.propertyIndex ??= 0;
         while (req.params.propertyIndex < this.properties.length) {
             const prop = this.properties[req.params.propertyIndex];
-            if (req.params[prop.name] === undefined) {
-                return res.send(res.getText(prop.message), prop.name);
-            } else if (!req.params[prop.name + 'Validated']) {
-                if (this.isSideMenu(req.params[prop.name], req, res)) {
-                    if (res.messages.length) {
-                        return;
-                    }
-                    return next(true);
-                }
-                req.params[prop.name + 'Validated'] = prop.validate(req);
-                if (!req.params[prop.name + 'Validated']) {
-                    res.clear();
-                    res.send(res.getText('tryAgain'));
+            const shouldAsk = await this.shouldAsk(prop, req);
+            if (shouldAsk) {
+                if (req.params[prop.name] === undefined) {
                     return res.send(res.getText(prop.message), prop.name);
+                } else if (!req.params[prop.name + 'Validated']) {
+                    if (this.isSideMenu(req.params[prop.name], req, res)) {
+                        if (res.messages.length) {
+                            return;
+                        }
+                        return next(true);
+                    }
+                    req.params[prop.name + 'Validated'] = prop.validate(req);
+                    if (!req.params[prop.name + 'Validated']) {
+                        res.clear();
+                        res.send(res.getText('tryAgain'));
+                        return res.send(res.getText(prop.message), prop.name);
+                    }
                 }
             }
             req.params.propertyIndex++;

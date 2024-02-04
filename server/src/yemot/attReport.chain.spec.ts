@@ -310,6 +310,17 @@ describe("attReport chain", () => {
             expect(next).toHaveBeenCalledTimes(1);
         });
 
+        it('when shouldNotAsk is returning true value, should not ask for absCount', async () => {
+            properties[0].shouldNotAsk = () => Promise.resolve(true);
+
+            await chain.handleRequest(req, res, next);
+
+            expect(next).toHaveBeenCalledTimes(1);
+            const response = await res.getResponse();
+            expect(response).toEqual(util.id_list_message_v2("nextStudent"));
+            delete properties[0].shouldNotAsk;
+        });
+
         it('when there is an absCount, should validate its value', async () => {
             req.params.absCount = -1;
 
