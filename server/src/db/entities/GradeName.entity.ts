@@ -28,10 +28,9 @@ export class GradeName implements IHasUserId {
   @Column("int", { name: "key" })
   key: number;
 
-  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsOptional({ always: true })
   @MaxLength(500, { always: true })
-  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @Column("varchar", { name: "name", length: 500 })
+  @Column("varchar", { name: "name", length: 500, nullable: true })
   name: string;
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
