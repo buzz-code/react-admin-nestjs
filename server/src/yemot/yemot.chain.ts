@@ -62,14 +62,14 @@ const attProperties: IReportProperty[] = [
             return req.params.absCount >= 0 && req.params.absCount <= req.params.howManyLessons;
         }
     },
-    {
-        name: 'lateCount',
-        message: 'lateCount',
-        field: 'lateCount',
-        validate(req: YemotRequest) {
-            return req.params.lateCount >= 0 && req.params.lateCount <= req.params.howManyLessons;
-        }
-    }
+    // {
+    //     name: 'lateCount',
+    //     message: 'lateCount',
+    //     field: 'lateCount',
+    //     validate(req: YemotRequest) {
+    //         return req.params.lateCount >= 0 && req.params.lateCount <= req.params.howManyLessons;
+    //     }
+    // }
 ]
 const beforeAttSave = (report: AttReport & { lateCount: number }) => {
     report.absCount = isNaN(report.absCount) ? 0 : Number(report.absCount);
