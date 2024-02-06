@@ -278,10 +278,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * check elk logs are rotated - verify this
 
 # todo
-* make sure db backup is saving only 7
-* delete old docker logs
-* make each menu icon unique
-* make github action to run tests on pull request
+* update react-admin version
+* update n8n version
+* check errors on n8n flows
+* add error workflow on n8n
 * add more unit tests
 * add success boolean to import file table
 * update in lesson report to have multiple lessons
@@ -289,6 +289,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add percent view for students
 * use known absences in all student reports
 * try to use winston logger, or set pino to show request time
+* make sure db backup is saving only 7
+* delete old docker logs
+* make each menu icon unique
+* make github action to run tests on pull request
 * 
 
 # todo later
