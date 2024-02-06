@@ -129,8 +129,8 @@ export class Grade implements IHasUserId {
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
-  @Column("int", { name: "grade", default: () => "'0'" })
+  @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
+  @Column("float", { name: "grade", default: () => "'0'" })
   grade: number;
 
   @IsOptional({ always: true })
