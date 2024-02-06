@@ -208,10 +208,22 @@ const ReportTableHeaderItem = ({ level, label, value }) => {
     return (
         <HeaderTag style={headerTagStyle}>
             {label && <>{label}:&nbsp;</>}
-            <span style={headerValueStyle}>{value}</span>
+            <span style={headerValueStyle}>
+                <ReportTableValueWithLineBreak value={value} />
+            </span>
         </HeaderTag>
     );
 };
+const ReportTableValueWithLineBreak = ({ value }) => {
+    if (!value) return null;
+
+    const parts = value.split('&');
+    if (parts.length === 1) return value;
+
+    return parts.map((item, index) => (
+        <div key={index}>{item}</div>
+    ));
+}
 
 const reportDataWrapperStyle: React.CSSProperties = {
     paddingTop: '2rem',
