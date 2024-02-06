@@ -236,10 +236,18 @@ const thStyle: React.CSSProperties = {
     ...commonTableStyle,
     border: '3px solid black',
 }
+const rightAlignThStyle: React.CSSProperties = {
+    ...thStyle,
+    textAlign: 'right',
+}
 const fullCellStyle: React.CSSProperties = {
     ...commonTableStyle,
     minWidth: 75,
     maxWidth: 100,
+}
+const rightAlignFullCellStyle: React.CSSProperties = {
+    ...fullCellStyle,
+    textAlign: 'right',
 }
 const emptyCellStyle: React.CSSProperties = {
     ...commonTableStyle,
@@ -264,7 +272,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
             <table style={tableStyle}>
                 {reportData.reports.length > 0 && <>
                     <tr>
-                        <th style={thStyle}>מקצוע</th>
+                        <th style={rightAlignThStyle}>מקצוע</th>
                         <th style={thStyle}>שם המורה</th>
                         <th style={thStyle}>אחוז נוכחות</th>
                         {reportParams.grades && <th style={thStyle}>ציון</th>}
@@ -311,7 +319,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
     var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name || null
 
     return <tr>
-        <td style={fullCellStyle}>{report.lesson && report.lesson.name}</td>
+        <td style={rightAlignFullCellStyle}>{report.lesson && report.lesson.name}</td>
         <td style={fullCellStyle}>{report.teacher && report.teacher.name}</td>
 
         {(report.lessonsCount && report.lessonsCount * 2 == report.absCount)
