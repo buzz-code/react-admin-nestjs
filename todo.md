@@ -276,12 +276,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add teacher report table for grades
 * add late count to yemot report chain
 * check elk logs are rotated - verify this
+* check errors on n8n flows
 
 # todo
 * update react-admin version
 * update n8n version
-* check errors on n8n flows
-* add error workflow on n8n
 * add more unit tests
 * add success boolean to import file table
 * update in lesson report to have multiple lessons
