@@ -59,6 +59,7 @@ interface StudentPercentReportWithDates extends StudentPercentReport {
     gradeEffectId?: string;
     absCountEffectId?: string;
     attGradeEffect?: number;
+    affectedGradeAvg?: number;
 }
 class StudentPercentReportService<T extends Entity | StudentPercentReport> extends BaseEntityService<T> {
     protected async populatePivotData(pivotName: string, list: T[], extra: any) {
@@ -137,10 +138,12 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
 
                 Object.values(sprMap).forEach(item => {
                     item.attGradeEffect = gradeEffectsMap[item.gradeEffectId] ?? absCountEffectsMap[item.absCountEffectId];
+                    item.affectedGradeAvg = Utils.calcAffectedGradeAvg(item.gradeAvg, item.attGradeEffect);
                 });
 
                 const headers = {};
                 headers['attGradeEffect'] = { value: 'attGradeEffect', label: 'קשר נוכחות ציון' };
+                headers['affectedGradeAvg'] = { value: 'affectedGradeAvg', label: 'ציון סופי' };
                 (data[0] as any).headers = Object.values(headers);
             }
         }
@@ -199,8 +202,11 @@ const Utils = {
                 select: ['id', 'effect'],
             })
             .then(arr => Object.fromEntries(arr.map(item => [item.id, item.effect])));
-    }
-
-}
+    },
+    calcAffectedGradeAvg(gradeAvg: number, attGradeEffect: number): number {
+        const modifiedEffect = Utils.roundFractional((attGradeEffect ?? 0) / 100);
+        return Math.max(0, Math.min(1, gradeAvg + modifiedEffect));
+    },
+};
 
 export default getConfig();

@@ -333,8 +333,8 @@ export default {
                 absPercents: 'אחוז חיסור',
                 attPercents: 'אחוז נוכחות',
                 gradeAvg: 'ציון ממוצע',
-                gradeEffectId: 'קשר נוכחות ציון',
-                absCountEffectId: 'קשר נוכחות ציון',
+                attGradeEffect: 'קשר נוכחות ציון',
+                affectedGradeAvg: 'ציון סופי',
             }
         },
         image: {

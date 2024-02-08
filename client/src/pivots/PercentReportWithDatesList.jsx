@@ -6,7 +6,6 @@ import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } fro
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import { ShowMatchingRecordsButton } from '@shared/components/fields/ShowMatchingRecordsButton';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
-import { useIsAbsCountEffect } from '@shared/utils/permissionsUtil';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -26,8 +25,6 @@ const filterDefaultValues = {
 };
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
-    const isAbsCountEffect = useIsAbsCountEffect();
-
     return (
         <CommonDatagrid {...props}>
             {children}
@@ -45,11 +42,8 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <NumberField source="absPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="attPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="gradeAvg" options={{ style: 'percent', maximumFractionDigits: 2 }} />
-            {isAbsCountEffect ? (
-                <MultiReferenceField source="absCountEffectId" reference='abs_count_effect_by_user' sortable={false} />
-            ) : (
-                <MultiReferenceField source="gradeEffectId" reference='grade_effect_by_user' sortable={false} />
-            )}
+            <NumberField source="attGradeEffect" sortable={false} />
+            <NumberField source="affectedGradeAvg" sortable={false} options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <ShowMatchingAttReportsButton />
         </CommonDatagrid>
     );
