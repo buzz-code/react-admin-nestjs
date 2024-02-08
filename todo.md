@@ -279,34 +279,37 @@ https://github.com/tinovyatkin/nest-puppeteer
 * check errors on n8n flows
 
 # todo
+* make github action to run tests on pull request
 * update react-admin version
-* update n8n version
-* add more unit tests
+* update icon for in-lesson-report
+* make each menu icon unique
 * add success boolean to import file table
 * update in lesson report to have multiple lessons
-* check docker security issues
-* add percent view for students
-* use known absences in all student reports
-* try to use winston logger, or set pino to show request time
-* make sure db backup is saving only 7
-* delete old docker logs
-* make each menu icon unique
-* make github action to run tests on pull request
 * 
 
 # todo later
-* check why cannot view pdf with jpg image - see image in troubleshoot folder, this is related to pdf-lib package
-* update icon for in-lesson-report
-* add unit testing to more places, including client side
+## infrastucture
+* update react-admin version
+* update n8n version
+* check docker security issues
+* add gzip to caddy
+* try to use winston logger, or set pino to show request time
+* make sure db backup is saving only 7
+* delete old docker logs
+## code refactor
+* add more unit tests to backend
+* add unit testing to client side
+* change to typescript on client side
+## bug fix
+* check why cannot view pdf with some jpg image, probably new version of jpg - see image in troubleshoot folder, this is related to pdf-lib package
+## new features
+* show yemot calls in a nice way, will all data & responses
+* add percent view for students
+* use known absences in all student reports
 * use ra-components
 * add user image to export pdf file
 * add option to self connect to yemot phone
 * make dashboard items configurable - implement todos
 * if teacher doesn't have email - she will get a phone call - see knowledge file
-* להציג את השיחות של ימות המשיח בצורה יפה
 * add settings & profile page
 * add ability to edit report templates
-* add gzip to caddy
-* change to typescript on client side
-* add custom prefix to common components
-* 
