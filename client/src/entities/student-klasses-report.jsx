@@ -18,7 +18,7 @@ const filterDefaultValues = {
 };
 
 const additionalBulkButtons = [
-    <StudentReportCardReactButton key='studentReportCardReact' filterDefaultValues={filterDefaultValues} />,
+    <StudentReportCardReactButton key='studentReportCardReact' defaultRequestValues={filterDefaultValues} />,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {

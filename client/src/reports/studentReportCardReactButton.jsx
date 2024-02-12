@@ -4,9 +4,14 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 
-export default ({ filterDefaultValues }) => (
+const defaultValues = {
+    personalNote: '',
+    showStudentTz: true,
+};
+export default ({ defaultRequestValues }) => (
     <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
-        name='studentReportCardReact' filename='תעודה' defaultRequestValues={filterDefaultValues}>
+        name='studentReportCardReact' filename='תעודה' 
+        defaultRequestValues={{ ...defaultValues, ...defaultRequestValues }}>
         <CommonAutocompleteInput source="year" label="שנה" choices={yearChoices} />
         <BooleanInput source="grades" label="עם ציונים" />
         <TextInput source="personalNote" label="הערה לתלמידה" defaultValue='' />
