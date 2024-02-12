@@ -277,6 +277,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add late count to yemot report chain
 * check elk logs are rotated - verify this
 * check errors on n8n flows
+* add success boolean to import file table
 
 # todo
 * check logs for use of student report card params, if a param is not used, comment it out
@@ -284,7 +285,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update react-admin version
 * update icon for in-lesson-report
 * make each menu icon unique
-* add success boolean to import file table
 * update in lesson report to have multiple lessons
 * 
 
