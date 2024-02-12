@@ -228,6 +228,7 @@ export default {
                 fileSource: 'מקור הקובץ',
                 entityIds: 'רשומות',
                 entityName: 'סוג טבלה',
+                fullSuccess: 'הצלחה',
                 response: 'תגובה',
             }
         },
