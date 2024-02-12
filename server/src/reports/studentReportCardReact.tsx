@@ -313,10 +313,8 @@ interface ReportItemProps {
 }
 const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, knownAbsByLessonAndKlass, att_grade_effect, grade_names }) => {
     if (
-        !(
-            (!reportParams.forceGrades || (report.gradeAvg != undefined && report.gradeAvg != null)) &&
-            (!reportParams.forceAtt || (report.lessonsCount))
-        )
+        (reportParams.forceGrades && (report.gradeAvg === undefined || report.gradeAvg === null)) ||
+        (reportParams.forceAtt && !report.lessonsCount)
     ) {
         return null;
     }
