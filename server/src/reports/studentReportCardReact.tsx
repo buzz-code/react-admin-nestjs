@@ -286,7 +286,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
                     <tr>
                         <th style={rightAlignThStyle}>מקצוע</th>
                         <th style={thStyle}>שם המורה</th>
-                        <th style={thStyle}>אחוז נוכחות</th>
+                        {reportParams.attendance && <th style={thStyle}>אחוז נוכחות</th>}
                         {reportParams.grades && <th style={thStyle}>ציון</th>}
                     </tr>
 
@@ -295,7 +295,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
                             knownAbsByLessonAndKlass={knownAbsByLessonAndKlass} att_grade_effect={att_grade_effect} grade_names={grade_names} />
                     ))}
 
-                    {!reportParams.hideAbsTotal && (
+                    {!reportParams.hideAbsTotal && reportParams.attendance && (
                         <ReportAbsTotal id={reportData.id} reports={reportData.reports} reportParams={reportParams} approved_abs_count={approved_abs_count} />
                     )}
                 </>}
@@ -319,7 +319,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
         return null;
     }
 
-    var knownAbs = knownAbsByLessonAndKlass[`${report.klass.id}_${report.lesson.id}`] ?? 0;
+    var knownAbs = knownAbsByLessonAndKlass[`${report.klass?.id}_${report.lesson?.id}`] ?? 0;
     var unKnownAbs = (report.absCount ?? 0) - knownAbs;
     var att_percents = Math.round((((report.lessonsCount ?? 1) - (unKnownAbs)) / (report.lessonsCount ?? 1)) * 100)
 
@@ -334,11 +334,11 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
 
         {(report.lessonsCount && report.lessonsCount * 2 == report.absCount)
             ? <>
-                <td style={fullCellStyle}>&nbsp;</td>
+                {reportParams.attendance && <td style={fullCellStyle}>&nbsp;</td>}
                 <td style={fullCellStyle}>{report.gradeAvg}</td>
             </>
             : <>
-                <td style={fullCellStyle}>{att_percents}%</td>
+                {reportParams.attendance && <td style={fullCellStyle}>{att_percents}%</td>}
                 {reportParams.grades && (
                     <td style={fullCellStyle}>
                         {(report.gradeAvg != undefined && report.gradeAvg != null)
@@ -397,6 +397,7 @@ export interface IReportParams {
     userId: number;
     studentId: number;
     year: number;
+    attendance: boolean;
     grades: boolean;
     personalNote?: string;
     groupByKlass?: boolean;
@@ -431,6 +432,14 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         acc[key] = (acc[key] || 0) + item.absnceCount
         return acc;
     }, {});
+
+    if (params.attendance && !params.grades) {
+        params.forceAtt = true;
+    }
+    if (params.grades && !params.attendance) {
+        params.forceGrades = true;
+    }
+
     return {
         user,
         images: { reportLogo, reportBottomLogo },

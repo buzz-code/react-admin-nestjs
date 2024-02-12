@@ -5,6 +5,7 @@ import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 
 const defaultValues = {
+    attendance: true,
     personalNote: '',
     showStudentTz: true,
 };
@@ -13,7 +14,8 @@ export default ({ defaultRequestValues }) => (
         name='studentReportCardReact' filename='תעודה' 
         defaultRequestValues={{ ...defaultValues, ...defaultRequestValues }}>
         <CommonAutocompleteInput source="year" label="שנה" choices={yearChoices} />
-        <BooleanInput source="grades" label="עם ציונים" />
+        <BooleanInput source="attendance" label="הצג נוכחות" defaultChecked />
+        <BooleanInput source="grades" label="הצג ציונים" />
         <TextInput source="personalNote" label="הערה לתלמידה" defaultValue='' />
         <BooleanInput source="groupByKlass" label="קבץ לפי כיתה" />
         <BooleanInput source="hideAbsTotal" label="הסתר סיכום כללי" />

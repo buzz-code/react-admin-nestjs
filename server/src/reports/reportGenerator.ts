@@ -13,6 +13,7 @@ import { sendBulkTeacherMailWithFile } from "@shared/utils/report/bulk-mail-file
 export function generateStudentReportCard(userId: any, reqExtra: any, generator: BaseReportGenerator) {
     const extraParams: Partial<IReportParams> = {
         year: reqExtra.year ?? getCurrentHebrewYear(),
+        attendance: reqExtra.attendance,
         grades: reqExtra.grades,
         personalNote: reqExtra.personalNote,
         groupByKlass: reqExtra.groupByKlass,
