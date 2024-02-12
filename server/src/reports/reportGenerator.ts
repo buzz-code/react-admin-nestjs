@@ -23,6 +23,7 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
         showStudentTz: reqExtra.showStudentTz,
         downComment: reqExtra.downComment,
     };
+    console.log('student report card extra params: ', extraParams);
     const params = reqExtra.ids
         .toString()
         .split(',')
