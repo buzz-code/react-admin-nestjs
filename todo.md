@@ -279,6 +279,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * check errors on n8n flows
 
 # todo
+* check logs for use of student report card params, if a param is not used, comment it out
 * make github action to run tests on pull request
 * update react-admin version
 * update icon for in-lesson-report
