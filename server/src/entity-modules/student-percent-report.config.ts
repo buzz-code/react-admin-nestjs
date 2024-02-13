@@ -60,6 +60,7 @@ interface StudentPercentReportWithDates extends StudentPercentReport {
     absCountEffectId?: string;
     attGradeEffect?: number;
     affectedGradeAvg?: number;
+    comments?: string;
 }
 class StudentPercentReportService<T extends Entity | StudentPercentReport> extends BaseEntityService<T> {
     protected async populatePivotData(pivotName: string, list: T[], extra: any) {
@@ -127,6 +128,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     val.gradeAvg = Utils.roundFractional(Utils.calcAvg(arr, item => item.grade) / 100);
                     val.gradeEffectId = `${val.userId}_${Math.floor(val.attPercents * 100)}`;
                     val.absCountEffectId = `${val.userId}_${val.unapprovedAbsCount}`;
+                    val.comments = Utils.getUniqueValues(arr, item => item.comments).join(', ');
                 });
 
                 const uniqueAbsCountEffectIds = Utils.getUniqueValues(Object.values(sprMap), item => item.absCountEffectId);

@@ -336,6 +336,7 @@ export default {
                 gradeAvg: 'ציון ממוצע',
                 attGradeEffect: 'קשר נוכחות ציון',
                 affectedGradeAvg: 'ציון סופי',
+                comments: 'הערות',
             }
         },
         image: {
