@@ -320,7 +320,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
     }
 
     var knownAbs = knownAbsByLessonAndKlass[`${report.klass?.id}_${report.lesson?.id}`] ?? 0;
-    var unKnownAbs = (report.absCount ?? 0) - knownAbs;
+    var unKnownAbs = Math.max(0, (report.absCount ?? 0) - knownAbs);
     var att_percents = Math.round((((report.lessonsCount ?? 1) - (unKnownAbs)) / (report.lessonsCount ?? 1)) * 100)
 
     var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents || item.count >= unKnownAbs)?.effect ?? 0
@@ -335,14 +335,14 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
         {(report.lessonsCount && report.lessonsCount * 2 == report.absCount)
             ? <>
                 {reportParams.attendance && <td style={fullCellStyle}>&nbsp;</td>}
-                <td style={fullCellStyle}>{report.gradeAvg}</td>
+                <td style={fullCellStyle}>{Math.round(report.gradeAvg)}</td>
             </>
             : <>
-                {reportParams.attendance && <td style={fullCellStyle}>{att_percents}%</td>}
+                {reportParams.attendance && <td style={fullCellStyle}>{Math.round(att_percents)}%</td>}
                 {reportParams.grades && (
                     <td style={fullCellStyle}>
                         {(report.gradeAvg != undefined && report.gradeAvg != null)
-                            ? (matching_grade_name ?? (affected_grade + '%'))
+                            ? (matching_grade_name ?? (Math.round(affected_grade) + '%'))
                             : <>&nbsp;</>
                         }
                     </td>
