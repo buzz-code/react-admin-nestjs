@@ -280,6 +280,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add success boolean to import file table
 
 # todo
+* put back netdata
+* check slow queries in kibana
 * check logs for use of student report card params, if a param is not used, comment it out
 * make github action to run tests on pull request
 * update react-admin version
