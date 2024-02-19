@@ -279,7 +279,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
     ]
 
     return (
-        <div style={reportParams.groupByKlass ? reportDataWrapperStyle2 : reportDataWrapperStyle}>
+        <div style={reportDataWrapperStyle}>
             <ReportTableHeaderWrapper items={reportTableHeader} />
             <table style={tableStyle}>
                 {reportData.reports.length > 0 && <>
