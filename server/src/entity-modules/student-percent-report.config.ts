@@ -60,6 +60,7 @@ interface StudentPercentReportWithDates extends StudentPercentReport {
     absCountEffectId?: string;
     attGradeEffect?: number;
     affectedGradeAvg?: number;
+    estimation?: string;
     comments?: string;
 }
 class StudentPercentReportService<T extends Entity | StudentPercentReport> extends BaseEntityService<T> {
@@ -128,7 +129,9 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     val.gradeAvg = Utils.roundFractional(Utils.calcAvg(arr, item => item.grade) / 100);
                     val.gradeEffectId = `${val.userId}_${Math.floor(val.attPercents * 100)}`;
                     val.absCountEffectId = `${val.userId}_${val.unapprovedAbsCount}`;
-                    val.comments = Utils.getUniqueValues(arr, item => item.comments).join(', ');
+                    const grades = arr.filter(item => item.type === 'grade');
+                    val.estimation = Utils.getUniqueValues(grades, item => item.estimation).join(', ');
+                    val.comments = Utils.getUniqueValues(grades, item => item.comments).join(', ');
                 });
 
                 const uniqueAbsCountEffectIds = Utils.getUniqueValues(Object.values(sprMap), item => item.absCountEffectId);
@@ -146,6 +149,8 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                 const headers = {};
                 headers['attGradeEffect'] = { value: 'attGradeEffect', label: 'קשר נוכחות ציון' };
                 headers['affectedGradeAvg'] = { value: 'affectedGradeAvg', label: 'ציון סופי' };
+                headers['estimation'] = { value: 'estimation', label: 'הערכה' };
+                headers['comments'] = { value: 'comments', label: 'הערה' };
                 (data[0] as any).headers = Object.values(headers);
             }
         }
@@ -192,7 +197,7 @@ const Utils = {
         return +val.toFixed(4);
     },
     getUniqueValues<T, S>(arr: T[], getValue: (item: T) => S): S[] {
-        return [...new Set(arr.map(getValue))];
+        return [...new Set(arr.map(getValue).filter(Boolean))];
     },
     fetchAttGradeEffect(dataSource: DataSource, viewEntity: any, ids: string[]): Promise<Record<string, number>> {
         return dataSource

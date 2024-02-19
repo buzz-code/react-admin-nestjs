@@ -6,7 +6,7 @@ import { AttReport } from "../entities/AttReport.entity";
 import { Grade } from "../entities/Grade.entity";
 
 @ViewEntity("att_report_and_grade", {
-expression:`
+    expression: `
   SELECT
       CONCAT('a-', id) AS id,
       'att' as 'type',
@@ -21,6 +21,7 @@ expression:`
       abs_count,
       approved_abs_count,
       NULL AS 'grade',
+      NULL AS 'estimation',
       comments,
       sheet_name
   FROM
@@ -40,6 +41,7 @@ expression:`
       NULL AS 'abs_count',
       NULL AS 'approved_abs_count',
       grade,
+      estimation,
       comments,
       NULL AS 'sheet_name'
   FROM
@@ -47,48 +49,51 @@ expression:`
 `
 })
 export class AttReportAndGrade implements IHasUserId {
-  @Column()
-  id: string;
+    @Column()
+    id: string;
 
-  @Column()
-  type: string;
+    @Column()
+    type: 'att' | 'grade';
 
-  @Column({ name: "user_id" })
-  userId: number;
+    @Column({ name: "user_id" })
+    userId: number;
 
-  @Column({ nullable: true })
-  year: number;
+    @Column({ nullable: true })
+    year: number;
 
-  @Column()
-  studentReferenceId: number;
+    @Column()
+    studentReferenceId: number;
 
-  @Column()
-  klassReferenceId: number;
+    @Column()
+    klassReferenceId: number;
 
-  @Column()
-  lessonReferenceId: number;
+    @Column()
+    lessonReferenceId: number;
 
-  @Column()
-  teacherReferenceId: number;
+    @Column()
+    teacherReferenceId: number;
 
-  @Column("date", { name: "report_date" })
-  reportDate: string;
+    @Column("date", { name: "report_date" })
+    reportDate: string;
 
-  @Column({ name: "how_many_lessons", nullable: true })
-  howManyLessons: number | null;
+    @Column({ name: "how_many_lessons", nullable: true })
+    howManyLessons: number | null;
 
-  @Column({ name: "abs_count" })
-  absCount: number;
+    @Column({ name: "abs_count" })
+    absCount: number;
 
-  @Column({ name: "approved_abs_count" })
-  approvedAbsCount: number;
+    @Column({ name: "approved_abs_count" })
+    approvedAbsCount: number;
 
-  @Column({ name: "grade" })
-  grade: number;
+    @Column({ name: "grade" })
+    grade: number;
 
-  @Column("varchar", { name: "comments", nullable: true, length: 500 })
-  comments: string | null;
+    @Column({ name: "estimation", nullable: true, length: 500 })
+    estimation: string | null;
 
-  @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
-  sheetName: string | null;
+    @Column("varchar", { name: "comments", nullable: true, length: 500 })
+    comments: string | null;
+
+    @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
+    sheetName: string | null;
 }
