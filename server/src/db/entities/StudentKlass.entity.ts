@@ -28,7 +28,10 @@ import { PaymentTrack } from "@shared/entities/PaymentTrack.entity";
 import { Type } from "class-transformer";
 
 @Index("student_klasses_users_idx", ["userId"], {})
+@Index("student_klasses_user_year_idx", ["userId", "year"], {})
+@Index("student_klasses_student_reference_id_year_idx", ["studentReferenceId", "year"], {})
 @Index("student_klasses_user_klass_year_idx", ["userId", "klassReferenceId", "year"], {})
+@Index("student_klasses_user_student_klass_year_idx", ["userId", "studentReferenceId", "klassReferenceId", "year"], {})
 @Index(['studentReferenceId', 'year'])
 @Entity("student_klasses")
 export class StudentKlass implements IHasUserId {
