@@ -4,6 +4,15 @@ import { Grade } from "src/db/entities/Grade.entity";
 function getConfig(): BaseEntityModuleOptions {
     return {
         entity: Grade,
+        query: {
+            join: {
+                studentBaseKlass: {},
+                student: {},
+                teacher: {},
+                lesson: {},
+                klass: {},
+            }
+        },
         exporter: {
             getImportDefinition(importFields) {
                 return {
