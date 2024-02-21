@@ -29,6 +29,10 @@ import { Type } from "class-transformer";
 
 @Index("att_users_idx", ["userId"], {})
 @Index("att_user_sheet_name_lession_klass_year_idx", ["userId", "sheetName", "lessonReferenceId", "klassReferenceId", "year"], {})
+@Index("att_user_year_idx", ["userId", "year"], {})
+@Index("att_user_year_student_reference_id_idx", ["userId", "studentReferenceId", "year"], {})
+@Index("att_user_year_teacher_reference_id_idx", ["userId", "teacherReferenceId", "year"], {})
+@Index("att_user_year_lesson_reference_id_idx", ["userId", "lessonReferenceId", "year"], {})
 @Entity("att_reports")
 export class AttReport implements IHasUserId {
   @BeforeInsert()
