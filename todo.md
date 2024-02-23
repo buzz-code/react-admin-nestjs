@@ -281,17 +281,21 @@ https://github.com/tinovyatkin/nest-puppeteer
 * put back netdata
 
 # todo
-* check slow queries in kibana
-* check logs for use of student report card params, if a param is not used, comment it out
+* save bulk button params in local storage
+* re-structure student percents report - think how to do it with dates filter
+* use grade name in student percent report, and only after that limit the grades between 0-100
 * make github action to run tests on pull request
+* check slow queries in kibana
 * update react-admin version
 * update icon for in-lesson-report
 * make each menu icon unique
 * update in lesson report to have multiple lessons
+* check logs for use of student report card params, if a param is not used, comment it out
 * 
 
 # todo later
 ## infrastucture
+* make sure all the db indexes have a meaningful name
 * update react-admin version
 * update n8n version
 * check docker security issues
