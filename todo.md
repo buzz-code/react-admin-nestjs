@@ -291,7 +291,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update icon for in-lesson-report
 * make each menu icon unique
 * update in lesson report to have multiple lessons
-* check logs for use of student report card params, if a param is not used, comment it out
 * 
 
 # todo later
