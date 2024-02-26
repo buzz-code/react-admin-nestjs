@@ -18,7 +18,7 @@ export class GradeName implements IHasUserId {
   id: number;
 
   @Column("int", { name: "user_id" })
-  @Index()
+  @Index("grade_names_user_id_idx")
   userId: number;
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })

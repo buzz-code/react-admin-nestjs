@@ -18,13 +18,14 @@ export enum ReportMonthSemester {
   fullYear = 'שנתי',
 }
 
+@Index("report_month_user_id_start_date_end_date_idx", ["userId", "startDate", "endDate"], {})
 @Entity()
 export class ReportMonth {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  @Index()
+  @Index("report_month_user_id_idx")
   userId: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
@@ -36,13 +37,13 @@ export class ReportMonth {
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
   @Type(() => Date)
-  @Index()
+  @Index("report_month_start_date_idx")
   startDate: Date;
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
   @Type(() => Date)
-  @Index()
+  @Index("report_month_end_date_idx")
   endDate: Date;
 
   @IsOptional({ always: true })

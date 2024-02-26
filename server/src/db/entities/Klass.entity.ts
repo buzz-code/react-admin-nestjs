@@ -78,14 +78,14 @@ export class Klass implements IHasUserId {
   @ValidateIf((attReport: Klass) => !Boolean(attReport.klassTypeId) && Boolean(attReport.klassTypeReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
-  @Index()
+  @Index("klasses_klass_type_reference_id_idx")
   klassTypeReferenceId: number;
 
   @Column("varchar", { name: "teacher_id", nullable: true, length: 10 })
   teacherId: string | null;
 
   @Column({ nullable: true })
-  @Index()
+  @Index("klasses_teacher_reference_id_idx")
   teacherReferenceId: number;
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })

@@ -71,7 +71,7 @@ export class KnownAbsence implements IHasUserId {
   @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.studentTz) && Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
-  @Index()
+  @Index("known_absences_student_reference_id_idx")
   studentReferenceId: number;
 
   @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.klassReferenceId), { always: true })

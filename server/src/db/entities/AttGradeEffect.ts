@@ -18,7 +18,7 @@ export class AttGradeEffect implements IHasUserId {
   id: number;
 
   @Column("int", { name: "user_id" })
-  @Index()
+  @Index("att_grade_effect_user_id_idx")
   userId: number;
 
   @IsOptional({ always: true })

@@ -89,7 +89,7 @@ export class Lesson implements IHasUserId {
   teacherId: string;
 
   @Column({ nullable: true })
-  @Index()
+  @Index("lessons_teacher_reference_id_idx")
   teacherReferenceId: number;
 
   @Column("date", { name: "start_date", nullable: true })
