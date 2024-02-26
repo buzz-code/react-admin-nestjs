@@ -281,6 +281,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * put back netdata
 * save bulk button params in local storage
 * use grade name in student percent report, and only after that limit the grades between 0-100
+* rename all db indexes to be meaningful
 
 # todo
 * re-structure student percents report - think how to do it with dates filter
