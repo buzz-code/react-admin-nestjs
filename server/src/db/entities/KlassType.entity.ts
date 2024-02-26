@@ -28,7 +28,6 @@ export enum KlassTypeEnum {
 }
 
 @Index("klass_types_users_idx", ["userId"], {})
-@Index("klass_types_klassTypeEnum_idx", ["klassTypeEnum"])
 @Entity("klass_types")
 export class KlassType implements IHasUserId {
   @BeforeInsert()

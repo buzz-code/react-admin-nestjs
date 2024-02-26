@@ -4,72 +4,40 @@ export class renameAllIndexes1708945273022 implements MigrationInterface {
     name = 'renameAllIndexes1708945273022'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
-            DROP INDEX \`IDX_17d1817f241f10a3dbafb169fd\` ON \`users\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_0390262acca3e09112e014e3e4\` ON \`yemot_call\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_3a2dccf671e4550e3b4f64fd0d\` ON \`att_grade_effect\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_0f24e1decf6e30babbfcf59665\` ON \`klass_types\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_9a2642196187f93e9fd8d20529\` ON \`klasses\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_c4c70577f3547af4b76cdc5c0a\` ON \`klasses\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_271fe2dc910f3f148d020739ad\` ON \`lessons\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_130727be2ecc7acba14fc372c5\` ON \`grades\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_22b82e90fafad45190f692dd05\` ON \`grades\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_69b8e100956b4789bd40ef793a\` ON \`grades\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_c9c2f94f61f2af5e67061f5490\` ON \`grades\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_cb5e566bb60eecc1a258f5a9b3\` ON \`grades\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_214a4367cce39521a10dd18192\` ON \`att_reports\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_82f8943c2abf1da42d5ea056ec\` ON \`att_reports\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_87e1551245da7d48e9faa8504c\` ON \`att_reports\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_a939d8e9cdb002cc936476d223\` ON \`att_reports\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_ec7ecb76abb8c9d0fba2a453d8\` ON \`att_reports\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_3969f5c06a11e499582a2ad109\` ON \`grade_names\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_cf652cc96dec2b051bc0f2f589\` ON \`known_absences\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_238410e9e94aea1e793799ac84\` ON \`report_month\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_562609ef14135b04bfbc29c504\` ON \`report_month\`
-        `);
-        await queryRunner.query(`
-            DROP INDEX \`IDX_c26ca93193d447559f28a179f0\` ON \`report_month\`
-        `);
+        const indexes = [
+            { index: 'IDX_17d1817f241f10a3dbafb169fd', table: 'users', columns: 'phone_number' },
+            { index: 'IDX_0390262acca3e09112e014e3e4', table: 'yemot_call', columns: 'apiCallId' },
+            { index: 'IDX_3a2dccf671e4550e3b4f64fd0d', table: 'att_grade_effect', columns: 'user_id' },
+            { index: 'IDX_0f24e1decf6e30babbfcf59665', table: 'klass_types', columns: 'klassTypeEnum' },
+            { index: 'IDX_9a2642196187f93e9fd8d20529', table: 'klasses', columns: 'klassTypeReferenceId' },
+            { index: 'IDX_c4c70577f3547af4b76cdc5c0a', table: 'klasses', columns: 'teacherReferenceId' },
+            { index: 'IDX_271fe2dc910f3f148d020739ad', table: 'lessons', columns: 'teacherReferenceId' },
+            { index: 'IDX_130727be2ecc7acba14fc372c5', table: 'grades', columns: 'teacherReferenceId' },
+            { index: 'IDX_22b82e90fafad45190f692dd05', table: 'grades', columns: 'klassReferenceId' },
+            { index: 'IDX_69b8e100956b4789bd40ef793a', table: 'grades', columns: 'lessonReferenceId' },
+            { index: 'IDX_c9c2f94f61f2af5e67061f5490', table: 'grades', columns: 'report_date' },
+            { index: 'IDX_cb5e566bb60eecc1a258f5a9b3', table: 'grades', columns: 'studentReferenceId' },
+            { index: 'IDX_214a4367cce39521a10dd18192', table: 'att_reports', columns: 'klassReferenceId' },
+            { index: 'IDX_82f8943c2abf1da42d5ea056ec', table: 'att_reports', columns: 'teacherReferenceId' },
+            { index: 'IDX_87e1551245da7d48e9faa8504c', table: 'att_reports', columns: 'studentReferenceId' },
+            { index: 'IDX_a939d8e9cdb002cc936476d223', table: 'att_reports', columns: 'report_date' },
+            { index: 'IDX_ec7ecb76abb8c9d0fba2a453d8', table: 'att_reports', columns: 'lessonReferenceId' },
+            { index: 'IDX_3969f5c06a11e499582a2ad109', table: 'grade_names', columns: 'user_id' },
+            { index: 'IDX_cf652cc96dec2b051bc0f2f589', table: 'known_absences', columns: 'studentReferenceId' },
+            { index: 'IDX_238410e9e94aea1e793799ac84', table: 'report_month', columns: 'endDate' },
+            { index: 'IDX_562609ef14135b04bfbc29c504', table: 'report_month', columns: 'userId' },
+            { index: 'IDX_c26ca93193d447559f28a179f0', table: 'report_month', columns: 'startDate' },
+        ];
+        for (const index of indexes) {
+            const table = await queryRunner.getTable(index.table);
+            const tableIndex = table?.indices.find(i => i.columnNames.join(',') === index.columns);
+            if (!tableIndex) {
+                console.log(`Index ${index.index} not found on table ${index.table}`);
+                continue;
+            }
+            await queryRunner.dropIndex(table, tableIndex);
+        }
+
         await queryRunner.query(`
             CREATE INDEX \`user_phone_number_idx\` ON \`users\` (\`phone_number\`)
         `);
