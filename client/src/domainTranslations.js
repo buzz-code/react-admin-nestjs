@@ -335,7 +335,7 @@ export default {
                 attPercents: 'אחוז נוכחות',
                 gradeAvg: 'ציון ממוצע',
                 attGradeEffect: 'קשר נוכחות ציון',
-                affectedGradeAvg: 'ציון סופי',
+                finalGrade: 'ציון סופי',
                 estimation: 'הערכה',
                 comments: 'הערה',
             }

@@ -1,11 +1,13 @@
 import { CrudRequest } from "@dataui/crud";
+import { getUserIdFromUser } from "@shared/auth/auth.util";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { IHeader } from "@shared/utils/exporter/types";
-import { getPercentsFormatter } from "@shared/utils/formatting/formatter.util";
+import { formatPercent, getPercentsFormatter } from "@shared/utils/formatting/formatter.util";
 import { AbsCountEffectByUser } from "@shared/view-entities/AbsCountEffectByUser.entity";
 import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entity";
+import { GradeName } from "src/db/entities/GradeName.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
@@ -60,11 +62,12 @@ interface StudentPercentReportWithDates extends StudentPercentReport {
     absCountEffectId?: string;
     attGradeEffect?: number;
     affectedGradeAvg?: number;
+    finalGrade?: string;
     estimation?: string;
     comments?: string;
 }
 class StudentPercentReportService<T extends Entity | StudentPercentReport> extends BaseEntityService<T> {
-    protected async populatePivotData(pivotName: string, list: T[], extra: any) {
+    protected async populatePivotData(pivotName: string, list: T[], extra: any, filter: any, auth: any) {
         const data = list as StudentPercentReport[];
         const sprIds = data.map(item => item.id);
         const sprMap: Record<string, StudentPercentReportWithDates> = data.reduce((a, b) => ({ ...a, [b.id]: b }), {});
@@ -146,9 +149,18 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     item.affectedGradeAvg = Utils.calcAffectedGradeAvg(item.gradeAvg, item.attGradeEffect);
                 });
 
+                const gradeNames = await this.dataSource.getRepository(GradeName)
+                    .find({ where: { userId: getUserIdFromUser(auth) }, order: { key: 'DESC' } });
+
+                Object.values(sprMap).forEach(item => {
+                    const gradeName = gradeNames.find(gn => gn.key <= item.affectedGradeAvg)?.name;
+                    const grade = Utils.limitGrade(Utils.roundFractional(item.affectedGradeAvg / 100));
+                    item.finalGrade = gradeName || formatPercent(grade);
+                });
+
                 const headers = {};
                 headers['attGradeEffect'] = { value: 'attGradeEffect', label: 'קשר נוכחות ציון' };
-                headers['affectedGradeAvg'] = { value: 'affectedGradeAvg', label: 'ציון סופי' };
+                headers['finalGrade'] = { value: 'finalGrade', label: 'ציון סופי' };
                 headers['estimation'] = { value: 'estimation', label: 'הערכה' };
                 headers['comments'] = { value: 'comments', label: 'הערה' };
                 (data[0] as any).headers = Object.values(headers);
@@ -211,8 +223,14 @@ const Utils = {
             .then(arr => Object.fromEntries(arr.map(item => [item.id, item.effect])));
     },
     calcAffectedGradeAvg(gradeAvg: number, attGradeEffect: number): number {
-        const modifiedEffect = Utils.roundFractional((attGradeEffect ?? 0) / 100);
-        return Math.max(0, Math.min(1, gradeAvg + modifiedEffect));
+        const newGrade = gradeAvg * 100;
+        if (newGrade >= 0 && newGrade <= 100) {
+            return newGrade + (attGradeEffect ?? 0);
+        }
+        return newGrade;
+    },
+    limitGrade(grade: number): number {
+        return Math.min(1, Math.max(0, grade));
     },
 };
 

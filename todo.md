@@ -280,10 +280,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add success boolean to import file table
 * put back netdata
 * save bulk button params in local storage
+* use grade name in student percent report, and only after that limit the grades between 0-100
 
 # todo
 * re-structure student percents report - think how to do it with dates filter
-* use grade name in student percent report, and only after that limit the grades between 0-100
 * make github action to run tests on pull request
 * check slow queries in kibana
 * update react-admin version
