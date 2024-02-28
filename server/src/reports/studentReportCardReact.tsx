@@ -31,11 +31,14 @@ const appStyle: React.CSSProperties = {
     fontSize: 12,
     height: 'calc(100vh - 16px)',
 }
+const appTableStyle: React.CSSProperties = {
+    width: '100%',
+}
 const App: React.FunctionComponent<AppProps> = (props) => {
     return (
         <div dir='rtl' style={appStyle}>
             <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-            <table>
+            <table style={appTableStyle}>
                 <thead><tr><th>
                     <Header image={props.images.reportLogo} />
                 </th></tr></thead>
