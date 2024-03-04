@@ -134,11 +134,13 @@ export class Grade implements IHasUserId {
   grade: number;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "estimation", nullable: true, length: 500 })
   estimation: string | null;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;

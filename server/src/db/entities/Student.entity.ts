@@ -28,8 +28,8 @@ export class Student implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
-  @Type(() => String)
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => String)
   @MaxLength(10, { always: true })
   @IsUniqueCombination(['userId'], [Student, User], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
@@ -37,12 +37,14 @@ export class Student implements IHasUserId {
   tz: string;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => String)
   @MaxLength(500, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(1000, { always: true })
   @Column("varchar", { name: "comment", nullable: true, length: 1000 })
   comment: string;

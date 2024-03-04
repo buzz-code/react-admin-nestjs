@@ -29,6 +29,7 @@ export class ReportMonth {
   userId: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => String)
   @MaxLength(255, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
@@ -47,6 +48,7 @@ export class ReportMonth {
   endDate: Date;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(255, { always: true })
   @Column({ default: ReportMonthSemester.fullYear })
   semester: ReportMonthSemester;

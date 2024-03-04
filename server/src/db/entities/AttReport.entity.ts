@@ -144,11 +144,13 @@ export class AttReport implements IHasUserId {
   approvedAbsCount: number;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(100, { always: true })
   @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
   sheetName: string | null;

@@ -29,6 +29,7 @@ export class GradeName implements IHasUserId {
   key: number;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "name", length: 500, nullable: true })
   name: string;

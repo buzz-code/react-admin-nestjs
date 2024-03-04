@@ -62,6 +62,7 @@ export class Klass implements IHasUserId {
   key: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => String)
   @MaxLength(500, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "name", length: 500 })

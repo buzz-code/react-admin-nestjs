@@ -115,16 +115,19 @@ export class KnownAbsence implements IHasUserId {
   absnceCode: number | null;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(100, { always: true })
   @Column("varchar", { name: "sender_name", nullable: true, length: 100 })
   senderName: string | null;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "reason", nullable: true, length: 500 })
   reason: string | null;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "comment", nullable: true, length: 500 })
   comment: string | null;

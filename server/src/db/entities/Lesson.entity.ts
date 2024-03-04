@@ -71,13 +71,14 @@ export class Lesson implements IHasUserId {
   key: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @Type(() => String)
   @MaxLength(500, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
-  @Type(() => String)
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(450, { always: true })
   @Column("varchar", { name: "klasses", nullable: true, length: 450 })
   klasses: string | null;
@@ -99,6 +100,7 @@ export class Lesson implements IHasUserId {
   endDate: string | null;
 
   @IsOptional({ always: true })
+  @Type(() => String)
   @MaxLength(1000, { always: true })
   @Column("varchar", { name: "comment", nullable: true, length: 1000 })
   comment: string;
