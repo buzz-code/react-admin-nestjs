@@ -59,7 +59,7 @@ const attProperties: IReportProperty[] = [
         message: 'absCount',
         field: 'absCount',
         validate(req: YemotRequest) {
-            return req.params.absCount >= 0 && req.params.absCount <= req.params.howManyLessons;
+            return Number(req.params.absCount) >= 0 && Number(req.params.absCount) <= Number(req.params.howManyLessons);
         }
     },
     {
@@ -67,7 +67,7 @@ const attProperties: IReportProperty[] = [
         message: 'lateCount',
         field: 'lateCount',
         validate(req: YemotRequest) {
-            return req.params.lateCount >= 0 && req.params.lateCount <= req.params.howManyLessons;
+            return Number(req.params.lateCount) >= 0 && Number(req.params.lateCount) <= Number(req.params.howManyLessons);
         },
         shouldNotAsk(req: YemotRequest) {
             return req.getUserPermissions().then(permissions => !permissions?.inLessonReport?.withLate);
