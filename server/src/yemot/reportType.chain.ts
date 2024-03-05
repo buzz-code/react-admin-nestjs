@@ -39,7 +39,7 @@ class UseGradeReportChainHandler extends HandlerBase {
 
 export default function getReportTypeChain(attReportChain: Chain, gradeReportChain: Chain) {
     return new Chain('get report type chain', [
-        // new CheckIfReportTypeDefinedHandler(),
+        new CheckIfReportTypeDefinedHandler(),
         new UseAttReportChainHandler(attReportChain),
         new UseGradeReportChainHandler(gradeReportChain),
     ]);
