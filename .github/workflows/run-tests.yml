@@ -1,3 +1,4 @@
+name: Run tests on pull request
 
 on:
   pull_request:
