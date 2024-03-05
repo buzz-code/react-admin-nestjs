@@ -282,11 +282,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * save bulk button params in local storage
 * use grade name in student percent report, and only after that limit the grades between 0-100
 * rename all db indexes to be meaningful
-* make github action to run tests on pull request
-* make sure all the db indexes have a meaningful name
 
 # todo
 * re-structure student percents report - think how to do it with dates filter
+* make github action to run tests on pull request
 * check slow queries in kibana
 * update react-admin version
 * update icon for in-lesson-report
@@ -296,6 +295,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 
 # todo later
 ## infrastucture
+* make sure all the db indexes have a meaningful name
 * update react-admin version
 * update n8n version
 * check docker security issues
@@ -305,12 +305,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * delete old docker logs
 ## code refactor
 * add more unit tests to backend
-* add more unit testing to client side
+* add unit testing to client side
 * change to typescript on client side
 ## bug fix
 * check why cannot view pdf with some jpg image, probably new version of jpg - see image in troubleshoot folder, this is related to pdf-lib package
 ## new features
-* show yemot calls in a nice way, with all data & responses
+* show yemot calls in a nice way, will all data & responses
 * add percent view for students
 * use known absences in all student reports
 * use ra-components
