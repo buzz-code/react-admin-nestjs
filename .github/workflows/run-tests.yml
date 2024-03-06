@@ -65,4 +65,8 @@ jobs:
           node-version: '20'
       - run: yarn
       - run: yarn test
+      - uses: docker/build-push-action@v4
+        with:
+          context: ./client
+
       
