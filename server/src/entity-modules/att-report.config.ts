@@ -46,7 +46,7 @@ function getConfig(): BaseEntityModuleOptions {
                         'klassId',
                         'studentTz',
                         '',
-                        'howManyLessons',
+                        'lateCount',
                         'absCount',
                         'comments',
                     ],
@@ -58,7 +58,8 @@ function getConfig(): BaseEntityModuleOptions {
                     ],
                     hardCodedFields: [
                         { field: 'reportDate', value: new Date() },
-                    ]
+                    ],
+                    beforeSave: calcAttLateCount,
                 };
             }
         }
@@ -66,3 +67,10 @@ function getConfig(): BaseEntityModuleOptions {
 }
 
 export default getConfig();
+
+export const calcAttLateCount = (report: AttReport & { lateCount: number }) => {
+    report.absCount = isNaN(report.absCount) ? 0 : Number(report.absCount);
+    report.lateCount = isNaN(report.lateCount) ? 0 : Number(report.lateCount);
+    report.absCount += report.lateCount * 0.3;
+    delete report.lateCount;
+}
