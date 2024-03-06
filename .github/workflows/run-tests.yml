@@ -69,8 +69,4 @@ jobs:
           cache-dependency-path: client/yarn.lock
       - run: yarn
       - run: yarn test
-      - uses: docker/build-push-action@v4
-        with:
-          context: ./client
 
-      
