@@ -46,8 +46,8 @@ function getConfig(): BaseEntityModuleOptions {
                         'klassId',
                         'studentTz',
                         '',
-                        'absCount',
                         'lateCount',
+                        'absCount',
                         'comments',
                     ],
                     specialFields: [
