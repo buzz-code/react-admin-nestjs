@@ -1,4 +1,5 @@
-import { DataSource, In } from "typeorm";
+import { AttGradeEffect } from "src/db/entities/AttGradeEffect";
+import { GradeName } from "src/db/entities/GradeName.entity";
 
 export function getNumericValueOrNull(val: string): number {
     return val === 'null' ? null : Number(val);
@@ -28,26 +29,33 @@ export function getUniqueValues<T, S>(arr: T[], getValue: (item: T) => S): S[] {
     return [...new Set(arr.map(getValue).filter(Boolean))];
 }
 
-export function fetchAttGradeEffect(dataSource: DataSource, viewEntity: any, ids: string[]): Promise<Record<string, number>> {
-    return dataSource
-        .getRepository(viewEntity)
-        .find({
-            where: {
-                id: In(ids),
-            },
-            select: ['id', 'effect'],
-        })
-        .then(arr => Object.fromEntries(arr.map(item => [item.id, item.effect])));
+export function getAttPercents(lessonsCount: number, unKnownAbs: number) {
+    const count = lessonsCount ?? 1;
+    return Math.round(((count - unKnownAbs) / count) * 100);
 }
 
-export function calcAffectedGradeAvg(gradeAvg: number, attGradeEffect: number): number {
-    const newGrade = gradeAvg * 100;
-    if (newGrade >= 0 && newGrade <= 100) {
-        return newGrade + (attGradeEffect ?? 0);
-    }
-    return newGrade;
+export function getUnknownAbsCount(absCount: number, knownAbs: number) {
+    return Math.max(0, (absCount ?? 0) - (knownAbs ?? 0));
 }
 
-export function limitGrade(grade: number): number {
-    return Math.min(1, Math.max(0, grade));
+export function getDisplayGrade(attPercents: number, absCount: number, grade: number, gradeNames: GradeName[], attGradeEffect: AttGradeEffect[]) {
+    var gradeEffect = getGradeEffect(attGradeEffect, attPercents, absCount);
+    var finalGrade = getFinalGrade(grade, gradeEffect);
+    var matchingGradeName = getGradeName(gradeNames, finalGrade);
+    var displayGrade = matchingGradeName ?? (Math.round(finalGrade) + '%');
+    return displayGrade;
+}
+
+function getFinalGrade(grade: number, gradeEffect: any) {
+    var isOriginalGrade = grade > 100 || grade == 0;
+    var finalGrade = isOriginalGrade ? grade : Math.min(100, Math.max(0, grade + gradeEffect));
+    return finalGrade;
+}
+
+function getGradeName(gradeNames: GradeName[], finalGrade: number) {
+    return gradeNames?.find(item => item.key <= finalGrade)?.name || null;
+}
+
+function getGradeEffect(attGradeEffect: AttGradeEffect[], attPercents: number, absCount: number) {
+    return attGradeEffect?.find(item => item.percents <= attPercents || item.count >= absCount)?.effect ?? 0;
 }

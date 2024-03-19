@@ -10,6 +10,7 @@ import { GradeName } from 'src/db/entities/GradeName.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
+import { getDisplayGrade, getAttPercents, getUnknownAbsCount } from 'src/utils/reportData';
 
 interface AppProps {
     user: User;
@@ -322,14 +323,10 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
         return null;
     }
 
-    var knownAbs = knownAbsByLessonAndKlass[`${report.klass?.id}_${report.lesson?.id}`] ?? 0;
-    var unKnownAbs = Math.max(0, (report.absCount ?? 0) - knownAbs);
-    var att_percents = Math.round((((report.lessonsCount ?? 1) - (unKnownAbs)) / (report.lessonsCount ?? 1)) * 100)
-
-    var grade_effect = att_grade_effect?.find(item => item.percents <= att_percents || item.count >= unKnownAbs)?.effect ?? 0
-    var isOriginalGrade = report.gradeAvg > 100 || report.gradeAvg == 0
-    var affected_grade = isOriginalGrade ? report.gradeAvg : Math.min(100, Math.max(0, report.gradeAvg + grade_effect))
-    var matching_grade_name = grade_names?.find(item => item.key <= affected_grade)?.name || null
+    var knownAbs = knownAbsByLessonAndKlass[`${report.klass?.id}_${report.lesson?.id}`];
+    var unKnownAbs = getUnknownAbsCount(report.absCount, knownAbs);
+    var attPercents = getAttPercents(report.lessonsCount, unKnownAbs)
+    var displayGrade = getDisplayGrade(attPercents, unKnownAbs, report.gradeAvg, grade_names, att_grade_effect);
 
     return <tr>
         <td style={rightAlignFullCellStyle}>{report.lesson && report.lesson.name}</td>
@@ -341,11 +338,11 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
                 <td style={fullCellStyle}>{Math.round(report.gradeAvg)}</td>
             </>
             : <>
-                {reportParams.attendance && <td style={fullCellStyle}>{Math.round(att_percents)}%</td>}
+                {reportParams.attendance && <td style={fullCellStyle}>{Math.round(attPercents)}%</td>}
                 {reportParams.grades && (
                     <td style={fullCellStyle}>
                         {(report.gradeAvg != undefined && report.gradeAvg != null)
-                            ? (matching_grade_name ?? (Math.round(affected_grade) + '%'))
+                            ? displayGrade
                             : <>&nbsp;</>
                         }
                     </td>
