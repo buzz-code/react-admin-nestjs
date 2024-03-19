@@ -286,6 +286,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make sure all the db indexes have a meaningful name
 
 # todo
+* create function to get all student report data by dates, and use it in report card and in percent report
 * re-structure student percents report - think how to do it with dates filter
 * check slow queries in kibana
 * update react-admin version
