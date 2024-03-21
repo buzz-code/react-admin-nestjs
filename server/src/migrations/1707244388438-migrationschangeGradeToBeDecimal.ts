@@ -1,9 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class migrationschangeGradeToBeDecimal1707244388438 implements MigrationInterface {
-    name = 'migrationschangeGradeToBeDecimal1707244388438'
-
-    //            ALTER TABLE \`att_reports\` CHANGE \`abs_count\` \`abs_count\` float NOT NULL DEFAULT '0'
+export class changeGradeToBeDecimal1707244388438 implements MigrationInterface {
+    name = 'changeGradeToBeDecimal1707244388438'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
