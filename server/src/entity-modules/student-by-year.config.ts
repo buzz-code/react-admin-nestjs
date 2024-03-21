@@ -10,6 +10,7 @@ import { ReportMonth, ReportMonthSemester } from "src/db/entities/ReportMonth.en
 import { KnownAbsenceWithReportMonth } from "src/db/view-entities/KnownAbsenceWithReportMonth.entity";
 import { Klass } from "src/db/entities/Klass.entity";
 import { formatPercent } from "@shared/utils/formatting/formatter.util";
+import { roundObjectProperty } from "src/utils/reportData";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -28,11 +29,18 @@ function getConfig(): BaseEntityModuleOptions {
     }
 }
 
+interface IStudentAttendancePivot extends StudentByYear {
+    total?: number;
+    totalLessons?: number;
+    totalKnownAbsences?: number;
+    unApprovedAbsences?: number;
+    absencePercentage?: string;
+}
 class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityService<T> {
     protected async populatePivotData(pivotName: string, list: T[], extra: any, filter: ParsedRequestParams<any>['filter']) {
         const data = list as StudentByYear[];
         const studentIds = data.map(item => item.id);
-        const studentMap = data.reduce((a, b) => ({ ...a, [b.id]: b }), {});
+        const studentMap: Record<number, IStudentAttendancePivot> = data.reduce((a, b) => ({ ...a, [b.id]: b }), {});
         const yearFilter = filter.find(item => item.field === 'year');
         const klassReferenceIdFilter = filter.find(item => item.field === 'klassReferenceIds');
         const klassTypeReferenceIdFilter = filter.find(item => item.field === 'klassTypeReferenceIds');
@@ -102,11 +110,16 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     studentMap[item.studentReferenceId].totalKnownAbsences += item.absnceCount;
                 });
 
-                Object.values(studentMap).forEach((student: any) => {
+                Object.values(studentMap).forEach((student) => {
                     const unApprovedAbsences = (student.total ?? 0) - (student.totalKnownAbsences ?? 0);
                     const totalLessons = student.totalLessons ?? 1;
                     student.unApprovedAbsences = unApprovedAbsences;
                     student.absencePercentage = formatPercent(unApprovedAbsences / totalLessons, 2);
+
+                    roundObjectProperty(student, 'total');
+                    roundObjectProperty(student, 'totalKnownAbsences');
+                    roundObjectProperty(student, 'unApprovedAbsences');
+                    roundObjectProperty(student, 'totalLessons');
                 });
 
                 headers['total'] = {

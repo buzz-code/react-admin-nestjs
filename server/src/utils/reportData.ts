@@ -25,6 +25,16 @@ export function roundFractional(val: number): number {
     return +val.toFixed(4);
 }
 
+type KeyOfType<T, V> = keyof {
+    [P in keyof T as T[P] extends V ? P : never]: any
+}
+
+export function roundObjectProperty<T>(obj: T, key: KeyOfType<T, number>) {
+    if (obj[key]) {
+        obj[key] = roundFractional(obj[key] as number) as any;
+    }
+}
+
 export function getUniqueValues<T, S>(arr: T[], getValue: (item: T) => S): S[] {
     return [...new Set(arr.map(getValue).filter(Boolean))];
 }
