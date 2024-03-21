@@ -127,8 +127,8 @@ export class AttReport implements IHasUserId {
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @Type(() => Number)
-  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
-  @Column("int", { name: "how_many_lessons", nullable: true })
+  @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
+  @Column("float", { name: "how_many_lessons", nullable: true })
   howManyLessons: number | null;
 
   @IsOptional({ always: true })
