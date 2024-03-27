@@ -2,6 +2,7 @@ import { CrudRequest } from "@dataui/crud";
 import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
 import { AttReport } from "src/db/entities/AttReport.entity";
+import { roundObjectProperty } from "src/utils/reportData";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -72,5 +73,6 @@ export const calcAttLateCount = (report: AttReport & { lateCount: number }) => {
     report.absCount = isNaN(report.absCount) ? 0 : Number(report.absCount);
     report.lateCount = isNaN(report.lateCount) ? 0 : Number(report.lateCount);
     report.absCount += report.lateCount * 0.3;
+    roundObjectProperty(report, 'absCount');
     delete report.lateCount;
 }
