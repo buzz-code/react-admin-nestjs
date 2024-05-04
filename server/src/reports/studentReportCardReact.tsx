@@ -12,6 +12,9 @@ import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
 import { getDisplayGrade, getAttPercents, getUnknownAbsCount } from 'src/utils/reportData.util';
 
+interface IExtenedStudentGlobalReport extends StudentGlobalReport {
+    isSpecial: boolean;
+}
 interface AppProps {
     user: User;
     images: {
@@ -21,7 +24,7 @@ interface AppProps {
     student: Student;
     studentBaseKlass: StudentBaseKlass;
     reportParams: IReportParams;
-    reports: StudentGlobalReport[];
+    reports: IExtenedStudentGlobalReport[];
     approved_abs_count: Record<number, number>;
     knownAbsByLessonAndKlass: Record<string, number>;
     att_grade_effect: AttGradeEffect[];
@@ -35,29 +38,27 @@ const appStyle: React.CSSProperties = {
 const appTableStyle: React.CSSProperties = {
     width: '100%',
 }
-const App: React.FunctionComponent<AppProps> = (props) => {
-    return (
-        <div dir='rtl' style={appStyle}>
-            <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-            <table style={appTableStyle}>
-                <thead><tr><th>
-                    <Header image={props.images.reportLogo} />
-                </th></tr></thead>
-                <tbody><tr><td>
-                    <ReportTable student={props.student} studentBaseKlass={props.studentBaseKlass}
-                        reports={props.reports} reportParams={props.reportParams}
-                        approved_abs_count={props.approved_abs_count} knownAbsByLessonAndKlass={props.knownAbsByLessonAndKlass}
-                        att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
-                    <PersonalNote note={props.reportParams.personalNote} />
-                    <YomanetNotice />
-                </td></tr></tbody>
-                <tfoot><tr><td>
-                    <Footer image={props.images.reportBottomLogo} />
-                </td></tr></tfoot>
-            </table>
-        </div>
-    );
-}
+const App: React.FunctionComponent<AppProps> = (props) => (
+    <div dir='rtl' style={appStyle}>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+        <table style={appTableStyle}>
+            <thead><tr><th>
+                <Header image={props.images.reportLogo} />
+            </th></tr></thead>
+            <tbody><tr><td>
+                <ReportTable student={props.student} studentBaseKlass={props.studentBaseKlass}
+                    reports={props.reports} reportParams={props.reportParams}
+                    approved_abs_count={props.approved_abs_count} knownAbsByLessonAndKlass={props.knownAbsByLessonAndKlass}
+                    att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
+                <PersonalNote note={props.reportParams.personalNote} />
+                <YomanetNotice />
+            </td></tr></tbody>
+            <tfoot><tr><td>
+                <Footer image={props.images.reportBottomLogo} />
+            </td></tr></tfoot>
+        </table>
+    </div>
+);
 
 const headerImageStyle: React.CSSProperties = {
     width: '95%',
@@ -316,13 +317,6 @@ interface ReportItemProps {
     grade_names: AppProps['grade_names'];
 }
 const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, knownAbsByLessonAndKlass, att_grade_effect, grade_names }) => {
-    if (
-        (reportParams.forceGrades && (report.gradeAvg === undefined || report.gradeAvg === null)) ||
-        (reportParams.forceAtt && !report.lessonsCount)
-    ) {
-        return null;
-    }
-
     var knownAbs = knownAbsByLessonAndKlass[`${report.klass?.id}_${report.lesson?.id}`];
     var unKnownAbs = getUnknownAbsCount(report.absCount, knownAbs);
     var attPercents = getAttPercents(report.lessonsCount, unKnownAbs)
@@ -332,7 +326,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
         <td style={rightAlignFullCellStyle}>{report.lesson && report.lesson.name}</td>
         <td style={fullCellStyle}>{report.teacher && report.teacher.name}</td>
 
-        {(report.lessonsCount && report.lessonsCount * 2 == report.absCount)
+        {report.isSpecial
             ? <>
                 {reportParams.attendance && <td style={fullCellStyle}>&nbsp;</td>}
                 <td style={fullCellStyle}>{Math.round(report.gradeAvg)}</td>
@@ -358,7 +352,7 @@ interface ReportAbsTotalProps {
     approved_abs_count: AppProps['approved_abs_count'];
 }
 const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, reports, reportParams, approved_abs_count }) => {
-    var reportsNoSpecial = reports.filter(item => item.lessonsCount * 2 != item.absCount)
+    var reportsNoSpecial = reports.filter(item => !item.isSpecial)
     var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.lessonsCount, 0)
     var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.absCount, 0)
     var total_att_count = total_lesson_count - total_abs_count
@@ -446,12 +440,30 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         student,
         studentBaseKlass,
         reportParams: params,
-        reports: studentReports,
+        reports: getReports(studentReports, params),
         approved_abs_count,
         knownAbsByLessonAndKlass,
         att_grade_effect,
         grade_names,
     };
+}
+
+function getReports(reports: StudentGlobalReport[], reportParams: IReportParams): AppProps['reports'] {
+    return reports.filter(report => {
+        if (
+            (reportParams.forceGrades && (report.gradeAvg === undefined || report.gradeAvg === null)) ||
+            (reportParams.forceAtt && !report.lessonsCount)
+        ) {
+            return false;
+        } else {
+            return true;
+        }
+    }).map(report => {
+        return {
+            ...report,
+            isSpecial: report.lessonsCount && report.lessonsCount * 2 == report.absCount,
+        }
+    });
 }
 
 export const getReportName = data => `תעודה לתלמידה ${data.student?.name} כיתה ${data.studentBaseKlass?.klassName}`;
