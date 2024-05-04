@@ -293,6 +293,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update icon for in-lesson-report
 * make each menu icon unique
 * update in lesson report to have multiple lessons
+* add start date & end date to student report card
+* add field of lessons - שיעורים ללא הגבלת תאריך - multiple lessons
 * 
 
 # todo later
