@@ -78,3 +78,8 @@ export function groupDataByKeys<T>(data: T[], keys: KeyOfType<T, any>[]): Record
         return a;
     }, {});
 }
+
+export function groupDataByKeysAndCalc<T, V>(data: T[], keys: KeyOfType<T, any>[], getValue: (item: T[]) => V): Record<string, V> {
+    const map = groupDataByKeys(data, keys);
+    return Object.fromEntries(Object.entries(map).map(([key, value]) => [key, getValue(value)]));
+}

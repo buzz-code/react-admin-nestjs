@@ -10,7 +10,7 @@ import { GradeName } from 'src/db/entities/GradeName.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
-import { getDisplayGrade, getAttPercents, getUnknownAbsCount } from 'src/utils/reportData.util';
+import { getDisplayGrade, getAttPercents, getUnknownAbsCount, groupDataByKeysAndCalc, calcSum } from 'src/utils/reportData.util';
 
 interface IExtenedStudentGlobalReport extends StudentGlobalReport {
     isSpecial: boolean;
@@ -31,8 +31,7 @@ interface AppProps {
     studentBaseKlass: StudentBaseKlass;
     reportParams: IReportParams;
     reports: ReportDataArrItem[];
-    approved_abs_count: Record<number, number>;
-    knownAbsByLessonAndKlass: Record<string, number>;
+    knownAbsMap: Record<string, Record<string, number>>;
     att_grade_effect: AttGradeEffect[];
     grade_names: GradeName[];
 };
@@ -54,7 +53,7 @@ const App: React.FunctionComponent<AppProps> = (props) => (
             <tbody><tr><td>
                 <ReportTable student={props.student} studentBaseKlass={props.studentBaseKlass}
                     reports={props.reports} reportParams={props.reportParams}
-                    approved_abs_count={props.approved_abs_count} knownAbsByLessonAndKlass={props.knownAbsByLessonAndKlass}
+                    knownAbsMap={props.knownAbsMap}
                     att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
                 <PersonalNote note={props.reportParams.personalNote} />
                 <YomanetNotice />
@@ -132,12 +131,11 @@ interface ReportTableProps {
     studentBaseKlass: AppProps['studentBaseKlass'];
     reports: AppProps['reports'];
     reportParams: AppProps['reportParams'];
-    approved_abs_count: AppProps['approved_abs_count'];
-    knownAbsByLessonAndKlass: AppProps['knownAbsByLessonAndKlass'];
+    knownAbsMap: AppProps['knownAbsMap'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
 }
-const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, reports, reportParams, approved_abs_count, knownAbsByLessonAndKlass, att_grade_effect, grade_names }) => {
+const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, reports, reportParams, knownAbsMap, att_grade_effect, grade_names }) => {
     const studentCommentHeader = [
         !reportParams.downComment && { level: 3, label: 'התמחות', value: student?.comment }
     ];
@@ -162,7 +160,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
 
             {reports.map((item, index) => (
                 <ReportTableContent key={index} reportData={item} reportParams={reportParams}
-                    approved_abs_count={approved_abs_count} knownAbsByLessonAndKlass={knownAbsByLessonAndKlass}
+                knownAbsMap={knownAbsMap}
                     att_grade_effect={att_grade_effect} grade_names={grade_names} />
             ))}
         </div>
@@ -263,12 +261,11 @@ const emptyCellStyle: React.CSSProperties = {
 interface ReportTableContentProps {
     reportData: ReportDataArrItem;
     reportParams: AppProps['reportParams'];
-    approved_abs_count: AppProps['approved_abs_count'];
-    knownAbsByLessonAndKlass: AppProps['knownAbsByLessonAndKlass'];
+    knownAbsMap: AppProps['knownAbsMap'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
 }
-const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ reportData, reportParams, approved_abs_count, knownAbsByLessonAndKlass, att_grade_effect, grade_names }) => {
+const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ reportData, reportParams, knownAbsMap, att_grade_effect, grade_names }) => {
     const reportTableHeader = [
         { level: 2, label: '', value: reportParams.groupByKlass && reportData.name }
     ]
@@ -287,11 +284,11 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
 
                     {reportData.reports.map((item, index) => (
                         <ReportItem key={index} reportParams={reportParams} report={item}
-                            knownAbsByLessonAndKlass={knownAbsByLessonAndKlass} att_grade_effect={att_grade_effect} grade_names={grade_names} />
+                        knownAbsMap={knownAbsMap} att_grade_effect={att_grade_effect} grade_names={grade_names} />
                     ))}
 
                     {!reportParams.hideAbsTotal && reportParams.attendance && (
-                        <ReportAbsTotal id={reportData.id} reports={reportData.reports} reportParams={reportParams} approved_abs_count={approved_abs_count} />
+                        <ReportAbsTotal id={reportData.id} reports={reportData.reports} reportParams={reportParams} knownAbsMap={knownAbsMap} />
                     )}
                 </>}
             </table>
@@ -302,12 +299,12 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
 interface ReportItemProps {
     reportParams: AppProps['reportParams'];
     report: AppProps['reports'][number]['reports'][number];
-    knownAbsByLessonAndKlass: AppProps['knownAbsByLessonAndKlass'];
+    knownAbsMap: AppProps['knownAbsMap'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
 }
-const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, knownAbsByLessonAndKlass, att_grade_effect, grade_names }) => {
-    var knownAbs = knownAbsByLessonAndKlass[`${report.klass?.id}_${report.lesson?.id}`];
+const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, knownAbsMap, att_grade_effect, grade_names }) => {
+    var knownAbs = knownAbsMap[String(report.klass?.id)][String(report.lesson?.id)];
     var unKnownAbs = getUnknownAbsCount(report.absCount, knownAbs);
     var attPercents = getAttPercents(report.lessonsCount, unKnownAbs)
     var displayGrade = getDisplayGrade(attPercents, unKnownAbs, report.gradeAvg, grade_names, att_grade_effect);
@@ -339,17 +336,15 @@ interface ReportAbsTotalProps {
     id: number;
     reports: AppProps['reports'][number]['reports'];
     reportParams: AppProps['reportParams'];
-    approved_abs_count: AppProps['approved_abs_count'];
+    knownAbsMap: AppProps['knownAbsMap'];
 }
-const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, reports, reportParams, approved_abs_count }) => {
+const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, reports, reportParams, knownAbsMap }) => {
     var reportsNoSpecial = reports.filter(item => !item.isSpecial)
     var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.lessonsCount, 0)
     var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.absCount, 0)
     var total_att_count = total_lesson_count - total_abs_count
-    var approved_abs_value = approved_abs_count?.[id]
-    if (!reportParams.groupByKlass) {
-        approved_abs_value = Object.values(approved_abs_count)[0]
-    }
+    const knownAbs =reportParams.groupByKlass ? knownAbsMap[String(id)] : Object.values(knownAbsMap)[0];
+    const approved_abs_value = calcSum(Object.values(knownAbs), item => item);
 
     return <>
         <tr>
@@ -367,7 +362,7 @@ const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, repo
                 {Math.round(
                     (
                         (
-                            total_att_count + (approved_abs_value || 0)
+                            total_att_count + (approved_abs_value)
                         ) / total_lesson_count
                     ) * 100
                 )}%
@@ -410,12 +405,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         dataSource.getRepository(AttGradeEffect).find({ where: { userId: params.userId }, order: { percents: 'DESC', count: 'DESC' } }),
         dataSource.getRepository(GradeName).find({ where: { userId: params.userId }, order: { key: 'DESC' } }),
     ])
-    const approved_abs_count = knownAbsences.reduce((acc, item) => ({ ...acc, [item.klassReferenceId]: (acc[item.klassReferenceId] || 0) + item.absnceCount }), {})
-    const knownAbsByLessonAndKlass = knownAbsences.reduce((acc, item) => {
-        const key = `${item.klassReferenceId}_${item.lessonReferenceId}`
-        acc[key] = (acc[key] || 0) + item.absnceCount
-        return acc;
-    }, {});
+    const knownAbsMap = groupDataByKeysAndCalc(knownAbsences, ['klassReferenceId'], (arr) => groupDataByKeysAndCalc(arr, ['lessonReferenceId'], (arr) => calcSum(arr, item => item.absnceCount)));
 
     if (params.attendance && !params.grades) {
         params.forceAtt = true;
@@ -431,8 +421,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         studentBaseKlass,
         reportParams: params,
         reports: groupReportsByKlass(getReports(studentReports, params), params, studentBaseKlass),
-        approved_abs_count,
-        knownAbsByLessonAndKlass,
+        knownAbsMap,
         att_grade_effect,
         grade_names,
     };
