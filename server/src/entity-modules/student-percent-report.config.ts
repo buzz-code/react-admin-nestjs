@@ -11,8 +11,8 @@ import { GradeName } from "src/db/entities/GradeName.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
-import { calcAvg, calcSum, getUniqueValues, groupDataByKeys, roundFractional } from "src/utils/reportData.util";
-import { getAttPercents, getDisplayGrade, getUnknownAbsCount } from "src/utils/studentReportData.util";
+import { getUniqueValues, groupDataByKeys } from "src/utils/reportData.util";
+import { calcReportsData, getDisplayGrade, getUnknownAbsCount } from "src/utils/studentReportData.util";
 import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from "src/utils/studentReportData.util";
 import { DataSource, In } from "typeorm";
 
@@ -84,18 +84,19 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                 const totalAbsencesDataMap = groupDataByKeys(totalAbsencesData, ['studentReferenceId', 'klassReferenceId', 'lessonReferenceId', 'userId', 'year']);
 
                 Object.entries(sprMap).forEach(([key, val]) => {
-                    const arr = pivotDataMap[key] ?? [];
-                    val.lessonsCount = calcSum(arr, item => item.howManyLessons);
-                    val.absCount = calcSum(arr, item => item.absCount);
-                    const knownAbsArr = totalAbsencesDataMap[[val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_')] ?? [];
-                    val.approvedAbsCount = calcSum(knownAbsArr, item => item.absnceCount);
-                    const unapprovedAbsCount = getUnknownAbsCount(val.absCount, val.approvedAbsCount);
-                    val.attPercents = getAttPercents(val.lessonsCount, unapprovedAbsCount) / 100;
-                    val.absPercents = 1 - val.attPercents;
-                    val.gradeAvg = roundFractional(calcAvg(arr, item => item.grade) / 100);
-                    const grades = arr.filter(item => item.type === 'grade');
-                    val.estimation = getUniqueValues(grades, item => item.estimation).join(', ');
-                    val.comments = getUniqueValues(grades, item => item.comments).join(', ');
+                    const reports = pivotDataMap[key] ?? [];
+                    const knownAbs = totalAbsencesDataMap[[val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_')] ?? [];
+
+                    const { lessonsCount, absCount, attPercents, absPercents, gradeAvg } = calcReportsData(reports, knownAbs);
+                    val.lessonsCount = lessonsCount;
+                    val.absCount = absCount;
+                    val.absPercents = absPercents;
+                    val.attPercents = attPercents;
+                    val.gradeAvg = gradeAvg;
+
+                    const gradeReports = reports.filter(item => item.type === 'grade');
+                    val.estimation = getUniqueValues(gradeReports, item => item.estimation).join(', ');
+                    val.comments = getUniqueValues(gradeReports, item => item.comments).join(', ');
                 });
 
                 const [absCountEffectsMap, gradeEffectsMap] = await getAbsGradeEffect(Object.values(sprMap), this.dataSource);

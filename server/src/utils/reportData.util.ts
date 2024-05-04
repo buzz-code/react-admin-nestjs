@@ -60,3 +60,7 @@ export function keepBetween(val: number, min: number, max: number): number {
     }
     return Math.max(Math.min(val, max), min);
 }
+
+export function getItemById<T extends { id: number | string }>(arr: T[], id: T['id']): T {
+    return arr.find(item => item.id === id);
+}

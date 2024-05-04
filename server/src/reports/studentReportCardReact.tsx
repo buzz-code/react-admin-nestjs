@@ -1,6 +1,12 @@
 import * as React from 'react';
+import { In } from 'typeorm';
 import { User } from 'src/db/entities/User.entity';
 import { Student } from 'src/db/entities/Student.entity';
+import { Klass } from 'src/db/entities/Klass.entity';
+import { Lesson } from 'src/db/entities/Lesson.entity';
+import { Teacher } from 'src/db/entities/Teacher.entity';
+import { AttReportAndGrade } from 'src/db/view-entities/AttReportAndGrade.entity';
+import { KlassTypeEnum } from 'src/db/entities/KlassType.entity';
 import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { ReactToPdfReportGenerator } from '@shared/utils/report/react-to-pdf.generator';
 import { StudentBaseKlass } from 'src/db/view-entities/StudentBaseKlass.entity';
@@ -10,11 +16,11 @@ import { GradeName } from 'src/db/entities/GradeName.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
-import { groupDataByKeysAndCalc, calcSum } from 'src/utils/reportData.util';
-import { getDisplayGrade, getAttPercents, getUnknownAbsCount } from 'src/utils/studentReportData.util';
+import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from 'src/utils/reportData.util';
+import { getDisplayGrade, getAttPercents, getUnknownAbsCount, calcReportsData } from 'src/utils/studentReportData.util';
 
 interface IExtenedStudentGlobalReport extends StudentGlobalReport {
-    isSpecial: boolean;
+    isSpecial?: boolean;
 }
 interface ReportDataArrItem {
     reports: IExtenedStudentGlobalReport[];
@@ -344,20 +350,22 @@ const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, repo
     const lessonsCount = calcSum(reportsNoSpecial, item => item.lessonsCount);
     const absCount = calcSum(reportsNoSpecial, item => item.absCount);
     const knownAbs = reportParams.groupByKlass ? knownAbsMap[String(id)] : Object.values(knownAbsMap)[0];
-    const approvedAbsCount = Math.min(absCount, calcSum(Object.values(knownAbs), item => item));
+    const approvedAbsCount = calcSum(Object.values(knownAbs), item => item);
     const unknownAbsCount = getUnknownAbsCount(absCount, approvedAbsCount);
+    const attPercents = getAttPercents(lessonsCount, absCount);
+    const approvedAttPercents = getAttPercents(lessonsCount, unknownAbsCount);
 
     return <>
         <tr>
             <th style={thStyle}>אחוז נוכחות כללי</th>
             <th style={thStyle}>&nbsp;</th>
-            <th style={thStyle}>{getAttPercents(lessonsCount, absCount)}%</th>
+            <th style={thStyle}>{attPercents}%</th>
             {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
         </tr>
         <tr>
             <th style={thStyle}>נוכחות בקיזוז חיסורים מאושרים</th>
             <th style={thStyle}>&nbsp;</th>
-            <th style={thStyle}>{getAttPercents(lessonsCount, unknownAbsCount)}%</th>
+            <th style={thStyle}>{approvedAttPercents}%</th>
             {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
         </tr>
     </>
@@ -378,25 +386,23 @@ export interface IReportParams {
     downComment?: boolean;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
-    const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, knownAbsences, att_grade_effect, grade_names] = await Promise.all([
+    const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, knownAbsences] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
-        dataSource.getRepository(StudentGlobalReport).find({
-            where: { studentReferenceId: params.studentId, year: params.year },
-            relations: {
-                lesson: true,
-                klass: true,
-                teacher: true,
-            }
-        }),
+        dataSource.getRepository(AttReportAndGrade).find({ where: { studentReferenceId: params.studentId, year: params.year } }),
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportLogo }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportBottomLogo }),
         dataSource.getRepository(KnownAbsence).findBy({ studentReferenceId: params.studentId, year: params.year, isApproved: true }),
-        dataSource.getRepository(AttGradeEffect).find({ where: { userId: params.userId }, order: { percents: 'DESC', count: 'DESC' } }),
-        dataSource.getRepository(GradeName).find({ where: { userId: params.userId }, order: { key: 'DESC' } }),
     ])
-    const knownAbsMap = groupDataByKeysAndCalc(knownAbsences, ['klassReferenceId'], (arr) => groupDataByKeysAndCalc(arr, ['lessonReferenceId'], (arr) => calcSum(arr, item => item.absnceCount)));
+
+    const [klasses, lessons, teachers, att_grade_effect, grade_names] = await Promise.all([
+        dataSource.getRepository(Klass).find({ where: { id: In(studentReports.map(item => item.klassReferenceId)) }, relations: { klassType: true } }),
+        dataSource.getRepository(Lesson).find({ where: { id: In(studentReports.map(item => item.lessonReferenceId)) } }),
+        dataSource.getRepository(Teacher).find({ where: { id: In(studentReports.map(item => item.teacherReferenceId)) } }),
+        dataSource.getRepository(AttGradeEffect).find({ where: { userId: student.userId }, order: { percents: 'DESC', count: 'DESC' } }),
+        dataSource.getRepository(GradeName).find({ where: { userId: student.userId }, order: { key: 'DESC' } }),
+    ]);
 
     if (params.attendance && !params.grades) {
         params.forceAtt = true;
@@ -405,30 +411,78 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         params.forceGrades = true;
     }
 
+    const reports = getReports(params, studentReports, knownAbsences, studentBaseKlass, klasses, lessons, teachers);
+    const knownAbsMap = groupDataByKeysAndCalc(knownAbsences, ['klassReferenceId'], (arr) => groupDataByKeysAndCalc(arr, ['lessonReferenceId'], (arr) => calcSum(arr, item => item.absnceCount)));
+
     return {
         user,
         images: { reportLogo, reportBottomLogo },
         student,
         studentBaseKlass,
         reportParams: params,
-        reports: groupReportsByKlass(getReports(studentReports, params), params, studentBaseKlass),
+        reports,
         knownAbsMap,
         att_grade_effect,
         grade_names,
     };
 }
 
-function getReports(reports: StudentGlobalReport[], reportParams: IReportParams): AppProps['reports'][number]['reports'] {
+function getReports(
+    reportParams: IReportParams,
+    reports: AttReportAndGrade[],
+    knownAbsences: KnownAbsence[],
+    studentBaseKlass: AppProps['studentBaseKlass'],
+    klasses: Klass[],
+    lessons: Lesson[],
+    teachers: Teacher[],
+): AppProps['reports'] {
+    const dataMap = groupDataByKeys(reports, ['teacherReferenceId', 'klassReferenceId', 'lessonReferenceId']);
+
+    const data: StudentGlobalReport[] = Object.entries(dataMap).map(([key, val]) => {
+        const { userId, year, studentReferenceId, klassReferenceId, lessonReferenceId, teacherReferenceId } = val[0];
+        const { lessonsCount, absCount, attPercents, absPercents, gradeAvg } = calcReportsData(val, knownAbsences);
+        const teacher = getItemById(teachers, val[0].teacherReferenceId);
+        const klass = getItemById(klasses, val[0].klassReferenceId);
+        const lesson = getItemById(lessons, val[0].lessonReferenceId);
+
+        return {
+            id: '',
+            studentReferenceId,
+            klassReferenceId,
+            lessonReferenceId,
+            teacherReferenceId,
+            userId,
+            year,
+            student: null,
+            teacher,
+            klass,
+            lesson,
+            isBaseKlass: klass?.klassType?.klassTypeEnum === KlassTypeEnum.baseKlass,
+            lessonsCount,
+            absCount,
+            attPercents,
+            absPercents,
+            gradeAvg,
+        };
+    });
+
+    const filteredReports = filterReports(data, reportParams);
+
+    return groupReportsByKlass(filteredReports, reportParams, studentBaseKlass);
+}
+
+function filterReports(reports: StudentGlobalReport[], reportParams: IReportParams): AppProps['reports'][number]['reports'] {
     return reports.filter(report => {
         return !(
             (reportParams.forceGrades && (report.gradeAvg === undefined || report.gradeAvg === null)) ||
             (reportParams.forceAtt && !report.lessonsCount)
         )
-    }).map(report => {
-        return {
-            ...report,
-            isSpecial: report.lessonsCount && report.lessonsCount * 2 == report.absCount,
-        }
+        // return this only if someone asks for it
+        // }).map(report => {
+        //     return {
+        //         ...report,
+        //         isSpecial: report.lessonsCount && report.lessonsCount * 2 == report.absCount,
+        //     }
     });
 }
 

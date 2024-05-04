@@ -1,4 +1,4 @@
-import { calcPercents, getNumericValueOrNull, keepBetween } from "src/utils/reportData.util";
+import { calcAvg, calcPercents, calcSum, getNumericValueOrNull, keepBetween, roundFractional } from "src/utils/reportData.util";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { FindOptionsWhere } from "typeorm";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
@@ -52,6 +52,31 @@ export function getKnownAbsenceFilterBySprAndDates(ids: string[], startDate: Dat
             year: getNumericValueOrNull(year),
         };
     });
+}
+
+interface IStudentReportData {
+    lessonsCount: number;
+    absCount: number;
+    attPercents: number;
+    absPercents: number;
+    gradeAvg: number;
+}
+export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: KnownAbsence[]): IStudentReportData {
+    const lessonsCount = calcSum(data, item => item.howManyLessons);
+    const absCount = calcSum(data, item => item.absCount);
+    const approvedAbsCount = calcSum(totalAbsencesData, item => item.absnceCount);
+    const unapprovedAbsCount = getUnknownAbsCount(absCount, approvedAbsCount);
+    const attPercents = getAttPercents(lessonsCount, unapprovedAbsCount) / 100;
+    const absPercents = 1 - attPercents;
+    const gradeAvg = roundFractional(calcAvg(data, item => item.grade) / 100);
+
+    return {
+        lessonsCount,
+        absCount,
+        attPercents,
+        absPercents,
+        gradeAvg,
+    };
 }
 
 export function getAttCount(lessonsCount: number, absCount: number) {
