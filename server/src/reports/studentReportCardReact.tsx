@@ -15,6 +15,12 @@ import { getDisplayGrade, getAttPercents, getUnknownAbsCount } from 'src/utils/r
 interface IExtenedStudentGlobalReport extends StudentGlobalReport {
     isSpecial: boolean;
 }
+interface ReportDataArrItem {
+    reports: IExtenedStudentGlobalReport[];
+    id: number;
+    name?: string;
+    order?: number;
+}
 interface AppProps {
     user: User;
     images: {
@@ -24,7 +30,7 @@ interface AppProps {
     student: Student;
     studentBaseKlass: StudentBaseKlass;
     reportParams: IReportParams;
-    reports: IExtenedStudentGlobalReport[];
+    reports: ReportDataArrItem[];
     approved_abs_count: Record<number, number>;
     knownAbsByLessonAndKlass: Record<string, number>;
     att_grade_effect: AttGradeEffect[];
@@ -131,23 +137,7 @@ interface ReportTableProps {
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
 }
-interface ReportDataArrItem {
-    reports: AppProps['reports'];
-    id: number;
-    name?: string;
-    order?: number;
-}
 const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, reports, reportParams, approved_abs_count, knownAbsByLessonAndKlass, att_grade_effect, grade_names }) => {
-    let reportDataArr: ReportDataArrItem[] = [{ reports, id: studentBaseKlass?.id }];
-    if (reportParams.groupByKlass) {
-        const klasses: Record<number, ReportDataArrItem> = {}
-        reports.forEach(item => {
-            klasses[item.klass.name] = klasses[item.klass.name] || { name: item.klass.name, id: item.klass.id, order: item.isBaseKlass ? -1 : 1, reports: [] }
-            klasses[item.klass.name].reports.push(item)
-        })
-        reportDataArr = Object.values(klasses).sort((a, b) => a.order - b.order)
-    }
-
     const studentCommentHeader = [
         !reportParams.downComment && { level: 3, label: 'התמחות', value: student?.comment }
     ];
@@ -170,7 +160,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
             <ReportTableHeaderWrapper items={baseHeader} />
             <ReportTableHeaderWrapper items={studentSmallCommentHeader} />
 
-            {reportDataArr.map((item, index) => (
+            {reports.map((item, index) => (
                 <ReportTableContent key={index} reportData={item} reportParams={reportParams}
                     approved_abs_count={approved_abs_count} knownAbsByLessonAndKlass={knownAbsByLessonAndKlass}
                     att_grade_effect={att_grade_effect} grade_names={grade_names} />
@@ -311,7 +301,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
 
 interface ReportItemProps {
     reportParams: AppProps['reportParams'];
-    report: AppProps['reports'][number];
+    report: AppProps['reports'][number]['reports'][number];
     knownAbsByLessonAndKlass: AppProps['knownAbsByLessonAndKlass'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
@@ -347,7 +337,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
 
 interface ReportAbsTotalProps {
     id: number;
-    reports: AppProps['reports'];
+    reports: AppProps['reports'][number]['reports'];
     reportParams: AppProps['reportParams'];
     approved_abs_count: AppProps['approved_abs_count'];
 }
@@ -440,7 +430,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         student,
         studentBaseKlass,
         reportParams: params,
-        reports: getReports(studentReports, params),
+        reports: groupReportsByKlass(getReports(studentReports, params), params, studentBaseKlass),
         approved_abs_count,
         knownAbsByLessonAndKlass,
         att_grade_effect,
@@ -448,7 +438,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
     };
 }
 
-function getReports(reports: StudentGlobalReport[], reportParams: IReportParams): AppProps['reports'] {
+function getReports(reports: StudentGlobalReport[], reportParams: IReportParams): AppProps['reports'][number]['reports'] {
     return reports.filter(report => {
         if (
             (reportParams.forceGrades && (report.gradeAvg === undefined || report.gradeAvg === null)) ||
@@ -464,6 +454,24 @@ function getReports(reports: StudentGlobalReport[], reportParams: IReportParams)
             isSpecial: report.lessonsCount && report.lessonsCount * 2 == report.absCount,
         }
     });
+}
+
+function groupReportsByKlass(reports: AppProps['reports'][number]['reports'], reportParams: IReportParams, studentBaseKlass: AppProps['studentBaseKlass']): AppProps['reports'] {
+    if (reportParams.groupByKlass) {
+        const klasses: Record<number, ReportDataArrItem> = {};
+        reports.forEach(item => {
+            klasses[item.klass.name] ??= {
+                name: item.klass.name,
+                id: item.klass.id,
+                order: item.isBaseKlass ? -1 : 1,
+                reports: [],
+            };
+            klasses[item.klass.name].reports.push(item);
+        })
+        return Object.values(klasses).sort((a, b) => a.order - b.order);
+    } else {
+        return [{ reports, id: studentBaseKlass?.id }];
+    }
 }
 
 export const getReportName = data => `תעודה לתלמידה ${data.student?.name} כיתה ${data.studentBaseKlass?.klassName}`;
