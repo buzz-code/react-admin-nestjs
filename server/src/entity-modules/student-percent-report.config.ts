@@ -11,7 +11,7 @@ import { GradeName } from "src/db/entities/GradeName.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
-import { calcAvg, calcSum, getAttPercents, getDisplayGrade, getUniqueValues, getUnknownAbsCount, roundFractional } from "src/utils/reportData.util";
+import { calcAvg, calcSum, getAttPercents, getDisplayGrade, getUniqueValues, getUnknownAbsCount, groupDataByKeys, roundFractional } from "src/utils/reportData.util";
 import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from "src/utils/studentReportData.util";
 import { DataSource, In } from "typeorm";
 
@@ -75,24 +75,12 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                 const pivotData = await this.dataSource
                     .getRepository(AttReportAndGrade)
                     .find({ where: getReportDataFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate) });
-
-                const pivotDataMap: Record<string, AttReportAndGrade[]> = {};
-                pivotData.forEach(item => {
-                    const id = [item.studentReferenceId, item.teacherReferenceId, item.klassReferenceId, item.lessonReferenceId, item.userId, item.year].map(String).join('_');
-                    pivotDataMap[id] ??= [];
-                    pivotDataMap[id].push(item);
-                });
+                const pivotDataMap = groupDataByKeys(pivotData, ['studentReferenceId', 'teacherReferenceId', 'klassReferenceId', 'lessonReferenceId', 'userId', 'year']);
 
                 const totalAbsencesData = await this.dataSource
                     .getRepository(KnownAbsence)
                     .find({ where: getKnownAbsenceFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate) });
-
-                const totalAbsencesDataMap: Record<string, KnownAbsence[]> = {};
-                totalAbsencesData.forEach(item => {
-                    const id = [item.studentReferenceId, item.klassReferenceId, item.lessonReferenceId, item.userId, item.year].map(String).join('_');
-                    totalAbsencesDataMap[id] ??= [];
-                    totalAbsencesDataMap[id].push(item);
-                });
+                const totalAbsencesDataMap = groupDataByKeys(totalAbsencesData, ['studentReferenceId', 'klassReferenceId', 'lessonReferenceId', 'userId', 'year']);
 
                 Object.entries(sprMap).forEach(([key, val]) => {
                     const arr = pivotDataMap[key] ?? [];

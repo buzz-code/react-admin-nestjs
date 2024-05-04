@@ -69,3 +69,12 @@ function getGradeName(gradeNames: GradeName[], finalGrade: number) {
 function getGradeEffect(attGradeEffect: AttGradeEffect[], attPercents: number, absCount: number) {
     return attGradeEffect?.find(item => item.percents <= attPercents || item.count >= absCount)?.effect ?? 0;
 }
+
+export function groupDataByKeys<T>(data: T[], keys: KeyOfType<T, any>[]): Record<string, T[]> {
+    return data.reduce((a, b) => {
+        const key = keys.map(k => b[k]).map(String).join('_');
+        a[key] ??= [];
+        a[key].push(b);
+        return a;
+    }, {});
+}
