@@ -2,7 +2,7 @@ import { CrudRequest } from "@dataui/crud";
 import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
 import { AttReport } from "src/db/entities/AttReport.entity";
-import { roundObjectProperty } from "src/utils/reportData";
+import { roundObjectProperty } from "src/utils/reportData.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {

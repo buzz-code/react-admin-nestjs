@@ -10,7 +10,7 @@ import { GradeName } from 'src/db/entities/GradeName.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
-import { getDisplayGrade, getAttPercents, getUnknownAbsCount } from 'src/utils/reportData';
+import { getDisplayGrade, getAttPercents, getUnknownAbsCount } from 'src/utils/reportData.util';
 
 interface AppProps {
     user: User;

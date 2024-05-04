@@ -1,4 +1,4 @@
-import { getNumericValueOrNull } from "src/utils/reportData";
+import { getNumericValueOrNull } from "src/utils/reportData.util";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { FindOptionsWhere } from "typeorm";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
