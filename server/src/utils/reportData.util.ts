@@ -1,5 +1,6 @@
-import { AttGradeEffect } from "src/db/entities/AttGradeEffect";
-import { GradeName } from "src/db/entities/GradeName.entity";
+type KeyOfType<T, V> = keyof {
+    [P in keyof T as T[P] extends V ? P : never]: any
+}
 
 export function getNumericValueOrNull(val: string): number {
     return val === 'null' ? null : Number(val);
@@ -25,10 +26,6 @@ export function roundFractional(val: number): number {
     return +val.toFixed(4);
 }
 
-type KeyOfType<T, V> = keyof {
-    [P in keyof T as T[P] extends V ? P : never]: any
-}
-
 export function roundObjectProperty<T>(obj: T, key: KeyOfType<T, number>) {
     if (obj[key]) {
         obj[key] = roundFractional(obj[key] as number) as any;
@@ -37,37 +34,6 @@ export function roundObjectProperty<T>(obj: T, key: KeyOfType<T, number>) {
 
 export function getUniqueValues<T, S>(arr: T[], getValue: (item: T) => S): S[] {
     return [...new Set(arr.map(getValue).filter(Boolean))];
-}
-
-export function getAttPercents(lessonsCount: number, unKnownAbs: number) {
-    const count = lessonsCount ?? 1;
-    return Math.round(((count - unKnownAbs) / count) * 100);
-}
-
-export function getUnknownAbsCount(absCount: number, knownAbs: number) {
-    return Math.max(0, (absCount ?? 0) - (knownAbs ?? 0));
-}
-
-export function getDisplayGrade(attPercents: number, absCount: number, grade: number, gradeNames: GradeName[], attGradeEffect: AttGradeEffect[]) {
-    var gradeEffect = getGradeEffect(attGradeEffect, attPercents, absCount);
-    var finalGrade = getFinalGrade(grade, gradeEffect);
-    var matchingGradeName = getGradeName(gradeNames, finalGrade);
-    var displayGrade = matchingGradeName ?? (Math.round(finalGrade) + '%');
-    return displayGrade;
-}
-
-function getFinalGrade(grade: number, gradeEffect: any) {
-    var isOriginalGrade = grade > 100 || grade == 0;
-    var finalGrade = isOriginalGrade ? grade : Math.min(100, Math.max(0, grade + gradeEffect));
-    return finalGrade;
-}
-
-function getGradeName(gradeNames: GradeName[], finalGrade: number) {
-    return gradeNames?.find(item => item.key <= finalGrade)?.name || null;
-}
-
-function getGradeEffect(attGradeEffect: AttGradeEffect[], attPercents: number, absCount: number) {
-    return attGradeEffect?.find(item => item.percents <= attPercents || item.count >= absCount)?.effect ?? 0;
 }
 
 export function groupDataByKeys<T>(data: T[], keys: KeyOfType<T, any>[]): Record<string, T[]> {

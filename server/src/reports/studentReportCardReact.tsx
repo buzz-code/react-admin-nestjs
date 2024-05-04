@@ -10,7 +10,8 @@ import { GradeName } from 'src/db/entities/GradeName.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
-import { getDisplayGrade, getAttPercents, getUnknownAbsCount, groupDataByKeysAndCalc, calcSum } from 'src/utils/reportData.util';
+import { groupDataByKeysAndCalc, calcSum } from 'src/utils/reportData.util';
+import { getDisplayGrade, getAttPercents, getUnknownAbsCount } from 'src/utils/studentReportData.util';
 
 interface IExtenedStudentGlobalReport extends StudentGlobalReport {
     isSpecial: boolean;

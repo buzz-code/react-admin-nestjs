@@ -11,7 +11,8 @@ import { GradeName } from "src/db/entities/GradeName.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
-import { calcAvg, calcSum, getAttPercents, getDisplayGrade, getUniqueValues, getUnknownAbsCount, groupDataByKeys, roundFractional } from "src/utils/reportData.util";
+import { calcAvg, calcSum, getUniqueValues, groupDataByKeys, roundFractional } from "src/utils/reportData.util";
+import { getAttPercents, getDisplayGrade, getUnknownAbsCount } from "src/utils/studentReportData.util";
 import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from "src/utils/studentReportData.util";
 import { DataSource, In } from "typeorm";
 
