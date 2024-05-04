@@ -11,17 +11,17 @@ const defaultValues = {
 };
 export default ({ defaultRequestValues }) => (
     <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
-        name='studentReportCardReact' filename='תעודה' 
+        name='studentReportCardReact' filename='תעודה'
         defaultRequestValues={{ ...defaultValues, ...defaultRequestValues }}>
         <CommonAutocompleteInput source="year" label="שנה" choices={yearChoices} />
-        <BooleanInput source="attendance" label="הצג נוכחות" defaultChecked />
-        <BooleanInput source="grades" label="הצג ציונים" />
-        <TextInput source="personalNote" label="הערה לתלמידה" defaultValue='' />
         <BooleanInput source="groupByKlass" label="קבץ לפי כיתה" />
         <BooleanInput source="hideAbsTotal" label="הסתר סיכום כללי" />
-        <BooleanInput source="forceGrades" label="הצג רק שורות שכוללות ציונים" />
+        <BooleanInput source="attendance" label="הצג נוכחות" defaultChecked />
         <BooleanInput source="forceAtt" label="הצג רק שורות שכוללות נוכחות" />
+        <BooleanInput source="grades" label="הצג ציונים" />
+        <BooleanInput source="forceGrades" label="הצג רק שורות שכוללות ציונים" />
         <BooleanInput source="showStudentTz" label="הצג תעודת זהות" defaultChecked />
         <BooleanInput source="downComment" label="הצג הערה מתחת שם תלמידה" />
+        <TextInput source="personalNote" label="הערה לתלמידה" defaultValue='' />
     </BulkReportButton>
 );
