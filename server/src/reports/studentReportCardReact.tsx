@@ -160,7 +160,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
 
             {reports.map((item, index) => (
                 <ReportTableContent key={index} reportData={item} reportParams={reportParams}
-                knownAbsMap={knownAbsMap}
+                    knownAbsMap={knownAbsMap}
                     att_grade_effect={att_grade_effect} grade_names={grade_names} />
             ))}
         </div>
@@ -284,7 +284,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
 
                     {reportData.reports.map((item, index) => (
                         <ReportItem key={index} reportParams={reportParams} report={item}
-                        knownAbsMap={knownAbsMap} att_grade_effect={att_grade_effect} grade_names={grade_names} />
+                            knownAbsMap={knownAbsMap} att_grade_effect={att_grade_effect} grade_names={grade_names} />
                     ))}
 
                     {!reportParams.hideAbsTotal && reportParams.attendance && (
@@ -340,18 +340,18 @@ interface ReportAbsTotalProps {
 }
 const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, reports, reportParams, knownAbsMap }) => {
     var reportsNoSpecial = reports.filter(item => !item.isSpecial)
-    var total_lesson_count = reportsNoSpecial.reduce((a, b) => a + b.lessonsCount, 0)
-    var total_abs_count = reportsNoSpecial.reduce((a, b) => a + b.absCount, 0)
-    var total_att_count = total_lesson_count - total_abs_count
-    const knownAbs =reportParams.groupByKlass ? knownAbsMap[String(id)] : Object.values(knownAbsMap)[0];
-    const approved_abs_value = calcSum(Object.values(knownAbs), item => item);
+    const lessonsCount = calcSum(reportsNoSpecial, item => item.lessonsCount);
+    const absCount = calcSum(reportsNoSpecial, item => item.absCount);
+    const attCount = lessonsCount - absCount;
+    const knownAbs = reportParams.groupByKlass ? knownAbsMap[String(id)] : Object.values(knownAbsMap)[0];
+    const approvedAbsCount = Math.min(absCount, calcSum(Object.values(knownAbs), item => item));
 
     return <>
         <tr>
             <th style={thStyle}>אחוז נוכחות כללי</th>
             <th style={thStyle}>&nbsp;</th>
             <th style={thStyle}>
-                {Math.round(((total_att_count) / total_lesson_count) * 100)}%
+                {Math.round(((attCount) / lessonsCount) * 100)}%
             </th>
             {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
         </tr>
@@ -362,8 +362,8 @@ const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, repo
                 {Math.round(
                     (
                         (
-                            total_att_count + (approved_abs_value)
-                        ) / total_lesson_count
+                            attCount + (approvedAbsCount)
+                        ) / lessonsCount
                     ) * 100
                 )}%
             </th>
