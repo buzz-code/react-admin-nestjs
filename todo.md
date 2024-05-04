@@ -289,6 +289,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add field of lessons - שיעורים ללא הגבלת תאריך - multiple lessons
 
 # todo
+* add a page for rashim file import - a simple page with one file input, and a button to send to server, server processes it and send back the filled file. can use student global report for that
 * check slow queries in kibana
 * update react-admin version
 * update icon for in-lesson-report
