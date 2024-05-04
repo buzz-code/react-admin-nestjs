@@ -1,4 +1,4 @@
-import { getNumericValueOrNull } from "src/utils/reportData.util";
+import { calcPercents, getNumericValueOrNull, keepBetween } from "src/utils/reportData.util";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { FindOptionsWhere } from "typeorm";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
@@ -54,9 +54,12 @@ export function getKnownAbsenceFilterBySprAndDates(ids: string[], startDate: Dat
     });
 }
 
-export function getAttPercents(lessonsCount: number, unKnownAbs: number) {
-    const count = lessonsCount ?? 1;
-    return Math.round(((count - unKnownAbs) / count) * 100);
+export function getAttCount(lessonsCount: number, absCount: number) {
+    return keepBetween(lessonsCount - absCount, 0, lessonsCount);
+}
+
+export function getAttPercents(lessonsCount: number, absCount: number) {
+    return calcPercents(getAttCount(lessonsCount, absCount), lessonsCount);
 }
 
 export function getUnknownAbsCount(absCount: number, knownAbs: number) {
@@ -73,7 +76,7 @@ export function getDisplayGrade(attPercents: number, absCount: number, grade: nu
 
 function getFinalGrade(grade: number, gradeEffect: any) {
     var isOriginalGrade = grade > 100 || grade == 0;
-    var finalGrade = isOriginalGrade ? grade : Math.min(100, Math.max(0, grade + gradeEffect));
+    var finalGrade = isOriginalGrade ? grade : keepBetween(grade + gradeEffect, 0, 100);
     return finalGrade;
 }
 

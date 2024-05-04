@@ -49,3 +49,14 @@ export function groupDataByKeysAndCalc<T, V>(data: T[], keys: KeyOfType<T, any>[
     const map = groupDataByKeys(data, keys);
     return Object.fromEntries(Object.entries(map).map(([key, value]) => [key, getValue(value)]));
 }
+
+export function calcPercents(val: number, total: number): number {
+    return Math.round(val / (total || 1) * 100);
+}
+
+export function keepBetween(val: number, min: number, max: number): number {
+    if (min > max) {
+        return keepBetween(val, max, min);
+    }
+    return Math.max(Math.min(val, max), min);
+}

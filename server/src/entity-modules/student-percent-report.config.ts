@@ -117,24 +117,6 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
             }
         }
     }
-
-    // reportsDict = {
-    //     studentReportCard: new BulkToPdfReportGenerator(studentReportCard),
-    // };
-    // async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
-    //     if (req.parsed.extra.report in this.reportsDict) {
-    //         const generator = this.reportsDict[req.parsed.extra.report];
-    //         const params = req.parsed.extra.ids
-    //             .toString()
-    //             .split(',')
-    //             .map(id => ({ userId: req.auth.id, studentId: id }));
-    //         return {
-    //             generator,
-    //             params,
-    //         };
-    //     }
-    //     return super.getReportData(req);
-    // }
 }
 
 async function getAbsGradeEffect(values: StudentPercentReportWithDates[], dataSource: DataSource) {

@@ -311,8 +311,8 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
     var displayGrade = getDisplayGrade(attPercents, unKnownAbs, report.gradeAvg, grade_names, att_grade_effect);
 
     return <tr>
-        <td style={rightAlignFullCellStyle}>{report.lesson && report.lesson.name}</td>
-        <td style={fullCellStyle}>{report.teacher && report.teacher.name}</td>
+        <td style={rightAlignFullCellStyle}>{report.lesson?.name}</td>
+        <td style={fullCellStyle}>{report.teacher?.name}</td>
 
         {report.isSpecial
             ? <>
@@ -320,7 +320,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
                 <td style={fullCellStyle}>{Math.round(report.gradeAvg)}</td>
             </>
             : <>
-                {reportParams.attendance && <td style={fullCellStyle}>{Math.round(attPercents)}%</td>}
+                {reportParams.attendance && <td style={fullCellStyle}>{attPercents}%</td>}
                 {reportParams.grades && (
                     <td style={fullCellStyle}>
                         {(report.gradeAvg != undefined && report.gradeAvg != null)
@@ -340,34 +340,24 @@ interface ReportAbsTotalProps {
     knownAbsMap: AppProps['knownAbsMap'];
 }
 const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, reports, reportParams, knownAbsMap }) => {
-    var reportsNoSpecial = reports.filter(item => !item.isSpecial)
+    const reportsNoSpecial = reports.filter(item => !item.isSpecial)
     const lessonsCount = calcSum(reportsNoSpecial, item => item.lessonsCount);
     const absCount = calcSum(reportsNoSpecial, item => item.absCount);
-    const attCount = lessonsCount - absCount;
     const knownAbs = reportParams.groupByKlass ? knownAbsMap[String(id)] : Object.values(knownAbsMap)[0];
     const approvedAbsCount = Math.min(absCount, calcSum(Object.values(knownAbs), item => item));
+    const unknownAbsCount = getUnknownAbsCount(absCount, approvedAbsCount);
 
     return <>
         <tr>
             <th style={thStyle}>אחוז נוכחות כללי</th>
             <th style={thStyle}>&nbsp;</th>
-            <th style={thStyle}>
-                {Math.round(((attCount) / lessonsCount) * 100)}%
-            </th>
+            <th style={thStyle}>{getAttPercents(lessonsCount, absCount)}%</th>
             {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
         </tr>
         <tr>
             <th style={thStyle}>נוכחות בקיזוז חיסורים מאושרים</th>
             <th style={thStyle}>&nbsp;</th>
-            <th style={thStyle}>
-                {Math.round(
-                    (
-                        (
-                            attCount + (approvedAbsCount)
-                        ) / lessonsCount
-                    ) * 100
-                )}%
-            </th>
+            <th style={thStyle}>{getAttPercents(lessonsCount, unknownAbsCount)}%</th>
             {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
         </tr>
     </>
@@ -430,14 +420,10 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
 
 function getReports(reports: StudentGlobalReport[], reportParams: IReportParams): AppProps['reports'][number]['reports'] {
     return reports.filter(report => {
-        if (
+        return !(
             (reportParams.forceGrades && (report.gradeAvg === undefined || report.gradeAvg === null)) ||
             (reportParams.forceAtt && !report.lessonsCount)
-        ) {
-            return false;
-        } else {
-            return true;
-        }
+        )
     }).map(report => {
         return {
             ...report,
