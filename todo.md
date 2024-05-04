@@ -286,6 +286,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make sure all the db indexes have a meaningful name
 * create function to get all student report data by dates, and use it in report card and in percent report
 * add start date & end date to student report card
+* add field of lessons - שיעורים ללא הגבלת תאריך - multiple lessons
 
 # todo
 * check slow queries in kibana
@@ -293,7 +294,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update icon for in-lesson-report
 * make each menu icon unique
 * update in lesson report to have multiple lessons
-* add field of lessons - שיעורים ללא הגבלת תאריך - multiple lessons
 * re-structure student percents report - think how to do it with dates filter
 * 
 

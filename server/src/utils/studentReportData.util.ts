@@ -1,6 +1,6 @@
 import { calcAvg, calcPercents, calcSum, getNumericValueOrNull, keepBetween, roundFractional } from "src/utils/reportData.util";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
-import { FindOptionsWhere } from "typeorm";
+import { FindOptionsWhere, FindOperator, In } from "typeorm";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { AttGradeEffect } from "src/db/entities/AttGradeEffect";
@@ -52,6 +52,18 @@ export function getKnownAbsenceFilterBySprAndDates(ids: string[], startDate: Dat
             year: getNumericValueOrNull(year),
         };
     });
+}
+
+export function getReportsFilterForReportCard(studentId: number, year: number, reportDateFilter: FindOperator<any>, globalLessonIds: string) {
+    const commonFilter = { studentReferenceId: studentId, year };
+    if (reportDateFilter && globalLessonIds) {
+        return [
+            { ...commonFilter, reportDate: reportDateFilter },
+            { ...commonFilter, getReportsFilterForReportCard: In(globalLessonIds.split(',')) },
+        ];
+    } else {
+        return commonFilter;
+    }
 }
 
 interface IStudentReportData {

@@ -17,7 +17,7 @@ import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
 import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from 'src/utils/reportData.util';
-import { getDisplayGrade, getAttPercents, getUnknownAbsCount, calcReportsData } from 'src/utils/studentReportData.util';
+import { getDisplayGrade, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard } from 'src/utils/studentReportData.util';
 import { getReportDateFilter, dateFromString } from '@shared/utils/entity/filters.util';
 
 interface IExtenedStudentGlobalReport extends StudentGlobalReport {
@@ -378,6 +378,7 @@ export interface IReportParams {
     year: number;
     startDate?: string;
     endDate?: string;
+    globalLessonReferenceIds?: string;
     attendance: boolean;
     grades: boolean;
     personalNote?: string;
@@ -389,11 +390,12 @@ export interface IReportParams {
     downComment?: boolean;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
-    const reportDate = getReportDateFilter(params.startDate, params.endDate);
+    const reportDate = getReportDateFilter(dateFromString(params.startDate), dateFromString(params.endDate));
+
     const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, knownAbsences] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
-        dataSource.getRepository(AttReportAndGrade).find({ where: { studentReferenceId: params.studentId, year: params.year, reportDate } }),
+        dataSource.getRepository(AttReportAndGrade).find({ where: getReportsFilterForReportCard(params.studentId, params.year, reportDate, params.globalLessonReferenceIds) }),
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportLogo }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportBottomLogo }),
