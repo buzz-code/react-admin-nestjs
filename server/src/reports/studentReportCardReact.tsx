@@ -382,7 +382,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
         dataSource.getRepository(StudentGlobalReport).find({
-            where: { studentReferenceId: params.studentId },
+            where: { studentReferenceId: params.studentId, year: params.year },
             relations: {
                 lesson: true,
                 klass: true,
@@ -392,7 +392,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportLogo }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportBottomLogo }),
-        dataSource.getRepository(KnownAbsence).findBy({ studentReferenceId: params.studentId, isApproved: true }),
+        dataSource.getRepository(KnownAbsence).findBy({ studentReferenceId: params.studentId, year: params.year, isApproved: true }),
         dataSource.getRepository(AttGradeEffect).find({ where: { userId: params.userId }, order: { percents: 'DESC', count: 'DESC' } }),
         dataSource.getRepository(GradeName).find({ where: { userId: params.userId }, order: { key: 'DESC' } }),
     ])
