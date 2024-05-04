@@ -1,4 +1,4 @@
-import { TextInput, BooleanInput } from 'react-admin';
+import { TextInput, BooleanInput, DateField } from 'react-admin';
 import { yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
@@ -14,6 +14,8 @@ export default ({ defaultRequestValues }) => (
         name='studentReportCardReact' filename='תעודה'
         defaultRequestValues={{ ...defaultValues, ...defaultRequestValues }}>
         <CommonAutocompleteInput source="year" label="שנה" choices={yearChoices} />
+        <DateInput source="startDate" label="תאריך התחלה" />
+        <DateInput source="endDate" label="תאריך סיום" />
         <BooleanInput source="groupByKlass" label="קבץ לפי כיתה" />
         <BooleanInput source="hideAbsTotal" label="הסתר סיכום כללי" />
         <BooleanInput source="attendance" label="הצג נוכחות" defaultChecked />
