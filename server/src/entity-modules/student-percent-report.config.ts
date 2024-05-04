@@ -2,7 +2,6 @@ import { CrudRequest } from "@dataui/crud";
 import { getUserIdFromUser } from "@shared/auth/auth.util";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
-import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { IHeader } from "@shared/utils/exporter/types";
 import { getPercentsFormatter } from "@shared/utils/formatting/formatter.util";
 import { AbsCountEffectByUser } from "@shared/view-entities/AbsCountEffectByUser.entity";
@@ -12,7 +11,8 @@ import { GradeName } from "src/db/entities/GradeName.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
-import { calcAvg, calcSum, getAttPercents, getDisplayGrade, getNumericValueOrNull, getUniqueValues, getUnknownAbsCount, roundFractional } from "src/utils/reportData";
+import { calcAvg, calcSum, getAttPercents, getDisplayGrade, getUniqueValues, getUnknownAbsCount, roundFractional } from "src/utils/reportData";
+import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from "src/utils/studentReportData";
 import { DataSource, In } from "typeorm";
 
 function getConfig(): BaseEntityModuleOptions {
@@ -74,20 +74,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
             case 'PercentReportWithDates': {
                 const pivotData = await this.dataSource
                     .getRepository(AttReportAndGrade)
-                    .find({
-                        where: sprIds.map(id => {
-                            const [studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId, userId, year] = id.split('_');
-                            return ({
-                                studentReferenceId: getNumericValueOrNull(studentReferenceId),
-                                teacherReferenceId: getNumericValueOrNull(teacherReferenceId),
-                                klassReferenceId: getNumericValueOrNull(klassReferenceId),
-                                lessonReferenceId: getNumericValueOrNull(lessonReferenceId),
-                                userId: getNumericValueOrNull(userId),
-                                year: getNumericValueOrNull(year),
-                                reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
-                            });
-                        })
-                    });
+                    .find({ where: getReportDataFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate) });
 
                 const pivotDataMap: Record<string, AttReportAndGrade[]> = {};
                 pivotData.forEach(item => {
@@ -98,18 +85,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
 
                 const totalAbsencesData = await this.dataSource
                     .getRepository(KnownAbsence)
-                    .find({
-                        where: sprIds.map(id => {
-                            const [studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId, userId, year] = id.split('_');
-                            return {
-                                isApproved: true,
-                                userId: getNumericValueOrNull(userId),
-                                studentReferenceId: getNumericValueOrNull(studentReferenceId),
-                                reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
-                                year: getNumericValueOrNull(year),
-                            };
-                        }),
-                    });
+                    .find({ where: getKnownAbsenceFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate) });
 
                 const totalAbsencesDataMap: Record<string, KnownAbsence[]> = {};
                 totalAbsencesData.forEach(item => {
