@@ -284,15 +284,18 @@ https://github.com/tinovyatkin/nest-puppeteer
 * rename all db indexes to be meaningful
 * make github action to run tests on pull request
 * make sure all the db indexes have a meaningful name
+* create function to get all student report data by dates, and use it in report card and in percent report
+* add start date & end date to student report card
+* add field of lessons - שיעורים ללא הגבלת תאריך - multiple lessons
 
 # todo
-* create function to get all student report data by dates, and use it in report card and in percent report
-* re-structure student percents report - think how to do it with dates filter
+* add a page for rashim file import - a simple page with one file input, and a button to send to server, server processes it and send back the filled file. can use student global report for that
 * check slow queries in kibana
 * update react-admin version
 * update icon for in-lesson-report
 * make each menu icon unique
 * update in lesson report to have multiple lessons
+* re-structure student percents report - think how to do it with dates filter
 * 
 
 # todo later
