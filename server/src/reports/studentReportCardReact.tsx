@@ -10,7 +10,7 @@ import { KlassTypeEnum } from 'src/db/entities/KlassType.entity';
 import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { ReactToPdfReportGenerator } from '@shared/utils/report/react-to-pdf.generator';
 import { StudentBaseKlass } from 'src/db/view-entities/StudentBaseKlass.entity';
-import { StudentGlobalReport } from 'src/db/view-entities/StudentGlobalReport.entity';
+import { StudentPercentReport } from 'src/db/view-entities/StudentPercentReport.entity';
 import { Image, ImageTargetEnum } from '@shared/entities/Image.entity';
 import { GradeName } from 'src/db/entities/GradeName.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
@@ -20,11 +20,12 @@ import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from 's
 import { getDisplayGrade, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard } from 'src/utils/studentReportData.util';
 import { getReportDateFilter, dateFromString } from '@shared/utils/entity/filters.util';
 
-interface IExtenedStudentGlobalReport extends StudentGlobalReport {
+interface IExtenedStudentPercentReport extends StudentPercentReport {
+    isBaseKlass?: boolean;
     isSpecial?: boolean;
 }
 interface ReportDataArrItem {
-    reports: IExtenedStudentGlobalReport[];
+    reports: IExtenedStudentPercentReport[];
     id: number;
     name?: string;
     order?: number;
@@ -292,7 +293,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
 
                     {reportData.reports.map((item, index) => (
                         <ReportItem key={index} reportParams={reportParams} report={item}
-                            knownAbsMap={knownAbsMap} att_grade_effect={att_grade_effect} grade_names={grade_names} />
+                            att_grade_effect={att_grade_effect} grade_names={grade_names} />
                     ))}
 
                     {!reportParams.hideAbsTotal && reportParams.attendance && (
@@ -307,15 +308,11 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
 interface ReportItemProps {
     reportParams: AppProps['reportParams'];
     report: AppProps['reports'][number]['reports'][number];
-    knownAbsMap: AppProps['knownAbsMap'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
 }
-const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, knownAbsMap, att_grade_effect, grade_names }) => {
-    var knownAbs = knownAbsMap[String(report.klass?.id)]?.[String(report.lesson?.id)];
-    var unKnownAbs = getUnknownAbsCount(report.absCount, knownAbs);
-    var attPercents = getAttPercents(report.lessonsCount, unKnownAbs)
-    var displayGrade = getDisplayGrade(attPercents, unKnownAbs, report.gradeAvg, grade_names, att_grade_effect);
+const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, att_grade_effect, grade_names }) => {
+    var displayGrade = getDisplayGrade(report.attPercents, report.absCount, report.gradeAvg, grade_names, att_grade_effect);
 
     return <tr>
         <td style={rightAlignFullCellStyle}>{report.lesson?.name}</td>
@@ -327,10 +324,10 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
                 <td style={fullCellStyle}>{Math.round(report.gradeAvg)}</td>
             </>
             : <>
-                {reportParams.attendance && <td style={fullCellStyle}>{attPercents}%</td>}
+                {reportParams.attendance && <td style={fullCellStyle}>{report.attPercents * 100}%</td>}
                 {reportParams.grades && (
                     <td style={fullCellStyle}>
-                        {(report.gradeAvg != undefined && report.gradeAvg != null)
+                        {(report.gradeAvg != undefined && report.gradeAvg != null && report.gradeAvg > 0)
                             ? displayGrade
                             : <>&nbsp;</>
                         }
@@ -417,8 +414,8 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         params.forceGrades = true;
     }
 
-    const reports = getReports(params, studentReports, knownAbsences, studentBaseKlass, klasses, lessons, teachers);
     const knownAbsMap = groupDataByKeysAndCalc(knownAbsences, ['klassReferenceId'], (arr) => groupDataByKeysAndCalc(arr, ['lessonReferenceId'], (arr) => calcSum(arr, item => item.absnceCount)));
+    const reports = getReports(params, studentReports, knownAbsMap, studentBaseKlass, klasses, lessons, teachers);
 
     return {
         user,
@@ -436,7 +433,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
 function getReports(
     reportParams: IReportParams,
     reports: AttReportAndGrade[],
-    knownAbsences: KnownAbsence[],
+    knownAbsMap: Record<string, Record<string, number>>,
     studentBaseKlass: AppProps['studentBaseKlass'],
     klasses: Klass[],
     lessons: Lesson[],
@@ -444,15 +441,17 @@ function getReports(
 ): AppProps['reports'] {
     const dataMap = groupDataByKeys(reports, ['teacherReferenceId', 'klassReferenceId', 'lessonReferenceId']);
 
-    const data: StudentGlobalReport[] = Object.entries(dataMap).map(([key, val]) => {
+    const data = Object.entries(dataMap).map(([key, val]) => {
         const { userId, year, studentReferenceId, klassReferenceId, lessonReferenceId, teacherReferenceId } = val[0];
-        const { lessonsCount, absCount, attPercents, absPercents, gradeAvg } = calcReportsData(val, knownAbsences);
+        const knownAbsences = knownAbsMap[klassReferenceId]?.[lessonReferenceId];
+        const { lessonsCount, absCount, attPercents, absPercents, gradeAvg } = calcReportsData(val, [{ absnceCount: knownAbsences }]);
         const teacher = getItemById(teachers, val[0].teacherReferenceId);
         const klass = getItemById(klasses, val[0].klassReferenceId);
         const lesson = getItemById(lessons, val[0].lessonReferenceId);
 
-        return {
+        const dataItem: IExtenedStudentPercentReport = {
             id: '',
+            studentBaseKlass: null,
             studentReferenceId,
             klassReferenceId,
             lessonReferenceId,
@@ -470,6 +469,8 @@ function getReports(
             absPercents,
             gradeAvg,
         };
+
+        return dataItem;
     });
 
     const filteredReports = filterReports(data, reportParams);
@@ -477,7 +478,7 @@ function getReports(
     return groupReportsByKlass(filteredReports, reportParams, studentBaseKlass);
 }
 
-function filterReports(reports: StudentGlobalReport[], reportParams: IReportParams): AppProps['reports'][number]['reports'] {
+function filterReports(reports: IExtenedStudentPercentReport[], reportParams: IReportParams): AppProps['reports'][number]['reports'] {
     return reports.filter(report => {
         return !(
             (reportParams.forceGrades && (report.gradeAvg === undefined || report.gradeAvg === null)) ||

@@ -106,7 +106,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                 Object.values(sprMap).forEach(item => {
                     item.attGradeEffect = gradeEffectsMap[getGradeEffectId(item)] ?? absCountEffectsMap[getAbsCountEffectId(item)];
                     const demoAttGradeEffects = [{ percents: 0, effect: item.attGradeEffect }] as AttGradeEffect[];
-                    item.finalGrade = getDisplayGrade(item.attPercents * 100, item.absCount, item.gradeAvg * 100, gradeNames, demoAttGradeEffects);
+                    item.finalGrade = getDisplayGrade(item.attPercents, item.absCount, item.gradeAvg, gradeNames, demoAttGradeEffects);
                 });
 
                 const headers = {};

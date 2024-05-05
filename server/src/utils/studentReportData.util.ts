@@ -79,7 +79,7 @@ interface IStudentReportData {
     absPercents: number;
     gradeAvg: number;
 }
-export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: KnownAbsence[]): IStudentReportData {
+export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: { absnceCount: number }[]): IStudentReportData {
     const lessonsCount = calcSum(data, item => item.howManyLessons);
     const absCount = calcSum(data, item => item.absCount);
     const approvedAbsCount = calcSum(totalAbsencesData, item => item.absnceCount);
@@ -110,8 +110,8 @@ export function getUnknownAbsCount(absCount: number, knownAbs: number) {
 }
 
 export function getDisplayGrade(attPercents: number, absCount: number, grade: number, gradeNames: GradeName[], attGradeEffect: AttGradeEffect[]) {
-    var gradeEffect = getGradeEffect(attGradeEffect, attPercents, absCount);
-    var finalGrade = getFinalGrade(grade, gradeEffect);
+    var gradeEffect = getGradeEffect(attGradeEffect, attPercents * 100, absCount);
+    var finalGrade = getFinalGrade(grade * 100, gradeEffect);
     var matchingGradeName = getGradeName(gradeNames, finalGrade);
     var displayGrade = matchingGradeName ?? (Math.round(finalGrade) + '%');
     return displayGrade;

@@ -15,7 +15,7 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
         year: reqExtra.year ?? getCurrentHebrewYear(),
         startDate: reqExtra.startDate,
         endDate: reqExtra.endDate,
-        globalLessonReferenceIds: reqExtra.globalLessonReferenceIds,
+        globalLessonReferenceIds: String(reqExtra.globalLessonReferenceIds),
         attendance: reqExtra.attendance,
         grades: reqExtra.grades,
         personalNote: reqExtra.personalNote,
