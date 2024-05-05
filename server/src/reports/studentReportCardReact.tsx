@@ -312,7 +312,7 @@ interface ReportItemProps {
     grade_names: AppProps['grade_names'];
 }
 const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, knownAbsMap, att_grade_effect, grade_names }) => {
-    var knownAbs = knownAbsMap[String(report.klass?.id)][String(report.lesson?.id)];
+    var knownAbs = knownAbsMap[String(report.klass?.id)]?.[String(report.lesson?.id)];
     var unKnownAbs = getUnknownAbsCount(report.absCount, knownAbs);
     var attPercents = getAttPercents(report.lessonsCount, unKnownAbs)
     var displayGrade = getDisplayGrade(attPercents, unKnownAbs, report.gradeAvg, grade_names, att_grade_effect);
@@ -351,7 +351,7 @@ const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, repo
     const lessonsCount = calcSum(reportsNoSpecial, item => item.lessonsCount);
     const absCount = calcSum(reportsNoSpecial, item => item.absCount);
     const knownAbs = reportParams.groupByKlass ? knownAbsMap[String(id)] : Object.values(knownAbsMap)[0];
-    const approvedAbsCount = calcSum(Object.values(knownAbs), item => item);
+    const approvedAbsCount = calcSum(Object.values(knownAbs || {}), item => item);
     const unknownAbsCount = getUnknownAbsCount(absCount, approvedAbsCount);
     const attPercents = getAttPercents(lessonsCount, absCount);
     const approvedAttPercents = getAttPercents(lessonsCount, unknownAbsCount);
