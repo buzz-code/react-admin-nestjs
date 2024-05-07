@@ -11,6 +11,7 @@ import DatasetIcon from '@mui/icons-material/Dataset';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import MapIcon from '@mui/icons-material/Map';
+import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 // import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 
 import BaseLayout from "@shared/components/layout/Layout";
@@ -26,6 +27,7 @@ const customMenuItems = [
     ({ permissions }) => isInLessonReport(permissions) && <MenuItemLink key="in-lesson-report-att" to="/in-lesson-report-att" primaryText="טופס נוכחות" leftIcon={<DatasetIcon />} />,
     ({ permissions }) => isInLessonReport(permissions) && <MenuItemLink key="in-lesson-report-grade" to="/in-lesson-report-grade" primaryText="טופס ציונים" leftIcon={<DatasetIcon />} />,
     <MenuItemLink key="roadmap" to="/roadmap" primaryText="פיתוחים עתידיים" leftIcon={<MapIcon />} />,
+    <MenuItemLink key="michlol-file-helper" to="/michlol-file-helper" primaryText="עדכון קבצי מכלול" leftIcon={<ContentPasteSearchIcon />} />,
     // <MenuItemLink key="settings" to="/settings" primaryText="הגדרות" leftIcon={<SettingsIcon />} />,
     // <MenuItemLink key="profile" to="/profile" primaryText="פרופיל" leftIcon={<PersonIcon />} />,
 ];
