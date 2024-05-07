@@ -287,9 +287,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * create function to get all student report data by dates, and use it in report card and in percent report
 * add start date & end date to student report card
 * add field of lessons - שיעורים ללא הגבלת תאריך - multiple lessons
+* add a page for rashim file import - a simple page with one file input, and a button to send to server, server processes it and send back the filled file. can use student global report for that
 
 # todo
-* add a page for rashim file import - a simple page with one file input, and a button to send to server, server processes it and send back the filled file. can use student global report for that
 * check slow queries in kibana
 * update react-admin version
 * update icon for in-lesson-report
