@@ -42,14 +42,14 @@ class TeacherGradeReportStatusService<T extends Entity | TeacherGradeReportStatu
         return super.getReportData(req);
     }
 
-    async doAction(req: CrudRequest<any, any>): Promise<any> {
+    async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
         switch (req.parsed.extra.action) {
             case 'teacherReportFile': {
                 req.parsed.extra.isGrades = true;
                 return sendTeacherReportFileMail(req, this.dataSource, this.mailSendService);
             }
         }
-        return super.doAction(req);
+        return super.doAction(req, body);
     }
 }
 
