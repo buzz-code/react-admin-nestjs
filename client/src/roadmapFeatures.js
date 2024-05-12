@@ -1,6 +1,6 @@
 export default [
     { html: 'לציין את שם החודש בקובץ שנשלח למורות', status: 'בוצע', statusColor: 'success' },
-    { html: 'לסמן בצורה מודגשת במייל תגובה לקבצים את הקבצים שנכשלו', status: 'נדרשת חשיבה נוספת', statusColor: 'primary' },
+    { html: 'לסמן בצורה מודגשת במייל תגובה לקבצים את הקבצים שנכשלו', status: 'בוצע', statusColor: 'success' },
     { html: 'לשלוח הודעה טלפונית למורות שטרם דיווחו', status: 'מורכב, ייתכן ויתבצע בעתיד', statusColor: 'error' },
     { html: 'אפשרות לייצא את רשימת הקבצים שהתקבלו', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת אפשרות לדיווח בזמן השיעור', status: 'בוצע', statusColor: 'success' },
