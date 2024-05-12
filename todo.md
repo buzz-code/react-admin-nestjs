@@ -288,9 +288,10 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add start date & end date to student report card
 * add field of lessons - שיעורים ללא הגבלת תאריך - multiple lessons
 * add a page for rashim file import - a simple page with one file input, and a button to send to server, server processes it and send back the filled file. can use student global report for that
+* add percent view for students
+* make dashboard items configurable - implement todos
 
 # todo
-* check slow queries in kibana
 * update react-admin version
 * update icon for in-lesson-report
 * make each menu icon unique
@@ -300,6 +301,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 
 # todo later
 ## infrastucture
+* check slow queries in kibana
 * update react-admin version
 * update n8n version
 * check docker security issues
@@ -314,13 +316,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 ## bug fix
 * check why cannot view pdf with some jpg image, probably new version of jpg - see image in troubleshoot folder, this is related to pdf-lib package
 ## new features
+* save dashboard items in a table, and enable for users to edit them
 * show yemot calls in a nice way, with all data & responses
-* add percent view for students
 * use known absences in all student reports
 * use ra-components
 * add user image to export pdf file
 * add option to self connect to yemot phone
-* make dashboard items configurable - implement todos
 * if teacher doesn't have email - she will get a phone call - see knowledge file
 * add settings & profile page
 * add ability to edit report templates
