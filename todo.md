@@ -290,9 +290,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add a page for rashim file import - a simple page with one file input, and a button to send to server, server processes it and send back the filled file. can use student global report for that
 * add percent view for students
 * make dashboard items configurable - implement todos
+* update react-admin version
 
 # todo
-* update react-admin version
 * update icon for in-lesson-report
 * make each menu icon unique
 * update in lesson report to have multiple lessons
