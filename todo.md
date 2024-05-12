@@ -291,9 +291,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add percent view for students
 * make dashboard items configurable - implement todos
 * update react-admin version
+* update icon for in-lesson-report
 
 # todo
-* update icon for in-lesson-report
 * make each menu icon unique
 * update in lesson report to have multiple lessons
 * re-structure student percents report - think how to do it with dates filter
