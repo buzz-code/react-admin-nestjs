@@ -62,6 +62,7 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import SchoolIcon from '@mui/icons-material/School';
 import PortraitIcon from '@mui/icons-material/Portrait';
+import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import GradingIcon from '@mui/icons-material/Grading';
@@ -84,6 +85,7 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -103,7 +105,7 @@ const App = () => (
             <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
               <Route path="student-attendance" element={<StudentAttendanceList />} />
             </Resource>
-            <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={GroupWorkIcon} />
+            <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={WorkspacesIcon} />
             <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
             <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
             <Resource name="known_absence" {...knownAbsence} options={{ menuGroup: 'data' }} icon={PlaylistRemoveIcon} />
@@ -119,11 +121,11 @@ const App = () => (
             <Resource name="image" {...image} options={{ menuGroup: 'settings' }} icon={ImageIcon} />
             <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
             <Resource name="att_report" {...attReport} options={{ menuGroup: 'settings' }} icon={ViewListIcon} />
-            <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
             <Resource name="grade_name" {...gradeName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
             <Resource name="att_grade_effect" {...attGradeEffect} options={{ menuGroup: 'settings' }} icon={CalculateIcon} />
-            <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
-            <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
+            <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
+            <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
+            <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
 
             {isAdmin(permissions) && <>
               <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />

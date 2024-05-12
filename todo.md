@@ -292,9 +292,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make dashboard items configurable - implement todos
 * update react-admin version
 * update icon for in-lesson-report
+* make each menu icon unique
 
 # todo
-* make each menu icon unique
 * update in lesson report to have multiple lessons
 * re-structure student percents report - think how to do it with dates filter
 * 
