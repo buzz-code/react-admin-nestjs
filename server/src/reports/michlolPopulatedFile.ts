@@ -7,6 +7,7 @@ import { Grade } from 'src/db/entities/Grade.entity';
 import * as path from 'path';
 import { Student } from 'src/db/entities/Student.entity';
 import { calcAvg, groupDataByKeysAndCalc } from 'src/utils/reportData.util';
+import { getCurrentHebrewYear } from '@shared/utils/entity/year.util';
 
 export interface MichlolPopulatedFileParams {
     userId: number;
@@ -14,6 +15,7 @@ export interface MichlolPopulatedFileParams {
     michlolFileData: { [key: string]: string }[];
 }
 export interface MichlolPopulatedFileData extends IDataToExcelReportGenerator {
+    lesson: Lesson;
     filename: string;
     extension: string;
 }
@@ -38,11 +40,12 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
                 studentReferenceId: In(students.map(s => s.id)),
                 teacherReferenceId: teacher?.id,
                 lessonReferenceId: lesson?.id,
+                year: getCurrentHebrewYear(),
             },
             select: { id: true, studentReferenceId: true, grade: true },
         });
 
-    const studentGradeMap = groupDataByKeysAndCalc(grades, ['studentReferenceId'], (arr) => calcAvg(arr, item => item.grade));
+    const studentGradeMap = groupDataByKeysAndCalc(grades, ['studentReferenceId'], (arr) => Math.round(calcAvg(arr, item => item.grade)));
     const studentIdMap = groupDataByKeysAndCalc(students, ['tz'], (arr) => arr[0].id);
 
     const updatedData = params.michlolFileData.map(row => {
@@ -66,6 +69,7 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
     ])).flat();
 
     return {
+        lesson,
         filename,
         extension,
         headerRow: [],
@@ -75,6 +79,6 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
     };
 }
 
-const getReportName = (data: MichlolPopulatedFileData) => `${data.filename} - מעודכן`;
+const getReportName = (data: MichlolPopulatedFileData) => `${data.lesson.key} - ${data.lesson.name}`;
 
 export default new DataToExcelReportGenerator(getReportName, getReportData);
