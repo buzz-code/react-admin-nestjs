@@ -15,7 +15,7 @@ export interface MichlolPopulatedFileParams {
     michlolFileData: { [key: string]: string }[];
 }
 export interface MichlolPopulatedFileData extends IDataToExcelReportGenerator {
-    lesson: Lesson;
+    lesson: Partial<Lesson>;
     filename: string;
     extension: string;
 }
@@ -69,7 +69,10 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
     ])).flat();
 
     return {
-        lesson,
+        lesson: lesson ?? {
+            key: Number(lessonKey),
+            name: params.michlolFileData[0]['C'],
+        },
         filename,
         extension,
         headerRow: [],
@@ -79,6 +82,6 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
     };
 }
 
-const getReportName = (data: MichlolPopulatedFileData) => `${data.lesson.key} - ${data.lesson.name}`;
+const getReportName = (data: MichlolPopulatedFileData) => `${data.lesson?.key} - ${data.lesson?.name}`;
 
 export default new DataToExcelReportGenerator(getReportName, getReportData);
