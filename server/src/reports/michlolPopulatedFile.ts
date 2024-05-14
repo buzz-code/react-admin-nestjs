@@ -22,7 +22,7 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
     const extension = path.extname(params.michlolFileName);
     const filename = path.basename(params.michlolFileName, extension);
 
-    const lessonKey = params.michlolFileData[0]['D'];
+    const lessonKey = params.michlolFileData[0]['D'].replace(/\s/g, '');
     const studentTzs = params.michlolFileData.slice(3).map(row => row['B']).filter(Boolean);
 
     const [lesson, students] = await Promise.all([
