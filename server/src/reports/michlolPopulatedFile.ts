@@ -1,6 +1,5 @@
 import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { DataToExcelReportGenerator, IDataToExcelReportGenerator } from '@shared/utils/report/data-to-excel.generator';
-import { Teacher } from 'src/db/entities/Teacher.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
 import { In } from 'typeorm';
 import { Grade } from 'src/db/entities/Grade.entity';
@@ -23,23 +22,27 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
     const extension = path.extname(params.michlolFileName);
     const filename = path.basename(params.michlolFileName, extension);
 
-    const lessonKey = params.michlolFileData[0]['I'];
-    const teacherTz = params.michlolFileData[0]['D'];
+    const lessonKey = params.michlolFileData[0]['D'];
     const studentTzs = params.michlolFileData.slice(3).map(row => row['B']).filter(Boolean);
 
-    const [lesson, teacher, students] = await Promise.all([
+    const [lesson, students] = await Promise.all([
         dataSource.getRepository(Lesson).findOne({ where: { userId: params.userId, key: Number(lessonKey) }, select: { id: true } }),
-        dataSource.getRepository(Teacher).findOne({ where: { userId: params.userId, tz: teacherTz }, select: { id: true } }),
         dataSource.getRepository(Student).find({ where: { userId: params.userId, tz: In(studentTzs) }, select: { id: true, tz: true } }),
     ]);
+
+    if (!lesson) {
+        throw new Error('שיעור לא נמצא');
+    }
+    if (!students.length) {
+        throw new Error('תלמידים לא נמצאים');
+    }
 
     const grades = await dataSource
         .getRepository(Grade)
         .find({
             where: {
                 studentReferenceId: In(students.map(s => s.id)),
-                teacherReferenceId: teacher?.id,
-                lessonReferenceId: lesson?.id,
+                lessonReferenceId: lesson.id,
                 year: getCurrentHebrewYear(),
             },
             select: { id: true, studentReferenceId: true, grade: true },
@@ -66,6 +69,11 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
         { cell: { c: 6, r: index }, value: row['G'] },
         { cell: { c: 7, r: index }, value: row['H'] },
         { cell: { c: 8, r: index }, value: row['I'] },
+        { cell: { c: 9, r: index }, value: row['J'] },
+        { cell: { c: 10, r: index }, value: row['K'] },
+        { cell: { c: 11, r: index }, value: row['L'] },
+        { cell: { c: 12, r: index }, value: row['M'] },
+        { cell: { c: 13, r: index }, value: row['N'] },
     ])).flat();
 
     return {
