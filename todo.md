@@ -295,8 +295,11 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make each menu icon unique
 
 # todo
-* update in lesson report to have multiple lessons
-* re-structure student percents report - think how to do it with dates filter
+* finish auth service unit tests
+* check test coverage & work to increase coverage
+* show yemot calls in a nice way, with all data & responses
+* add more unit tests to backend
+* add more unit testing to client side
 * 
 
 # todo later
@@ -310,14 +313,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make sure db backup is saving only 7
 * delete old docker logs
 ## code refactor
-* add more unit tests to backend
-* add more unit testing to client side
 * change to typescript on client side
 ## bug fix
 * check why cannot view pdf with some jpg image, probably new version of jpg - see image in troubleshoot folder, this is related to pdf-lib package
 ## new features
+* update in lesson report to have multiple lessons
+* re-structure student percents report - think how to do it with dates filter
 * save dashboard items in a table, and enable for users to edit them
-* show yemot calls in a nice way, with all data & responses
 * use known absences in all student reports
 * use ra-components
 * add user image to export pdf file
