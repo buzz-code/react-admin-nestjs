@@ -2,11 +2,14 @@ import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { DataToExcelReportGenerator, IDataToExcelReportGenerator } from '@shared/utils/report/data-to-excel.generator';
 import { Lesson } from 'src/db/entities/Lesson.entity';
 import { In } from 'typeorm';
-import { Grade } from 'src/db/entities/Grade.entity';
 import * as path from 'path';
 import { Student } from 'src/db/entities/Student.entity';
-import { calcAvg, groupDataByKeysAndCalc } from 'src/utils/reportData.util';
+import { groupDataByKeys, groupDataByKeysAndCalc } from 'src/utils/reportData.util';
 import { getCurrentHebrewYear } from '@shared/utils/entity/year.util';
+import { AttReportAndGrade } from 'src/db/view-entities/AttReportAndGrade.entity';
+import { calcReportsData, getDisplayGrade } from 'src/utils/studentReportData.util';
+import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
+import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 
 export interface MichlolPopulatedFileParams {
     userId: number;
@@ -26,38 +29,43 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
     const studentTzs = params.michlolFileData.slice(3).map(row => row['B']).filter(Boolean);
 
     const [lesson, students] = await Promise.all([
-        dataSource.getRepository(Lesson).findOne({ where: { userId: params.userId, key: Number(lessonKey) }, select: { id: true, key: true, name: true } }),
+        dataSource.getRepository(Lesson).findOne({ where: { userId: params.userId, key: Number(lessonKey) }, select: { id: true, key: true, name: true, userId: true } }),
         dataSource.getRepository(Student).find({ where: { userId: params.userId, tz: In(studentTzs) }, select: { id: true, tz: true } }),
     ]);
 
-    if (!lesson) {
-        throw new Error('שיעור לא נמצא');
-    }
-    if (!students.length) {
-        throw new Error('תלמידים לא נמצאים');
-    }
+    let updatedData = params.michlolFileData;
 
-    const grades = await dataSource
-        .getRepository(Grade)
-        .find({
-            where: {
-                studentReferenceId: In(students.map(s => s.id)),
-                lessonReferenceId: lesson.id,
-                year: getCurrentHebrewYear(),
-            },
-            select: { id: true, studentReferenceId: true, grade: true },
-        });
-
-    const studentGradeMap = groupDataByKeysAndCalc(grades, ['studentReferenceId'], (arr) => Math.round(calcAvg(arr, item => item.grade)));
-    const studentIdMap = groupDataByKeysAndCalc(students, ['tz'], (arr) => arr[0].id);
-
-    const updatedData = params.michlolFileData.map(row => {
-        const studentId = studentIdMap[row['B']];
-        return {
-            ...row,
-            E: studentGradeMap[studentId] ?? row['E'],
+    if (lesson && students.length > 0) {
+        const dataFilter = {
+            studentReferenceId: In(students.map(s => s.id)),
+            lessonReferenceId: lesson.id,
+            year: getCurrentHebrewYear(),
         };
-    });
+        const [reports, knownAbsences, attGradeEffect] = await Promise.all([
+            dataSource.getRepository(AttReportAndGrade).find({ where: dataFilter }),
+            dataSource.getRepository(KnownAbsence).find({ where: { ...dataFilter, isApproved: true } }),
+            dataSource.getRepository(AttGradeEffect).find({ where: { userId: lesson.userId }, order: { percents: 'DESC', count: 'DESC' } }),
+        ]);
+
+        const studentReportsMap = groupDataByKeys(reports, ['studentReferenceId']);
+        const knownAbsencesMap = groupDataByKeys(knownAbsences, ['studentReferenceId']);
+        const studentIdMap = groupDataByKeysAndCalc(students, ['tz'], (arr) => arr[0].id);
+
+        updatedData = params.michlolFileData.map(row => {
+            const studentId = studentIdMap[row['B']];
+
+            const studentReports = studentReportsMap[studentId] || [];
+            const studentKnownAbsences = knownAbsencesMap[studentId] || [];
+            const { attPercents, absCount, gradeAvg } = calcReportsData(studentReports, studentKnownAbsences);
+            const displayGrade = getDisplayGrade(attPercents, absCount, gradeAvg, [], attGradeEffect);
+            const finalGrade = parseInt(displayGrade.replace('%', ''));
+
+            return {
+                ...row,
+                E: String(finalGrade || row['E']),
+            };
+        });
+    }
 
     const specialFields = updatedData.map((row, index) => ([
         { cell: { c: 0, r: index }, value: row['A'] },
