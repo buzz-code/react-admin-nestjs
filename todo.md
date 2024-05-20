@@ -293,9 +293,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update react-admin version
 * update icon for in-lesson-report
 * make each menu icon unique
+* finish auth service unit tests
 
 # todo
-* finish auth service unit tests
 * check test coverage & work to increase coverage
 * show yemot calls in a nice way, with all data & responses
 * add more unit tests to backend
