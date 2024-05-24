@@ -312,7 +312,7 @@ interface ReportItemProps {
     grade_names: AppProps['grade_names'];
 }
 const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, att_grade_effect, grade_names }) => {
-    var displayGrade = getDisplayGrade(report.attPercents, report.absCount, report.gradeAvg, grade_names, att_grade_effect);
+    var displayGrade = getDisplayGrade(report.lessonsCount, report.absCount, report.gradeAvg, grade_names, att_grade_effect);
 
     return <tr>
         <td style={rightAlignFullCellStyle}>{report.lesson?.name}</td>

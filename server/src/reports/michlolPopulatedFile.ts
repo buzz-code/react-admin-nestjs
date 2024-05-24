@@ -56,8 +56,8 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
 
             const studentReports = studentReportsMap[studentId] || [];
             const studentKnownAbsences = knownAbsencesMap[studentId] || [];
-            const { attPercents, absCount, gradeAvg } = calcReportsData(studentReports, studentKnownAbsences);
-            const displayGrade = getDisplayGrade(attPercents, absCount, gradeAvg, [], attGradeEffect);
+            const { attPercents, absCount, gradeAvg, lessonsCount } = calcReportsData(studentReports, studentKnownAbsences);
+            const displayGrade = getDisplayGrade(lessonsCount, absCount, gradeAvg, [], attGradeEffect);
             const finalGrade = parseInt(displayGrade.replace('%', ''));
 
             return {

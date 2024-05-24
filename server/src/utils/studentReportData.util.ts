@@ -109,8 +109,12 @@ export function getUnknownAbsCount(absCount: number, knownAbs: number) {
     return Math.max(0, (absCount ?? 0) - (knownAbs ?? 0));
 }
 
-export function getDisplayGrade(attPercents: number, absCount: number, grade: number, gradeNames: GradeName[], attGradeEffect: AttGradeEffect[]) {
-    var gradeEffect = getGradeEffect(attGradeEffect, attPercents * 100, absCount);
+export function getDisplayGrade(lessonsCount: number, absCount: number, grade: number, gradeNames: GradeName[], attGradeEffect: AttGradeEffect[]) {
+    let gradeEffect = 0;
+    if (lessonsCount) {
+        const attPercents = getAttPercents(lessonsCount, absCount);
+        gradeEffect = getGradeEffect(attGradeEffect, attPercents, absCount);
+    }
     var finalGrade = getFinalGrade(grade * 100, gradeEffect);
     var matchingGradeName = getGradeName(gradeNames, finalGrade);
     var displayGrade = matchingGradeName ?? (Math.round(finalGrade) + '%');
