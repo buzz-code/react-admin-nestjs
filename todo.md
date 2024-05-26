@@ -294,6 +294,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update icon for in-lesson-report
 * make each menu icon unique
 * finish auth service unit tests
+* show last grade and not grade avg
 
 # todo
 * check test coverage & work to increase coverage

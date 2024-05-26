@@ -75,7 +75,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
             case 'PercentReportWithDates': {
                 const pivotData = await this.dataSource
                     .getRepository(AttReportAndGrade)
-                    .find({ where: getReportDataFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate) });
+                    .find({ where: getReportDataFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate), order: { reportDate: 'ASC' } });
                 const pivotDataMap = groupDataByKeys(pivotData, ['studentReferenceId', 'teacherReferenceId', 'klassReferenceId', 'lessonReferenceId', 'userId', 'year']);
 
                 const totalAbsencesData = await this.dataSource
@@ -87,12 +87,12 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     const reports = pivotDataMap[key] ?? [];
                     const knownAbs = totalAbsencesDataMap[[val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_')] ?? [];
 
-                    const { lessonsCount, absCount, attPercents, absPercents, gradeAvg } = calcReportsData(reports, knownAbs);
+                    const { lessonsCount, absCount, attPercents, absPercents, gradeAvg, lastGrade } = calcReportsData(reports, knownAbs);
                     val.lessonsCount = lessonsCount;
                     val.absCount = absCount;
                     val.absPercents = absPercents;
                     val.attPercents = attPercents;
-                    val.gradeAvg = gradeAvg;
+                    val.gradeAvg = extra?.lastGrade ? lastGrade : gradeAvg;
 
                     const gradeReports = reports.filter(item => item.type === 'grade');
                     val.estimation = getUniqueValues(gradeReports, item => item.estimation).join(', ');

@@ -1,4 +1,4 @@
-import { DateInput, NumberField, TextField, ReferenceField, useRecordContext, SelectField, useListFilterContext, TextInput, useAuthState, usePermissions } from 'react-admin';
+import { DateInput, NumberField, TextField, ReferenceField, useRecordContext, SelectField, useListFilterContext, TextInput, useAuthState, usePermissions, BooleanInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -11,6 +11,7 @@ const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,
+    <BooleanInput source="extra.lastGrade" label="חשב ציון אחרון" alwaysOn defaultChecked />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,

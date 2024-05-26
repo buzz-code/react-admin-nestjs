@@ -385,6 +385,7 @@ export interface IReportParams {
     forceAtt?: boolean;
     showStudentTz?: boolean;
     downComment?: boolean;
+    lastGrade?: boolean;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
     const reportDate = getReportDateFilter(dateFromString(params.startDate), dateFromString(params.endDate));
@@ -392,7 +393,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
     const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, knownAbsences] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
-        dataSource.getRepository(AttReportAndGrade).find({ where: getReportsFilterForReportCard(params.studentId, params.year, reportDate, params.globalLessonReferenceIds) }),
+        dataSource.getRepository(AttReportAndGrade).find({ where: getReportsFilterForReportCard(params.studentId, params.year, reportDate, params.globalLessonReferenceIds), order: { reportDate: 'ASC' } }),
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportLogo }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportBottomLogo }),
@@ -444,10 +445,11 @@ function getReports(
     const data = Object.entries(dataMap).map(([key, val]) => {
         const { userId, year, studentReferenceId, klassReferenceId, lessonReferenceId, teacherReferenceId } = val[0];
         const knownAbsences = knownAbsMap[klassReferenceId]?.[lessonReferenceId];
-        const { lessonsCount, absCount, attPercents, absPercents, gradeAvg } = calcReportsData(val, [{ absnceCount: knownAbsences }]);
+        const { lessonsCount, absCount, attPercents, absPercents, gradeAvg, lastGrade } = calcReportsData(val, [{ absnceCount: knownAbsences }]);
         const teacher = getItemById(teachers, val[0].teacherReferenceId);
         const klass = getItemById(klasses, val[0].klassReferenceId);
         const lesson = getItemById(lessons, val[0].lessonReferenceId);
+        const grade = reportParams.lastGrade ? lastGrade : gradeAvg;
 
         const dataItem: IExtenedStudentPercentReport = {
             id: '',
@@ -467,7 +469,7 @@ function getReports(
             absCount,
             attPercents,
             absPercents,
-            gradeAvg,
+            gradeAvg: grade,
         };
 
         return dataItem;

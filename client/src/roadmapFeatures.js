@@ -17,6 +17,7 @@ export default [
     { html: 'הצגת שגיאת ייבוא במייל בצבע אדום', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת סינון לפי תאריכים בתעודה', status: 'בוצע', statusColor: 'success' },
     { html: 'מילוי אוטומטי של קבצי מכלול', status: 'בוצע', statusColor: 'success' },
+    { html: 'הצגת ציון אחרון במקום ממוצע', status: 'בוצע', statusColor: 'success' },
 
     // { html: 'הגדרת תקופת זמן לפי תאריכים', status: 'בקרוב', statusColor: 'warning' },
     // { html: 'הגדרת תקופת זמן לפי יום בשבוע', status: 'בוצע', statusColor: 'success' },

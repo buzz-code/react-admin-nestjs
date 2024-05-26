@@ -25,6 +25,7 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
         forceAtt: reqExtra.forceAtt,
         showStudentTz: reqExtra.showStudentTz,
         downComment: reqExtra.downComment,
+        lastGrade: reqExtra.lastGrade,
     };
     console.log('student report card extra params: ', extraParams);
     const params = reqExtra.ids

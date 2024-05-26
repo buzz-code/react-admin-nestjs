@@ -42,7 +42,7 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
             year: getCurrentHebrewYear(),
         };
         const [reports, knownAbsences, attGradeEffect] = await Promise.all([
-            dataSource.getRepository(AttReportAndGrade).find({ where: dataFilter }),
+            dataSource.getRepository(AttReportAndGrade).find({ where: dataFilter , order: { reportDate: 'ASC' }}),
             dataSource.getRepository(KnownAbsence).find({ where: { ...dataFilter, isApproved: true } }),
             dataSource.getRepository(AttGradeEffect).find({ where: { userId: lesson.userId }, order: { percents: 'DESC', count: 'DESC' } }),
         ]);
@@ -56,8 +56,9 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
 
             const studentReports = studentReportsMap[studentId] || [];
             const studentKnownAbsences = knownAbsencesMap[studentId] || [];
-            const { attPercents, absCount, gradeAvg, lessonsCount } = calcReportsData(studentReports, studentKnownAbsences);
-            const displayGrade = getDisplayGrade(lessonsCount, absCount, gradeAvg, [], attGradeEffect);
+            const { attPercents, absCount, gradeAvg, lessonsCount, lastGrade } = calcReportsData(studentReports, studentKnownAbsences);
+            // TODO add param here to use lastGrade or gradeAvg
+            const displayGrade = getDisplayGrade(lessonsCount, absCount, lastGrade, [], attGradeEffect);
             const finalGrade = parseInt(displayGrade.replace('%', ''));
 
             return {
