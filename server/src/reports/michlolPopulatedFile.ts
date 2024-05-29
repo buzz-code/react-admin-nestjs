@@ -51,6 +51,7 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
         const knownAbsencesMap = groupDataByKeys(knownAbsences, ['studentReferenceId']);
         const studentIdMap = groupDataByKeysAndCalc(students, ['tz'], (arr) => arr[0].id);
         console.log('info for michlolPopulatedFile: ', studentIdMap);
+        console.log('info for michlolPopulatedFile: ', studentReportsMap);
 
         updatedData = params.michlolFileData.map(row => {
             const studentId = studentIdMap[row['B']];
