@@ -50,9 +50,6 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
         const studentReportsMap = groupDataByKeys(reports, ['studentReferenceId']);
         const knownAbsencesMap = groupDataByKeys(knownAbsences, ['studentReferenceId']);
         const studentIdMap = groupDataByKeysAndCalc(students, ['tz'], (arr) => arr[0].id);
-        // console.log('info for michlolPopulatedFile: ', studentIdMap);
-        // console.log('info for michlolPopulatedFile: ', studentReportsMap);
-        console.log('info for michlolPopulatedFile: ', studentReportsMap[3006], studentReportsMap['3006']);
 
         updatedData = params.michlolFileData.map(row => {
             const studentId = studentIdMap[row['B']];
@@ -64,9 +61,6 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
             const displayGrade = getDisplayGrade(lessonsCount, absCount, lastGrade, [], attGradeEffect);
             const finalGrade = parseInt(displayGrade.replace('%', ''));
 
-            if (studentId == 3006) {
-                console.log('info for michlolPopulatedFile: ', row, studentId, studentReports, finalGrade, lastGrade, displayGrade);
-            }
             return {
                 ...row,
                 E: String(finalGrade || row['E']),
