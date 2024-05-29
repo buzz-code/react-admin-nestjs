@@ -61,6 +61,7 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
             const displayGrade = getDisplayGrade(lessonsCount, absCount, lastGrade, [], attGradeEffect);
             const finalGrade = parseInt(displayGrade.replace('%', ''));
 
+            console.log('info for michlolPopulatedFile: ', studentId, finalGrade, lastGrade, displayGrade);
             return {
                 ...row,
                 E: String(finalGrade || row['E']),
