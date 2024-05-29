@@ -42,7 +42,7 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
             year: getCurrentHebrewYear(),
         };
         const [reports, knownAbsences, attGradeEffect] = await Promise.all([
-            dataSource.getRepository(AttReportAndGrade).find({ where: dataFilter , order: { reportDate: 'ASC' }}),
+            dataSource.getRepository(AttReportAndGrade).find({ where: dataFilter, order: { reportDate: 'ASC' } }),
             dataSource.getRepository(KnownAbsence).find({ where: { ...dataFilter, isApproved: true } }),
             dataSource.getRepository(AttGradeEffect).find({ where: { userId: lesson.userId }, order: { percents: 'DESC', count: 'DESC' } }),
         ]);
@@ -50,8 +50,9 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
         const studentReportsMap = groupDataByKeys(reports, ['studentReferenceId']);
         const knownAbsencesMap = groupDataByKeys(knownAbsences, ['studentReferenceId']);
         const studentIdMap = groupDataByKeysAndCalc(students, ['tz'], (arr) => arr[0].id);
-        console.log('info for michlolPopulatedFile: ', studentIdMap);
-        console.log('info for michlolPopulatedFile: ', studentReportsMap);
+        // console.log('info for michlolPopulatedFile: ', studentIdMap);
+        // console.log('info for michlolPopulatedFile: ', studentReportsMap);
+        console.log('info for michlolPopulatedFile: ', studentReportsMap[3006], studentReportsMap['3006']);
 
         updatedData = params.michlolFileData.map(row => {
             const studentId = studentIdMap[row['B']];
@@ -63,7 +64,9 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
             const displayGrade = getDisplayGrade(lessonsCount, absCount, lastGrade, [], attGradeEffect);
             const finalGrade = parseInt(displayGrade.replace('%', ''));
 
-            console.log('info for michlolPopulatedFile: ', row, studentId, finalGrade, lastGrade, displayGrade);
+            if (studentId == 3006) {
+                console.log('info for michlolPopulatedFile: ', row, studentId, studentReports, finalGrade, lastGrade, displayGrade);
+            }
             return {
                 ...row,
                 E: String(finalGrade || row['E']),
