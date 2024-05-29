@@ -88,7 +88,7 @@ export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: { 
     const attPercents = getAttPercents(lessonsCount, unapprovedAbsCount) / 100;
     const absPercents = 1 - attPercents;
     const gradeAvg = roundFractional(calcAvg(data, item => item.grade) / 100);
-    const lastGrade = data[data.length - 1]?.grade / 100;
+    const lastGrade = data.length ? data[data.length - 1].grade / 100 : 0;
 
     return {
         lessonsCount,
