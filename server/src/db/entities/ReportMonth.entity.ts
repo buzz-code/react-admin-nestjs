@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
-import { Type } from "class-transformer";
+import { DateType, StringType } from "@shared/utils/entity/class-transformer";
 
 
 export enum ReportMonthSemester {
@@ -29,7 +29,7 @@ export class ReportMonth {
   userId: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => String)
+  @StringType
   @MaxLength(255, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
@@ -37,18 +37,18 @@ export class ReportMonth {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
-  @Type(() => Date)
+  @DateType
   @Index("report_month_start_date_idx")
   startDate: Date;
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
-  @Type(() => Date)
+  @DateType
   @Index("report_month_end_date_idx")
   endDate: Date;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(255, { always: true })
   @Column({ default: ReportMonthSemester.fullYear })
   semester: ReportMonthSemester;

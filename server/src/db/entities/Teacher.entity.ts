@@ -13,7 +13,7 @@ import { User } from "src/db/entities/User.entity";
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
-import { Type } from "class-transformer";
+import { StringType } from "@shared/utils/entity/class-transformer";
 
 @Index("teachers_users_idx", ["userId"], {})
 @Index(["userId", "tz", "year"], { unique: true })
@@ -31,7 +31,7 @@ export class Teacher implements IHasUserId {
   year: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => String)
+  @StringType
   @MaxLength(10, { always: true })
   @IsUniqueCombination(['userId'], [Teacher, User], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
@@ -39,26 +39,26 @@ export class Teacher implements IHasUserId {
   tz: string;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(10, { always: true })
   @Column("varchar", { name: "phone", nullable: true, length: 10 })
   phone: string | null;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(10, { always: true })
   @Column("varchar", { name: "phone2", nullable: true, length: 10 })
   phone2: string | null;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "email", nullable: true, length: 500 })
   email: string | null;

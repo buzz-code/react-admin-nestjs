@@ -25,7 +25,7 @@ import { IsOptional, ValidateIf } from "class-validator";
 import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { CrudValidationGroups } from "@dataui/crud";
 import { StudentBaseKlass } from "../view-entities/StudentBaseKlass.entity";
-import { Type } from "class-transformer";
+import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 
 @Index("grades_users_idx", ["userId"], {})
 @Index("grades_user_lesson_klass_year_idx", ["userId", "lessonReferenceId", "klassReferenceId", "year"], {})
@@ -92,7 +92,7 @@ export class Grade implements IHasUserId {
   @ValidateIf((grade: Grade) => !Boolean(grade.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number | null;
@@ -105,7 +105,7 @@ export class Grade implements IHasUserId {
 
   @ValidateIf((grade: Grade) => !Boolean(grade.lessonReferenceId), { always: true })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "lesson_id", nullable: true })
   lessonId: number;
@@ -117,30 +117,30 @@ export class Grade implements IHasUserId {
 
   @Column("date", { name: "report_date" })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @Type(() => Date)
+  @DateType
   @Index("grades_report_date_idx")
   reportDate: Date;
 
   @IsOptional({ always: true })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
   @Column("float", { name: "how_many_lessons", nullable: true })
   howManyLessons: number | null;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
   @Column("float", { name: "grade", default: () => "'0'" })
   grade: number;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "estimation", nullable: true, length: 500 })
   estimation: string | null;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;

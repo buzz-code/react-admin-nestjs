@@ -18,7 +18,7 @@ import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { Teacher } from "./Teacher.entity";
-import { Type } from "class-transformer";
+import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
 
 export enum KlassTypeEnum {
   baseKlass = 'כיתת אם',
@@ -54,13 +54,13 @@ export class KlassType implements IHasUserId {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "key" })
   key: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "name", length: 500 })
