@@ -13,7 +13,7 @@ import { User } from "src/db/entities/User.entity";
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
-import { Type } from "class-transformer";
+import { StringType } from "@shared/utils/entity/class-transformer";
 
 @Index("students_users_idx", ["userId"], {})
 @Index(["userId", "tz", "year"], { unique: true })
@@ -29,7 +29,7 @@ export class Student implements IHasUserId {
   year: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => String)
+  @StringType
   @MaxLength(10, { always: true })
   @IsUniqueCombination(['userId'], [Student, User], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
@@ -37,14 +37,14 @@ export class Student implements IHasUserId {
   tz: string;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(1000, { always: true })
   @Column("varchar", { name: "comment", nullable: true, length: 1000 })
   comment: string;

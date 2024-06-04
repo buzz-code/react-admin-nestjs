@@ -19,7 +19,7 @@ import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity
 import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
-import { Type } from "class-transformer";
+import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
 
 @Index("klasses_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -56,13 +56,13 @@ export class Klass implements IHasUserId {
   @IsUniqueCombination(['userId'], [Klass, KlassType, User, Teacher], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "key" })
   key: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "name", length: 500 })
@@ -71,7 +71,7 @@ export class Klass implements IHasUserId {
   @ValidateIf((attReport: Klass) => !Boolean(attReport.klassTypeReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "klass_type_id", nullable: true })
   klassTypeId: number | null;

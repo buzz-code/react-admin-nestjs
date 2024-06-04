@@ -10,7 +10,7 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { IsOptional } from "class-validator";
 import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { CrudValidationGroups } from "@dataui/crud";
-import { Type } from "class-transformer";
+import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
 
 @Entity("grade_names")
 export class GradeName implements IHasUserId {
@@ -23,13 +23,13 @@ export class GradeName implements IHasUserId {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "key" })
   key: number;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "name", length: 500, nullable: true })
   name: string;

@@ -89,6 +89,18 @@ describe("attReport chain", () => {
             expect(next).toHaveBeenCalled();
             expect(req.params.sheetName).toEqual(expect.any(String));
         });
+
+        it("should call next if sheetName is not defined", async () => {
+            req.params.sheetName = undefined;
+            req.params.isCurrentMonth = '2';
+            req.params.currentMonth = '3';
+
+            chain.handleRequest(req, res, next);
+
+            const response = await res.getResponse();
+            expect(response).toEqual("");
+            expect(next).toHaveBeenCalled();
+        });
     });
 
 
@@ -175,6 +187,17 @@ describe("attReport chain", () => {
             req.params.existingReports = [];
             chain.handlers.length = 4;
         });
+
+        it("call next if reportType is 'grade'", async () => {
+            const chain = getReportChain(getExistingReports, 'grade', properties);
+            chain.handlers.length = 4;
+
+            await chain.handleRequest(req, res, next);
+
+            expect(res.send).not.toHaveBeenCalled();
+            expect(next).toHaveBeenCalled();
+        });
+
 
         it('should ask for how many lessons if howManyLessons param is not defined', async () => {
             await chain.handleRequest(req, res, next);
@@ -360,12 +383,37 @@ describe("attReport chain", () => {
             expect(response).toEqual(util.read_v2("sideMenu", "sideMenu"));
         });
 
-        it('when opened a side menu with a direction, should go to student', async () => {
+        it('when opened a side menu with a direction, should ask for absCount', async () => {
+            req.params.absCount = '*';
+            req.params.sideMenu = '4';
+
+            await chain.handleRequest(req, res, next);
+
+            expect(req.params.absCountValidation).toBeUndefined();
+            expect(req.params.sideMenu).toBeUndefined();
+            expect(next).toHaveBeenCalledTimes(0);
+        });
+
+        it('when opened a side menu with a direction, should go to next student', async () => {
             req.params.absCount = '*6';
 
             await chain.handleRequest(req, res, next);
 
             expect(req.params.studentIndex).toEqual(1);
+            expect(next).toHaveBeenCalledTimes(0);
+            const response = await res.getResponse();
+            expect(response).toEqual(util.send(
+                util.id_list_message_v2("nextStudent"),
+                util.read_v2("absCount", "absCount")
+            ));
+        });
+
+        it('when opened a side menu with a direction, should go to prev student', async () => {
+            req.params.absCount = '*4';
+
+            await chain.handleRequest(req, res, next);
+
+            expect(req.params.studentIndex).toEqual(0);
             expect(next).toHaveBeenCalledTimes(0);
             const response = await res.getResponse();
             expect(response).toEqual(util.send(

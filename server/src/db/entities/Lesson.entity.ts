@@ -23,7 +23,7 @@ import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { cleanDateFields } from "@shared/utils/entity/deafultValues.util";
-import { Type } from "class-transformer";
+import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -65,20 +65,20 @@ export class Lesson implements IHasUserId {
   @IsUniqueCombination(['userId'], [Lesson, Teacher, User], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "key" })
   key: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(450, { always: true })
   @Column("varchar", { name: "klasses", nullable: true, length: 450 })
   klasses: string | null;
@@ -100,7 +100,7 @@ export class Lesson implements IHasUserId {
   endDate: string | null;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(1000, { always: true })
   @Column("varchar", { name: "comment", nullable: true, length: 1000 })
   comment: string;

@@ -18,13 +18,13 @@ import { Student } from "./Student.entity";
 import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
-import { Type } from "class-transformer";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
 import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
+import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 
 @Index("known_users_idx", ["userId"], {})
 @Index(['studentReferenceId', 'year'])
@@ -77,7 +77,7 @@ export class KnownAbsence implements IHasUserId {
   @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number | null;
@@ -88,7 +88,7 @@ export class KnownAbsence implements IHasUserId {
   klassReferenceId: number;
 
   @IsOptional({ always: true })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "lesson_id", nullable: true })
   lessonId: number;
@@ -99,35 +99,35 @@ export class KnownAbsence implements IHasUserId {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column("date", { name: "report_date" })
-  @Type(() => Date)
+  @DateType
   reportDate: Date;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "absnce_count", nullable: true })
   absnceCount: number | null;
 
   @IsOptional({ always: true })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "absnce_code", nullable: true })
   absnceCode: number | null;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(100, { always: true })
   @Column("varchar", { name: "sender_name", nullable: true, length: 100 })
   senderName: string | null;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "reason", nullable: true, length: 500 })
   reason: string | null;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "comment", nullable: true, length: 500 })
   comment: string | null;

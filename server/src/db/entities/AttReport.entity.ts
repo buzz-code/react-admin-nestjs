@@ -25,7 +25,7 @@ import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
-import { Type } from "class-transformer";
+import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 
 @Index("att_users_idx", ["userId"], {})
 @Index("att_user_sheet_name_lession_klass_year_idx", ["userId", "sheetName", "lessonReferenceId", "klassReferenceId", "year"], {})
@@ -96,7 +96,7 @@ export class AttReport implements IHasUserId {
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "klass_id", nullable: true })
   klassId: number | null;
@@ -109,7 +109,7 @@ export class AttReport implements IHasUserId {
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.lessonReferenceId), { always: true })
   @IsOptional({ always: true })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column("int", { name: "lesson_id", nullable: true })
   lessonId: number;
@@ -121,36 +121,36 @@ export class AttReport implements IHasUserId {
 
   @Column("date", { name: "report_date" })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @Type(() => Date)
+  @DateType
   @Index("att_reports_report_date_idx")
   reportDate: Date;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
   @Column("float", { name: "how_many_lessons", nullable: true })
   howManyLessons: number | null;
 
   @IsOptional({ always: true })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
   @Column("float", { name: "abs_count", default: () => "'0'" })
   absCount: number;
 
   @IsOptional({ always: true })
-  @Type(() => Number)
+  @NumberType
   @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
   @Column("float", { name: "approved_abs_count", default: () => "'0'" })
   approvedAbsCount: number;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(500, { always: true })
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;
 
   @IsOptional({ always: true })
-  @Type(() => String)
+  @StringType
   @MaxLength(100, { always: true })
   @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
   sheetName: string | null;

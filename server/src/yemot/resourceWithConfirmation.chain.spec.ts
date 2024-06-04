@@ -47,6 +47,16 @@ describe('lesson chain of responsibility', () => {
         next = jest.fn(() => Promise.resolve());
     });
 
+    test('req.params[resource] is undefined, should set resource', async () =>{
+        delete req.params[resource];
+
+        await chain.handleRequest(req, res, next);
+
+        expect(next).not.toHaveBeenCalled();
+        expect(res.send).toHaveBeenCalledWith(`type${pascalCase(resource)}Id`, resource + 'Id');
+        expect(req.params[resource]).toBeDefined();
+    });
+
     test('lesson is defined, should early exit chain', async () => {
         req.params[resource].data = defaultLesson;
 
