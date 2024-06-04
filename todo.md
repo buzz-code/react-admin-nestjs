@@ -297,7 +297,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * show last grade and not grade avg
 
 # todo
-* check test coverage & work to increase coverage - current: 86.76 |    61.51 |   65.07 |   89.68
+* check test coverage & work to increase coverage - current: 89.21 |    65.97 |   72.22 |   92.25
 * show yemot calls in a nice way, with all data & responses
 * add more unit tests to backend
 * add more unit testing to client side
