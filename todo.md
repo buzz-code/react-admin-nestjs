@@ -297,17 +297,19 @@ https://github.com/tinovyatkin/nest-puppeteer
 * show last grade and not grade avg
 
 # todo
-* check test coverage & work to increase coverage - current: 89.21 |    65.97 |   72.22 |   92.25
+* update react-admin version
+* update n8n version
 * show yemot calls in a nice way, with all data & responses
-* add more unit tests to backend
-* add more unit testing to client side
 * 
 
 # todo later
 ## infrastucture
+* fix local dev dockerfile
+* check test coverage & work to increase coverage - current: 89.21 |    65.97 |   72.22 |   92.25
+* add more unit tests to backend
+* add more unit testing to client side
 * check slow queries in kibana
 * update react-admin version
-* update n8n version
 * check docker security issues
 * add gzip to caddy
 * try to use winston logger, or set pino to show request time
