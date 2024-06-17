@@ -84,7 +84,7 @@ const gradeProperties: IReportProperty[] = [
         message: 'grade',
         field: 'grade',
         validate(req: YemotRequest) {
-            return req.params.grade > 0 && req.params.grade <= 100;
+            return req.params.grade > 0 && req.params.grade <= 1000;
         }
     }
 ]
