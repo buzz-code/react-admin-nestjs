@@ -19,7 +19,7 @@ import { EntitiesModule } from './entities.module';
   imports: [
     RequestContextModule,
     LoggerModule.forRoot(),
-    ThrottlerModule.forRoot({ ttl: 60, limit: 120 }),
+    ThrottlerModule.forRoot({ ttl: 5, limit: 200 }),
     TypeOrmModule.forRoot(typeOrmModuleConfig),
     MailSendModule,
     EntitiesModule,
@@ -29,10 +29,10 @@ import { EntitiesModule } from './entities.module';
   controllers: [AppController],
   providers: [
     AppService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ThrottlerGuard
-    // }
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
   ],
 })
 export class AppModule { }
