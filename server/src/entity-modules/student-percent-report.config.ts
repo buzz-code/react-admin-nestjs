@@ -11,7 +11,7 @@ import { GradeName } from "src/db/entities/GradeName.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
-import { getUniqueValues, groupDataByKeys } from "src/utils/reportData.util";
+import { calcSum, getUniqueValues, groupDataByKeys } from "src/utils/reportData.util";
 import { calcReportsData, getDisplayGrade, getUnknownAbsCount } from "src/utils/studentReportData.util";
 import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from "src/utils/studentReportData.util";
 import { DataSource, In } from "typeorm";
@@ -84,14 +84,10 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     .find({ where: getKnownAbsenceFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate) });
                 const totalAbsencesDataMap = groupDataByKeys(totalAbsencesData, ['studentReferenceId', 'klassReferenceId', 'lessonReferenceId', 'userId', 'year']);
 
-                console.log('temppp log: ' + JSON.stringify(totalAbsencesDataMap));
-                console.log('temppp log, spr keys: ' + JSON.stringify(Object.keys(sprMap)));
-
                 Object.entries(sprMap).forEach(([key, val]) => {
                     const reports = pivotDataMap[key] ?? [];
                     const knownAbsKey = [val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_');
                     const knownAbs = totalAbsencesDataMap[knownAbsKey] ?? [];
-                    console.log('temppp log: ' + JSON.stringify({ knownAbsKey, knownAbs }));
 
                     const { lessonsCount, absCount, attPercents, absPercents, gradeAvg, lastGrade } = calcReportsData(reports, knownAbs);
                     val.lessonsCount = lessonsCount;
@@ -99,6 +95,8 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     val.absPercents = absPercents;
                     val.attPercents = attPercents;
                     val.gradeAvg = extra?.lastGrade ? lastGrade : gradeAvg;
+
+                    val.approvedAbsCount = calcSum(knownAbs, item => item.absnceCount);
 
                     const gradeReports = reports.filter(item => item.type === 'grade');
                     val.estimation = getUniqueValues(gradeReports, item => item.estimation).join(', ');
