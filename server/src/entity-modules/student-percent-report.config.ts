@@ -71,6 +71,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
         const sprIds = data.map(item => item.id);
         const sprMap: Record<string, StudentPercentReportWithDates> = data.reduce((a, b) => ({ ...a, [b.id]: b }), {});
 
+
         switch (pivotName) {
             case 'PercentReportWithDates': {
                 const pivotData = await this.dataSource
@@ -83,13 +84,14 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     .find({ where: getKnownAbsenceFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate) });
                 const totalAbsencesDataMap = groupDataByKeys(totalAbsencesData, ['studentReferenceId', 'klassReferenceId', 'lessonReferenceId', 'userId', 'year']);
 
-                console.log('temppp log: ' + JSON.stringify(totalAbsencesData));
+                console.log('temppp log: ' + JSON.stringify(totalAbsencesDataMap));
                 console.log('temppp log, spr keys: ' + JSON.stringify(Object.keys(sprMap)));
 
                 Object.entries(sprMap).forEach(([key, val]) => {
                     const reports = pivotDataMap[key] ?? [];
                     const knownAbsKey = [val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_');
                     const knownAbs = totalAbsencesDataMap[knownAbsKey] ?? [];
+                    console.log('temppp log: ' + JSON.stringify({ knownAbsKey, knownAbs }));
 
                     const { lessonsCount, absCount, attPercents, absPercents, gradeAvg, lastGrade } = calcReportsData(reports, knownAbs);
                     val.lessonsCount = lessonsCount;
