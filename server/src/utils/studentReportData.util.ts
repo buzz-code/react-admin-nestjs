@@ -75,6 +75,7 @@ export function getReportsFilterForReportCard(studentId: number, year: number, r
 interface IStudentReportData {
     lessonsCount: number;
     absCount: number;
+    approvedAbsCount: number;
     attPercents: number;
     absPercents: number;
     gradeAvg: number;
@@ -93,6 +94,7 @@ export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: { 
     return {
         lessonsCount,
         absCount,
+        approvedAbsCount,
         attPercents,
         absPercents,
         gradeAvg,

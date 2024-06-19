@@ -89,14 +89,13 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     const knownAbsKey = [val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_');
                     const knownAbs = totalAbsencesDataMap[knownAbsKey] ?? [];
 
-                    const { lessonsCount, absCount, attPercents, absPercents, gradeAvg, lastGrade } = calcReportsData(reports, knownAbs);
+                    const { lessonsCount, absCount, approvedAbsCount, attPercents, absPercents, gradeAvg, lastGrade } = calcReportsData(reports, knownAbs);
                     val.lessonsCount = lessonsCount;
                     val.absCount = absCount;
+                    val.approvedAbsCount = approvedAbsCount;
                     val.absPercents = absPercents;
                     val.attPercents = attPercents;
                     val.gradeAvg = extra?.lastGrade ? lastGrade : gradeAvg;
-
-                    val.approvedAbsCount = calcSum(knownAbs, item => item.absnceCount);
 
                     const gradeReports = reports.filter(item => item.type === 'grade');
                     val.estimation = getUniqueValues(gradeReports, item => item.estimation).join(', ');
