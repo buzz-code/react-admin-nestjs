@@ -35,6 +35,7 @@ interface IStudentAttendancePivot extends StudentByYear {
     totalKnownAbsences?: number;
     unApprovedAbsences?: number;
     absencePercentage?: string;
+    totalAbsencePercentage?: string;
 }
 class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityService<T> {
     protected async populatePivotData(pivotName: string, list: T[], extra: any, filter: ParsedRequestParams<any>['filter']) {
@@ -115,6 +116,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     const totalLessons = student.totalLessons ?? 1;
                     student.unApprovedAbsences = unApprovedAbsences;
                     student.absencePercentage = formatPercent(unApprovedAbsences / totalLessons, 2);
+                    student.totalAbsencePercentage = formatPercent((student.total ?? 0) / totalLessons, 2);
 
                     roundObjectProperty(student, 'total');
                     roundObjectProperty(student, 'totalKnownAbsences');
@@ -141,6 +143,10 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                 headers['absencePercentage'] = {
                     value: 'absencePercentage',
                     label: 'אחוז חיסורים'
+                };
+                headers['totalAbsencePercentage'] = {
+                    value: 'totalAbsencePercentage',
+                    label: 'אחוז חיסורים כולל'
                 };
 
                 (data[0] as any).headers = Object.values(headers);
