@@ -114,19 +114,14 @@ export function getUnknownAbsCount(absCount: number, knownAbs: number) {
     return Math.max(0, (absCount ?? 0) - (knownAbs ?? 0));
 }
 
-export function getDisplayGrade(lessonsCount: number, absCount: number, grade: number, gradeNames: GradeName[], attGradeEffect: AttGradeEffect[]) {
-    let gradeEffect = 0;
-    if (lessonsCount) {
-        const attPercents = getAttPercents(lessonsCount, absCount);
-        gradeEffect = getGradeEffect(attGradeEffect, attPercents, absCount);
-    }
+export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNames: GradeName[] = []) {
     var finalGrade = getFinalGrade(grade * 100, gradeEffect);
     var matchingGradeName = getGradeName(gradeNames, finalGrade);
     var displayGrade = matchingGradeName ?? (Math.round(finalGrade) + '%');
     return displayGrade;
 }
 
-function getFinalGrade(grade: number, gradeEffect: any) {
+function getFinalGrade(grade: number, gradeEffect: number) {
     var isOriginalGrade = grade > 100 || grade == 0;
     var finalGrade = isOriginalGrade ? grade : keepBetween(grade + gradeEffect, 0, 100);
     return finalGrade;
@@ -136,6 +131,6 @@ function getGradeName(gradeNames: GradeName[], finalGrade: number) {
     return gradeNames?.find(item => item.key <= finalGrade)?.name || null;
 }
 
-function getGradeEffect(attGradeEffect: AttGradeEffect[], attPercents: number, absCount: number) {
+export function getGradeEffect(attGradeEffect: AttGradeEffect[], attPercents: number, absCount: number) {
     return attGradeEffect?.find(item => item.percents <= attPercents || item.count >= absCount)?.effect ?? 0;
 }

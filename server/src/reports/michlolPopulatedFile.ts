@@ -7,7 +7,7 @@ import { Student } from 'src/db/entities/Student.entity';
 import { groupDataByKeys, groupDataByKeysAndCalc } from 'src/utils/reportData.util';
 import { getCurrentHebrewYear } from '@shared/utils/entity/year.util';
 import { AttReportAndGrade } from 'src/db/view-entities/AttReportAndGrade.entity';
-import { calcReportsData, getDisplayGrade, getUnknownAbsCount } from 'src/utils/studentReportData.util';
+import { calcReportsData, getDisplayGrade, getGradeEffect, getUnknownAbsCount } from 'src/utils/studentReportData.util';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 
@@ -59,7 +59,8 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
             const { attPercents, absCount, approvedAbsCount, gradeAvg, lessonsCount, lastGrade } = calcReportsData(studentReports, studentKnownAbsences);
             // TODO add param here to use lastGrade or gradeAvg
             const unapprovedAbsCount = getUnknownAbsCount(absCount, approvedAbsCount);
-            const displayGrade = getDisplayGrade(lessonsCount, unapprovedAbsCount, lastGrade, [], attGradeEffect);
+            const gradeEffect = getGradeEffect(attGradeEffect, attPercents, unapprovedAbsCount);
+            const displayGrade = getDisplayGrade(lastGrade, gradeEffect);
             const finalGrade = parseInt(displayGrade.replace('%', ''));
 
             return {
