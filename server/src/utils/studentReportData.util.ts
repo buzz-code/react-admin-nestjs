@@ -115,6 +115,8 @@ export function getUnknownAbsCount(absCount: number, knownAbs: number) {
 }
 
 export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNames: GradeName[] = []) {
+    // if (grade === 0) return '0%';
+    if (!grade) return '';
     var finalGrade = getFinalGrade(grade * 100, gradeEffect);
     var matchingGradeName = getGradeName(gradeNames, finalGrade);
     var displayGrade = matchingGradeName ?? (Math.round(finalGrade) + '%');
