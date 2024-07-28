@@ -290,6 +290,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
                         <th style={thStyle}>שם המורה</th>
                         {reportParams.attendance && <th style={thStyle}>אחוז נוכחות</th>}
                         {reportParams.grades && <th style={thStyle}>ציון</th>}
+                        {reportParams.debug && <th style={thStyle}>פירוט</th>}
                     </tr>
 
                     {reportData.reports.map((item, index) => (
@@ -316,6 +317,11 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
     var unApprovedAbsCount = getUnknownAbsCount(report.absCount, report.approvedAbsCount);
     var gradeEffect = getGradeEffect(att_grade_effect, report.attPercents, unApprovedAbsCount);
     var displayGrade = getDisplayGrade(report.gradeAvg, gradeEffect, grade_names);
+    const debugDetails = `
+        חיסורים: ${report.absCount}, מאושרים: ${report.approvedAbsCount}, שיעורים: ${report.lessonsCount}
+        ציון: ${report.gradeAvg}, השפעה: ${gradeEffect}, ציון סופי: ${displayGrade}
+    `;
+
 
     return <tr>
         <td style={rightAlignFullCellStyle}>{report.lesson?.name}</td>
@@ -325,6 +331,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
             ? <>
                 {reportParams.attendance && <td style={fullCellStyle}>&nbsp;</td>}
                 <td style={fullCellStyle}>{Math.round(report.gradeAvg)}</td>
+                {reportParams.debug && <td style={fullCellStyle}>{debugDetails}</td>}
             </>
             : <>
                 {reportParams.attendance && <td style={fullCellStyle}>{report.attPercents * 100}%</td>}
@@ -336,6 +343,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
                         }
                     </td>
                 )}
+                {reportParams.debug && <td style={fullCellStyle}>{debugDetails}</td>}
             </>}
     </tr>;
 }
@@ -362,12 +370,14 @@ const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, repo
             <th style={thStyle}>&nbsp;</th>
             <th style={thStyle}>{attPercents}%</th>
             {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
+            {reportParams.debug && <th style={thStyle}>&nbsp;</th>}
         </tr>
         <tr>
             <th style={thStyle}>נוכחות בקיזוז חיסורים מאושרים</th>
             <th style={thStyle}>&nbsp;</th>
             <th style={thStyle}>{approvedAttPercents}%</th>
             {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
+            {reportParams.debug && <th style={thStyle}>&nbsp;</th>}
         </tr>
     </>
 }
@@ -389,6 +399,7 @@ export interface IReportParams {
     showStudentTz?: boolean;
     downComment?: boolean;
     lastGrade?: boolean;
+    debug?: boolean;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
     const reportDate = getReportDateFilter(dateFromString(params.startDate), dateFromString(params.endDate));

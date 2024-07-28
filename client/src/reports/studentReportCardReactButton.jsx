@@ -28,5 +28,6 @@ export default ({ defaultRequestValues }) => (
         <BooleanInput source="downComment" label="הצג הערה מתחת שם תלמידה" />
         <TextInput source="personalNote" label="הערה לתלמידה" defaultValue='' />
         <BooleanInput source="lastGrade" label="חשב ציון אחרון" defaultChecked />
+        <BooleanInput source="debug" label="הצג פירוט" defaultChecked />
     </BulkReportButton>
 );
