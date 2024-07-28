@@ -529,6 +529,7 @@ function groupReportsByKlass(reports: AppProps['reports'][number]['reports'], re
     }
 }
 
-export const getReportName = data => `תעודה לתלמידה ${data.student?.name} כיתה ${data.studentBaseKlass?.klassName}`;
+const getReportNameByDataItem = data => `תעודה לתלמידה ${data.student?.name} כיתה ${data.studentBaseKlass?.klassName}`;
+export const getReportName = data => Array.isArray(data) ? data.map(getReportNameByDataItem).join() : getReportNameByDataItem(data);
 
 export default new ReactToPdfReportGenerator(getReportName, getReportData, App);
