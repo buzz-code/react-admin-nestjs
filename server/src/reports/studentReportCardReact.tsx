@@ -320,7 +320,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
     const debugDetails = `
         חיסורים: ${report.absCount}, מאושרים: ${report.approvedAbsCount}, שיעורים: ${report.lessonsCount},
         אחוז נוכחות: ${report.attPercents} אחוז חיסור: ${report.absPercents},
-        ציון: ${report.gradeAvg * 100}, השפעה: ${gradeEffect}, ציון סופי: ${displayGrade}
+        ציון: ${report.gradeAvg ? report.gradeAvg * 100 : '-'}, השפעה: ${gradeEffect}, ציון סופי: ${displayGrade}
     `;
 
 
@@ -335,7 +335,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
                 {reportParams.debug && <td style={fullCellStyle}>{debugDetails}</td>}
             </>
             : <>
-                {reportParams.attendance && <td style={fullCellStyle}>{report.attPercents * 100}%</td>}
+                {reportParams.attendance && <td style={fullCellStyle}>{Math.round(report.attPercents * 100)}%</td>}
                 {reportParams.grades && (
                     <td style={fullCellStyle}>
                         {(report.gradeAvg != undefined && report.gradeAvg != null && report.gradeAvg > 0)
