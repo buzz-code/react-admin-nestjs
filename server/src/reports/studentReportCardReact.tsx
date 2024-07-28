@@ -319,7 +319,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
     var displayGrade = getDisplayGrade(report.gradeAvg, gradeEffect, grade_names);
     const debugDetails = `
         חיסורים: ${report.absCount}, מאושרים: ${report.approvedAbsCount}, שיעורים: ${report.lessonsCount},
-        אחוז נוכחות: ${report.attPercents} אחוז חיסור: ${report.absPercents},
+        אחוז נוכחות: ${Math.round(report.attPercents * 100)} אחוז חיסור: ${Math.round(report.absPercents * 100)},
         ציון: ${report.gradeAvg ? report.gradeAvg * 100 : '-'}, השפעה: ${gradeEffect}, ציון סופי: ${displayGrade}
     `;
 
