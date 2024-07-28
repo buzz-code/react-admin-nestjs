@@ -380,7 +380,7 @@ export default {
             name: 'קשר נוכחות ציון',
             fields: {
                 ...generalResourceFieldsTranslation,
-                percents: 'אחוז חיסור',
+                percents: 'אחוז נוכחות',
                 count: 'מספר חיסורים',
                 effect: 'השפעה',
             }

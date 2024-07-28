@@ -139,5 +139,6 @@ function getGradeName(gradeNames: GradeName[], finalGrade: number) {
 }
 
 export function getGradeEffect(attGradeEffect: AttGradeEffect[], attPercents: number, absCount: number) {
-    return attGradeEffect?.find(item => item.percents <= attPercents || item.count >= absCount)?.effect ?? 0;
+    const actualPercents = attPercents * 100;
+    return attGradeEffect?.find(item => item.percents <= actualPercents || item.count >= absCount)?.effect ?? 0;
 }
