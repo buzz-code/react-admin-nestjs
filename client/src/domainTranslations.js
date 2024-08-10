@@ -215,9 +215,13 @@ export default {
                 studentTz: 'תלמידה',
                 studentReferenceId: 'תלמידה',
                 klassReferenceId1: 'כיתת אם',
+                'klassReferenceId1:$cont': 'כיתת אם',
                 klassReferenceId2: 'מסלול',
+                'klassReferenceId2:$cont': 'מסלול',
                 klassReferenceId3: 'התמחות',
+                'klassReferenceId3:$cont': 'התמחות',
                 klassReferenceIdNull: 'אחר',
+                'klassReferenceIdNull:$cont': 'אחר',
             }
         },
         import_file: {

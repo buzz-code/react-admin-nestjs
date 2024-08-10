@@ -10,6 +10,10 @@ import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } fro
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={filterByUserId} />,
+    <CommonReferenceInputFilter source="klassReferenceId1:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
+    <CommonReferenceInputFilter source="klassReferenceId2:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
+    <CommonReferenceInputFilter source="klassReferenceId3:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
+    <CommonReferenceInputFilter source="klassReferenceIdNull:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
