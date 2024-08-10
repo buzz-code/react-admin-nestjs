@@ -18,6 +18,9 @@ function getConfig(): BaseEntityModuleOptions {
                 return [
                     { value: 'tz', label: 'תז' },
                     { value: 'name', label: 'שם' },
+                    { value: 'comment', label: 'הערה' },
+                    { value: 'phone', label: 'טלפון' },
+                    { value: 'year', label: 'כתובת' },
                 ];
             }
         },

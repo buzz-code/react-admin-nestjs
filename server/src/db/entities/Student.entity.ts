@@ -49,6 +49,18 @@ export class Student implements IHasUserId {
   @Column("varchar", { name: "comment", nullable: true, length: 1000 })
   comment: string;
 
+  @IsOptional({ always: true })
+  @StringType
+  @MaxLength(1000, { always: true })
+  @Column("varchar", { name: "phone", nullable: true, length: 1000 })
+  phone: string;
+
+  @IsOptional({ always: true })
+  @StringType
+  @MaxLength(1000, { always: true })
+  @Column("varchar", { name: "address", nullable: true, length: 1000 })
+  address: string;
+
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 

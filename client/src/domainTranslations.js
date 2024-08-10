@@ -140,6 +140,8 @@ export default {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
                 comment: 'הערה',
+                phone: 'טלפון',
+                address: 'כתובת',
             }
         },
         student_by_year: {

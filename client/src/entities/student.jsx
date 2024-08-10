@@ -34,6 +34,8 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="tz" />
             <TextField source="name" />
             <TextField source="comment" />
+            <TextField source="phone" />
+            <TextField source="address" />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -48,6 +50,8 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <TextInput source="tz" validate={[required(), maxLength(10), unique()]} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
         <TextInput source="comment" validate={[maxLength(1000)]} />
+        <TextInput source="phone" validate={[maxLength(1000)]} />
+        <TextInput source="address" validate={[maxLength(1000)]} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
         {!isCreate && <Labeled label="שיוך לכיתות">
@@ -64,7 +68,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['tz', 'name', 'comment'],
+    fields: ['tz', 'name', 'comment', 'phone', 'address'],
 }
 
 const entity = {
