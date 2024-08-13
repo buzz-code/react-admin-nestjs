@@ -20,6 +20,11 @@ import { Student } from "../entities/Student.entity";
     .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.speciality}', student_klasses.klassReferenceId, null) SEPARATOR ',')`, 'klassReferenceId_3')
     .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.other}' || klass_types.klassTypeEnum is null, student_klasses.klassReferenceId, null) SEPARATOR ',')`, 'klassReferenceId_null')
 
+    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', klasses.name, null) SEPARATOR ', ')`, 'klass_name_1')
+    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.track}', klasses.name, null) SEPARATOR ', ')`, 'klass_name_2')
+    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.speciality}', klasses.name, null) SEPARATOR ', ')`, 'klass_name_3')
+    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.other}' || klass_types.klassTypeEnum is null, klasses.name, null) SEPARATOR ', ')`, 'klass_name_null')
+
     .from(StudentKlass, 'student_klasses')
     .leftJoin(Klass, 'klasses', 'klasses.id = student_klasses.klassReferenceId')
     .leftJoin(KlassType, 'klass_types', 'klass_types.id = klasses.klassTypeReferenceId')
@@ -59,6 +64,21 @@ export class StudentKlassReport implements IHasUserId {
   @Column('simple-array', { name: 'klassReferenceId_null' })
   klassReferenceIdNull: string[];
 
+  @Column({ name: 'klass_name_1' })
+  klassName1: string;
+
+  @Column({ name: 'klass_name_2' })
+  klassName2: string;
+
+  @Column({ name: 'klass_name_3' })
+  klassName3: string;
+
+  @Column({ name: 'klass_name_null' })
+  klassNameNull: string;
+
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
   user: User;
+
+  @JoinColumn([{ name: "id", referencedColumnName: "id" }])
+  student: Student;
 }

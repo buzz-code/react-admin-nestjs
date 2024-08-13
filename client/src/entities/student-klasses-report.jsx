@@ -52,7 +52,6 @@ const entity = {
     Datagrid,
     filters,
     filterDefaultValues,
-    exporter: false,
 };
 
 export default getResourceComponents(entity);

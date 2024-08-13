@@ -18,6 +18,28 @@ function getConfig(): BaseEntityModuleOptions {
             },
         },
         service: StudentKlassReportService,
+        exporter: {
+            processReqForExport(req: CrudRequest, innerFunc) {
+                req.options.query.join = {
+                    student: { eager: true },
+                };
+                return innerFunc(req);
+            },
+            getExportHeaders() {
+                return [
+                    { value: 'student.tz', label: 'תז' },
+                    { value: 'student.name', label: 'שם' },
+                    { value: 'student.comment', label: 'הערה' },
+                    { value: 'student.phone', label: 'טלפון' },
+                    { value: 'student.year', label: 'כתובת' },
+                    { value: 'year', label: 'שנה' },
+                    { value: 'klassName1', label: 'כיתת אם' },
+                    { value: 'klassName2', label: 'מסלול' },
+                    { value: 'klassName3', label: 'התמחות' },
+                    { value: 'klassNameNull', label: 'אחר' },
+                ]
+            },
+        }
     }
 }
 
