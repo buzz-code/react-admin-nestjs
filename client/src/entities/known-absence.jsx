@@ -4,7 +4,8 @@ import { MultiReferenceField } from '@shared/components/fields/CommonReferenceFi
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { yearChoices } from '@shared/utils/yearFilter';
+import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
+import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -17,8 +18,13 @@ const filters = [
     <TextInput source="senderName:$cont" label="שולחת" />,
     <TextInput source="reason:$cont" label="סיבה" />,
     <TextInput source="comment:$cont" label="הערות" />,
-    <BooleanInput source="isApproved" />
+    <BooleanInput source="isApproved" />,
+    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
+
+const filterDefaultValues = {
+    ...defaultYearFilter,
+};
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
@@ -59,6 +65,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <TextInput source="reason" validate={maxLength(500)} />
         <TextInput source="comment" validate={maxLength(500)} />
         <BooleanInput source="isApproved" defaultValue={true} />
+        <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
@@ -73,6 +80,7 @@ const entity = {
     Inputs,
     filters,
     importer,
+    filterDefaultValues,
 };
 
 export default getResourceComponents(entity);

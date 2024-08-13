@@ -1,5 +1,5 @@
 import { TextInput, BooleanInput, DateInput } from 'react-admin';
-import { yearChoices } from '@shared/utils/yearFilter';
+import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
@@ -9,6 +9,7 @@ const defaultValues = {
     attendance: true,
     personalNote: '',
     showStudentTz: true,
+    ...defaultYearFilter,
 };
 export default ({ defaultRequestValues }) => (
     <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
