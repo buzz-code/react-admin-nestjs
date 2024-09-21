@@ -40,7 +40,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
 }
 
 const Inputs = ({ isCreate, isAdmin }) => {
-    const unique = useUnique();
+    const unique = useUnique({ dynamicFilter: { year: 'year' } });
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}

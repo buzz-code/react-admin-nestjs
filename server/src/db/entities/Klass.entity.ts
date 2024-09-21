@@ -53,7 +53,7 @@ export class Klass implements IHasUserId {
   @Column({ nullable: true })
   year: number;
 
-  @IsUniqueCombination(['userId'], [Klass, KlassType, User, Teacher], { always: true })
+  @IsUniqueCombination(['userId', 'year'], [Klass, KlassType, User, Teacher], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @NumberType
