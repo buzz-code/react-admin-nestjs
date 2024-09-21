@@ -29,7 +29,7 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
     const studentTzs = params.michlolFileData.slice(3).map(row => row['B']).filter(Boolean);
 
     const [lesson, students] = await Promise.all([
-        dataSource.getRepository(Lesson).findOne({ where: { userId: params.userId, key: Number(lessonKey) }, select: { id: true, key: true, name: true, userId: true } }),
+        dataSource.getRepository(Lesson).findOne({ where: { userId: params.userId, key: Number(lessonKey), year: getCurrentHebrewYear() }, select: { id: true, key: true, name: true, userId: true } }),
         dataSource.getRepository(Student).find({ where: { userId: params.userId, tz: In(studentTzs) }, select: { id: true, tz: true } }),
     ]);
 
