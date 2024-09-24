@@ -20,6 +20,7 @@ import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
+import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 
 @Index("klasses_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -31,6 +32,7 @@ export class Klass implements IHasUserId {
   async fillFields() {
     let dataSource: DataSource;
     try {
+      fillDefaultYearValue(this);
       dataSource = await getDataSource([KlassType, Teacher, User]);
 
       this.klassTypeReferenceId = await findOneAndAssignReferenceId(
