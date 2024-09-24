@@ -17,7 +17,7 @@ import { AttReportWithReportMonth } from "./AttReportWithReportMonth.entity";
     .addSelect('CASE WHEN COUNT(att_reports.id) > 0 THEN 1 ELSE 0 END', 'isReported')
     .from(Teacher, 'teachers')
     .innerJoin(Lesson, 'lessons', 'lessons.teacherReferenceId = teachers.id')
-    .leftJoin(ReportMonth, 'report_months', 'report_months.userId = teachers.user_id')
+    .leftJoin(ReportMonth, 'report_months', 'report_months.userId = teachers.user_id AND report_months.year = lessons.year')
     .leftJoin(AttReportWithReportMonth, 'att_reports', 'att_reports.teacherReferenceId = teachers.id AND att_reports.lessonReferenceId = lessons.id AND att_reports.reportMonthReferenceId = report_months.id')
     .where('COALESCE(lessons.start_date, report_months.endDate) <= report_months.endDate'
       + ' AND COALESCE(lessons.end_date, report_months.startDate) >= report_months.startDate')
