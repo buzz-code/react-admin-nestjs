@@ -5,13 +5,19 @@ import { getResourceComponents } from '@shared/components/crudContainers/CommonE
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
+import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <TextInput source="name:$cont" alwaysOn />,
     <DateInput source="startDate" />,
     <DateInput source="endDate" />,
+    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
+
+const filterDefaultValues = {
+    ...defaultYearFilter,
+};
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
@@ -23,6 +29,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <DateField source="startDate" />
             <DateField source="endDate" />
             <TextField source="semester" />
+            <SelectField source="year" choices={yearChoices} />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -40,6 +47,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <DateInput source="startDate" validate={required()} />
         <DateInput source="endDate" validate={required()} />
         <CommonAutocompleteInput source="semester" choices={semesterChoices} validate={required()} />
+        <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
@@ -48,7 +56,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['name', 'startDate', 'endDate'],
+    fields: ['name', 'startDate', 'endDate', 'semester', 'year'],
 }
 
 const entity = {
@@ -56,6 +64,7 @@ const entity = {
     Inputs,
     Representation,
     filters,
+    filterDefaultValues,
     importer,
 };
 

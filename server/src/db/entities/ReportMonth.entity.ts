@@ -1,6 +1,8 @@
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsOptional } from "class-validator";
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -10,6 +12,7 @@ import {
 } from "typeorm";
 import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { DateType, StringType } from "@shared/utils/entity/class-transformer";
+import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 
 
 export enum ReportMonthSemester {
@@ -19,8 +22,16 @@ export enum ReportMonthSemester {
 }
 
 @Index("report_month_user_id_start_date_end_date_idx", ["userId", "startDate", "endDate"], {})
+@Index("report_month_user_id_year_idx", ["userId", "year"], { unique: true })
+@Index("report_month_user_id_start_date_end_date_year_idx", ["userId", "startDate", "endDate", "year"], { unique: true })
 @Entity()
 export class ReportMonth {
+  @BeforeInsert()
+  @BeforeUpdate()
+  async fillFields() {
+    fillDefaultYearValue(this);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -52,6 +63,9 @@ export class ReportMonth {
   @MaxLength(255, { always: true })
   @Column({ default: ReportMonthSemester.fullYear })
   semester: ReportMonthSemester;
+
+  @Column({ nullable: true })
+  year: number;
 
   @CreateDateColumn()
   createdAt: Date;
