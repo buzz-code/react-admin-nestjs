@@ -22,8 +22,8 @@ export enum ReportMonthSemester {
 }
 
 @Index("report_month_user_id_start_date_end_date_idx", ["userId", "startDate", "endDate"], {})
-@Index("report_month_user_id_year_idx", ["userId", "year"], { unique: true })
-@Index("report_month_user_id_start_date_end_date_year_idx", ["userId", "startDate", "endDate", "year"], { unique: true })
+@Index("report_month_user_id_year_idx", ["userId", "year"], {})
+@Index("report_month_user_id_start_date_end_date_year_idx", ["userId", "startDate", "endDate", "year"], {})
 @Entity()
 export class ReportMonth {
   @BeforeInsert()

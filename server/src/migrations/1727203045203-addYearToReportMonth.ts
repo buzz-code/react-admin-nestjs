@@ -10,10 +10,10 @@ export class addYearToReportMonth1727203045203 implements MigrationInterface {
                 ADD \`year\` int NULL
             `);
             await queryRunner.query(`
-                CREATE UNIQUE INDEX \`report_month_user_id_start_date_end_date_year_idx\` ON \`report_month\` (\`userId\`, \`startDate\`, \`endDate\`, \`year\`)
+                CREATE INDEX \`report_month_user_id_start_date_end_date_year_idx\` ON \`report_month\` (\`userId\`, \`startDate\`, \`endDate\`, \`year\`)
             `);
             await queryRunner.query(`
-                CREATE UNIQUE INDEX \`report_month_user_id_year_idx\` ON \`report_month\` (\`userId\`, \`year\`)
+                CREATE INDEX \`report_month_user_id_year_idx\` ON \`report_month\` (\`userId\`, \`year\`)
             `);
         } catch (e) {
             console.log('error while running migration', e)
