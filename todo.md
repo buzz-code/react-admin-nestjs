@@ -297,13 +297,14 @@ https://github.com/tinovyatkin/nest-puppeteer
 * show last grade and not grade avg
 
 # todo
-* update react-admin version
-* update n8n version
-* show yemot calls in a nice way, with all data & responses
+* add bulk action on audit log table to revert changes
+* add klass type column & filter to teacher sales report
 * 
 
 # todo later
 ## infrastucture
+* update react-admin version
+* update n8n version
 * fix local dev dockerfile
 * check test coverage & work to increase coverage - current: 89.21 |    65.97 |   72.22 |   92.25
 * add more unit tests to backend
@@ -320,6 +321,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 ## bug fix
 * check why cannot view pdf with some jpg image, probably new version of jpg - see image in troubleshoot folder, this is related to pdf-lib package
 ## new features
+* show yemot calls in a nice way, with all data & responses
 * update in lesson report to have multiple lessons
 * re-structure student percents report - think how to do it with dates filter
 * save dashboard items in a table, and enable for users to edit them
