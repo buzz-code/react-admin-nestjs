@@ -254,6 +254,7 @@ export default {
                 entityName: 'טבלה',
                 operation: 'פעולה',
                 entityData: 'המידע שהשתנה',
+                isReverted: 'שוחזר',
             }
         },
         recieved_mail: {
