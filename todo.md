@@ -295,9 +295,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make each menu icon unique
 * finish auth service unit tests
 * show last grade and not grade avg
+* add bulk action on audit log table to revert changes
 
 # todo
-* add bulk action on audit log table to revert changes
 * add klass type column & filter to teacher sales report
 * 
 
