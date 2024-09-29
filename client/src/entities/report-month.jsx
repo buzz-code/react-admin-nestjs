@@ -9,6 +9,10 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" label="נוצר אחרי" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" label="נוצר לפני" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" label="עודכן אחרי" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" label="עודכן לפני" />,
     <TextInput source="name:$cont" alwaysOn />,
     <DateInput source="startDate" />,
     <DateInput source="endDate" />,

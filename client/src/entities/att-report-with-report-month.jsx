@@ -11,6 +11,10 @@ import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDat
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" label="נוצר אחרי" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" label="נוצר לפני" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" label="עודכן אחרי" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" label="עודכן לפני" />,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,

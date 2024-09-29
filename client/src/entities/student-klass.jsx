@@ -10,6 +10,10 @@ import StudentReportCardReactButton from 'src/reports/studentReportCardReactButt
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" label="נוצר אחרי" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" label="נוצר לפני" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" label="עודכן אחרי" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" label="עודכן לפני" />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,

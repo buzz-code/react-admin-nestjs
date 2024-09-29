@@ -11,6 +11,10 @@ import { useUnique } from '@shared/utils/useUnique';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" label="נוצר אחרי" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" label="נוצר לפני" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" label="עודכן אחרי" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" label="עודכן לפני" />,
     <NumberInput source="key" />,
     <TextInput source="name:$cont" alwaysOn />,
     <CommonReferenceInputFilter source="klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
