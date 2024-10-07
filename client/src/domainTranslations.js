@@ -200,6 +200,9 @@ export default {
                 mailAddressTitle: 'שם כתובת המייל',
                 bccAddress: 'כתובת מייל לשליחת עותק',
                 paymentTrackId: 'תוכנית',
+                'additionalData.trialEndDate': 'תאריך חובת תשלום',
+                'additionalData.customTrialMessage': 'הודעה מקדימה חובת תשלום',
+                'additionalData.customTrialEndedMessage': 'הודעת סיום חובת תשלום',
             }
         },
         yemot_call: {
