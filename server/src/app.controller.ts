@@ -5,6 +5,7 @@ import { JwtAuthGuard } from '@shared/auth/jwt-auth.guard';
 import { LocalAuthGuard } from '@shared/auth/local-auth.guard';
 import { Response } from 'express';
 import { LocalRegisterAuthGuard } from '@shared/auth/local-register-auth.guard';
+import { getUserIdFromUser } from '@shared/auth/auth.util';
 
 @Controller()
 export class AppController {
@@ -39,8 +40,13 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async getProfile(@Request() req) {
+    const userId = getUserIdFromUser(req.user);
+    if (!userId) {
+      return req.user;
+    }
+    const user = await this.authService.getProfile(userId);
+    return Object.assign({}, req.user, user);
   }
 
   @UseGuards(JwtAuthGuard)
