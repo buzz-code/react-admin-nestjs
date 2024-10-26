@@ -296,9 +296,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * finish auth service unit tests
 * show last grade and not grade avg
 * add bulk action on audit log table to revert changes
+* add klass type filter to teacher salary report
 
 # todo
-* add klass type column & filter to teacher sales report
 * 
 
 # todo later
