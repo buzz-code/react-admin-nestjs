@@ -376,6 +376,7 @@ export default {
                 teacherReferenceId: 'מורה',
                 lessonReferenceId: 'שיעור',
                 klassReferenceId: 'כיתה',
+                'klass.klassTypeReferenceId': 'שיוך כיתה',
                 reportMonthReferenceId: 'תקופת דיווח',
                 howManyLessons: 'מספר שיעורים',
             }
