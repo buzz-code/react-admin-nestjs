@@ -26,6 +26,7 @@ describe('AppController', () => {
             }),
             getCookieForLogOut: jest.fn().mockResolvedValue('Authentication=; HttpOnly; Path=/; Max-Age=0; SameSite=true'),
             registerUser: jest.fn().mockRejectedValue(new UnauthorizedException()),
+            getProfile: jest.fn().mockResolvedValue({}),
           }
         },
       ],
@@ -109,13 +110,13 @@ describe('AppController', () => {
       });
 
       // The 'getProfile' method returns the user's profile information
-      it('should return the user\'s profile information when calling getProfile method', () => {
+      it('should return the user\'s profile information when calling getProfile method', async () => {
         // Arrange
         const req = { user: { id: 1, email: 'test@example.com', name: 'Test User' } };
         const expectedProfile = { id: 1, email: 'test@example.com', name: 'Test User' };
 
         // Act
-        const profile = appController.getProfile(req);
+        const profile = await appController.getProfile(req);
 
         // Assert
         expect(profile).toEqual(expectedProfile);
