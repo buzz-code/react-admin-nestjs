@@ -10,6 +10,7 @@ import { Lesson } from 'src/db/entities/Lesson.entity';
 import { ReportMonth } from 'src/db/entities/ReportMonth.entity';
 import { FindOptionsWhere, In, IsNull, Not } from 'typeorm';
 import * as ExcelJS from 'exceljs';
+import { ISpecialField } from '@shared/utils/importer/types';
 
 
 export interface TeacherReportFileParams {
@@ -107,6 +108,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
             { cell: { c: 2, r: 1 }, value: lesson.key.toString() },
             { cell: { c: 3, r: 1 }, value: 'מספר שיעורים:' },
             { cell: { c: 4, r: 1 }, value: '', style: formulaStyle, dataValidation: { type: 'whole', operator: 'between', formulae: [1, 99] } },
+            ...getNumbricCells(lessonStudents[lesson.id].length, dataCols.length),
         ],
         user,
         teacher,
@@ -114,6 +116,21 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
         teacherReportStatus,
         reportMonth,
     }));
+}
+
+const getNumbricCells = (rowCount: number, colCount: number): ISpecialField[] => {
+    const cells = [];
+    for (let r = 3; r < rowCount; r++) {
+        for (let c = 3; c < colCount; c++) {
+            cells.push({ r, c });
+        }
+    }
+    return cells
+        .map(cell => ({
+            cell,
+            value: '',
+            dataValidation: { type: 'whole', operator: 'between', formulae: [0, 999] }
+        }));
 }
 
 const getReportName = (data: TeacherReportFileData) => `${data.fileTitle} למורה ${data.teacher?.name} לשיעור ${data.lesson?.name} - ${data.reportMonth?.name}`;
