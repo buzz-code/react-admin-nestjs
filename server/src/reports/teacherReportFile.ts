@@ -9,6 +9,7 @@ import { Teacher } from 'src/db/entities/Teacher.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
 import { ReportMonth } from 'src/db/entities/ReportMonth.entity';
 import { FindOptionsWhere, In, IsNull, Not } from 'typeorm';
+import * as ExcelJS from 'exceljs';
 
 
 export interface TeacherReportFileParams {
@@ -86,6 +87,8 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
     const commentCols = params.isGrades ? ['התנהגות א/ב/ג', 'צניעות א/ב/ג'] : ['הערות'];
     const headerRow = ['קוד כיתה', 'ת.ז.', 'שם תלמידה', ...dataCols, ...commentCols];
 
+    const formulaStyle: Partial<ExcelJS.Style> = { fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: '00C0C0C0' } } };
+
     return lessons.map(lesson => ({
         fileTitle: params.isGrades ? 'קובץ ציונים' : 'קובץ נוכחות',
         headerRow,
@@ -98,10 +101,12 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
             { cell: { c: 1, r: 0 }, value: teacher.name },
             { cell: { c: 2, r: 0 }, value: teacher.tz },
             { cell: { c: 3, r: 0 }, value: 'תאריך: (ניתן להשאיר ריק)' },
+            { cell: { c: 4, r: 0 }, value: '', style: formulaStyle, dataValidation: { type: 'date', allowBlank: true, formulae: [] } },
             { cell: { c: 0, r: 1 }, value: 'שיעור:' },
             { cell: { c: 1, r: 1 }, value: lesson.name },
             { cell: { c: 2, r: 1 }, value: lesson.key.toString() },
             { cell: { c: 3, r: 1 }, value: 'מספר שיעורים:' },
+            { cell: { c: 4, r: 1 }, value: '', style: formulaStyle, dataValidation: { type: 'whole', operator: 'between', formulae: [1, 99] } },
         ],
         user,
         teacher,
