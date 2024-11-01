@@ -22,7 +22,7 @@ import { KlassType } from "./KlassType.entity";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 import { IsOptional, ValidateIf } from "class-validator";
-import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsDate, IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { CrudValidationGroups } from "@dataui/crud";
 import { StudentBaseKlass } from "../view-entities/StudentBaseKlass.entity";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
@@ -117,7 +117,9 @@ export class Grade implements IHasUserId {
 
   @Column("date", { name: "report_date" })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @DateType
+  @IsDate({ always: true })
   @Index("grades_report_date_idx")
   reportDate: Date;
 

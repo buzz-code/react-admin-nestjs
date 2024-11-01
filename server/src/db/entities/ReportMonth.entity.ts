@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsDate, IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { DateType, StringType } from "@shared/utils/entity/class-transformer";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 
@@ -47,14 +47,18 @@ export class ReportMonth {
   name: string;
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @Column()
   @DateType
+  @IsDate({ always: true })
   @Index("report_month_start_date_idx")
   startDate: Date;
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @Column()
   @DateType
+  @IsDate({ always: true })
   @Index("report_month_end_date_idx")
   endDate: Date;
 

@@ -17,7 +17,7 @@ import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity
 import { Student } from "./Student.entity";
 import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsDate, IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 import { Klass } from "./Klass.entity";
@@ -98,8 +98,10 @@ export class KnownAbsence implements IHasUserId {
   lessonReferenceId: number;
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @Column("date", { name: "report_date" })
   @DateType
+  @IsDate({ always: true })
   reportDate: Date;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
