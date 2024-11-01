@@ -22,7 +22,7 @@ import { User } from "./User.entity";
 import { KlassType } from "./KlassType.entity";
 import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsDateString } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
@@ -121,7 +121,10 @@ export class AttReport implements IHasUserId {
 
   @Column("date", { name: "report_date" })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @DateType
+  @IsDate({ always: true })
+  // @IsDateString({}, { always: true })
   @Index("att_reports_report_date_idx")
   reportDate: Date;
 
