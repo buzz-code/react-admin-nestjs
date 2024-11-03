@@ -1,4 +1,4 @@
-import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, required, maxLength, SelectField } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, required, minValue, maxLength, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -66,7 +66,7 @@ export const Inputs = ({ isCreate, isAdmin }) => {
         <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserIdAndYear} />
         <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} dynamicFilter={filterByUserIdAndYear} />
         <DateInput source="reportDate" validate={required()} />
-        <NumberInput source="howManyLessons" defaultValue={1} />
+        <NumberInput source="howManyLessons" defaultValue={1} validate={minValue(1)} />
         <NumberInput source="absCount" defaultValue={0} />
         {/* <NumberInput source="approvedAbsCount" defaultValue={0} /> */}
         <TextInput source="comments" validate={maxLength(500)} />

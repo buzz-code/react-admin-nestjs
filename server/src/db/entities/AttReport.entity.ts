@@ -22,7 +22,7 @@ import { User } from "./User.entity";
 import { KlassType } from "./KlassType.entity";
 import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, IsNumber, MaxLength, IsDate } from "@shared/utils/validation/class-validator-he";
+import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsPositive } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
@@ -130,6 +130,7 @@ export class AttReport implements IHasUserId {
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
+  @IsPositive({ always: true })
   @Column("float", { name: "how_many_lessons", nullable: true })
   howManyLessons: number | null;
 
