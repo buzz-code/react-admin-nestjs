@@ -210,9 +210,11 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 phone: 'מאת',
+                'phone:$cont': 'מאת',
                 currentStep: 'שלב נוכחי',
                 hasError: 'שגיאה?',
                 errorMessage: 'הודעת שגיאה',
+                'errorMessage:$cont': 'הודעת שגיאה',
                 history: 'שלבים',
                 data: 'נתונים',
                 isOpen: 'פעיל?',

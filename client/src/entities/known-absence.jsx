@@ -9,10 +9,10 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" label="נוצר אחרי" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" label="נוצר לפני" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" label="עודכן אחרי" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" label="עודכן לפני" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" />,
+    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserId} />,
