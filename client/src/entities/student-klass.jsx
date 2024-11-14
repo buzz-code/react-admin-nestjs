@@ -1,4 +1,4 @@
-import { DateField, DateTimeInput, ReferenceField, required, TextField, TextInput, SelectField } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, ReferenceField, required, TextField, TextInput, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
