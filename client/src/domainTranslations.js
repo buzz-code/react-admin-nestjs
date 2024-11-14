@@ -207,11 +207,17 @@ export default {
         },
         yemot_call: {
             name: 'שיחה |||| שיחות',
-        },
-        'yemot': {
-            ApiCallId: 'מזהה שיחה',
-            ApiDID: 'מספר מערכת',
-            ApiPhone: 'מספר טלפון שמתקשר',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                phone: 'מאת',
+                currentStep: 'שלב נוכחי',
+                hasError: 'שגיאה?',
+                errorMessage: 'הודעת שגיאה',
+                history: 'שלבים',
+                data: 'נתונים',
+                isOpen: 'פעיל?',
+                apiCallId: 'מזהה שיחה (ימות)',
+            },
         },
         student_klass_report: {
             name: 'דוח שיוך תלמידה',
