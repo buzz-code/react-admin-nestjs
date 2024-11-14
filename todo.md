@@ -316,10 +316,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * try to use winston logger, or set pino to show request time
 * make sure db backup is saving only 7
 * delete old docker logs
-## code refactor
-* change to typescript on client side
-## bug fix
-* check why cannot view pdf with some jpg image, probably new version of jpg - see image in troubleshoot folder, this is related to pdf-lib package
 ## new features
 * show yemot calls in a nice way, with all data & responses
 * update in lesson report to have multiple lessons
@@ -332,3 +328,5 @@ https://github.com/tinovyatkin/nest-puppeteer
 * if teacher doesn't have email - she will get a phone call - see knowledge file
 * add settings & profile page
 * add ability to edit report templates
+## bug fix
+* check why cannot view pdf with some jpg image, probably new version of jpg - see image in troubleshoot folder, this is related to pdf-lib package
