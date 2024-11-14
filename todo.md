@@ -297,6 +297,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * show last grade and not grade avg
 * add bulk action on audit log table to revert changes
 * add klass type filter to teacher salary report
+* show yemot calls in a nice way, with all data & responses
 
 # todo
 * 
@@ -317,7 +318,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make sure db backup is saving only 7
 * delete old docker logs
 ## new features
-* show yemot calls in a nice way, with all data & responses
 * update in lesson report to have multiple lessons
 * re-structure student percents report - think how to do it with dates filter
 * save dashboard items in a table, and enable for users to edit them
