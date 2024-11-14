@@ -1,4 +1,4 @@
-FROM node:16-alpine as development
+FROM node:18-alpine as development
 
 RUN apk add git
 
@@ -14,7 +14,7 @@ WORKDIR /app
 CMD ["yarn", "start"]
 
 
-FROM node:16-alpine AS builder
+FROM node:18-alpine AS builder
 
 RUN apk add git
 

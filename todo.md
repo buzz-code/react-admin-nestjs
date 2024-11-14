@@ -298,13 +298,13 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add bulk action on audit log table to revert changes
 * add klass type filter to teacher salary report
 * show yemot calls in a nice way, with all data & responses
+* update react-admin version to v5
 
 # todo
 * 
 
 # todo later
 ## infrastucture
-* update react-admin version
 * update n8n version
 * fix local dev dockerfile
 * check test coverage & work to increase coverage - current: 89.21 |    65.97 |   72.22 |   92.25

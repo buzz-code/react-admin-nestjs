@@ -19,7 +19,7 @@
     "ra-input-rich-text": "^4.10.1",
     "ra-language-hebrew-il": "^3.9.6",
     "react": "^18.2.0",
-    "react-admin": "^4.16.17",
+    "react-admin": "^5.3.3",
     "react-admin-json-view": "^2.0.0",
     "react-dom": "^18.2.0",
     "stylis": "^4.1.3",

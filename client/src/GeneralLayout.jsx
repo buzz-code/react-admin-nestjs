@@ -46,12 +46,14 @@ const menuGroups = [
     { name: 'admin', icon: <AdminPanelSettingsIcon /> },
 ];
 
-export const Layout = (props) => (
-    <BaseLayout {...props} customMenuItems={customMenuItems} menuGroups={menuGroups} />
+export const Layout = ({ children }) => (
+    <BaseLayout customMenuItems={customMenuItems} menuGroups={menuGroups}>
+        {children}
+    </BaseLayout>
 );
 
 const dashboardItems = [
-    { resource: 'att_report', icon: ListIcon, filter: defaultYearFilter },
+    { resource: 'att_report_with_report_month', icon: ListIcon, filter: defaultYearFilter },
     { resource: 'student_by_year', icon: ListIcon, filter: { 'year:$cont': defaultYearFilter.year } },
 ];
 
