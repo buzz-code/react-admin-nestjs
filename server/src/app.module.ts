@@ -13,12 +13,12 @@ import { YemotModule } from '@shared/utils/yemot/yemot.module';
 import yemotChain from './yemot/yemot.chain';
 import { MailSendModule } from '@shared/utils/mail/mail-send.module';
 import { EntitiesModule } from './entities.module';
-
+import { getPinoConfig } from '@shared/config/pino.config';
 
 @Module({
   imports: [
     RequestContextModule,
-    LoggerModule.forRoot(),
+    LoggerModule.forRoot(getPinoConfig(process.env.NODE_ENV === 'development')),
     ThrottlerModule.forRoot({ ttl: 5, limit: 200 }),
     TypeOrmModule.forRoot(typeOrmModuleConfig),
     MailSendModule,

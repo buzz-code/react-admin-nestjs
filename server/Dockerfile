@@ -5,6 +5,7 @@ RUN apk add --no-cache \
     ttf-freefont \
     chromium
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV NODE_ENV development
 
 WORKDIR /app
 
