@@ -10,6 +10,7 @@ import { AttReportAndGrade } from 'src/db/view-entities/AttReportAndGrade.entity
 import { calcReportsData, getDisplayGrade, getGradeEffect, getUnknownAbsCount } from 'src/utils/studentReportData.util';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
+import { BadRequestException } from '@nestjs/common';
 
 export interface MichlolPopulatedFileParams {
     userId: number;
@@ -25,11 +26,15 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
     const extension = path.extname(params.michlolFileName);
     const filename = path.basename(params.michlolFileName, extension);
 
-    const lessonKey = params.michlolFileData[0]['D'].replace(/\s/g, '');
+    const lessonKey = Number(params.michlolFileData[0]['D'].replace(/\s/g, ''));
     const studentTzs = params.michlolFileData.slice(3).map(row => row['B']).filter(Boolean);
 
+    if (isNaN(lessonKey)) {
+        throw new BadRequestException("קוד שיעור לא תקין");
+    }
+
     const [lesson, students] = await Promise.all([
-        dataSource.getRepository(Lesson).findOne({ where: { userId: params.userId, key: Number(lessonKey), year: getCurrentHebrewYear() }, select: { id: true, key: true, name: true, userId: true } }),
+        dataSource.getRepository(Lesson).findOne({ where: { userId: params.userId, key: lessonKey, year: getCurrentHebrewYear() }, select: { id: true, key: true, name: true, userId: true } }),
         dataSource.getRepository(Student).find({ where: { userId: params.userId, tz: In(studentTzs) }, select: { id: true, tz: true } }),
     ]);
 
@@ -89,7 +94,7 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
 
     return {
         lesson: lesson ?? {
-            key: Number(lessonKey),
+            key: lessonKey,
             name: params.michlolFileData[0]['C'],
         },
         filename,
