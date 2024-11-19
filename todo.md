@@ -299,6 +299,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add klass type filter to teacher salary report
 * show yemot calls in a nice way, with all data & responses
 * update react-admin version to v5
+* add new 'comment' column to teachers table, and show it in teacher report table
 
 # todo
 * 

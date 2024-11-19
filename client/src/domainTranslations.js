@@ -306,6 +306,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 teacherReferenceId: 'מורה',
+                teacherComment: 'הערת מורה',
                 reportMonthReferenceId: 'תקופת דיווח',
                 reportedLessons: 'שיעורים שדווחו',
                 notReportedLessons: 'שיעורים שלא דווחו',
@@ -316,6 +317,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 teacherReferenceId: 'מורה',
+                teacherComment: 'הערת מורה',
                 reportMonthReferenceId: 'תקופת דיווח',
                 reportedLessons: 'שיעורים שדווחו',
                 notReportedLessons: 'שיעורים שלא דווחו',

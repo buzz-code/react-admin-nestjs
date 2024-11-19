@@ -44,6 +44,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <ReferenceField source="teacherReferenceId" reference="teacher" sortBy='teacherName' />
+            <TextField source="teacherComment" />
             <ReferenceField source="reportMonthReferenceId" reference="report_month" sortBy='reportMonthName' />
             <SelectField source="year" choices={yearChoices} />
             <ReferenceArrayField source="reportedLessons" reference="lesson" sortBy="reportedLessonNames" />

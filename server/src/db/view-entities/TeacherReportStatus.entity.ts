@@ -12,6 +12,7 @@ import { TeacherLessonReportStatus } from "./TeacherLessonReportStatus.entity";
     .addSelect('tlrs.userId', 'userId')
     .addSelect('tlrs.teacherId', 'teacherId')
     .addSelect('teacher.name', 'teacherName')
+    .addSelect('teacher.comment', 'teacherComment')
     .addSelect('tlrs.reportMonthId', 'reportMonthId')
     .addSelect('tlrs.year', 'year')
     .addSelect('rm.name', 'reportMonthName')
@@ -45,6 +46,9 @@ export class TeacherReportStatus implements IHasUserId {
 
   @ViewColumn()
   teacherName: string;
+
+  @ViewColumn()
+  teacherComment: string;
 
   @ViewColumn({ name: 'reportMonthId' })
   reportMonthReferenceId: number;
