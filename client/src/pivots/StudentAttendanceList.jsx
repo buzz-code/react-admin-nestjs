@@ -23,7 +23,7 @@ const filters = [
 ];
 
 const filterDefaultValues = {
-    ...defaultYearFilter,
+    'year:$cont': defaultYearFilter.year,
     extra: {
         isCheckKlassType: true,
     },
