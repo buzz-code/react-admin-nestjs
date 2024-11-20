@@ -79,6 +79,6 @@ export class StudentPercentReport implements IHasUserId {
   klass: Klass;
 
   @ManyToOne(() => StudentBaseKlass, { createForeignKeyConstraints: false })
-  @JoinColumn({ name: 'studentReferenceId', referencedColumnName: 'id' })
+  @JoinColumn([{ name: 'studentReferenceId', referencedColumnName: 'id' }, { name: 'year', referencedColumnName: 'year' }])
   studentBaseKlass: StudentBaseKlass;
 }

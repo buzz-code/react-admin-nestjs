@@ -169,7 +169,7 @@ export class AttReport implements IHasUserId {
   student: Student;
 
   @ManyToOne(() => StudentBaseKlass, { createForeignKeyConstraints: false })
-  @JoinColumn({ name: 'studentReferenceId', referencedColumnName: 'id' })
+  @JoinColumn([{ name: 'studentReferenceId', referencedColumnName: 'id' }, { name: 'year', referencedColumnName: 'year' }])
   studentBaseKlass: StudentBaseKlass;
 
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
