@@ -1,4 +1,5 @@
-import { DateField, DateInput, NumberField, TextField, TextInput, ReferenceField, SelectField } from 'react-admin';
+import { DateField, DateInput, NumberField, TextField, TextInput, ReferenceField, SelectField, required, NumberInput, BooleanInput, maxLength } from 'react-admin';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -8,6 +9,7 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { Inputs } from './att-report';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
+import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -31,11 +33,21 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
-// const recordRowClick = (id, resource, record) => `/att_report/${id}/edit`;
+const additionalBulkButtons = [
+    <BulkActionButton label='הוספת חיסורים מאושרים' icon={<PlaylistRemoveIcon />} name='bulkKnownAbsences' >
+        <DateInput source="reportDate" resource="known_absence" validate={required()} />
+        <NumberInput source="absnceCount" resource="known_absence" validate={required()} defaultValue={1} />
+        <NumberInput source="absnceCode" resource="known_absence" />
+        <TextInput source="senderName" resource="known_absence" validate={maxLength(100)} defaultValue='' />
+        <TextInput source="reason" resource="known_absence" validate={maxLength(500)} defaultValue='' />
+        <TextInput source="comment" resource="known_absence" validate={maxLength(500)} defaultValue='' />
+        <BooleanInput source="isApproved" resource="known_absence" defaultValue={true} />
+    </BulkActionButton>,
+];
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
-        <CommonDatagrid {...props}>
+        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}

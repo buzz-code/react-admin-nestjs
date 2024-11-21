@@ -1,7 +1,12 @@
 import { CrudRequest } from "@dataui/crud";
-import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
+import { In } from "typeorm";
+import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
 import { AttReportWithReportMonth } from "src/db/view-entities/AttReportWithReportMonth.entity";
+import { BaseEntityService } from "@shared/base-entity/base-entity.service";
+import { AttReport } from "src/db/entities/AttReport.entity";
+import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
+import { validateBulk } from "@shared/base-entity/base-entity.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -44,7 +49,40 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'comments', label: 'הערות' },
                 ];
             }
+        },
+        service: AttReportWithReportMonthService,
+    }
+}
+
+
+class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMonth> extends BaseEntityService<T> {
+    async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
+        switch (req.parsed.extra.action) {
+            case 'bulkKnownAbsences': {
+                const ids = req.parsed.extra.ids.toString().split(',');
+                const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
+
+                const knownAbsences: Array<Partial<KnownAbsence>> = reports.map(report => ({
+                    userId: report.userId,
+                    studentReferenceId: report.studentReferenceId,
+                    klassReferenceId: report.klassReferenceId,
+                    lessonReferenceId: report.lessonReferenceId,
+                    reportDate: req.parsed.extra.reportDate,
+                    absnceCount: req.parsed.extra.absnceCount,
+                    absnceCode: req.parsed.extra.absnceCode,
+                    senderName: req.parsed.extra.senderName,
+                    reason: req.parsed.extra.reason,
+                    comment: req.parsed.extra.comment,
+                    isApproved: req.parsed.extra.isApproved,
+                    year: report.year,
+                }))
+                await validateBulk<T>(knownAbsences, KnownAbsence);
+                await this.dataSource.getRepository(KnownAbsence).insert(knownAbsences);
+
+                return `נוצרו ${reports.length} חיסורים מאושרים`;
+            }
         }
+        return super.doAction(req, body);
     }
 }
 
