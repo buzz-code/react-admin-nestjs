@@ -52,7 +52,7 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @Post('auth/impersonate')
   async impersonate(@Request() req, @Res() response: Response) {
-    if (!req.user.permissions.admin) {
+    if (!req.user.permissions.admin || !req.body.userId) {
       console.log('impersonate non authorized')
       throw new UnauthorizedException();
     }
