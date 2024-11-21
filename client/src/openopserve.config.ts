@@ -6,7 +6,7 @@ const options = {
     applicationId: 'demo-yoman-online',
     site: 'api.openobserve.ai',
     service: 'frontend',
-    env: 'production',
+    env: location.href.includes('dev') ? 'development' : 'production',
     version: packageJson.version,
     organizationIdentifier: 'hadasa_organization_50794_yN95E6myGED9AWO',
     insecureHTTP: false,
