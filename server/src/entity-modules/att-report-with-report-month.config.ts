@@ -7,6 +7,7 @@ import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { AttReport } from "src/db/entities/AttReport.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { validateBulk } from "@shared/base-entity/base-entity.util";
+import { fixReferences } from "@shared/utils/entity/fixReference.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -80,6 +81,15 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
                 await this.dataSource.getRepository(KnownAbsence).insert(knownAbsences);
 
                 return `נוצרו ${reports.length} חיסורים מאושרים`;
+            }
+            case 'fixReferences': {
+                const ids = req.parsed.extra.ids.toString().split(',');
+                const referenceFields = {
+                    studentTz: 'studentReferenceId',
+                    klassId: 'klassReferenceId',
+                    lessonId: 'lessonReferenceId',
+                };
+                return fixReferences(this.dataSource.getRepository(AttReport), ids, referenceFields);
             }
         }
         return super.doAction(req, body);

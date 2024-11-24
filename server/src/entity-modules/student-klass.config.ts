@@ -10,6 +10,7 @@ import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { generateStudentReportCard } from "src/reports/reportGenerator";
 import studentReportCard from "src/reports/studentReportCard";
 import studentReportCardReact from "src/reports/studentReportCardReact";
+import { fixReferences } from "@shared/utils/entity/fixReference.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -60,21 +61,13 @@ class StudentKlassService<T extends Entity | StudentKlass> extends BaseEntitySer
 
     async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
         switch (req.parsed.extra.action) {
-            case 'fixStudentReference': {
+            case 'fixReferences': {
                 const ids = req.parsed.extra.ids.toString().split(',');
-                const data = await this.dataSource.getRepository(StudentKlass).findBy({ id: In(ids) });
-                for (const item of data) {
-                    if (item.studentTz) {
-                        item.studentReferenceId = null;
-                    }
-                    if (item.klassId) {
-                        item.klassReferenceId = null;
-                    }
-                    await item.fillFields();
-                }
-                await this.dataSource.getRepository(StudentKlass).save(data);
-
-                return `תוקנו ${data.length} רשומות`;
+                const referenceFields = {
+                    studentTz: 'studentReferenceId',
+                    klassId: 'klassReferenceId',
+                };
+                return fixReferences(this.dataSource.getRepository(StudentKlass), ids, referenceFields);
             }
         }
         return super.doAction(req, body);

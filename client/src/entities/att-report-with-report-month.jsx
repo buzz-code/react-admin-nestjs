@@ -10,6 +10,7 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { Inputs } from './att-report';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
+import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -43,6 +44,7 @@ const additionalBulkButtons = [
         <TextInput source="comment" resource="known_absence" validate={maxLength(500)} defaultValue='' />
         <BooleanInput source="isApproved" resource="known_absence" defaultValue={true} />
     </BulkActionButton>,
+    <BulkFixReferenceButton key='fixReferences' />,
 ];
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {

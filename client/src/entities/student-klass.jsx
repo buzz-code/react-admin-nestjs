@@ -7,8 +7,7 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
-import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
-import HelpIcon from '@mui/icons-material/Help';
+import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -27,7 +26,7 @@ const filterDefaultValues = {
 
 const additionalBulkButtons = [
     <StudentReportCardReactButton key='studentReportCardReact' defaultRequestValues={filterDefaultValues} />,
-    <BulkActionButton label='תיקון שיוך תלמידה' icon={<HelpIcon />} name='fixStudentReference' />,
+    <BulkFixReferenceButton key='fixReferences' />,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
