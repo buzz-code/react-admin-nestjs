@@ -1,4 +1,4 @@
-import { BooleanField, BooleanInput, DateField, DateInput, DateTimeInput, maxLength, NumberField, NumberInput, ReferenceField, required, SelectField, TextField, TextInput } from 'react-admin';
+import { BooleanField, BooleanInput, DateField, DateInput, DateTimeInput, maxLength, NullableBooleanInput, NumberField, NumberInput, ReferenceField, required, SelectField, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -22,7 +22,7 @@ const filters = [
     <TextInput source="senderName:$cont" label="שולחת" />,
     <TextInput source="reason:$cont" label="סיבה" />,
     <TextInput source="comment:$cont" label="הערות" />,
-    <BooleanInput source="isApproved" />,
+    <NullableBooleanInput source="isApproved" />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
