@@ -33,7 +33,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
     const { data } = useListContext();
 
     return (
-        <CommonDatagrid pivot {...props}>
+        <CommonDatagrid {...props}>
             {children}
             {isAdmin && <TextField key="id" source="id" />}
             {isAdmin && <ReferenceField key="userId" source="userId" reference="user" />}
@@ -50,6 +50,7 @@ const entity = {
     Datagrid,
     filters,
     filterDefaultValues,
+    configurable: false,
 }
 
 export default getResourceComponents(entity).list;
