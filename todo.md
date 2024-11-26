@@ -315,7 +315,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update react-admin version
 * check docker security issues
 * add gzip to caddy
-* try to use winston logger, or set pino to show request time
 * make sure db backup is saving only 7
 * delete old docker logs
 ## new features
