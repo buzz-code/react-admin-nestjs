@@ -24,6 +24,7 @@ import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from "@shared/ut
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { cleanDateFields } from "@shared/utils/entity/deafultValues.util";
 import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
+import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -114,4 +115,8 @@ export class Lesson implements IHasUserId {
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'teacherReferenceId' })
   teacher: Teacher;
+
+  @ManyToOne(() => LessonKlassName, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'id', referencedColumnName: 'id' })
+  lessonKlassName: LessonKlassName;
 }

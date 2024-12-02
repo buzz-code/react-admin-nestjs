@@ -11,7 +11,7 @@ import { KlassType, KlassTypeEnum } from "../entities/KlassType.entity";
     .select('studentReferenceId', 'id')
     .addSelect('student_klasses.user_id', 'user_id')
     .addSelect('student_klasses.year', 'year')
-    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', klasses.name, null) SEPARATOR ', ')`, 'base_klass')
+    .addSelect(`GROUP_CONCAT(DISTINCT if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', klasses.name, null) SEPARATOR ', ')`, 'base_klass')
     .from(StudentKlass, 'student_klasses')
     .leftJoin(Klass, 'klasses', 'klasses.id = student_klasses.klassReferenceId')
     .leftJoin(KlassType, 'klass_types', 'klass_types.id = klasses.klassTypeReferenceId')
