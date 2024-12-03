@@ -39,7 +39,7 @@ export class Lesson implements IHasUserId {
 
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([Teacher, Klass, KlassType, User]);
+      dataSource = await getDataSource([Teacher, Klass, KlassType, User, LessonKlassName]);
 
       const klassesArray = (typeof this.klasses === 'string' && this.klasses.includes(',')) ? this.klasses.split(',') : [this.klasses];
       this.klassReferenceIds = await findManyAndAssignReferenceIds(
