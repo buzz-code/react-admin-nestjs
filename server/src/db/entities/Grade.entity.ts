@@ -26,6 +26,7 @@ import { IsDate, IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validatio
 import { CrudValidationGroups } from "@dataui/crud";
 import { StudentBaseKlass } from "../view-entities/StudentBaseKlass.entity";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
+import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 
 @Index("grades_users_idx", ["userId"], {})
 @Index("grades_user_lesson_klass_year_idx", ["userId", "lessonReferenceId", "klassReferenceId", "year"], {})
@@ -39,7 +40,7 @@ export class Grade implements IHasUserId {
 
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
+      dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType, LessonKlassName]);
 
       this.studentReferenceId = await findOneAndAssignReferenceId(
         dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz

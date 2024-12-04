@@ -26,6 +26,7 @@ import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsPositive } from "@shared/uti
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
+import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 
 @Index("att_users_idx", ["userId"], {})
 @Index("att_user_sheet_name_lession_klass_year_idx", ["userId", "sheetName", "lessonReferenceId", "klassReferenceId", "year"], {})
@@ -43,7 +44,7 @@ export class AttReport implements IHasUserId {
 
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType]);
+      dataSource = await getDataSource([Student, Teacher, Klass, Lesson, User, KlassType, LessonKlassName]);
 
       this.studentReferenceId = await findOneAndAssignReferenceId(
         dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz

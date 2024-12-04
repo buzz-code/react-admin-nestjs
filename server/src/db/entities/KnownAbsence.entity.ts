@@ -25,6 +25,7 @@ import { Lesson } from "./Lesson.entity";
 import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
+import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 
 @Index("known_users_idx", ["userId"], {})
 @Index(['studentReferenceId', 'year'])
@@ -38,7 +39,7 @@ export class KnownAbsence implements IHasUserId {
 
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([Student, User, Klass, KlassType, Lesson, Teacher]);
+      dataSource = await getDataSource([Student, User, Klass, KlassType, Lesson, Teacher, LessonKlassName]);
 
       this.studentReferenceId = await findOneAndAssignReferenceId(
         dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
