@@ -88,7 +88,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
     const commentCols = params.isGrades ? ['התנהגות א/ב/ג', 'צניעות א/ב/ג'] : ['הערות'];
     const headerRow = ['קוד כיתה', 'ת.ז.', 'שם תלמידה', ...dataCols, ...commentCols];
 
-    const formulaStyle: Partial<ExcelJS.Style> = { fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: '00C0C0C0' } } };
+    const formulaStyle: Partial<ExcelJS.Style> = { fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: 'FF90EE90' } } };
 
     return lessons.map(lesson => ({
         fileTitle: params.isGrades ? 'קובץ ציונים' : 'קובץ נוכחות',
