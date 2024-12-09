@@ -153,8 +153,8 @@ const App = () => (
               <Route path="/tutorial" element={<Tutorial />} />
               <Route path="/pages-view" element={<PageList />} />
               <Route path="/scanner-upload" element={<ScannerUpload />} />
-              <Route path="/in-lesson-report-att" element={<InLessonReport />} />
-              <Route path="/in-lesson-report-grade" element={<InLessonReport gradeMode />} />
+              <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
+              <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
               <Route path="/roadmap" element={<Roadmap features={roadmapFeatures} />} />
               <Route path="/michlol-file-helper" element={<MichlolFileHelper />} />
             </CustomRoutes>
