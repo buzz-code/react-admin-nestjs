@@ -300,6 +300,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * show yemot calls in a nice way, with all data & responses
 * update react-admin version to v5
 * add new 'comment' column to teachers table, and show it in teacher report table
+* add ablity to insert multiple report dates on in-lesson-report
 
 # todo
 * 
