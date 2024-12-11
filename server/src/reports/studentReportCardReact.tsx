@@ -390,6 +390,7 @@ export interface IReportParams {
     startDate?: string;
     endDate?: string;
     globalLessonReferenceIds?: string;
+    denyLessonReferenceIds?: string;
     attendance: boolean;
     grades: boolean;
     personalNote?: string;
@@ -408,7 +409,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
     const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, knownAbsences] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
-        dataSource.getRepository(AttReportAndGrade).find({ where: getReportsFilterForReportCard(params.studentId, params.year, reportDate, params.globalLessonReferenceIds), order: { reportDate: 'ASC' } }),
+        dataSource.getRepository(AttReportAndGrade).find({ where: getReportsFilterForReportCard(params.studentId, params.year, reportDate, params.globalLessonReferenceIds, params.denyLessonReferenceIds), order: { reportDate: 'ASC' } }),
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportLogo }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportBottomLogo }),

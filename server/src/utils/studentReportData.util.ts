@@ -1,6 +1,6 @@
 import { calcAvg, calcPercents, calcSum, getNumericValueOrNull, keepBetween, roundFractional } from "src/utils/reportData.util";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
-import { FindOptionsWhere, FindOperator, In } from "typeorm";
+import { FindOptionsWhere, FindOperator, In, Not, Any } from "typeorm";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { AttGradeEffect } from "src/db/entities/AttGradeEffect";
@@ -54,8 +54,10 @@ export function getKnownAbsenceFilterBySprAndDates(ids: string[], startDate: Dat
     });
 }
 
-export function getReportsFilterForReportCard(studentId: number, year: number, reportDateFilter: FindOperator<any>, globalLessonIdsStr: string): FindOptionsWhere<AttReportAndGrade>[] {
-    const commonFilter = { studentReferenceId: studentId, year };
+export function getReportsFilterForReportCard(studentId: number, year: number, reportDateFilter: FindOperator<any>, globalLessonIdsStr: string, denyLessonIdStr: string): FindOptionsWhere<AttReportAndGrade>[] {
+    const denyLessonIds = denyLessonIdStr.split(',').filter(item => item != 'undefined');
+    const lessonFilter: FindOperator<number> = denyLessonIds.length ? Not(In(denyLessonIds)) : undefined;
+    const commonFilter = { studentReferenceId: studentId, year, lessonReferenceId: lessonFilter };
     const globalLessonIds = globalLessonIdsStr.split(',').filter(item => item != 'undefined');
 
     if (reportDateFilter && globalLessonIds.length) {

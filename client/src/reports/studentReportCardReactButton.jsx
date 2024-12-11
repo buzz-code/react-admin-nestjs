@@ -19,6 +19,7 @@ export default ({ defaultRequestValues }) => (
         <DateInput source="startDate" label="תאריך התחלה" />
         <DateInput source="endDate" label="תאריך סיום" />
         <CommonReferenceArrayInput source="globalLessonReferenceIds" reference="lesson" label="שיעורים ללא הגבלת תאריך" />
+        <CommonReferenceArrayInput source="denyLessonReferenceIds" reference="lesson" label="שיעורים שלא ייכללו בתעודה" />
         <BooleanInput source="groupByKlass" label="קבץ לפי כיתה" />
         <BooleanInput source="hideAbsTotal" label="הסתר סיכום כללי" />
         <BooleanInput source="attendance" label="הצג נוכחות" defaultChecked />
