@@ -22,6 +22,7 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
         personalNote: reqExtra.personalNote,
         groupByKlass: reqExtra.groupByKlass,
         hideAbsTotal: reqExtra.hideAbsTotal,
+        minimalReport: reqExtra.minimalReport,
         forceGrades: reqExtra.forceGrades,
         forceAtt: reqExtra.forceAtt,
         showStudentTz: reqExtra.showStudentTz,

@@ -22,6 +22,7 @@ export default ({ defaultRequestValues }) => (
         <CommonReferenceArrayInput source="denyLessonReferenceIds" reference="lesson" label="שיעורים שלא ייכללו בתעודה" />
         <BooleanInput source="groupByKlass" label="קבץ לפי כיתה" />
         <BooleanInput source="hideAbsTotal" label="הסתר סיכום כללי" />
+        <BooleanInput source="minimalReport" label="הצג רק סיכום כללי" />
         <BooleanInput source="attendance" label="הצג נוכחות" defaultChecked />
         <BooleanInput source="forceAtt" label="הצג רק שורות שכוללות נוכחות" />
         <BooleanInput source="grades" label="הצג ציונים" />

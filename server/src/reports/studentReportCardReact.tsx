@@ -293,7 +293,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
                         {reportParams.debug && <th style={thStyle}>פירוט</th>}
                     </tr>
 
-                    {reportData.reports.map((item, index) => (
+                    {!reportParams.minimalReport && reportData.reports.map((item, index) => (
                         <ReportItem key={index} reportParams={reportParams} report={item}
                             att_grade_effect={att_grade_effect} grade_names={grade_names} />
                     ))}
@@ -396,6 +396,7 @@ export interface IReportParams {
     personalNote?: string;
     groupByKlass?: boolean;
     hideAbsTotal?: boolean;
+    minimalReport?: boolean;
     forceGrades?: boolean;
     forceAtt?: boolean;
     showStudentTz?: boolean;
