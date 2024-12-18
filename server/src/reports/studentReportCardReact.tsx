@@ -326,7 +326,9 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
 
     return <tr>
         <td style={rightAlignFullCellStyle}>{report.lesson?.name}</td>
-        <td style={fullCellStyle}>{report.teacher?.name}</td>
+        <td style={fullCellStyle}>
+            {report.teacher?.displayName || report.teacher?.name}
+        </td>
 
         {report.isSpecial
             ? <>

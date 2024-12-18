@@ -69,6 +69,12 @@ export class Teacher implements IHasUserId {
   @Column("varchar", { name: "comment", nullable: true, length: 1000 })
   comment: string;
 
+  @IsOptional({ always: true })
+  @StringType
+  @MaxLength(500, { always: true })
+  @Column("varchar", { name: "displayName", nullable: true, length: 500 })
+  displayName: string;
+
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 

@@ -160,6 +160,7 @@ export default {
                 phone: 'טלפון',
                 phone2: 'טלפון 2',
                 email: 'כתובת מייל',
+                displayName: 'שם לתעודה'
             }
         },
         text: {

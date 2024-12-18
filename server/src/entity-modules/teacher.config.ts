@@ -13,6 +13,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'phone', label: 'טלפון' },
                     { value: 'phone2', label: 'טלפון 2' },
                     { value: 'email', label: 'כתובת מייל' },
+                    { value: 'displayName', label: 'שם לתצוגה' },
                 ];
             }
         },
