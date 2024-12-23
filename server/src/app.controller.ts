@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, UnauthorizedException, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, UnauthorizedException, Post, Request, Res, UseGuards, Body } from '@nestjs/common';
 import { AppService } from 'src/app.service';
 import { AuthService } from '@shared/auth/auth.service';
 import { JwtAuthGuard } from '@shared/auth/jwt-auth.guard';
@@ -67,6 +67,13 @@ export class AppController {
     const cookie = await this.authService.getCookieForLogOut(req.user);
     response.setHeader('Set-Cookie', cookie);
     return response.sendStatus(200);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('settings')
+  async updateSettings(@Request() req, @Body() data: any) {
+    const userId = getUserIdFromUser(req.user);
+    return this.authService.updateSettings(userId, data);
   }
 
   @Get()

@@ -27,6 +27,7 @@ describe('AppController', () => {
             getCookieForLogOut: jest.fn().mockResolvedValue('Authentication=; HttpOnly; Path=/; Max-Age=0; SameSite=true'),
             registerUser: jest.fn().mockRejectedValue(new UnauthorizedException()),
             getProfile: jest.fn().mockResolvedValue({}),
+            updateSettings: jest.fn().mockResolvedValue({}),
           }
         },
       ],
@@ -194,6 +195,17 @@ describe('AppController', () => {
         expect(responseMock.sendStatus).toHaveBeenCalledWith(200);
       });
 
+      it('should update user settings', async () => {
+        // Arrange
+        const req = { user: { id: 1 } };
+        const data = { key: 'value' };
+
+        // Act
+        await appController.updateSettings(req, data);
+
+        // Assert
+        expect(authService.updateSettings).toHaveBeenCalledWith(1, data);
+      });
     });
 
   });

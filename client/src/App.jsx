@@ -31,6 +31,7 @@ import teacherSalaryReport from "src/entities/teacher-salary-report";
 import studentPercentReport from "src/entities/student-percent-report";
 import gradeName from "src/entities/grade-name";
 import attGradeEffect from './entities/att-grade-effect';
+import Settings from 'src/Settings';
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
 import PercentReportWithDatesList from 'src/pivots/PercentReportWithDatesList';
@@ -163,10 +164,9 @@ const App = () => (
               <Route path="/register" element={<RegisterPage />} />
             </CustomRoutes>
 
-            {/* {!isAdmin(permissions) && <CustomRoutes>
+            {!isAdmin(permissions) && <CustomRoutes>
               <Route path="/settings" element={<Settings />} />
-              <Route path="/profile" element={<Profile />} />
-            </CustomRoutes>} */}
+            </CustomRoutes>}
           </>
         )}
       </Admin>

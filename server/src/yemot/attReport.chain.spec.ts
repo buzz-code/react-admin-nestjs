@@ -304,7 +304,7 @@ describe("attReport chain", () => {
                 lessonReferenceId: req.params.lesson.data.id,
                 reportDate: new Date(),
             };
-            req.params.students = [{ tz: '111111111' }, { tz: '222222222' }];
+            req.params.students = [{ tz: '111111111' }, { tz: '222222222' }, { tz: '333333333' }];
             chain.handlers.length = 6;
             req.saveReport = jest.fn();
             req.deleteExistingReports = jest.fn();
