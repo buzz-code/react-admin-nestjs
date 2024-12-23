@@ -1,8 +1,12 @@
 import React from 'react';
 import { Card, CardContent } from '@mui/material';
-import { SimpleForm, TextInput, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider } from 'react-admin';
+import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { getDefaultPageSize } from '@shared/utils/settingsUtil';
+import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { PAGE_SIZE_OPTIONS } from '@shared/config/settings';
+
+const pageSizeOptions = PAGE_SIZE_OPTIONS.map(option => ({ id: option, name: option }));
 
 const SettingsToolbar = () => (
     <Toolbar>
@@ -42,10 +46,12 @@ export default function Settings() {
                     defaultValues={defaultValues}
                     toolbar={<SettingsToolbar />}
                 >
-                    <TextInput
+                    <CommonAutocompleteInput
                         source="defaultPageSize"
                         label="מספר שורות בטבלה"
+                        choices={pageSizeOptions}
                         fullWidth
+                        disableClearable
                     />
                 </SimpleForm>
             </CardContent>
