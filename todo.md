@@ -301,6 +301,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update react-admin version to v5
 * add new 'comment' column to teachers table, and show it in teacher report table
 * add ablity to insert multiple report dates on in-lesson-report
+* add settings page
 
 # todo
 * 
@@ -327,7 +328,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add user image to export pdf file
 * add option to self connect to yemot phone
 * if teacher doesn't have email - she will get a phone call - see knowledge file
-* add settings & profile page
 * add ability to edit report templates
 ## bug fix
 * check why cannot view pdf with some jpg image, probably new version of jpg - see image in troubleshoot folder, this is related to pdf-lib package
