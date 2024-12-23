@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, CardContent } from '@mui/material';
-import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider } from 'react-admin';
+import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider, NumberInput } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
-import { getDefaultPageSize } from '@shared/utils/settingsUtil';
+import { getDefaultPageSize, getLateValue } from '@shared/utils/settingsUtil';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { PAGE_SIZE_OPTIONS } from '@shared/config/settings';
 
@@ -23,6 +23,7 @@ export default function Settings() {
 
     const defaultValues = {
         defaultPageSize: getDefaultPageSize(identity),
+        lateValue: getLateValue(identity),
     };
 
     const handleSave = async (values) => {
@@ -53,6 +54,7 @@ export default function Settings() {
                         fullWidth
                         disableClearable
                     />
+                    <NumberInput source="lateValue" label="ערך לאיחור" fullWidth />
                 </SimpleForm>
             </CardContent>
         </Card>
