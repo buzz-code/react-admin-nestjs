@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, CardContent } from '@mui/material';
-import { SimpleForm, TextInput, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar } from 'react-admin';
+import { SimpleForm, TextInput, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider } from 'react-admin';
+import { useNavigate } from 'react-router-dom';
+import { getDefaultPageSize } from '@shared/utils/settingsUtil';
 
 const SettingsToolbar = () => (
     <Toolbar>
@@ -10,17 +12,22 @@ const SettingsToolbar = () => (
 
 export default function Settings() {
     const notify = useNotify();
+    const navigate = useNavigate();
     const { identity } = useGetIdentity();
     const dataProvider = useDataProvider();
+    const authProvider = useAuthProvider();
 
     const defaultValues = {
-        defaultPageSize: identity?.additionalData?.defaultPageSize || '',
+        defaultPageSize: getDefaultPageSize(identity),
     };
 
     const handleSave = async (values) => {
         try {
             await dataProvider.updateSettings({ data: values });
+            await authProvider.getIdentity(true);
             notify('ההגדרות נשמרו בהצלחה', { type: 'info' });
+            navigate('/');
+            window.location.reload();
         } catch (e) {
             notify('שמירה נכשלה', { type: 'error' });
         }
@@ -37,7 +44,7 @@ export default function Settings() {
                 >
                     <TextInput
                         source="defaultPageSize"
-                        label="גודל עמוד ברירת מחדל"
+                        label="מספר שורות בטבלה"
                         fullWidth
                     />
                 </SimpleForm>
