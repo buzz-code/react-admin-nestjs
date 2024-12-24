@@ -1,3 +1,4 @@
+import { User } from "@shared/entities/User.entity";
 import { Chain, HandlerBase } from "@shared/utils/yemot/chain.interface";
 import { ReportType, YemotRequest, YemotResponse } from "@shared/utils/yemot/yemot.interface";
 import { AttReport } from "src/db/entities/AttReport.entity";
@@ -159,7 +160,7 @@ class GetParamsDataHandler extends HandlerBase {
     }
 }
 class SaveAndGoToNextStudent extends HandlerBase {
-    constructor(private properties: IReportProperty[], private reportType: ReportType, private beforeSave?: (report: AttReport | Grade) => void) {
+    constructor(private properties: IReportProperty[], private reportType: ReportType, private beforeSave?: (report: AttReport | Grade, user: User) => void) {
         super();
     }
 
@@ -177,8 +178,9 @@ class SaveAndGoToNextStudent extends HandlerBase {
         for (const prop of this.properties) {
             report[prop.field] = req.params[prop.name];
         }
-        
-        this.beforeSave?.(report);
+
+        const user = await req.getUser();
+        this.beforeSave?.(report, user);
         await req.saveReport(report, this.reportType);
 
         req.params.studentIndex++;
@@ -199,7 +201,7 @@ function clearStudentData(req: YemotRequest, properties: IReportProperty[]) {
 class IterateStudentsHandler extends HandlerBase {
     studentChain: Chain;
 
-    constructor(private properties: IReportProperty[], private reportType: ReportType, beforeSave?: (report: AttReport | Grade) => void) {
+    constructor(private properties: IReportProperty[], private reportType: ReportType, beforeSave?: (report: AttReport | Grade, user: User) => void) {
         super();
         this.studentChain = new Chain('iterate students', [
             new GetParamsDataHandler(properties),
@@ -226,7 +228,7 @@ class IterateStudentsHandler extends HandlerBase {
 }
 
 
-export default function getReportChain(getExistingReports: GetExistingReportsFunction, reportType: ReportType, properties: IReportProperty[], beforeSave?: (report: AttReport | Grade) => void) {
+export default function getReportChain(getExistingReports: GetExistingReportsFunction, reportType: ReportType, properties: IReportProperty[], beforeSave?: (report: AttReport | Grade, user: User) => void) {
     return new Chain('get report chain', [
         new GetSheetNameHandler(),
         new GetExistingReportsHandler(getExistingReports),

@@ -27,7 +27,8 @@ describe("attReport chain", () => {
                 lesson: { data: { id: "lesson123" } },
                 isCurrentMonth: "1",
             },
-        } as YemotRequest;
+            getUser: jest.fn(),
+        } as unknown as YemotRequest;
 
         res = new YemotResponseMock();
         jest.spyOn(res, 'send');
