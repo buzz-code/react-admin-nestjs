@@ -54,7 +54,7 @@ export default function Settings() {
                         fullWidth
                         disableClearable
                     />
-                    <NumberInput source="lateValue" label="ערך לאיחור" fullWidth />
+                    <NumberInput source="lateValue" label="שווי איחור" fullWidth />
                 </SimpleForm>
             </CardContent>
         </Card>
