@@ -20,10 +20,10 @@ import { User } from "./User.entity";
 import { findManyAndAssignReferenceIds, findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsDate, IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { cleanDateFields } from "@shared/utils/entity/deafultValues.util";
-import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
+import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 
 @Index("lessons_users_idx", ["userId"], {})
@@ -95,9 +95,17 @@ export class Lesson implements IHasUserId {
   teacherReferenceId: number;
 
   @Column("date", { name: "start_date", nullable: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @DateType
+  @IsDate({ always: true })
   startDate: string | null;
 
   @Column("date", { name: "end_date", nullable: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @DateType
+  @IsDate({ always: true })
   endDate: string | null;
 
   @IsOptional({ always: true })
