@@ -128,6 +128,7 @@ const App = () => (
             <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
             <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
 
+            
             {isAdmin(permissions) && <>
               <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
               <Resource name="text" {...text} options={{ menuGroup: 'admin' }} />
