@@ -6,6 +6,7 @@ import { LocalAuthGuard } from '@shared/auth/local-auth.guard';
 import { Response } from 'express';
 import { LocalRegisterAuthGuard } from '@shared/auth/local-register-auth.guard';
 import { getUserIdFromUser } from '@shared/auth/auth.util';
+import { AuthenticatedRequest } from '@shared/auth/auth.types';
 
 @Controller()
 export class AppController {
@@ -16,7 +17,7 @@ export class AppController {
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   @HttpCode(200)
-  async login(@Request() req, @Res() response: Response) {
+  async login(@Request() req: AuthenticatedRequest, @Res() response: Response) {
     const cookie = await this.authService.getCookieWithJwtToken(req.user);
     response.setHeader('Set-Cookie', cookie);
     return response.send({ success: true });
@@ -25,7 +26,7 @@ export class AppController {
   @UseGuards(LocalRegisterAuthGuard)
   @Post('auth/register')
   @HttpCode(200)
-  async register(@Request() req, @Res() response: Response) {
+  async register(@Request() req: AuthenticatedRequest, @Res() response: Response) {
     const cookie = await this.authService.getCookieWithJwtToken(req.user);
     response.setHeader('Set-Cookie', cookie);
     return response.send({ success: true });
@@ -40,7 +41,7 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Request() req) {
+  async getProfile(@Request() req: AuthenticatedRequest) {
     const userId = getUserIdFromUser(req.user);
     if (!userId) {
       return req.user;
@@ -51,7 +52,7 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Post('auth/impersonate')
-  async impersonate(@Request() req, @Res() response: Response) {
+  async impersonate(@Request() req: AuthenticatedRequest, @Res() response: Response) {
     if (!req.user.permissions.admin || !req.body.userId) {
       console.log('impersonate non authorized')
       throw new UnauthorizedException();
@@ -63,7 +64,7 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Post('auth/unimpersonate')
-  async unimpersonate(@Request() req, @Res() response: Response) {
+  async unimpersonate(@Request() req: Express.AuthenticatedRequest, @Res() response: Response) {
     const cookie = await this.authService.getCookieForLogOut(req.user);
     response.setHeader('Set-Cookie', cookie);
     return response.sendStatus(200);
@@ -71,7 +72,7 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Post('settings')
-  async updateSettings(@Request() req, @Body() data: any) {
+  async updateSettings(@Request() req: AuthenticatedRequest, @Body() data: any) {
     const userId = getUserIdFromUser(req.user);
     return this.authService.updateSettings(userId, data);
   }
