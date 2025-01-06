@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { IsDate, IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsDate, IsNotEmpty, IsUniqueDateRange, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { DateType, StringType } from "@shared/utils/entity/class-transformer";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 
@@ -51,6 +51,7 @@ export class ReportMonth {
   @Column()
   @DateType
   @IsDate({ always: true })
+  @IsUniqueDateRange("startDate", "endDate", [ReportMonth], { always: true })
   @Index("report_month_start_date_idx")
   startDate: Date;
 
@@ -59,6 +60,7 @@ export class ReportMonth {
   @Column()
   @DateType
   @IsDate({ always: true })
+  @IsUniqueDateRange("startDate", "endDate", [ReportMonth], { always: true })
   @Index("report_month_end_date_idx")
   endDate: Date;
 
