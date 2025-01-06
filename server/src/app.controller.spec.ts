@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { AuthService } from '@shared/auth/auth.service';
 import { Response } from 'express';
 import { UnauthorizedException } from '@nestjs/common';
+import { AuthenticatedRequest } from '@shared/auth/auth.types';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -53,7 +54,7 @@ describe('AppController', () => {
 
       // The 'login' method logs in a user and returns a success message
       it('should log in a user and return a success message when calling login method', async () => {
-        const req = { user: { email: 'test@example.com' } };
+        const req = { user: { email: 'test@example.com' } } as unknown as AuthenticatedRequest;
         const res = { setHeader: jest.fn(), send: jest.fn() } as unknown as Response;
 
         await appController.login(req, res);
@@ -65,7 +66,7 @@ describe('AppController', () => {
 
       // The 'register' method registers a user and returns a success message
       it('should register a user and return a success message when calling register method', async () => {
-        const req = { user: { email: 'test@example.com' } };
+        const req = { user: { email: 'test@example.com' } } as unknown as AuthenticatedRequest;
         const res = { setHeader: jest.fn(), send: jest.fn() } as unknown as Response;
 
         await appController.register(req, res);
@@ -77,7 +78,7 @@ describe('AppController', () => {
 
       // The 'login' method throws an UnauthorizedException if the user is not authenticated
       it('should throw an UnauthorizedException when calling login method with unauthenticated user', async () => {
-        const req = { user: null };
+        const req = { user: null } as unknown as AuthenticatedRequest;
         const res = { setHeader: jest.fn(), send: jest.fn() } as unknown as Response;
 
         await expect(appController.login(req, res)).rejects.toThrow(UnauthorizedException);
@@ -85,7 +86,7 @@ describe('AppController', () => {
 
       // The 'impersonate' method throws an UnauthorizedException if the user is not an admin
       it('should throw an UnauthorizedException when calling impersonate method with non-admin user', async () => {
-        const req = { user: { permissions: {} }, body: { userId: 1 } };
+        const req = { user: { permissions: {} }, body: { userId: 1 } } as unknown as AuthenticatedRequest;
         const res = { setHeader: jest.fn(), send: jest.fn() } as unknown as Response;
 
         await expect(appController.impersonate(req, res)).rejects.toThrow(UnauthorizedException);
@@ -113,7 +114,7 @@ describe('AppController', () => {
       // The 'getProfile' method returns the user's profile information
       it('should return the user\'s profile information when calling getProfile method', async () => {
         // Arrange
-        const req = { user: { id: 1, email: 'test@example.com', name: 'Test User' } };
+        const req = { user: { id: 1, email: 'test@example.com', name: 'Test User' } } as unknown as AuthenticatedRequest;
         const expectedProfile = { id: 1, email: 'test@example.com', name: 'Test User' };
 
         // Act
@@ -131,7 +132,7 @@ describe('AppController', () => {
           setHeader: jest.fn(),
           send: jest.fn(),
         } as unknown as Response;
-        const req = { body: { userId }, user: { permissions: { admin: true } } };
+        const req = { body: { userId }, user: { permissions: { admin: true } } } as unknown as AuthenticatedRequest;
 
         // Act
         await appController.impersonate(req, responseMock);
@@ -153,7 +154,7 @@ describe('AppController', () => {
         const getCookieForLogOutSpy = jest.spyOn(authService, 'getCookieForLogOut').mockResolvedValue('cookie');
 
         // Act
-        await appController.unimpersonate({}, responseMock);
+        await appController.unimpersonate({} as AuthenticatedRequest, responseMock);
 
         // Assert
         expect(getCookieForLogOutSpy).toHaveBeenCalled();
@@ -172,7 +173,7 @@ describe('AppController', () => {
           user: {
             permissions: {},
           },
-        };
+        } as unknown as AuthenticatedRequest;
 
         // Act & Assert
         expect(() => appController.impersonate(reqMock, responseMock)).rejects.toThrow(UnauthorizedException);
@@ -197,7 +198,7 @@ describe('AppController', () => {
 
       it('should update user settings', async () => {
         // Arrange
-        const req = { user: { id: 1 } };
+        const req = { user: { id: 1 } } as unknown as AuthenticatedRequest;
         const data = { key: 'value' };
 
         // Act
