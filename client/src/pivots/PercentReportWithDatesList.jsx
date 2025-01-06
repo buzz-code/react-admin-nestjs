@@ -47,6 +47,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <NumberField source="finalGrade" sortable={false} />
             <TextField source="estimation" />
             <TextField source="comments" />
+            <NumberField source="estimatedAbsPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <ShowMatchingAttReportsButton />
         </CommonDatagrid>
     );

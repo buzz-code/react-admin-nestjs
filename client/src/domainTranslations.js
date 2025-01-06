@@ -359,6 +359,7 @@ export default {
                 finalGrade: 'ציון סופי',
                 estimation: 'הערכה',
                 comments: 'הערה',
+                estimatedAbsPercents: 'אחוז חיסור משוער',
             }
         },
         image: {

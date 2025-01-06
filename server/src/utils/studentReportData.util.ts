@@ -82,8 +82,10 @@ interface IStudentReportData {
     absPercents: number;
     gradeAvg: number;
     lastGrade: number;
+    estimatedAttPercents?: number;
+    estimatedAbsPercents?: number;
 }
-export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: { absnceCount: number }[]): IStudentReportData {
+export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: { absnceCount: number }[], estimatedLessonCount?: number): IStudentReportData {
     const lessonsCount = calcSum(data, item => item.howManyLessons);
     const absCount = calcSum(data, item => item.absCount);
     const approvedAbsCount = calcSum(totalAbsencesData, item => item.absnceCount);
@@ -98,6 +100,12 @@ export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: { 
         lastGrade = (grades.at(-1)?.grade ?? 0) / 100;
     }
 
+    let estimatedAttPercents, estimatedAbsPercents;
+    if (estimatedLessonCount) {
+        estimatedAttPercents = getAttPercents(estimatedLessonCount, unapprovedAbsCount) / 100;
+        estimatedAbsPercents = 1 - estimatedAttPercents;
+    }
+
     return {
         lessonsCount,
         absCount,
@@ -106,6 +114,8 @@ export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: { 
         absPercents,
         gradeAvg,
         lastGrade,
+        estimatedAttPercents,
+        estimatedAbsPercents,
     };
 }
 

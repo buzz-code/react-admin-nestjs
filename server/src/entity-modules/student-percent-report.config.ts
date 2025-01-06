@@ -9,9 +9,10 @@ import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entit
 import { AttGradeEffect } from "src/db/entities/AttGradeEffect";
 import { GradeName } from "src/db/entities/GradeName.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
+import { Lesson } from "src/db/entities/Lesson.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
-import { calcSum, getUniqueValues, groupDataByKeys } from "src/utils/reportData.util";
+import { calcSum, getUniqueValues, groupDataByKeys, groupDataByKeysAndCalc } from "src/utils/reportData.util";
 import { calcReportsData, getDisplayGrade, getUnknownAbsCount } from "src/utils/studentReportData.util";
 import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from "src/utils/studentReportData.util";
 import { DataSource, In } from "typeorm";
@@ -84,18 +85,24 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     .find({ where: getKnownAbsenceFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate) });
                 const totalAbsencesDataMap = groupDataByKeys(totalAbsencesData, ['studentReferenceId', 'klassReferenceId', 'lessonReferenceId', 'userId', 'year']);
 
+                const estimatedLessonCount = await this.dataSource
+                    .getRepository(Lesson)
+                    .find({ where: { id: In(getUniqueValues(pivotData, item => item.lessonReferenceId)) } });
+                const estimatedLessonCountMap = groupDataByKeysAndCalc(estimatedLessonCount, ['id'], items => ({ howManyLessons: calcSum(items, item => item.howManyLessons) }));
+
                 Object.entries(sprMap).forEach(([key, val]) => {
                     const reports = pivotDataMap[key] ?? [];
                     const knownAbsKey = [val.studentReferenceId, val.klassReferenceId, val.lessonReferenceId, val.userId, val.year].map(String).join('_');
                     const knownAbs = totalAbsencesDataMap[knownAbsKey] ?? [];
+                    const estimatedLessonCount = estimatedLessonCountMap[val.lessonReferenceId]?.howManyLessons ?? 0;
 
-                    const { lessonsCount, absCount, approvedAbsCount, attPercents, absPercents, gradeAvg, lastGrade } = calcReportsData(reports, knownAbs);
-                    val.lessonsCount = lessonsCount;
-                    val.absCount = absCount;
-                    val.approvedAbsCount = approvedAbsCount;
-                    val.absPercents = absPercents;
-                    val.attPercents = attPercents;
-                    val.gradeAvg = extra?.lastGrade ? lastGrade : gradeAvg;
+                    const reportData = calcReportsData(reports, knownAbs, estimatedLessonCount);
+                    val.lessonsCount = reportData.lessonsCount;
+                    val.absCount = reportData.absCount;
+                    val.approvedAbsCount = reportData.approvedAbsCount;
+                    val.absPercents = reportData.absPercents;
+                    val.attPercents = reportData.attPercents;
+                    val.gradeAvg = extra?.lastGrade ? reportData.lastGrade : reportData.gradeAvg;
 
                     const gradeReports = reports.filter(item => item.type === 'grade');
                     val.estimation = getUniqueValues(gradeReports, item => item.estimation).join(', ');
@@ -116,6 +123,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                 headers['finalGrade'] = { value: 'finalGrade', label: 'ציון סופי' };
                 headers['estimation'] = { value: 'estimation', label: 'הערכה' };
                 headers['comments'] = { value: 'comments', label: 'הערה' };
+                headers['estimatedAbsPercents'] = { value: 'estimatedAbsPercents', label: 'אחוז חיסור משוער' };
                 (data[0] as any).headers = Object.values(headers);
             }
         }
