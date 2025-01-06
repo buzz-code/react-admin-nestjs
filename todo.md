@@ -304,6 +304,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add settings page
 
 # todo
+* add pre-push test run
+* add pre-commit test run
 * 
 
 # todo later
