@@ -1,4 +1,4 @@
-import { DateField, DateInput, DateTimeInput, maxLength, NumberInput, ReferenceArrayField, ReferenceArrayInput, ReferenceField, required, TextField, TextInput, SelectField } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, maxLength, NumberInput, ReferenceArrayField, ReferenceArrayInput, ReferenceField, required, TextField, TextInput, SelectField, minValue } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField, MultiReferenceArrayField } from '@shared/components/fields/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
@@ -60,6 +60,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <DateInput source="endDate" />
         <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
         <TextInput source="comment" validate={[maxLength(1000)]} />
+        <NumberInput source="howManyLessons" validate={minValue(1)} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
