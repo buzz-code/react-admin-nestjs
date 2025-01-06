@@ -20,7 +20,7 @@ import { User } from "./User.entity";
 import { findManyAndAssignReferenceIds, findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsDate, IsNotEmpty, IsNumber, IsPositive, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsDate, IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength, Min } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { cleanDateFields } from "@shared/utils/entity/deafultValues.util";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
@@ -117,7 +117,7 @@ export class Lesson implements IHasUserId {
   @IsOptional({ always: true })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
-  @IsPositive({ always: true })
+  @Min(0, { always: true })
   @Column("float", { name: "how_many_lessons", nullable: true })
   howManyLessons: number;
 
