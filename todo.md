@@ -302,6 +302,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add new 'comment' column to teachers table, and show it in teacher report table
 * add ablity to insert multiple report dates on in-lesson-report
 * add settings page
+* make email rtl always
 
 # todo
 * add pre-push test run

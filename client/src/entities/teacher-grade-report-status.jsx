@@ -6,7 +6,7 @@ import { BulkReportButton } from '@shared/components/crudContainers/BulkReportBu
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import AttachEmailIcon from '@mui/icons-material/AttachEmail';
 import BrowserUpdatedIcon from '@mui/icons-material/BrowserUpdated';
-import { RichTextInput } from 'ra-input-rich-text';
+import { CommonRichTextInput } from '@shared/components/fields/CommonRichTextInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 
@@ -32,7 +32,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
         </BulkReportButton>,
         <BulkActionButton label='שליחת אקסל למורה' icon={<AttachEmailIcon />} name='teacherReportFile' >
             <TextInput key="mailSubject" source="mailSubject" label="נושא המייל" validate={required()} defaultValue={defaultMailSubject} />
-            <RichTextInput key="mailBody" source="mailBody" label="תוכן המייל" validate={required()} defaultValue={defaultMailBody} />
+            <CommonRichTextInput key="mailBody" source="mailBody" label="תוכן המייל" validate={required()} defaultValue={defaultMailBody} />
             <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" label="שיעור" dynamicFilter={filterByUserId} />
             {/* <BooleanInput source="isGrades" label="קובץ ציונים" /> */}
         </BulkActionButton>,
