@@ -29,7 +29,7 @@ export class Student implements IHasUserId {
   year: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  // @MaxLength(10, { always: true })
+  @MaxLength(10, { always: true })
   @StringType
   @IsUniqueCombination(['userId'], [Student, User], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })

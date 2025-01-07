@@ -25,7 +25,7 @@ import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { MaxCountByUserLimit } from "@shared/utils/validation/max-count-by-user-limit";
 import { StudentByYear } from "../view-entities/StudentByYear.entity";
 import { PaymentTrack } from "@shared/entities/PaymentTrack.entity";
-import { NumberType } from "@shared/utils/entity/class-transformer";
+import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Index("student_klasses_user_year_idx", ["userId", "year"], {})
@@ -79,6 +79,7 @@ export class StudentKlass implements IHasUserId {
   @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @MaxLength(10, { always: true })
+  @StringType
   @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
