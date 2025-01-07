@@ -306,6 +306,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 # todo
 * add pre-push test run
 * add pre-commit test run
+* add custom implementatino for max-length that works with numbers too
 * 
 
 # todo later
