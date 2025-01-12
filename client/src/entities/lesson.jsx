@@ -70,7 +70,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['key', 'name', 'klasses', 'teacherId', 'startDate', 'endDate', 'year', 'comment'],
+    fields: ['key', 'name', 'klasses', 'teacherId', 'startDate', 'endDate', 'year', 'comment', 'howManyLessons'],
 }
 
 const entity = {
