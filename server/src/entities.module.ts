@@ -15,7 +15,6 @@ import textConfig from './entity-modules/text.config';
 import studentKlassReportConfig from './entity-modules/student-klass-report.config';
 import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass.entity';
 import auditLogConfig from "./entity-modules/audit-log.config";
-import { ImportFile } from '@shared/entities/ImportFile.entity';
 import { YemotCall } from '@shared/entities/YemotCall.entity';
 import { TextByUser } from '@shared/view-entities/TextByUser.entity';
 import mailAddressConfig from '@shared/utils/mail/mail-address.config';
@@ -38,6 +37,7 @@ import teacherGradeReportStatusConfig from "./entity-modules/teacher-grade-repor
 import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entity";
 import { AbsCountEffectByUser } from "@shared/view-entities/AbsCountEffectByUser.entity";
 import { LessonKlassName } from "./db/view-entities/LessonKlassName.entity";
+import importFileConfig from "./entity-modules/import-file.config";
 
 @Module({
     imports: [
@@ -56,7 +56,7 @@ import { LessonKlassName } from "./db/view-entities/LessonKlassName.entity";
         BaseEntityModule.register(studentKlassReportConfig),
         BaseEntityModule.register({ entity: StudentBaseKlass }),
         BaseEntityModule.register(auditLogConfig),
-        BaseEntityModule.register({ entity: ImportFile }),
+        BaseEntityModule.register(importFileConfig),
         BaseEntityModule.register({ entity: YemotCall }),
         BaseEntityModule.register(mailAddressConfig),
         BaseEntityModule.register({ entity: RecievedMail }),
