@@ -41,6 +41,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <DateField source="endDate" />
             <SelectField source="year" choices={yearChoices} />
             <TextField source="comment" />
+            <TextField source="howManyLessons" />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>

@@ -122,6 +122,7 @@ export default {
                 startDate: 'תאריך התחלה',
                 endDate: 'תאריך סיום',
                 comment: 'הערה',
+                howManyLessons: 'מספר שיעורים',
             }
         },
         student_klass: {
