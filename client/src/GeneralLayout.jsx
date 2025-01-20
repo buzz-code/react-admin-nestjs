@@ -1,12 +1,10 @@
 import { MenuItemLink } from 'react-admin';
-import ListIcon from '@mui/icons-material/List';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import HelpIcon from '@mui/icons-material/Help';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import CallIcon from '@mui/icons-material/Call';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
-import PersonIcon from '@mui/icons-material/Person';
 import DatasetIcon from '@mui/icons-material/Dataset';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -18,7 +16,6 @@ import PercentIcon from '@mui/icons-material/Percent';
 
 import BaseLayout from "@shared/components/layout/Layout";
 import BaseDashboard from '@shared/components/views/Dashboard';
-import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { isInLessonReport, isScannerUpload } from '../shared/utils/permissionsUtil';
 
 const customMenuItems = [
@@ -52,11 +49,6 @@ export const Layout = ({ children }) => (
     </BaseLayout>
 );
 
-const dashboardItems = [
-    { resource: 'att_report_with_report_month', icon: ListIcon, filter: defaultYearFilter },
-    { resource: 'student_by_year', icon: ListIcon, filter: { 'year:$cont': defaultYearFilter.year } },
-];
-
 export const Dashboard = () => (
-    <BaseDashboard items={dashboardItems} />
+    <BaseDashboard />
 );

@@ -1,10 +1,12 @@
 import React from 'react';
-import { Card, CardContent } from '@mui/material';
-import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider, NumberInput } from 'react-admin';
+import { Card, CardContent, Typography } from '@mui/material';
+import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider, NumberInput, ArrayInput, SimpleFormIterator, ResourceContextProvider } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
-import { getDefaultPageSize, getLateValue } from '@shared/utils/settingsUtil';
+import { getDefaultPageSize, getLateValue, getDashboardItems } from '@shared/utils/settingsUtil';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { PAGE_SIZE_OPTIONS } from '@shared/config/settings';
+import { CommonEntityNameInput } from '@shared/components/fields/CommonEntityNameInput';
+import { CommonJsonInput } from '@shared/components/fields/CommonJsonItem';
 
 const pageSizeOptions = PAGE_SIZE_OPTIONS.map(option => ({ id: option, name: option }));
 
@@ -24,6 +26,7 @@ export default function Settings() {
     const defaultValues = {
         defaultPageSize: getDefaultPageSize(identity),
         lateValue: getLateValue(identity),
+        dashboardItems: getDashboardItems(identity),
     };
 
     const handleSave = async (values) => {
@@ -42,20 +45,52 @@ export default function Settings() {
         <Card>
             <Title title="הגדרות" />
             <CardContent>
-                <SimpleForm
-                    onSubmit={handleSave}
-                    defaultValues={defaultValues}
-                    toolbar={<SettingsToolbar />}
-                >
-                    <CommonAutocompleteInput
-                        source="defaultPageSize"
-                        label="מספר שורות בטבלה"
-                        choices={pageSizeOptions}
-                        fullWidth
-                        disableClearable
-                    />
-                    <NumberInput source="lateValue" label="שווי איחור" fullWidth />
-                </SimpleForm>
+                <ResourceContextProvider value="settings">
+                    <SimpleForm
+                        onSubmit={handleSave}
+                        defaultValues={defaultValues}
+                        toolbar={<SettingsToolbar />}
+                    >
+                        <CommonAutocompleteInput
+                            source="defaultPageSize"
+                            label="מספר שורות בטבלה"
+                            choices={pageSizeOptions}
+                            fullWidth
+                            disableClearable
+                        />
+                        <NumberInput source="lateValue" label="שווי איחור" fullWidth />
+
+                        <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                            הגדרות לוח מחוונים
+                        </Typography>
+                        <ArrayInput source="dashboardItems">
+                            <SimpleFormIterator>
+                                <CommonEntityNameInput
+                                    source="resource"
+                                    label="מקור נתונים"
+                                    helperText="בחר את מקור הנתונים שברצונך להציג"
+                                    fullWidth
+                                />
+                                <CommonAutocompleteInput
+                                    source="yearFilterType"
+                                    label="סוג סינון שנה"
+                                    choices={[
+                                        { id: 'none', name: 'ללא סינון שנה' },
+                                        { id: 'year', name: 'סינון שנה רגיל' },
+                                        { id: 'year:$cont', name: 'סינון שנה מורחב' }
+                                    ]}
+                                    defaultValue="year"
+                                    fullWidth
+                                    disableClearable
+                                />
+                                <CommonJsonInput
+                                    source="filter"
+                                    helperText="פילטר נוסף בפורמט JSON (אופציונלי, ללא שנה)"
+                                />
+                            </SimpleFormIterator>
+                        </ArrayInput>
+                    </SimpleForm>
+                </ResourceContextProvider>
             </CardContent>
         </Card>
     );
