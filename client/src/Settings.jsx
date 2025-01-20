@@ -75,7 +75,7 @@ export default function Settings() {
                                         'teacher_report_status',
                                         'teacher_grade_report_status',
                                         'student_percent_report',
-                                        'student',
+                                        'student_by_year',
                                         'teacher',
                                         'klass',
                                         'lesson'
