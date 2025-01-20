@@ -8,6 +8,18 @@ export default {
         admin: 'ניהול',
     },
     resources: {
+        settings: {
+            name: 'הגדרות',
+            fields: {
+                defaultPageSize: 'מספר שורות בטבלה',
+                lateValue: 'שווי איחור',
+                dashboardItems: 'הגדרות לוח מחוונים',
+                'dashboardItems.resource': 'מקור נתונים',
+                'dashboardItems.resourceHelperText': 'בחר את מקור הנתונים שברצונך להציג',
+                'dashboardItems.yearFilterType': 'סוג סינון שנה',
+                'dashboardItems.filter': 'פילטר נוסף בפורמט JSON (אופציונלי, ללא שנה)',
+            }
+        },
         att_report: {
             name: 'רשומת נוכחות |||| נוכחות',
             fields: {

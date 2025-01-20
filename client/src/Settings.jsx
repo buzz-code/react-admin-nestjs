@@ -53,12 +53,11 @@ export default function Settings() {
                     >
                         <CommonAutocompleteInput
                             source="defaultPageSize"
-                            label="מספר שורות בטבלה"
                             choices={pageSizeOptions}
                             fullWidth
                             disableClearable
                         />
-                        <NumberInput source="lateValue" label="שווי איחור" fullWidth />
+                        <NumberInput source="lateValue" fullWidth />
 
                         <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
                             הגדרות לוח מחוונים
@@ -67,13 +66,11 @@ export default function Settings() {
                             <SimpleFormIterator>
                                 <CommonEntityNameInput
                                     source="resource"
-                                    label="מקור נתונים"
                                     helperText="בחר את מקור הנתונים שברצונך להציג"
                                     fullWidth
                                 />
                                 <CommonAutocompleteInput
                                     source="yearFilterType"
-                                    label="סוג סינון שנה"
                                     choices={[
                                         { id: 'none', name: 'ללא סינון שנה' },
                                         { id: 'year', name: 'סינון שנה רגיל' },
@@ -83,10 +80,7 @@ export default function Settings() {
                                     fullWidth
                                     disableClearable
                                 />
-                                <CommonJsonInput
-                                    source="filter"
-                                    helperText="פילטר נוסף בפורמט JSON (אופציונלי, ללא שנה)"
-                                />
+                                <CommonJsonInput source="filter" />
                             </SimpleFormIterator>
                         </ArrayInput>
                     </SimpleForm>
