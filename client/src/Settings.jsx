@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
-import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider, NumberInput, ArrayInput, SimpleFormIterator, ResourceContextProvider } from 'react-admin';
+import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider, NumberInput, ArrayInput, SimpleFormIterator, ResourceContextProvider, required } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { getDefaultPageSize, getLateValue, getDashboardItems } from '@shared/utils/settingsUtil';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
@@ -56,8 +56,9 @@ export default function Settings() {
                             choices={pageSizeOptions}
                             fullWidth
                             disableClearable
+                            validate={required()}
                         />
-                        <NumberInput source="lateValue" fullWidth />
+                        <NumberInput source="lateValue" fullWidth validate={required()} />
 
                         <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
                             הגדרות לוח מחוונים
@@ -68,6 +69,7 @@ export default function Settings() {
                                     source="resource"
                                     helperText="בחר את מקור הנתונים שברצונך להציג"
                                     fullWidth
+                                    validate={required()}
                                 />
                                 <CommonAutocompleteInput
                                     source="yearFilterType"
