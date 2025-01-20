@@ -67,6 +67,19 @@ export default function Settings() {
                             <SimpleFormIterator>
                                 <CommonEntityNameInput
                                     source="resource"
+                                    allowedEntities={[
+                                        'att_report_with_report_month',
+                                        'grade',
+                                        'known_absence',
+                                        'student_klass_report',
+                                        'teacher_report_status',
+                                        'teacher_grade_report_status',
+                                        'student_percent_report',
+                                        'student',
+                                        'teacher',
+                                        'klass',
+                                        'lesson'
+                                    ]}
                                     helperText="בחר את מקור הנתונים שברצונך להציג"
                                     fullWidth
                                     validate={required()}
