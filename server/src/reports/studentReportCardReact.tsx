@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { In } from 'typeorm';
 import { User } from 'src/db/entities/User.entity';
-import { ReportElementType, convertToReactStyle, getFontLink, ReportStyles } from './reportStyles';
-import { wrapWithStyles, useStyles } from './StylesContext';
+import { ReportElementType, convertToReactStyle, ReportStyles } from './reportStyles';
+import { wrapWithStyles, useStyles, useFontLinks } from './StylesContext';
 import { Student } from 'src/db/entities/Student.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
@@ -99,10 +99,11 @@ const appTableStyle: React.CSSProperties = {
 }
 const App: React.FunctionComponent<AppProps> = (props) => {
     const { appStyle } = useAppStyles();
+    const fontLinks = useFontLinks();
 
     return (
         <div dir='rtl' style={appStyle}>
-            <link href={getFontLink(defaultReportStyles)} rel="stylesheet" />
+            {fontLinks.map((link, index) => (<link key={index} rel='stylesheet' href={link} />))}
             <table style={appTableStyle}>
                 <thead><tr><th>
                     <Header image={props.images.reportLogo} />

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { ReportElementType, ReportStyles, getElementStyle, mergeStyles } from './reportStyles';
+import { ReportElementType, ReportStyles, getElementStyle, getFontLinks, mergeStyles } from './reportStyles';
 
 const StylesContext = React.createContext<ReportStyles>([]);
+export default StylesContext;
 
 interface StylesProviderProps {
     value: ReportStyles;
@@ -25,7 +26,10 @@ export const useStyles = (elementType: ReportElementType): ReportStyles[number] 
     return getElementStyle(elementType, styles);
 };
 
-export default StylesContext;
+export const useFontLinks = (): string[] => {
+    const styles = React.useContext(StylesContext);
+    return getFontLinks(styles);
+}
 
 interface IUserStyles {
     userStyles: ReportStyles;

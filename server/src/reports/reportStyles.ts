@@ -42,8 +42,7 @@ export function convertToReactStyle(elementStyle: ReportElementStyle): CSSProper
     };
 }
 
-export function getFontLink(styles: ReportElementStyle[]): string {
+export function getFontLinks(styles: ReportElementStyle[]): string[] {
     const uniqueFonts = [...new Set(styles.map(style => style.fontFamily))];
-    const fontsQuery = uniqueFonts.join('|').replace(/\s+/g, '+');
-    return `https://fonts.googleapis.com/css2?family=${fontsQuery}&display=swap`;
+    return uniqueFonts.map(font => `https://fonts.googleapis.com/css2?family=${font.replace(' ', '+')}&display=swap`);
 }
