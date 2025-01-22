@@ -188,6 +188,18 @@ export default {
             name: 'מורה |||| מורות',
             fields: {
                 ...generalResourceFieldsTranslation,
+                tz: 'תז',
+                phone: 'טלפון',
+                phone2: 'טלפון 2',
+                email: 'כתובת מייל',
+                displayName: 'שם לתעודה'
+        },
+        text: {
+            name: 'הודעה |||| הודעות - טבלת אדמין',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                description: 'תיאור',
+                value: 'ערך',
             }
         },
         text_by_user: {
