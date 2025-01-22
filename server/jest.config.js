@@ -11,15 +11,12 @@ module.exports = {
     transform: {
         "^.+\\.(t|j)s$": "ts-jest"
     },
-    // moduleDirectories: ['node_modules', './'],
-    // moduleFileExtensions: [
-    //     "js",
-    //     "json",
-    //     "ts"
-    // ],
-    // rootDir: "src",
-    // collectCoverageFrom: [
-    //     "**/*.(t|j)s"
-    // ],
-    // coverageDirectory: "../coverage",
+    collectCoverageFrom: [
+        "**/*.(t|j)s",
+        "!**/node_modules/**",
+        "!**/dist/**",
+        "!**/coverage/**"
+    ],
+    coverageDirectory: "../test/coverage",
+    coverageReporters: ["json", "lcov", "text", "clover"],
 }
