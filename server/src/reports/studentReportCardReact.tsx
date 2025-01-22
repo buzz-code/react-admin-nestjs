@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { In } from 'typeorm';
 import { User } from 'src/db/entities/User.entity';
+import { ReportElementType, getElementStyle, convertToReactStyle, getFontLink, defaultReportStyles } from './reportStyles';
 import { Student } from 'src/db/entities/Student.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
@@ -46,8 +47,7 @@ interface AppProps {
     grade_names: GradeName[];
 };
 const appStyle: React.CSSProperties = {
-    fontFamily: '"Roboto", sans-serif',
-    fontSize: 12,
+    ...convertToReactStyle(getElementStyle(ReportElementType.DOCUMENT)),
     height: 'calc(100vh - 16px)',
 }
 const appTableStyle: React.CSSProperties = {
@@ -55,7 +55,7 @@ const appTableStyle: React.CSSProperties = {
 }
 const App: React.FunctionComponent<AppProps> = (props) => (
     <div dir='rtl' style={appStyle}>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+        <link href={getFontLink(defaultReportStyles)} rel="stylesheet" />
         <table style={appTableStyle}>
             <thead><tr><th>
                 <Header image={props.images.reportLogo} />
@@ -197,21 +197,23 @@ const ReportTableHeaderWrapper: React.FunctionComponent<ReportTableHeaderWrapper
     );
 }
 
-const headerTagStyle: React.CSSProperties = {
+const getHeaderStyleByLevel = (level: number): React.CSSProperties => ({
+    ...convertToReactStyle(getElementStyle(
+        level === 2 ? ReportElementType.TITLE_PRIMARY : ReportElementType.TITLE_SECONDARY
+    )),
     margin: 0,
-}
-const headerValueStyle: React.CSSProperties = {
-    fontWeight: 'normal',
-}
+});
+
 const ReportTableHeaderItem = ({ level, label, value }) => {
     if (!value) return null;
 
     const HeaderTag = `h${level}` as keyof JSX.IntrinsicElements;
+    const style = getHeaderStyleByLevel(level);
 
     return (
-        <HeaderTag style={headerTagStyle}>
+        <HeaderTag style={style}>
             {label && <>{label}:&nbsp;</>}
-            <span style={headerValueStyle}>
+            <span style={{ fontWeight: 'normal' }}>
                 <ReportTableValueWithLineBreak value={value} />
             </span>
         </HeaderTag>
@@ -239,33 +241,41 @@ const commonTableStyle: React.CSSProperties = {
     border: '1px solid black',
     padding: 12,
     textAlign: 'center',
-    fontSize: 16,
 }
+
 const tableStyle: React.CSSProperties = {
     ...commonTableStyle,
     borderCollapse: 'collapse',
     width: '100%',
     marginTop: '.5em',
 }
+
 const thStyle: React.CSSProperties = {
     ...commonTableStyle,
+    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_HEADER)),
     border: '3px solid black',
 }
+
 const rightAlignThStyle: React.CSSProperties = {
     ...thStyle,
     textAlign: 'right',
 }
+
 const fullCellStyle: React.CSSProperties = {
     ...commonTableStyle,
+    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_CELL)),
     minWidth: 75,
     maxWidth: 100,
 }
+
 const rightAlignFullCellStyle: React.CSSProperties = {
     ...fullCellStyle,
     textAlign: 'right',
 }
+
 const emptyCellStyle: React.CSSProperties = {
     ...commonTableStyle,
+    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_CELL)),
     minWidth: 60,
 }
 interface ReportTableContentProps {
@@ -533,7 +543,7 @@ function groupReportsByKlass(reports: AppProps['reports'][number]['reports'], re
     }
 }
 
-const getReportNameByDataItem = data => `תעודה לתלמידה ${data.student?.name} כיתה ${data.studentBaseKlass?.klassName}`;
+const getReportNameByDataItem = data => `תעודה לתלמידה ${data.student?.name ?? ''} כיתה ${data.studentBaseKlass?.klassName ?? ''} `;
 export const getReportName = data => Array.isArray(data) ? data.map(getReportNameByDataItem).join() : getReportNameByDataItem(data);
 
 export default new ReactToPdfReportGenerator(getReportName, getReportData, App);
