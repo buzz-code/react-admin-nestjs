@@ -18,46 +18,19 @@ export interface ReportElementStyle {
 
 export type ReportStyles = ReportElementStyle[];
 
-export const defaultReportStyles: ReportStyles = [
-    {
-        type: ReportElementType.DOCUMENT,
-        fontFamily: 'Roboto',
-        fontSize: 12,
-        isBold: false,
-        isItalic: false
-    },
-    {
-        type: ReportElementType.TABLE_HEADER,
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        isBold: true,
-        isItalic: false
-    },
-    {
-        type: ReportElementType.TABLE_CELL,
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        isBold: false,
-        isItalic: false
-    },
-    {
-        type: ReportElementType.TITLE_PRIMARY,
-        fontFamily: 'Roboto',
-        fontSize: 18,
-        isBold: true,
-        isItalic: false
-    },
-    {
-        type: ReportElementType.TITLE_SECONDARY,
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        isBold: true,
-        isItalic: false
+export function mergeStyles(userStyles: ReportStyles, defaultStyles: ReportStyles): ReportStyles {
+    if (!userStyles || userStyles.length === 0) {
+        return defaultStyles;
     }
-];
 
-export function getElementStyle(elementType: ReportElementType): ReportElementStyle {
-    return defaultReportStyles.find(style => style.type === elementType) || defaultReportStyles[0];
+    return defaultStyles.map(defaultStyle => {
+        const userStyle = userStyles.find(style => style.type === defaultStyle.type);
+        return userStyle ? { ...defaultStyle, ...userStyle } : defaultStyle;
+    });
+}
+
+export function getElementStyle(elementType: ReportElementType, styles: ReportStyles): ReportElementStyle {
+    return styles.find(style => style.type === elementType) || styles[0];
 }
 
 export function convertToReactStyle(elementStyle: ReportElementStyle): CSSProperties {

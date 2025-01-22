@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { In } from 'typeorm';
 import { User } from 'src/db/entities/User.entity';
-import { ReportElementType, getElementStyle, convertToReactStyle, getFontLink, defaultReportStyles, ReportStyles } from './reportStyles';
+import { ReportElementType, getElementStyle, convertToReactStyle, getFontLink, ReportStyles } from './reportStyles';
+import { wrapWithStyles } from './StylesContext';
 import { Student } from 'src/db/entities/Student.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
@@ -20,6 +21,46 @@ import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
 import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from 'src/utils/reportData.util';
 import { getDisplayGrade, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect } from 'src/utils/studentReportData.util';
 import { getReportDateFilter, dateFromString } from '@shared/utils/entity/filters.util';
+
+
+export const defaultReportStyles: ReportStyles = [
+    {
+        type: ReportElementType.DOCUMENT,
+        fontFamily: 'Roboto',
+        fontSize: 12,
+        isBold: false,
+        isItalic: false
+    },
+    {
+        type: ReportElementType.TABLE_HEADER,
+        fontFamily: 'Roboto',
+        fontSize: 16,
+        isBold: true,
+        isItalic: false
+    },
+    {
+        type: ReportElementType.TABLE_CELL,
+        fontFamily: 'Roboto',
+        fontSize: 16,
+        isBold: false,
+        isItalic: false
+    },
+    {
+        type: ReportElementType.TITLE_PRIMARY,
+        fontFamily: 'Roboto',
+        fontSize: 18,
+        isBold: true,
+        isItalic: false
+    },
+    {
+        type: ReportElementType.TITLE_SECONDARY,
+        fontFamily: 'Roboto',
+        fontSize: 16,
+        isBold: true,
+        isItalic: false
+    }
+];
+
 
 interface IExtenedStudentPercentReport extends StudentPercentReport {
     isBaseKlass?: boolean;
@@ -47,7 +88,7 @@ interface AppProps {
     grade_names: GradeName[];
 };
 const appStyle: React.CSSProperties = {
-    ...convertToReactStyle(getElementStyle(ReportElementType.DOCUMENT)),
+    ...convertToReactStyle(getElementStyle(ReportElementType.DOCUMENT, defaultReportStyles)),
     height: 'calc(100vh - 16px)',
 }
 const appTableStyle: React.CSSProperties = {
@@ -199,7 +240,8 @@ const ReportTableHeaderWrapper: React.FunctionComponent<ReportTableHeaderWrapper
 
 const getHeaderStyleByLevel = (level: number): React.CSSProperties => ({
     ...convertToReactStyle(getElementStyle(
-        level === 2 ? ReportElementType.TITLE_PRIMARY : ReportElementType.TITLE_SECONDARY
+        level === 2 ? ReportElementType.TITLE_PRIMARY : ReportElementType.TITLE_SECONDARY,
+        defaultReportStyles,
     )),
     margin: 0,
 });
@@ -252,7 +294,7 @@ const tableStyle: React.CSSProperties = {
 
 const thStyle: React.CSSProperties = {
     ...commonTableStyle,
-    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_HEADER)),
+    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_HEADER, defaultReportStyles)),
     border: '3px solid black',
 }
 
@@ -263,7 +305,7 @@ const rightAlignThStyle: React.CSSProperties = {
 
 const fullCellStyle: React.CSSProperties = {
     ...commonTableStyle,
-    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_CELL)),
+    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_CELL, defaultReportStyles)),
     minWidth: 75,
     maxWidth: 100,
 }
@@ -275,7 +317,7 @@ const rightAlignFullCellStyle: React.CSSProperties = {
 
 const emptyCellStyle: React.CSSProperties = {
     ...commonTableStyle,
-    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_CELL)),
+    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_CELL, defaultReportStyles)),
     minWidth: 60,
 }
 interface ReportTableContentProps {
@@ -546,4 +588,4 @@ function groupReportsByKlass(reports: AppProps['reports'][number]['reports'], re
 const getReportNameByDataItem = data => `תעודה לתלמידה ${data.student?.name ?? ''} כיתה ${data.studentBaseKlass?.klassName ?? ''} `;
 export const getReportName = data => Array.isArray(data) ? data.map(getReportNameByDataItem).join() : getReportNameByDataItem(data);
 
-export default new ReactToPdfReportGenerator(getReportName, getReportData, App);
+export default new ReactToPdfReportGenerator(getReportName, getReportData, wrapWithStyles(App, defaultReportStyles));
