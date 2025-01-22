@@ -303,16 +303,18 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add ablity to insert multiple report dates on in-lesson-report
 * add settings page
 * make email rtl always
+* save dashboard items in a table, and enable for users to edit them
+* update n8n version
 
 # todo
 * add pre-push test run
 * add pre-commit test run
-* add custom implementatino for max-length that works with numbers too
+* add health check for all services
+* add style editor in settings and use it in student report card
 * 
 
 # todo later
 ## infrastucture
-* update n8n version
 * fix local dev dockerfile
 * check test coverage & work to increase coverage - current: 89.21 |    65.97 |   72.22 |   92.25
 * add more unit tests to backend
@@ -324,9 +326,8 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make sure db backup is saving only 7
 * delete old docker logs
 ## new features
-* update in lesson report to have multiple lessons
+* add custom implementatino for max-length that works with numbers too
 * re-structure student percents report - think how to do it with dates filter
-* save dashboard items in a table, and enable for users to edit them
 * use known absences in all student reports
 * use ra-components
 * add user image to export pdf file
