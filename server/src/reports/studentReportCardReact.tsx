@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { In } from 'typeorm';
 import { User } from 'src/db/entities/User.entity';
-import { ReportElementType, getElementStyle, convertToReactStyle, getFontLink, ReportStyles } from './reportStyles';
-import { wrapWithStyles } from './StylesContext';
+import { ReportElementType, convertToReactStyle, getFontLink, ReportStyles } from './reportStyles';
+import { wrapWithStyles, useStyles } from './StylesContext';
 import { Student } from 'src/db/entities/Student.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
@@ -87,34 +87,41 @@ interface AppProps {
     att_grade_effect: AttGradeEffect[];
     grade_names: GradeName[];
 };
-const appStyle: React.CSSProperties = {
-    ...convertToReactStyle(getElementStyle(ReportElementType.DOCUMENT, defaultReportStyles)),
-    height: 'calc(100vh - 16px)',
-}
+const useAppStyles = () => {
+    const appStyle: React.CSSProperties = {
+        ...convertToReactStyle(useStyles(ReportElementType.DOCUMENT)),
+        height: 'calc(100vh - 16px)',
+    }
+    return { appStyle };
+};
 const appTableStyle: React.CSSProperties = {
     width: '100%',
 }
-const App: React.FunctionComponent<AppProps> = (props) => (
-    <div dir='rtl' style={appStyle}>
-        <link href={getFontLink(defaultReportStyles)} rel="stylesheet" />
-        <table style={appTableStyle}>
-            <thead><tr><th>
-                <Header image={props.images.reportLogo} />
-            </th></tr></thead>
-            <tbody><tr><td>
-                <ReportTable student={props.student} studentBaseKlass={props.studentBaseKlass}
-                    reports={props.reports} reportParams={props.reportParams}
-                    knownAbsMap={props.knownAbsMap}
-                    att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
-                <PersonalNote note={props.reportParams.personalNote} />
-                <YomanetNotice />
-            </td></tr></tbody>
-            <tfoot><tr><td>
-                <Footer image={props.images.reportBottomLogo} />
-            </td></tr></tfoot>
-        </table>
-    </div>
-);
+const App: React.FunctionComponent<AppProps> = (props) => {
+    const { appStyle } = useAppStyles();
+
+    return (
+        <div dir='rtl' style={appStyle}>
+            <link href={getFontLink(defaultReportStyles)} rel="stylesheet" />
+            <table style={appTableStyle}>
+                <thead><tr><th>
+                    <Header image={props.images.reportLogo} />
+                </th></tr></thead>
+                <tbody><tr><td>
+                    <ReportTable student={props.student} studentBaseKlass={props.studentBaseKlass}
+                        reports={props.reports} reportParams={props.reportParams}
+                        knownAbsMap={props.knownAbsMap}
+                        att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
+                    <PersonalNote note={props.reportParams.personalNote} />
+                    <YomanetNotice />
+                </td></tr></tbody>
+                <tfoot><tr><td>
+                    <Footer image={props.images.reportBottomLogo} />
+                </td></tr></tfoot>
+            </table>
+        </div>
+    );
+};
 
 const headerImageStyle: React.CSSProperties = {
     width: '95%',
@@ -238,10 +245,9 @@ const ReportTableHeaderWrapper: React.FunctionComponent<ReportTableHeaderWrapper
     );
 }
 
-const getHeaderStyleByLevel = (level: number): React.CSSProperties => ({
-    ...convertToReactStyle(getElementStyle(
+const useHeaderStyleByLevel = (level: number): React.CSSProperties => ({
+    ...convertToReactStyle(useStyles(
         level === 2 ? ReportElementType.TITLE_PRIMARY : ReportElementType.TITLE_SECONDARY,
-        defaultReportStyles,
     )),
     margin: 0,
 });
@@ -250,7 +256,7 @@ const ReportTableHeaderItem = ({ level, label, value }) => {
     if (!value) return null;
 
     const HeaderTag = `h${level}` as keyof JSX.IntrinsicElements;
-    const style = getHeaderStyleByLevel(level);
+    const style = useHeaderStyleByLevel(level);
 
     return (
         <HeaderTag style={style}>
@@ -292,33 +298,41 @@ const tableStyle: React.CSSProperties = {
     marginTop: '.5em',
 }
 
-const thStyle: React.CSSProperties = {
-    ...commonTableStyle,
-    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_HEADER, defaultReportStyles)),
-    border: '3px solid black',
+const useThStyles = () => {
+    const thStyle: React.CSSProperties = {
+        ...commonTableStyle,
+        ...convertToReactStyle(useStyles(ReportElementType.TABLE_HEADER)),
+        border: '3px solid black',
+    }
+
+    const rightAlignThStyle: React.CSSProperties = {
+        ...thStyle,
+        textAlign: 'right',
+    }
+
+    return { thStyle, rightAlignThStyle };
 }
 
-const rightAlignThStyle: React.CSSProperties = {
-    ...thStyle,
-    textAlign: 'right',
-}
+const useCellStyles = () => {
+    const fullCellStyle: React.CSSProperties = {
+        ...commonTableStyle,
+        ...convertToReactStyle(useStyles(ReportElementType.TABLE_CELL)),
+        minWidth: 75,
+        maxWidth: 100,
+    }
 
-const fullCellStyle: React.CSSProperties = {
-    ...commonTableStyle,
-    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_CELL, defaultReportStyles)),
-    minWidth: 75,
-    maxWidth: 100,
-}
+    const rightAlignFullCellStyle: React.CSSProperties = {
+        ...fullCellStyle,
+        textAlign: 'right',
+    }
 
-const rightAlignFullCellStyle: React.CSSProperties = {
-    ...fullCellStyle,
-    textAlign: 'right',
-}
+    const emptyCellStyle: React.CSSProperties = {
+        ...commonTableStyle,
+        ...convertToReactStyle(useStyles(ReportElementType.TABLE_CELL)),
+        minWidth: 60,
+    }
 
-const emptyCellStyle: React.CSSProperties = {
-    ...commonTableStyle,
-    ...convertToReactStyle(getElementStyle(ReportElementType.TABLE_CELL, defaultReportStyles)),
-    minWidth: 60,
+    return { fullCellStyle, rightAlignFullCellStyle, emptyCellStyle };
 }
 interface ReportTableContentProps {
     reportData: ReportDataArrItem;
@@ -331,6 +345,8 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
     const reportTableHeader = [
         { level: 2, label: '', value: reportParams.groupByKlass && reportData.name }
     ]
+
+    const { thStyle, rightAlignThStyle } = useThStyles();
 
     return (
         <div style={reportDataWrapperStyle}>
@@ -375,6 +391,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
         ציון: ${report.gradeAvg ? report.gradeAvg * 100 : '-'}, השפעה: ${gradeEffect}, ציון סופי: ${displayGrade}
     `;
 
+    const { fullCellStyle, rightAlignFullCellStyle, emptyCellStyle } = useCellStyles();
 
     return <tr>
         <td style={rightAlignFullCellStyle}>{report.lesson?.name}</td>
@@ -418,6 +435,8 @@ const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, repo
     const unknownAbsCount = getUnknownAbsCount(absCount, approvedAbsCount);
     const attPercents = getAttPercents(lessonsCount, absCount);
     const approvedAttPercents = getAttPercents(lessonsCount, unknownAbsCount);
+
+    const { thStyle } = useThStyles();
 
     return <>
         <tr>
