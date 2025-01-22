@@ -21,7 +21,6 @@ export function DashboardItemsInput() {
           <SimpleFormIterator>
             <TextInput
               source="title"
-              label="כותרת"
               fullWidth
             />
             <CommonEntityNameInput

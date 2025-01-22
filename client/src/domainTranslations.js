@@ -25,6 +25,18 @@ export default {
                 'reportStyles.fontSize': 'גודל גופן',
                 'reportStyles.isBold': 'מודגש',
                 'reportStyles.isItalic': 'נטוי',
+                reportCardSettings: 'הגדרות ברירת מחדל לתעודה',
+                'reportCardSettings.attendance': 'הצג נוכחות',
+                'reportCardSettings.grades': 'הצג ציונים',
+                'reportCardSettings.showStudentTz': 'הצג תעודת זהות',
+                'reportCardSettings.groupByKlass': 'קבץ לפי כיתה',
+                'reportCardSettings.hideAbsTotal': 'הסתר סיכום כללי',
+                'reportCardSettings.minimalReport': 'הצג רק סיכום כללי',
+                'reportCardSettings.forceAtt': 'הצג רק שורות שכוללות נוכחות',
+                'reportCardSettings.forceGrades': 'הצג רק שורות שכוללות ציונים',
+                'reportCardSettings.downComment': 'הצג הערה מתחת שם תלמידה',
+                'reportCardSettings.lastGrade': 'חשב ציון אחרון',
+                'reportCardSettings.debug': 'הצג פירוט',
             }
         },
         att_report: {
@@ -176,19 +188,6 @@ export default {
             name: 'מורה |||| מורות',
             fields: {
                 ...generalResourceFieldsTranslation,
-                tz: 'תז',
-                phone: 'טלפון',
-                phone2: 'טלפון 2',
-                email: 'כתובת מייל',
-                displayName: 'שם לתעודה'
-            }
-        },
-        text: {
-            name: 'הודעה |||| הודעות - טבלת אדמין',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                description: 'תיאור',
-                value: 'ערך',
             }
         },
         text_by_user: {
