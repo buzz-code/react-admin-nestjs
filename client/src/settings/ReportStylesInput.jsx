@@ -49,25 +49,10 @@ export function ReportStylesInput() {
               fullWidth
               validate={required()}
             />
-            <CommonAutocompleteInput
-              source="fontFamily"
-              label="גופן"
-              choices={fontOptions}
-              fullWidth
-            />
-            <NumberInput
-              source="fontSize"
-              label="גודל גופן"
-              fullWidth
-            />
-            <BooleanInput
-              source="isBold"
-              label="מודגש"
-            />
-            <BooleanInput
-              source="isItalic"
-              label="נטוי"
-            />
+            <CommonAutocompleteInput source="fontFamily" choices={fontOptions} fullWidth />
+            <NumberInput source="fontSize" fullWidth />
+            <BooleanInput source="isBold" />
+            <BooleanInput source="isItalic" />
           </SimpleFormIterator>
         </ArrayInput>
       </AccordionDetails>
