@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { In } from 'typeorm';
 import { User } from 'src/db/entities/User.entity';
-import { ReportElementType, convertToReactStyle, ReportStyles } from './reportStyles';
-import { wrapWithStyles, useStyles, useFontLinks } from './StylesContext';
+import { convertToReactStyle, ReportStyles } from '../../shared/utils/report/react-user-styles/reportStyles';
+import { wrapWithStyles, useStyles, useFontLinks } from '../../shared/utils/report/react-user-styles/StylesContext';
 import { Student } from 'src/db/entities/Student.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
@@ -22,8 +22,15 @@ import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from 's
 import { getDisplayGrade, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect } from 'src/utils/studentReportData.util';
 import { getReportDateFilter, dateFromString } from '@shared/utils/entity/filters.util';
 
+enum ReportElementType {
+    DOCUMENT = 'document',           // General document text
+    TABLE_HEADER = 'tableHeader',    // Table headers
+    TABLE_CELL = 'tableCell',        // Table content
+    TITLE_PRIMARY = 'titlePrimary',  // h2 headers (student name, class)
+    TITLE_SECONDARY = 'titleSecondary' // h3 headers (dates, comments)
+}
 
-export const defaultReportStyles: ReportStyles = [
+const defaultReportStyles: ReportStyles = [
     {
         type: ReportElementType.DOCUMENT,
         fontFamily: 'Roboto',
