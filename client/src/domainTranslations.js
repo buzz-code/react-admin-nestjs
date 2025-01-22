@@ -18,6 +18,12 @@ export default {
                 'dashboardItems.resourceHelperText': 'בחר את מקור הנתונים שברצונך להציג',
                 'dashboardItems.yearFilterType': 'סוג סינון שנה',
                 'dashboardItems.filter': 'פילטר נוסף בפורמט JSON (אופציונלי, ללא שנה)',
+                reportStyles: 'הגדרות עיצוב תעודה',
+                'reportStyles.type': 'סוג טקסט',
+                'reportStyles.fontFamily': 'גופן',
+                'reportStyles.fontSize': 'גודל גופן',
+                'reportStyles.isBold': 'מודגש',
+                'reportStyles.isItalic': 'נטוי',
             }
         },
         att_report: {

@@ -17,7 +17,6 @@ export interface ReportElementStyle {
 }
 
 export type ReportStyles = ReportElementStyle[];
-
 export function mergeStyles(userStyles: ReportStyles, defaultStyles: ReportStyles): ReportStyles {
     if (!userStyles || userStyles.length === 0) {
         return defaultStyles;
@@ -25,7 +24,14 @@ export function mergeStyles(userStyles: ReportStyles, defaultStyles: ReportStyle
 
     return defaultStyles.map(defaultStyle => {
         const userStyle = userStyles.find(style => style.type === defaultStyle.type);
-        return userStyle ? { ...defaultStyle, ...userStyle } : defaultStyle;
+        if (!userStyle) return defaultStyle;
+
+        return {
+            ...defaultStyle,
+            ...Object.fromEntries(
+                Object.entries(userStyle).filter(([_, value]) => value)
+            )
+        };
     });
 }
 

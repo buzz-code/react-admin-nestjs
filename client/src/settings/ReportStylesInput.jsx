@@ -1,5 +1,6 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ArrayInput, BooleanInput, NumberInput, SimpleFormIterator, required } from 'react-admin';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 
@@ -25,45 +26,51 @@ const fontOptions = [
 
 export function ReportStylesInput() {
   return (
-    <>
-      <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-        הגדרות סגנונות דוח
-      </Typography>
-      <ArrayInput source="reportStyles">
-        <SimpleFormIterator>
-          <CommonAutocompleteInput
-            source="type"
-            choices={[
-              { id: 'document', name: 'טקסט כללי' },
-              { id: 'tableHeader', name: 'כותרת טבלה' },
-              { id: 'tableCell', name: 'תא טבלה' },
-              { id: 'titlePrimary', name: 'כותרת ראשית' },
-              { id: 'titleSecondary', name: 'כותרת משנית' }
-            ]}
-            fullWidth
-            validate={required()}
-          />
-          <CommonAutocompleteInput
-            source="fontFamily"
-            label="גופן"
-            choices={fontOptions}
-            fullWidth
-          />
-          <NumberInput
-            source="fontSize"
-            label="גודל גופן"
-            fullWidth
-          />
-          <BooleanInput
-            source="isBold"
-            label="מודגש"
-          />
-          <BooleanInput
-            source="isItalic"
-            label="נטוי"
-          />
-        </SimpleFormIterator>
-      </ArrayInput>
-    </>
+    <Accordion sx={{ width: '100%' }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="report-styles-content"
+        id="report-styles-header"
+      >
+        <Typography variant="h6">הגדרות עיצוב תעודה</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <ArrayInput source="reportStyles">
+          <SimpleFormIterator>
+            <CommonAutocompleteInput
+              source="type"
+              choices={[
+                { id: 'document', name: 'טקסט כללי' },
+                { id: 'tableHeader', name: 'כותרת טבלה' },
+                { id: 'tableCell', name: 'תא טבלה' },
+                { id: 'titlePrimary', name: 'כותרת ראשית' },
+                { id: 'titleSecondary', name: 'כותרת משנית' }
+              ]}
+              fullWidth
+              validate={required()}
+            />
+            <CommonAutocompleteInput
+              source="fontFamily"
+              label="גופן"
+              choices={fontOptions}
+              fullWidth
+            />
+            <NumberInput
+              source="fontSize"
+              label="גודל גופן"
+              fullWidth
+            />
+            <BooleanInput
+              source="isBold"
+              label="מודגש"
+            />
+            <BooleanInput
+              source="isItalic"
+              label="נטוי"
+            />
+          </SimpleFormIterator>
+        </ArrayInput>
+      </AccordionDetails>
+    </Accordion>
   )
 }
