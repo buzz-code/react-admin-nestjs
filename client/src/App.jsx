@@ -31,7 +31,7 @@ import teacherSalaryReport from "src/entities/teacher-salary-report";
 import studentPercentReport from "src/entities/student-percent-report";
 import gradeName from "src/entities/grade-name";
 import attGradeEffect from './entities/att-grade-effect';
-import Settings from 'src/Settings';
+import Settings from 'src/settings/Settings';
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
 import PercentReportWithDatesList from 'src/pivots/PercentReportWithDatesList';
