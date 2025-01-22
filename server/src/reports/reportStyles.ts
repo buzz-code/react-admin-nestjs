@@ -16,7 +16,9 @@ export interface ReportElementStyle {
     isItalic: boolean;
 }
 
-export const defaultReportStyles: ReportElementStyle[] = [
+export type ReportStyles = ReportElementStyle[];
+
+export const defaultReportStyles: ReportStyles = [
     {
         type: ReportElementType.DOCUMENT,
         fontFamily: 'Roboto',

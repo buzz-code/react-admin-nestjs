@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { In } from 'typeorm';
 import { User } from 'src/db/entities/User.entity';
-import { ReportElementType, getElementStyle, convertToReactStyle, getFontLink, defaultReportStyles } from './reportStyles';
+import { ReportElementType, getElementStyle, convertToReactStyle, getFontLink, defaultReportStyles, ReportStyles } from './reportStyles';
 import { Student } from 'src/db/entities/Student.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
@@ -33,7 +33,7 @@ interface ReportDataArrItem {
     order?: number;
 }
 interface AppProps {
-    user: User;
+    userStyles: ReportStyles;
     images: {
         reportLogo: Image;
         reportBottomLogo: Image;
@@ -448,7 +448,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
     const reports = getReports(params, studentReports, knownAbsMap, studentBaseKlass, klasses, lessons, teachers);
 
     return {
-        user,
+        userStyles: user?.additionalData?.reportStyles,
         images: { reportLogo, reportBottomLogo },
         student,
         studentBaseKlass,
