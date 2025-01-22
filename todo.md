@@ -305,12 +305,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * make email rtl always
 * save dashboard items in a table, and enable for users to edit them
 * update n8n version
+* add style editor in settings and use it in student report card
 
 # todo
 * add pre-push test run
 * add pre-commit test run
 * add health check for all services
-* add style editor in settings and use it in student report card
 * 
 
 # todo later
