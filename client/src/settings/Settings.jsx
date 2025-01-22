@@ -2,10 +2,11 @@ import React from 'react';
 import { Card, CardContent } from '@mui/material';
 import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider, NumberInput, ResourceContextProvider, required } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
-import { getDefaultPageSize, getLateValue, getDashboardItems } from '@shared/utils/settingsUtil';
+import { getDefaultPageSize, getLateValue, getDashboardItems, getReportStyles } from '@shared/utils/settingsUtil';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { PAGE_SIZE_OPTIONS } from '@shared/config/settings';
 import { DashboardItemsInput } from './DashboardItemsInput';
+import { ReportStylesInput } from './ReportStylesInput';
 
 const pageSizeOptions = PAGE_SIZE_OPTIONS.map(option => ({ id: option, name: option }));
 
@@ -26,6 +27,7 @@ export default function Settings() {
         defaultPageSize: getDefaultPageSize(identity),
         lateValue: getLateValue(identity),
         dashboardItems: getDashboardItems(identity),
+        reportStyles: getReportStyles(identity),
     };
 
     const handleSave = async (values) => {
@@ -60,6 +62,8 @@ export default function Settings() {
                         <NumberInput source="lateValue" fullWidth validate={required()} />
 
                         <DashboardItemsInput />
+
+                        <ReportStylesInput />
                     </SimpleForm>
                 </ResourceContextProvider>
             </CardContent>
