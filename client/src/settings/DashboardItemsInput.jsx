@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ArrayInput, SimpleFormIterator, required } from 'react-admin';
+import { ArrayInput, SimpleFormIterator, required, TextInput } from 'react-admin';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonEntityNameInput } from '@shared/components/fields/CommonEntityNameInput';
 import { CommonJsonInput } from '@shared/components/fields/CommonJsonItem';
@@ -19,6 +19,11 @@ export function DashboardItemsInput() {
       <AccordionDetails>
         <ArrayInput source="dashboardItems">
           <SimpleFormIterator>
+            <TextInput
+              source="title"
+              label="כותרת"
+              fullWidth
+            />
             <CommonEntityNameInput
               source="resource"
               allowedEntities={[

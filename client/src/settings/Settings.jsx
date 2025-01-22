@@ -7,6 +7,7 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { PAGE_SIZE_OPTIONS } from '@shared/config/settings';
 import { DashboardItemsInput } from './DashboardItemsInput';
 import { ReportStylesInput } from './ReportStylesInput';
+import { GeneralSettingsInput } from './GeneralSettingsInput';
 
 const pageSizeOptions = PAGE_SIZE_OPTIONS.map(option => ({ id: option, name: option }));
 
@@ -52,17 +53,8 @@ export default function Settings() {
                         defaultValues={defaultValues}
                         toolbar={<SettingsToolbar />}
                     >
-                        <CommonAutocompleteInput
-                            source="defaultPageSize"
-                            choices={pageSizeOptions}
-                            fullWidth
-                            disableClearable
-                            validate={required()}
-                        />
-                        <NumberInput source="lateValue" fullWidth validate={required()} />
-
+                        <GeneralSettingsInput />
                         <DashboardItemsInput />
-
                         <ReportStylesInput />
                     </SimpleForm>
                 </ResourceContextProvider>
