@@ -493,7 +493,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         dataSource.getRepository(Klass).find({ where: { id: In(studentReports.map(item => item.klassReferenceId)) }, relations: { klassType: true } }),
         dataSource.getRepository(Lesson).find({ where: { id: In(studentReports.map(item => item.lessonReferenceId)) } }),
         dataSource.getRepository(Teacher).find({ where: { id: In(studentReports.map(item => item.teacherReferenceId)) } }),
-        dataSource.getRepository(AttGradeEffect).find({ where: { userId: student.userId }, order: { percents: 'DESC', count: 'DESC' } }),
+        dataSource.getRepository(AttGradeEffect).find({ where: { userId: student.userId }, order: { percents: 'DESC', count: 'ASC' } }),
         dataSource.getRepository(GradeName).find({ where: { userId: student.userId }, order: { key: 'DESC' } }),
     ]);
 
@@ -507,7 +507,6 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
     const knownAbsMap = groupDataByKeysAndCalc(knownAbsences, ['klassReferenceId'], (arr) => groupDataByKeysAndCalc(arr, ['lessonReferenceId'], (arr) => calcSum(arr, item => item.absnceCount)));
     const reports = getReports(params, studentReports, knownAbsMap, studentBaseKlass, klasses, lessons, teachers);
 
-    console.log('att_grade_effect', att_grade_effect.map(a => a.effect).join());
     return {
         userStyles: user?.additionalData?.reportStyles,
         images: { reportLogo, reportBottomLogo },
