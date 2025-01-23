@@ -49,7 +49,7 @@ const getReportData: IGetReportDataFunction = async (params: MichlolPopulatedFil
         const [reports, knownAbsences, attGradeEffect] = await Promise.all([
             dataSource.getRepository(AttReportAndGrade).find({ where: dataFilter, order: { reportDate: 'ASC' } }),
             dataSource.getRepository(KnownAbsence).find({ where: { ...dataFilter, isApproved: true } }),
-            dataSource.getRepository(AttGradeEffect).find({ where: { userId: lesson.userId }, order: { percents: 'DESC', count: 'DESC' } }),
+            dataSource.getRepository(AttGradeEffect).find({ where: { userId: lesson.userId }, order: { percents: 'DESC', count: 'ASC' } }),
         ]);
 
         const studentReportsMap = groupDataByKeys(reports, ['studentReferenceId']);
