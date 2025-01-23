@@ -17,6 +17,6 @@ module.exports = {
         "!**/dist/**",
         "!**/coverage/**"
     ],
-    coverageDirectory: "../test/coverage",
+    coverageDirectory: "coverage",
     coverageReporters: ["json", "lcov", "text", "clover"],
 }
