@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { In } from 'typeorm';
 import { User } from 'src/db/entities/User.entity';
-import { convertToReactStyle, ReportStyles } from '../../shared/utils/report/react-user-styles/reportStyles';
-import { wrapWithStyles, useStyles, useFontLinks } from '../../shared/utils/report/react-user-styles/StylesContext';
+import { convertToReactStyle, ReportStyles } from '@shared/utils/report/react-user-styles/reportStyles';
+import { wrapWithStyles, useStyles, useFontLinks } from '@shared/utils/report/react-user-styles/StylesContext';
 import { Student } from 'src/db/entities/Student.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
@@ -40,31 +40,22 @@ const defaultReportStyles: ReportStyles = [
     },
     {
         type: ReportElementType.TABLE_HEADER,
-        fontFamily: 'Roboto',
         fontSize: 16,
         isBold: true,
-        isItalic: false
     },
     {
         type: ReportElementType.TABLE_CELL,
-        fontFamily: 'Roboto',
         fontSize: 16,
-        isBold: false,
-        isItalic: false
     },
     {
         type: ReportElementType.TITLE_PRIMARY,
-        fontFamily: 'Roboto',
         fontSize: 18,
         isBold: true,
-        isItalic: false
     },
     {
         type: ReportElementType.TITLE_SECONDARY,
-        fontFamily: 'Roboto',
         fontSize: 16,
         isBold: true,
-        isItalic: false
     }
 ];
 
