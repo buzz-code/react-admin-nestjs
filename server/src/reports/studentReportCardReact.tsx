@@ -507,6 +507,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
     const knownAbsMap = groupDataByKeysAndCalc(knownAbsences, ['klassReferenceId'], (arr) => groupDataByKeysAndCalc(arr, ['lessonReferenceId'], (arr) => calcSum(arr, item => item.absnceCount)));
     const reports = getReports(params, studentReports, knownAbsMap, studentBaseKlass, klasses, lessons, teachers);
 
+    console.log('att_grade_effect', att_grade_effect);
     return {
         userStyles: user?.additionalData?.reportStyles,
         images: { reportLogo, reportBottomLogo },
