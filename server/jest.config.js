@@ -15,7 +15,12 @@ module.exports = {
         "**/*.(t|j)s",
         "!**/node_modules/**",
         "!**/dist/**",
-        "!**/coverage/**"
+        "!**/coverage/**",
+        "!helpers/**",
+        "!.eslintrc.js",
+        "!jest.config.js",
+        "!**/migrations/**",
+        "!test/**",
     ],
     coverageDirectory: "coverage",
     coverageReporters: ["json", "lcov", "text", "clover"],
