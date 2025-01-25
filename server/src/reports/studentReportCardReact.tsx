@@ -21,6 +21,7 @@ import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
 import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from 'src/utils/reportData.util';
 import { getDisplayGrade, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect } from 'src/utils/studentReportData.util';
 import { getReportDateFilter, dateFromString } from '@shared/utils/entity/filters.util';
+import { StudentSpeciality } from 'src/db/view-entities/StudentSpeciality.entity';
 
 enum ReportElementType {
     DOCUMENT = 'document',           // General document text
@@ -79,6 +80,7 @@ interface AppProps {
     };
     student: Student;
     studentBaseKlass: StudentBaseKlass;
+    studentSpeciality: StudentSpeciality;
     reportParams: IReportParams;
     reports: ReportDataArrItem[];
     knownAbsMap: Record<string, Record<string, number>>;
@@ -107,7 +109,8 @@ const App: React.FunctionComponent<AppProps> = (props) => {
                     <Header image={props.images.reportLogo} />
                 </th></tr></thead>
                 <tbody><tr><td>
-                    <ReportTable student={props.student} studentBaseKlass={props.studentBaseKlass}
+                    <ReportTable student={props.student} 
+                        studentBaseKlass={props.studentBaseKlass} studentSpeciality={props.studentSpeciality}
                         reports={props.reports} reportParams={props.reportParams}
                         knownAbsMap={props.knownAbsMap}
                         att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
@@ -186,13 +189,14 @@ const containerStyle: React.CSSProperties = {
 interface ReportTableProps {
     student: AppProps['student'];
     studentBaseKlass: AppProps['studentBaseKlass'];
+    studentSpeciality: AppProps['studentSpeciality'];
     reports: AppProps['reports'];
     reportParams: AppProps['reportParams'];
     knownAbsMap: AppProps['knownAbsMap'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
 }
-const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, reports, reportParams, knownAbsMap, att_grade_effect, grade_names }) => {
+const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, studentSpeciality, reports, reportParams, knownAbsMap, att_grade_effect, grade_names }) => {
     const studentCommentHeader = [
         !reportParams.downComment && { level: 3, label: 'התמחות', value: student?.comment }
     ];
@@ -205,7 +209,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
         { level: 3, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
     ];
     const studentSmallCommentHeader = [
-        reportParams.downComment && { level: 3, label: '', value: student?.comment }
+        reportParams.downComment && { level: 3, label: 'התמחות', value: studentSpeciality?.klassName }
     ];
 
     return (
@@ -479,11 +483,12 @@ export interface IReportParams {
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
     const reportDate = getReportDateFilter(dateFromString(params.startDate), dateFromString(params.endDate));
 
-    const [user, student, studentReports, studentBaseKlass, reportLogo, reportBottomLogo, knownAbsences] = await Promise.all([
+    const [user, student, studentReports, studentBaseKlass, studentSpeciality, reportLogo, reportBottomLogo, knownAbsences] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
         dataSource.getRepository(AttReportAndGrade).find({ where: getReportsFilterForReportCard(params.studentId, params.year, reportDate, params.globalLessonReferenceIds, params.denyLessonReferenceIds), order: { reportDate: 'ASC' } }),
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
+        dataSource.getRepository(StudentSpeciality).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportLogo }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportBottomLogo }),
         dataSource.getRepository(KnownAbsence).findBy({ studentReferenceId: params.studentId, year: params.year, isApproved: true, reportDate }),
@@ -512,6 +517,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         images: { reportLogo, reportBottomLogo },
         student,
         studentBaseKlass,
+        studentSpeciality,
         reportParams: params,
         reports,
         knownAbsMap,
