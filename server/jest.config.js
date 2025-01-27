@@ -21,6 +21,7 @@ module.exports = {
         "!jest.config.js",
         "!**/migrations/**",
         "!test/**",
+        "!**/config/**",
     ],
     coverageDirectory: "coverage",
     coverageReporters: ["json", "lcov", "text", "clover"],
