@@ -1,0 +1,18 @@
+{
+  "customizations": {
+    "codespaces": {
+      "repositories": {
+        "buzz-code/nra-server": {
+          "permissions": {
+            "contents": "write"
+          }
+        },
+        "buzz-code/nra-client": {
+          "permissions": {
+            "contents": "write"
+          }
+        }
+      }
+    }
+  }
+}
