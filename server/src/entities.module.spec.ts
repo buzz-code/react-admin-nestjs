@@ -127,9 +127,6 @@ describe('EntitiesModule', () => {
       expect(imports).toBeDefined();
       expect(Array.isArray(imports)).toBe(true);
       
-      // Log the actual structure for debugging
-      console.log('Imports metadata:', JSON.stringify(imports, null, 2));
-      
       imports.forEach(imp => {
         expect(typeof imp).toBe('object');
         expect(imp).toHaveProperty('module');
@@ -203,9 +200,6 @@ describe('EntitiesModule', () => {
       const imports = Reflect.getMetadata('imports', EntitiesModule);
       expect(imports).toBeDefined();
       expect(Array.isArray(imports)).toBe(true);
-
-      // Log the actual structure for debugging
-      console.log('Integration imports metadata:', JSON.stringify(imports, null, 2));
 
       imports.forEach(imp => {
         expect(typeof imp).toBe('object');
