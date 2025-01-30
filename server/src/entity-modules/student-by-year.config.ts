@@ -155,7 +155,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
     }
 }
 
-const Utils = {
+export const Utils = {
     getReportMonthFilter(id: number, semester: ReportMonthSemester): FindOptionsWhere<ReportMonth> {
         const filter = { id, semester };
         for (const key in filter) {
