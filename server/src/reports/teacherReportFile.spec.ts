@@ -102,6 +102,64 @@ describe('teacherReportFile', () => {
       expect(result).toEqual([]);
     });
 
+    it('should handle valid lessonReferenceId', async () => {
+      const params = createMockParams({ lessonReferenceId: 1 });
+      const mockLesson = {
+        id: 1,
+        name: 'Math',
+        key: 123,
+        klassReferenceIds: ['1']
+      };
+      const mockStudents = [
+        {
+          klass: { key: 'A1' },
+          student: { tz: '123', name: 'Student 1' },
+        },
+      ];
+
+      (mockUserRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 1, name: 'User 1' });
+      (mockTeacherRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 2, name: 'Teacher 1', tz: '999' });
+      (mockTeacherReportStatusRepo.findOneBy as jest.Mock).mockResolvedValue({
+        notReportedLessons: ['1', '2'],
+        year: 2025,
+        reportMonthName: 'January',
+      });
+      (mockReportMonthRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 3, name: 'January' });
+      (mockLessonRepo.findBy as jest.Mock).mockResolvedValue([mockLesson]);
+      (mockStudentKlassRepo.find as jest.Mock).mockResolvedValue(mockStudents);
+
+      const result = await teacherReportFileModule.getReportData(params, mockDataSource as DataSource);
+
+      expect(result).toHaveLength(1);
+      expect(mockLessonRepo.findBy).toHaveBeenCalledWith({ id: 1 });
+    });
+
+    it('should handle lessons without klassReferenceIds', async () => {
+      const params = createMockParams();
+      const mockLesson = {
+        id: 1,
+        name: 'Math',
+        key: 123,
+        klassReferenceIds: null
+      };
+
+      (mockUserRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 1, name: 'User 1' });
+      (mockTeacherRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 2, name: 'Teacher 1', tz: '999' });
+      (mockTeacherReportStatusRepo.findOneBy as jest.Mock).mockResolvedValue({
+        notReportedLessons: ['1'],
+        year: 2025,
+        reportMonthName: 'January',
+      });
+      (mockReportMonthRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 3, name: 'January' });
+      (mockLessonRepo.findBy as jest.Mock).mockResolvedValue([mockLesson]);
+
+      const result = await teacherReportFileModule.getReportData(params, mockDataSource as DataSource);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].formattedData).toEqual([]);
+      expect(mockStudentKlassRepo.find).not.toHaveBeenCalled();
+    });
+
     it('should generate grade report with students', async () => {
       const params = createMockParams({ isGrades: true });
       const mockLesson = {
@@ -144,7 +202,7 @@ describe('teacherReportFile', () => {
         ],
         sheetName: 'January',
       });
-      expect(result[0].specialFields).toHaveLength(10); // Base fields
+      expect(result[0].specialFields).toHaveLength(10);
     });
 
     it('should generate attendance report with students', async () => {
@@ -185,6 +243,31 @@ describe('teacherReportFile', () => {
         sheetName: 'January',
       });
     });
+
+    it('should handle missing reportMonthName', async () => {
+      const params = createMockParams();
+      const mockLesson = {
+        id: 1,
+        name: 'Math',
+        key: 123,
+        klassReferenceIds: ['1']
+      };
+
+      (mockUserRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 1, name: 'User 1' });
+      (mockTeacherRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 2, name: 'Teacher 1', tz: '999' });
+      (mockTeacherReportStatusRepo.findOneBy as jest.Mock).mockResolvedValue({
+        notReportedLessons: ['1'],
+        year: 2025,
+        reportMonthName: null,
+      });
+      (mockReportMonthRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 3, name: 'January' });
+      (mockLessonRepo.findBy as jest.Mock).mockResolvedValue([mockLesson]);
+      (mockStudentKlassRepo.find as jest.Mock).mockResolvedValue([]);
+
+      const result = await teacherReportFileModule.getReportData(params, mockDataSource as DataSource);
+
+      expect(result[0].sheetName).toBe('דיווח נוכחות');
+    });
   });
 
   describe('getReportName', () => {
@@ -198,6 +281,7 @@ describe('teacherReportFile', () => {
         teacherReportStatus: { reportMonthName: 'January' } as TeacherReportStatus,
         headerRow: [],
         formattedData: [],
+        specialFields: []
       };
 
       const result = teacherReportFileModule.getReportName(mockData);
