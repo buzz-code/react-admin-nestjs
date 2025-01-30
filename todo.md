@@ -306,6 +306,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * save dashboard items in a table, and enable for users to edit them
 * update n8n version
 * add style editor in settings and use it in student report card
+* increase test coverage for 'server' folder
 
 # todo
 * add pre-push test run
@@ -316,8 +317,6 @@ https://github.com/tinovyatkin/nest-puppeteer
 # todo later
 ## infrastucture
 * fix local dev dockerfile
-* check test coverage & work to increase coverage - current: 89.21 |    65.97 |   72.22 |   92.25
-* add more unit tests to backend
 * add more unit testing to client side
 * check slow queries in kibana
 * update react-admin version
