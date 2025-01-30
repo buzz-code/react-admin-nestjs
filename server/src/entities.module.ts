@@ -38,6 +38,7 @@ import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entit
 import { AbsCountEffectByUser } from "@shared/view-entities/AbsCountEffectByUser.entity";
 import { LessonKlassName } from "./db/view-entities/LessonKlassName.entity";
 import importFileConfig from "./entity-modules/import-file.config";
+import { StudentSpeciality } from "./db/view-entities/StudentSpeciality.entity";
 
 @Module({
     imports: [
@@ -55,6 +56,7 @@ import importFileConfig from "./entity-modules/import-file.config";
         BaseEntityModule.register(textConfig),
         BaseEntityModule.register(studentKlassReportConfig),
         BaseEntityModule.register({ entity: StudentBaseKlass }),
+        BaseEntityModule.register({ entity: StudentSpeciality }),
         BaseEntityModule.register(auditLogConfig),
         BaseEntityModule.register(importFileConfig),
         BaseEntityModule.register({ entity: YemotCall }),
