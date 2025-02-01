@@ -54,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "@types/xlsx": "^0.0.36",
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
