@@ -1,5 +1,5 @@
-import klassTypeConfig from './klass-type.config';
-import { KlassType } from '../db/entities/KlassType.entity';
+import { KlassType } from 'src/db/entities/KlassType.entity';
+import klassTypeConfig from '../klass-type.config';
 
 describe('KlassTypeConfig', () => {
   it('should use KlassType entity', () => {

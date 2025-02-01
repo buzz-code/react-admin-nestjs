@@ -1,6 +1,6 @@
-import getReportChain from './attReport.chain';
+import getReportChain from '../attReport.chain';
 import { YemotRequest, YemotResponse, YemotResponseMock } from "@shared/utils/yemot/yemot.interface";
-import getReportTypeChain from './reportType.chain';
+import getReportTypeChain from '../reportType.chain';
 import util from '@shared/utils/yemot/yemot.util';
 
 async function getExistingReports(req: YemotRequest, klassId: string, lessonId: string, sheetName: string) {

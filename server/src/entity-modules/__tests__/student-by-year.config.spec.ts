@@ -1,4 +1,4 @@
-import config, { Utils } from './student-by-year.config';
+import config, { Utils } from '../student-by-year.config';
 import { StudentByYear } from "src/db/view-entities/StudentByYear.entity";
 import { DataSource, EntityMetadata, Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';

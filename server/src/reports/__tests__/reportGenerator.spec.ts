@@ -2,7 +2,7 @@ import { BaseReportGenerator } from '@shared/utils/report/report.generators';
 import { CrudRequest } from '@dataui/crud';
 import { DataSource } from 'typeorm';
 import { MailSendService } from '@shared/utils/mail/mail-send.service';
-import { generateStudentReportCard, getTeacherStatusFileReportParams, sendTeacherReportFileMail } from './reportGenerator';
+import { generateStudentReportCard, getTeacherStatusFileReportParams, sendTeacherReportFileMail } from '../reportGenerator';
 import * as yearUtil from '@shared/utils/entity/year.util';
 import * as authUtil from '@shared/auth/auth.util';
 import * as mailAddressUtil from '@shared/utils/mail/mail-address.util';

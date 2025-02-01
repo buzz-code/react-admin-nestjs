@@ -6,7 +6,7 @@ import { TeacherGradeReportStatus } from 'src/db/view-entities/TeacherGradeRepor
 import { ReportMonth } from 'src/db/entities/ReportMonth.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
 import { StudentKlass } from 'src/db/entities/StudentKlass.entity';
-import teacherReportFileModule, { TeacherReportFileParams, TeacherReportFileData } from './teacherReportFile';
+import teacherReportFileModule, { TeacherReportFileParams, TeacherReportFileData } from '../teacherReportFile';
 
 describe('teacherReportFile', () => {
   let mockDataSource: Partial<DataSource>;

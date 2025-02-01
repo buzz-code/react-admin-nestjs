@@ -1,5 +1,5 @@
-import teacherConfig from './teacher.config';
-import { Teacher } from '../db/entities/Teacher.entity';
+import teacherConfig from '../teacher.config';
+import { Teacher } from 'src/db/entities/Teacher.entity';
 
 describe('TeacherConfig', () => {
   it('should use Teacher entity', () => {

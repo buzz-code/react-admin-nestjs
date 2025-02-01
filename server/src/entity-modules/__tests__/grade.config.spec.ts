@@ -1,7 +1,7 @@
 import { Repository, DataSource } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailSendService } from '@shared/utils/mail/mail-send.service';
-import gradeConfig from './grade.config';
+import gradeConfig from '../grade.config';
 import { Grade } from 'src/db/entities/Grade.entity';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { ENTITY_REPOSITORY, ENTITY_EXPORTER } from '@shared/base-entity/interface';

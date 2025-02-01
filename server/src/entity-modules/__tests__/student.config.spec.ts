@@ -1,8 +1,6 @@
-import studentConfig from './student.config';
-import { Student } from '../db/entities/Student.entity';
+import studentConfig from '../student.config';
+import { Student } from 'src/db/entities/Student.entity';
 import { BulkToPdfReportGenerator } from '@shared/utils/report/bulk-to-pdf.generator';
-import studentReportCard from '../reports/studentReportCard';
-import studentReportCardReact from '../reports/studentReportCardReact';
 import { getUserIdFromUser } from '@shared/auth/auth.util';
 import { generateStudentReportCard } from 'src/reports/reportGenerator';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';

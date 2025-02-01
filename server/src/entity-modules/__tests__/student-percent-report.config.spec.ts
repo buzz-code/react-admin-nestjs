@@ -2,7 +2,7 @@ import { CrudRequest } from '@dataui/crud';
 import { DataSource, Repository } from 'typeorm';
 import { StudentPercentReport } from 'src/db/view-entities/StudentPercentReport.entity';
 import { IColumn, IHeader } from '@shared/utils/exporter/types';
-import config from './student-percent-report.config';
+import config from '../student-percent-report.config';
 
 type MockRepository<T> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 

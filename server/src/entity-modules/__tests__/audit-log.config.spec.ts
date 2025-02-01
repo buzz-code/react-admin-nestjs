@@ -1,4 +1,4 @@
-import config from './audit-log.config';
+import config from '../audit-log.config';
 import { AuditLog } from '@shared/entities/AuditLog.entity';
 import { Student } from 'src/db/entities/Student.entity';
 import { Teacher } from 'src/db/entities/Teacher.entity';

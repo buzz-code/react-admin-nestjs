@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm';
 import { MailSendService } from '@shared/utils/mail/mail-send.service';
 import teacherReportFile from 'src/reports/teacherReportFile';
 import * as reportGenerator from 'src/reports/reportGenerator';
-import config from './teacher-report-status.config';
+import config from '../teacher-report-status.config';
 import { CrudRequest } from '@dataui/crud';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 

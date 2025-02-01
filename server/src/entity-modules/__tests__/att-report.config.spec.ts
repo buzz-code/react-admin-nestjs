@@ -1,4 +1,4 @@
-import config, { calcAttLateCount } from './att-report.config';
+import config, { calcAttLateCount } from '../att-report.config';
 import { AttReport } from 'src/db/entities/AttReport.entity';
 import { User } from '@shared/entities/User.entity';
 

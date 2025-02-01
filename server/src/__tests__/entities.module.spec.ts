@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EntitiesModule } from './entities.module';
+import { EntitiesModule } from '../entities.module';
 import { BaseEntityModule } from '@shared/base-entity/base-entity.module';
 import { getMetadataArgsStorage, DataSource } from 'typeorm';
 import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
@@ -28,30 +28,30 @@ jest.mock('@shared/base-entity/base-entity.module', () => {
 const MockBaseEntityModule = global.MockBaseEntityModule;
 
 // Import all configs and entities
-import userConfig from './entity-modules/user.config';
-import attReportConfig from './entity-modules/att-report.config';
-import gradeConfig from './entity-modules/grade.config';
-import klassConfig from './entity-modules/klass.config';
-import klassTypeConfig from './entity-modules/klass-type.config';
-import knownAbsenceConfig from './entity-modules/known-absence.config';
-import lessonConfig from './entity-modules/lesson.config';
-import studentKlassConfig from './entity-modules/student-klass.config';
-import studentConfig from './entity-modules/student.config';
-import teacherConfig from './entity-modules/teacher.config';
-import textConfig from './entity-modules/text.config';
-import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass.entity';
+import userConfig from '../entity-modules/user.config';
+import attReportConfig from '../entity-modules/att-report.config';
+import gradeConfig from '../entity-modules/grade.config';
+import klassConfig from '../entity-modules/klass.config';
+import klassTypeConfig from '../entity-modules/klass-type.config';
+import knownAbsenceConfig from '../entity-modules/known-absence.config';
+import lessonConfig from '../entity-modules/lesson.config';
+import studentKlassConfig from '../entity-modules/student-klass.config';
+import studentConfig from '../entity-modules/student.config';
+import teacherConfig from '../entity-modules/teacher.config';
+import textConfig from '../entity-modules/text.config';
+import { StudentBaseKlass } from '../db/view-entities/StudentBaseKlass.entity';
 import { YemotCall } from '@shared/entities/YemotCall.entity';
 import { RecievedMail } from '@shared/entities/RecievedMail.entity';
 import { Image } from "@shared/entities/Image.entity";
-import { ReportMonth } from './db/entities/ReportMonth.entity';
-import { AttReportAndGrade } from "./db/view-entities/AttReportAndGrade.entity";
-import { StudentGlobalReport } from "./db/view-entities/StudentGlobalReport.entity";
-import { KnownAbsenceWithReportMonth } from "./db/view-entities/KnownAbsenceWithReportMonth.entity";
-import { GradeName } from "./db/entities/GradeName.entity";
-import { AttGradeEffect } from "./db/entities/AttGradeEffect";
+import { ReportMonth } from '../db/entities/ReportMonth.entity';
+import { AttReportAndGrade } from "../db/view-entities/AttReportAndGrade.entity";
+import { StudentGlobalReport } from "../db/view-entities/StudentGlobalReport.entity";
+import { KnownAbsenceWithReportMonth } from "../db/view-entities/KnownAbsenceWithReportMonth.entity";
+import { GradeName } from "../db/entities/GradeName.entity";
+import { AttGradeEffect } from "../db/entities/AttGradeEffect";
 import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entity";
 import { AbsCountEffectByUser } from "@shared/view-entities/AbsCountEffectByUser.entity";
-import { LessonKlassName } from "./db/view-entities/LessonKlassName.entity";
+import { LessonKlassName } from "../db/view-entities/LessonKlassName.entity";
 
 describe('EntitiesModule', () => {
   let module: TestingModule;

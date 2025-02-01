@@ -5,7 +5,7 @@ import { Student } from 'src/db/entities/Student.entity';
 import { AttReportAndGrade } from 'src/db/view-entities/AttReportAndGrade.entity';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
-import michlolPopulatedFile, { MichlolPopulatedFileParams } from './michlolPopulatedFile';
+import michlolPopulatedFile, { MichlolPopulatedFileParams } from '../michlolPopulatedFile';
 import * as yearUtil from '@shared/utils/entity/year.util';
 import * as reportDataUtil from 'src/utils/reportData.util';
 import * as studentReportDataUtil from 'src/utils/studentReportData.util';

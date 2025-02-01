@@ -10,7 +10,7 @@ import {
   getUnknownAbsCount,
   getDisplayGrade,
   getGradeEffect
-} from './studentReportData.util';
+} from '../studentReportData.util';
 import { AttReportAndGrade } from 'src/db/view-entities/AttReportAndGrade.entity';
 import { GradeName } from 'src/db/entities/GradeName.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';

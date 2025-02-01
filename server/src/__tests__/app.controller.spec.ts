@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from '../app.controller';
+import { AppService } from '../app.service';
 import { AuthService } from '@shared/auth/auth.service';
 import { Response } from 'express';
 import { UnauthorizedException } from '@nestjs/common';

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from './app.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppModule } from '../app.module';
+import { AppController } from '../app.controller';
+import { AppService } from '../app.service';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,12 +10,12 @@ import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from '@shared/auth/auth.module';
 import { YemotModule } from '@shared/utils/yemot/yemot.module';
 import { MailSendModule } from '@shared/utils/mail/mail-send.module';
-import { EntitiesModule } from './entities.module';
+import { EntitiesModule } from '../entities.module';
 import { getPinoConfig } from '@shared/config/pino.config';
 import { JwtModule } from '@nestjs/jwt';
 
 // Mock required modules
-jest.mock('./entities.module', () => ({
+jest.mock('../entities.module', () => ({
   EntitiesModule: class {
     static imports = [];
   }

@@ -7,7 +7,7 @@ import { MailSendService } from '@shared/utils/mail/mail-send.service';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { CommonReportData } from '@shared/utils/report/types';
 import { ParamsToJsonReportGenerator } from '@shared/utils/report/params-to-json.generator';
-import config from './student-klass.config';
+import config from '../student-klass.config';
 
 jest.mock('@shared/utils/report/bulk-to-pdf.generator');
 jest.mock('src/reports/reportGenerator');

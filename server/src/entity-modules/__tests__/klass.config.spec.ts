@@ -1,6 +1,6 @@
 import { CrudRequest } from '@dataui/crud';
 import { Klass } from 'src/db/entities/Klass.entity';
-import klassConfig from './klass.config';
+import klassConfig from '../klass.config';
 
 describe('KlassConfig', () => {
   it('should have correct base configuration', () => {
