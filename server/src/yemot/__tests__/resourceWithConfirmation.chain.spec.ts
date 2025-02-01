@@ -1,5 +1,5 @@
 import { pascalCase } from "change-case";
-import getResourceConfirmationChain from "./resourceWithConfirmation.chain";
+import getResourceConfirmationChain from "../resourceWithConfirmation.chain";
 
 const resource = 'lesson';
 const chain = getResourceConfirmationChain(resource, req => req.getLessonFromLessonId(req.params[resource + 'Id']));

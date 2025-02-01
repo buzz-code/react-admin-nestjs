@@ -1,4 +1,4 @@
-import getReportChain, { IReportProperty } from "./attReport.chain";
+import getReportChain, { IReportProperty } from "../attReport.chain";
 import { YemotRequest, YemotResponse, YemotResponseMock } from "@shared/utils/yemot/yemot.interface";
 import util from "@shared/utils/yemot/yemot.util";
 

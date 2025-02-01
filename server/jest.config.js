@@ -7,6 +7,7 @@ module.exports = {
     modulePaths: [
         '<rootDir>'
     ],
+    maxWorkers: 1,
     testRegex: ".*\\.(spec|test)\\.ts$",
     transform: {
         "^.+\\.(t|j)s$": "ts-jest"
@@ -15,7 +16,13 @@ module.exports = {
         "**/*.(t|j)s",
         "!**/node_modules/**",
         "!**/dist/**",
-        "!**/coverage/**"
+        "!**/coverage/**",
+        "!helpers/**",
+        "!.eslintrc.js",
+        "!jest.config.js",
+        "!**/migrations/**",
+        "!test/**",
+        "!**/config/**",
     ],
     coverageDirectory: "coverage",
     coverageReporters: ["json", "lcov", "text", "clover"],

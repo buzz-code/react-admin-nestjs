@@ -14,7 +14,7 @@ interface ISprIdData {
     userId: string;
     year: string;
 }
-function breakSprId(id: string): ISprIdData {
+export function breakSprId(id: string): ISprIdData {
     const [studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId, userId, year] = id.split('_');
     return {
         studentReferenceId,

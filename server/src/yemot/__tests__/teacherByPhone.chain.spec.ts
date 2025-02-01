@@ -1,4 +1,4 @@
-import teacherByPhoneChain from "./teacherByPhone.chain";
+import teacherByPhoneChain from "../teacherByPhone.chain";
 
 const chain = teacherByPhoneChain;
 
