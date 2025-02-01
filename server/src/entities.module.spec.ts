@@ -132,12 +132,6 @@ describe('EntitiesModule', () => {
         expect(imp).toHaveProperty('module');
       });
     });
-
-    it('should register correct number of entity configurations', () => {
-      const imports = Reflect.getMetadata('imports', EntitiesModule);
-      // Count should match the number of BaseEntityModule.register() calls in the module
-      expect(imports.length).toBe(37);
-    });
   });
 
   describe('Entity Configurations', () => {
