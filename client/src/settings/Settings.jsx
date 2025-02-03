@@ -3,13 +3,10 @@ import { Card, CardContent } from '@mui/material';
 import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider, ResourceContextProvider } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { getDefaultPageSize, getLateValue, getDashboardItems, getReportStyles, getReportCardSettings } from '@shared/utils/settingsUtil';
-import { PAGE_SIZE_OPTIONS } from '@shared/config/settings';
 import { DashboardItemsInput } from './DashboardItemsInput';
 import { ReportStylesInput } from './ReportStylesInput';
 import { GeneralSettingsInput } from './GeneralSettingsInput';
 import { ReportCardSettingsInput } from './ReportCardSettingsInput';
-
-const pageSizeOptions = PAGE_SIZE_OPTIONS.map(option => ({ id: option, name: option }));
 
 const SettingsToolbar = () => (
     <Toolbar>
