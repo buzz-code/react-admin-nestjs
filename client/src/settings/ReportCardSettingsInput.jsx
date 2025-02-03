@@ -1,7 +1,7 @@
 import React from 'react';
-import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { Typography, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { BooleanInput } from 'react-admin';
+import { BooleanInput, Link } from 'react-admin';
 
 export function ReportCardSettingsInput() {
   return (
@@ -14,6 +14,9 @@ export function ReportCardSettingsInput() {
         <Typography variant="h6">הגדרות ברירת מחדל לתעודה</Typography>
       </AccordionSummary>
       <AccordionDetails>
+        <Box sx={{ mb: 2 }}>
+          <Link to="/image" target="_blank">להגדרת תמונות</Link>
+        </Box>
         <BooleanInput source="reportCardSettings.attendance" defaultChecked />
         <BooleanInput source="reportCardSettings.grades" defaultChecked />
         <BooleanInput source="reportCardSettings.showStudentTz" defaultChecked />
