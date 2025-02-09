@@ -290,7 +290,7 @@ const reportDataWrapperStyle2: React.CSSProperties = {
 }
 const commonTableStyle: React.CSSProperties = {
     border: '1px solid black',
-    padding: 12,
+    padding: '.75em',
     textAlign: 'center',
 }
 
