@@ -17,7 +17,8 @@ export default ({ defaultRequestValues }) => {
     return (
         <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
             name='studentReportCardReact' filename='תעודה'
-            defaultRequestValues={{ ...defaultValues, ...reportCardSettings, ...defaultRequestValues }}>
+            defaultRequestValues={{ ...defaultValues, ...defaultRequestValues }}
+            requestValues={reportCardSettings}>
             <CommonAutocompleteInput source="year" label="שנה" choices={yearChoices} />
             <DateInput source="startDate" label="תאריך התחלה" />
             <DateInput source="endDate" label="תאריך סיום" />
