@@ -44,7 +44,8 @@ export function ReportStylesInput() {
                 { id: 'tableHeader', name: 'כותרת טבלה' },
                 { id: 'tableCell', name: 'תא טבלה' },
                 { id: 'titlePrimary', name: 'כותרת ראשית' },
-                { id: 'titleSecondary', name: 'כותרת משנית' }
+                { id: 'titleSecondary', name: 'כותרת משנית (תאריכים)' },
+                { id: 'titleThird', name: 'כותרת שלישית' },
               ]}
               fullWidth
               validate={required()}

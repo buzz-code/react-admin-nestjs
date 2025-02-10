@@ -28,7 +28,8 @@ enum ReportElementType {
     TABLE_HEADER = 'tableHeader',    // Table headers
     TABLE_CELL = 'tableCell',        // Table content
     TITLE_PRIMARY = 'titlePrimary',  // h2 headers (student name, class)
-    TITLE_SECONDARY = 'titleSecondary' // h3 headers (dates, comments)
+    TITLE_SECONDARY = 'titleSecondary', // h3 headers (dates)
+    TITLE_THIRD = 'titleThird',      // h3 headers (comments)
 }
 
 const defaultReportStyles: ReportStyles = [
@@ -55,6 +56,11 @@ const defaultReportStyles: ReportStyles = [
     },
     {
         type: ReportElementType.TITLE_SECONDARY,
+        fontSize: 16,
+        isBold: true,
+    },
+    {
+        type: ReportElementType.TITLE_THIRD,
         fontSize: 16,
         isBold: true,
     }
@@ -198,7 +204,7 @@ interface ReportTableProps {
 }
 const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, studentSpeciality, reports, reportParams, knownAbsMap, att_grade_effect, grade_names }) => {
     const studentCommentHeader = [
-        !reportParams.downComment && { level: 3, label: 'התמחות', value: student?.comment }
+        !reportParams.downComment && { level: 4, label: 'התמחות', value: student?.comment }
     ];
     const baseHeader = [
         { level: 2, label: 'שם התלמידה', value: student?.name },
@@ -209,7 +215,7 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
         { level: 3, label: 'תאריך הנפקה', value: formatHebrewDate(new Date()) },
     ];
     const studentSmallCommentHeader = [
-        reportParams.downComment && { level: 3, label: 'התמחות', value: studentSpeciality?.klassName }
+        reportParams.downComment && { level: 4, label: 'התמחות', value: studentSpeciality?.klassName }
     ];
 
     return (
@@ -248,9 +254,14 @@ const ReportTableHeaderWrapper: React.FunctionComponent<ReportTableHeaderWrapper
     );
 }
 
+const headerLevelStyles = {
+    2: ReportElementType.TITLE_PRIMARY,
+    3: ReportElementType.TITLE_SECONDARY,
+    4: ReportElementType.TITLE_THIRD,
+}
 const useHeaderStyleByLevel = (level: number): React.CSSProperties => ({
     ...convertToReactStyle(useStyles(
-        level === 2 ? ReportElementType.TITLE_PRIMARY : ReportElementType.TITLE_SECONDARY,
+        headerLevelStyles[level] as ReportElementType | ReportElementType.DOCUMENT
     )),
     margin: 0,
 });
