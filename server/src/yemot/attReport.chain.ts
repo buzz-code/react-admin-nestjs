@@ -211,7 +211,7 @@ class IterateStudentsHandler extends HandlerBase {
 
     async handleRequest(req: YemotRequest, res: YemotResponse, next: Function) {
         req.params.studentIndex ??= 0;
-        if (req.params.studentIndex < req.params.students.length - 1) {
+        if (req.params.studentIndex < req.params.students.length) {
             res.clear();
             req.params.student ??= req.params.students[req.params.studentIndex];
             req.params.existing ??= req.params.existingReports.filter(item => item.studentReferenceId === req.params.student.id);

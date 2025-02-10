@@ -327,7 +327,7 @@ describe("attReport chain", () => {
         });
 
         it('when there are no more students to iterate, should call the next handler', async () => {
-            req.params.studentIndex = 2;
+            req.params.studentIndex = 3;
 
             await chain.handleRequest(req, res, next);
 
