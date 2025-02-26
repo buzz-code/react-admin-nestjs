@@ -2,6 +2,7 @@ import { CrudRequest } from "@dataui/crud";
 import { getUserIdFromUser } from "@shared/auth/auth.util";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
+import { IHeader } from "@shared/utils/exporter/types";
 import { generateCommonFileResponse } from "@shared/utils/report/report.util";
 import { Grade } from "src/db/entities/Grade.entity";
 import michlolPopulatedFile, { MichlolPopulatedFileParams } from "src/reports/michlolPopulatedFile";
@@ -19,6 +20,28 @@ function getConfig(): BaseEntityModuleOptions {
             }
         },
         exporter: {
+            processReqForExport(req: CrudRequest, innerFunc) {
+                req.options.query.join = {
+                    student: { eager: true },
+                    teacher: { eager: true },
+                    klass: { eager: true },
+                    lesson: { eager: true },
+                };
+                return innerFunc(req);
+            },
+            getExportHeaders(): IHeader[] {
+                return [
+                    { value: 'id', label: 'מזהה' },
+                    { value: 'teacher.name', label: 'שם המורה' },
+                    { value: 'student.name', label: 'שם התלמידה' },
+                    { value: 'klass.name', label: 'כיתה' },
+                    { value: 'lesson.name', label: 'שיעור' },
+                    { value: 'reportDate', label: 'תאריך דיווח' },
+                    { value: 'grade', label: 'ציון' },
+                    { value: 'estimation', label: 'הערכה' },
+                    { value: 'comments', label: 'הערות' },
+                ];
+            },
             getImportDefinition(importFields) {
                 return {
                     importFields: [
