@@ -156,6 +156,7 @@ export default {
                 comment: 'הערה',
                 howManyLessons: 'מספר שיעורים',
                 displayName: 'שם לתעודה',
+                order: 'סדר',
             }
         },
         student_klass: {

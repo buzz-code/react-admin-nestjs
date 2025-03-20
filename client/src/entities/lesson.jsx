@@ -43,6 +43,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <SelectField source="year" choices={yearChoices} />
             <TextField source="comment" />
             <TextField source="howManyLessons" />
+            <TextField source="order" />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -64,6 +65,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
         <TextInput source="comment" validate={[maxLength(1000)]} />
         <NumberInput source="howManyLessons" validate={minValue(0)} />
+        <NumberInput source="order" />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
@@ -72,7 +74,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['key', 'name', 'klasses', 'teacherId', 'startDate', 'endDate', 'year', 'comment', 'howManyLessons', 'displayName'],
+    fields: ['key', 'name', 'klasses', 'teacherId', 'startDate', 'endDate', 'year', 'comment', 'howManyLessons', 'displayName', 'order'],
 }
 
 const entity = {

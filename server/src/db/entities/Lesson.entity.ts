@@ -127,6 +127,12 @@ export class Lesson implements IHasUserId {
   @Column("float", { name: "how_many_lessons", nullable: true })
   howManyLessons: number;
 
+  @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @Column("int", { name: "order", nullable: true })
+  order: number;
+
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 

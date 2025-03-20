@@ -467,7 +467,7 @@ const ReportAbsTotal: React.FunctionComponent<ReportAbsTotalProps> = ({ id, repo
             {reportParams.grades && <th style={thStyle}>&nbsp;</th>}
             {reportParams.debug && <th style={thStyle}>&nbsp;</th>}
         </tr>
-    </>
+    </>;
 }
 
 export interface IReportParams {
@@ -583,6 +583,8 @@ function getReports(
     });
 
     const filteredReports = filterReports(data, reportParams);
+
+    filteredReports.sort((a, b) => (a.lesson?.order || 0) - (b.lesson?.order || 0));
 
     return groupReportsByKlass(filteredReports, reportParams, studentBaseKlass);
 }
