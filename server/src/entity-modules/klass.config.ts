@@ -26,6 +26,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'name', label: 'שם' },
                     { value: 'klassType.name', label: 'סוג כיתה' },
                     { value: 'teacher.name', label: 'מורה' },
+                    { value: 'displayName', label: 'שם לתעודה' },
                 ];
             }
         }

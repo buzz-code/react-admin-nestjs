@@ -80,6 +80,12 @@ export class Lesson implements IHasUserId {
 
   @IsOptional({ always: true })
   @StringType
+  @MaxLength(500, { always: true })
+  @Column("varchar", { name: "display_name", length: 500 })
+  displayName: string;
+
+  @IsOptional({ always: true })
+  @StringType
   @MaxLength(450, { always: true })
   @Column("varchar", { name: "klasses", nullable: true, length: 450 })
   klasses: string | null;

@@ -19,7 +19,7 @@ import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
 import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from 'src/utils/reportData.util';
-import { getDisplayGrade, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect } from 'src/utils/studentReportData.util';
+import { getDisplayGrade, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect, getDisplayable } from 'src/utils/studentReportData.util';
 import { getReportDateFilter, dateFromString } from '@shared/utils/entity/filters.util';
 import { StudentSpeciality } from 'src/db/view-entities/StudentSpeciality.entity';
 
@@ -408,9 +408,9 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
     const { fullCellStyle, rightAlignFullCellStyle, emptyCellStyle } = useCellStyles();
 
     return <tr>
-        <td style={rightAlignFullCellStyle}>{report.lesson?.name}</td>
+        <td style={rightAlignFullCellStyle}>{getDisplayable(report.lesson)}</td>
         <td style={fullCellStyle}>
-            {report.teacher?.displayName || report.teacher?.name}
+            {getDisplayable(report.teacher)}
         </td>
 
         {report.isSpecial
@@ -606,13 +606,14 @@ function groupReportsByKlass(reports: AppProps['reports'][number]['reports'], re
     if (reportParams.groupByKlass) {
         const klasses: Record<number, ReportDataArrItem> = {};
         reports.forEach(item => {
-            klasses[item.klass.name] ??= {
-                name: item.klass.name,
+            const name = getDisplayable(item.klass);
+            klasses[name] ??= {
+                name: name,
                 id: item.klass.id,
                 order: item.isBaseKlass ? -1 : 1,
                 reports: [],
             };
-            klasses[item.klass.name].reports.push(item);
+            klasses[name].reports.push(item);
         })
         return Object.values(klasses).sort((a, b) => a.order - b.order);
     } else {

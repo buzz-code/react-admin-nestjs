@@ -28,6 +28,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'teacher.name', label: 'מורה' },
                     { value: 'startDate', label: 'תאריך התחלה' },
                     { value: 'endDate', label: 'תאריך סיום' },
+                    { value: 'displayName', label: 'שם לתעודה' },
                 ];
             }
         },

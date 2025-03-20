@@ -70,6 +70,12 @@ export class Klass implements IHasUserId {
   @Column("varchar", { name: "name", length: 500 })
   name: string;
 
+  @IsOptional({ always: true })
+  @StringType
+  @MaxLength(500, { always: true })
+  @Column("varchar", { name: "display_name", length: 500 })
+  displayName: string;
+
   @ValidateIf((attReport: Klass) => !Boolean(attReport.klassTypeReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })

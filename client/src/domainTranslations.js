@@ -108,6 +108,7 @@ export default {
             name: 'כיתה |||| כיתות',
             fields: {
                 ...generalResourceFieldsTranslation,
+                displayName: 'שם לתעודה',
                 klassTypeId: 'שיוך כיתה',
                 klassTypeReferenceId: 'שיוך כיתה',
                 teacherId: 'מורה',
@@ -154,6 +155,7 @@ export default {
                 endDate: 'תאריך סיום',
                 comment: 'הערה',
                 howManyLessons: 'מספר שיעורים',
+                displayName: 'שם לתעודה',
             }
         },
         student_klass: {

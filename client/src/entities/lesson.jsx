@@ -35,6 +35,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <TextField source="key" />
             <TextField source="name" />
+            <TextField source="displayName" />
             <MultiReferenceArrayField source="klassReferenceIds" reference="klass" optionalSource="klasses" optionalTarget="key" />
             <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             <DateField source="startDate" />
@@ -55,6 +56,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
         <NumberInput source="key" validate={[required(), unique()]} />
         <TextInput source="name" validate={[required(), maxLength(500)]} />
+        <TextInput source="displayName" validate={[required(), maxLength(500)]} />
         <CommonReferenceArrayInput source="klassReferenceIds" reference='klass' dynamicFilter={filterByUserIdAndYear} />
         <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
         <DateInput source="startDate" />
@@ -70,7 +72,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['key', 'name', 'klasses', 'teacherId', 'startDate', 'endDate', 'year', 'comment', 'howManyLessons'],
+    fields: ['key', 'name', 'klasses', 'teacherId', 'startDate', 'endDate', 'year', 'comment', 'howManyLessons', 'displayName'],
 }
 
 const entity = {
