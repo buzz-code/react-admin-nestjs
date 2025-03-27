@@ -73,7 +73,7 @@ export class Klass implements IHasUserId {
   @IsOptional({ always: true })
   @StringType
   @MaxLength(500, { always: true })
-  @Column("varchar", { name: "display_name", length: 500 })
+  @Column("varchar", { name: "display_name", length: 500, nullable: true })
   displayName: string;
 
   @ValidateIf((attReport: Klass) => !Boolean(attReport.klassTypeReferenceId), { always: true })

@@ -81,7 +81,7 @@ export class Lesson implements IHasUserId {
   @IsOptional({ always: true })
   @StringType
   @MaxLength(500, { always: true })
-  @Column("varchar", { name: "display_name", length: 500 })
+  @Column("varchar", { name: "display_name", length: 500, nullable: true })
   displayName: string;
 
   @IsOptional({ always: true })
