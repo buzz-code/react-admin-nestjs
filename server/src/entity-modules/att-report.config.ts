@@ -2,6 +2,7 @@ import { CrudRequest } from "@dataui/crud";
 import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
 import { User } from "@shared/entities/User.entity";
 import { IHeader } from "@shared/utils/exporter/types";
+import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 import { AttReport } from "src/db/entities/AttReport.entity";
 import { roundObjectProperty } from "src/utils/reportData.util";
 
@@ -35,6 +36,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'klass.name', label: 'כיתה' },
                     { value: 'lesson.name', label: 'שיעור' },
                     { value: 'reportDate', label: 'תאריך דיווח' },
+                    { value: getHebrewDateFormatter('reportDate'), label: 'תאריך עברי' },
                     { value: 'howManyLessons', label: 'מספר שיעורים' },
                     { value: 'absCount', label: 'מספר חיסורים' },
                     // { value: 'approvedAbsCount', label: 'מספר חיסורים מאושרים' },

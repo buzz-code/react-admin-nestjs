@@ -8,6 +8,7 @@ import { AttReport } from "src/db/entities/AttReport.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { validateBulk } from "@shared/base-entity/base-entity.util";
 import { fixReferences } from "@shared/utils/entity/fixReference.util";
+import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -43,6 +44,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'lesson.name', label: 'שיעור' },
                     { value: 'reportMonth.name', label: 'חודש דיווח' },
                     { value: 'reportDate', label: 'תאריך דיווח' },
+                    { value: getHebrewDateFormatter('reportDate'), label: 'תאריך עברי' },
                     { value: 'howManyLessons', label: 'מספר שיעורים' },
                     { value: 'absCount', label: 'מספר חיסורים' },
                     // { value: 'approvedAbsCount', label: 'מספר חיסורים מאושרים' },

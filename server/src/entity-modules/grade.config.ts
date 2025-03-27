@@ -3,6 +3,7 @@ import { getUserIdFromUser } from "@shared/auth/auth.util";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
+import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 import { generateCommonFileResponse } from "@shared/utils/report/report.util";
 import { Grade } from "src/db/entities/Grade.entity";
 import michlolPopulatedFile, { MichlolPopulatedFileParams } from "src/reports/michlolPopulatedFile";
@@ -37,6 +38,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'klass.name', label: 'כיתה' },
                     { value: 'lesson.name', label: 'שיעור' },
                     { value: 'reportDate', label: 'תאריך דיווח' },
+                    { value: getHebrewDateFormatter('reportDate'), label: 'תאריך עברי' },
                     { value: 'grade', label: 'ציון' },
                     { value: 'estimation', label: 'הערכה' },
                     { value: 'comments', label: 'הערות' },
