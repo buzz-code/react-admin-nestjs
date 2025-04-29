@@ -1,14 +1,21 @@
 import { Admin, Resource, CustomRoutes } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
+import { blue, purple } from '@mui/material/colors';
 
 import domainTranslations from 'src/domainTranslations';
 import dataProvider from "@shared/providers/dataProvider";
 import { getI18nProvider } from "@shared/providers/i18nProvider";
 import authProvider from "@shared/providers/authProvider";
-import theme from "@shared/providers/themeProvider";
+import { createTheme } from "@shared/providers/themeProvider";
 import RTLStyle from "@shared/components/layout/RTLStyle";
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import roadmapFeatures from 'src/roadmapFeatures';
+
+const appTheme = createTheme({
+  primary: blue[700],
+  secondary: purple[500],
+  isRtl: true
+});
 
 import { Dashboard, Layout } from 'src/GeneralLayout';
 
@@ -94,7 +101,7 @@ const App = () => (
   <BrowserRouter>
     <RTLStyle>
       <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider}
-        theme={theme} title='נוכחות'
+        theme={appTheme} title='נוכחות'
         dashboard={Dashboard} layout={Layout} loginPage={LoginPage}
         requireAuth>
         {permissions => (
