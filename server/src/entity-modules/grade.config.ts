@@ -13,11 +13,11 @@ function getConfig(): BaseEntityModuleOptions {
         entity: Grade,
         query: {
             join: {
-                studentBaseKlass: {},
-                student: {},
-                teacher: {},
-                lesson: {},
-                klass: {},
+                studentBaseKlass: { eager: false },
+                student: { eager: false },
+                teacher: { eager: false },
+                lesson: { eager: false },
+                klass: { eager: false },
             }
         },
         exporter: {

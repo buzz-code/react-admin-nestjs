@@ -6,7 +6,7 @@ function getConfig(): BaseEntityModuleOptions {
         entity: KnownAbsence,
         query: {
             join: {
-                student: {},
+                student: { eager: false },
             }
         },
     }

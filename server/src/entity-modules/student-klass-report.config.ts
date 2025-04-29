@@ -14,7 +14,7 @@ function getConfig(): BaseEntityModuleOptions {
         entity: StudentKlassReport,
         query: {
             join: {
-                student: {},
+                student: { eager: false },
             },
         },
         service: StudentKlassReportService,
