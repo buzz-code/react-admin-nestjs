@@ -15,7 +15,7 @@ function getConfig(): BaseEntityModuleOptions {
         entity: AttReportWithReportMonth,
         query: {
             join: {
-                studentBaseKlass: { eager: false },
+                studentBaseKlass: { eager: true },
                 student: { eager: false },
                 teacher: { eager: false },
                 lesson: { eager: false },

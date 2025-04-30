@@ -69,8 +69,8 @@ describe('StudentKlassConfig', () => {
     it('should return correct entity config', () => {
       expect(config.entity).toBe(StudentKlass);
       expect(config.query.join).toEqual({
-        student: {},
-        klass: {},
+        student: { eager: false },
+        klass: { eager: false },
       });
     });
 

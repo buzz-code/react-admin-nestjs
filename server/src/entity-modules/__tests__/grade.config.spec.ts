@@ -40,11 +40,11 @@ describe('grade.config', () => {
       expect(queryConfig).toBeDefined();
       expect(queryConfig.join).toBeDefined();
       expect(queryConfig.join).toEqual({
-        studentBaseKlass: {},
-        student: {},
-        teacher: {},
-        lesson: {},
-        klass: {},
+        studentBaseKlass: { eager: false },
+        student: { eager: false },
+        teacher: { eager: false },
+        lesson: { eager: false },
+        klass: { eager: false },
       });
 
       // Validate all required relationships are present

@@ -9,10 +9,10 @@ describe('att-report.config', () => {
       expect(config.query).toBeDefined();
       expect(config.query.join).toEqual({
         studentBaseKlass: { eager: true },
-        student: {},
-        teacher: {},
-        lesson: {},
-        klass: {},
+        student: { eager: false },
+        teacher: { eager: false },
+        lesson: { eager: false },
+        klass: { eager: false },
       });
     });
 
@@ -39,7 +39,7 @@ describe('att-report.config', () => {
 
       // Test getExportHeaders
       const headers = config.exporter.getExportHeaders(['id', 'name', 'absCount']);
-      expect(headers).toHaveLength(9); // Verify number of headers
+      expect(headers).toHaveLength(10); // Verify number of headers
       expect(headers[0]).toEqual({ value: 'id', label: 'מזהה' });
     });
 
