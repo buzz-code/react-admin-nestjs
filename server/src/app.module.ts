@@ -15,6 +15,8 @@ import { YemotRequestImpl } from './yemot/yemot.request.impl';
 import { MailSendModule } from '@shared/utils/mail/mail-send.module';
 import { EntitiesModule } from './entities.module';
 import { getPinoConfig } from '@shared/config/pino.config';
+import { UserInitModule } from './user-init.module';
+import { UserInitializationService } from './user-initialization.service';
 
 @Module({
   imports: [
@@ -24,7 +26,10 @@ import { getPinoConfig } from '@shared/config/pino.config';
     TypeOrmModule.forRoot(typeOrmModuleConfig),
     MailSendModule,
     EntitiesModule,
-    AuthModule,
+    AuthModule.forRootAsync({
+      imports: [UserInitModule],
+      userInitServiceType: UserInitializationService,
+    }),
     YemotModule.register(yemotChain, YemotRequestImpl),
   ],
   controllers: [AppController],
