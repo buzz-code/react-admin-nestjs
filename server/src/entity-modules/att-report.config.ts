@@ -12,10 +12,10 @@ function getConfig(): BaseEntityModuleOptions {
         query: {
             join: {
                 studentBaseKlass: { eager: true },
-                student: {},
-                teacher: {},
-                lesson: {},
-                klass: {},
+                student: { eager: false },
+                teacher: { eager: false },
+                lesson: { eager: false },
+                klass: { eager: false },
             }
         },
         exporter: {

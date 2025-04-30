@@ -17,8 +17,8 @@ function getConfig(): BaseEntityModuleOptions {
         entity: StudentKlass,
         query: {
             join: {
-                student: {},
-                klass: {},
+                student: { eager: false },
+                klass: { eager: false },
             },
         },
         exporter: {

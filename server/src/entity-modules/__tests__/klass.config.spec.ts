@@ -7,8 +7,8 @@ describe('KlassConfig', () => {
     expect(klassConfig.entity).toBe(Klass);
     expect(klassConfig.query).toBeDefined();
     expect(klassConfig.query.join).toEqual(expect.objectContaining({
-      teacher: {},
-      klassType: {},
+      teacher: { eager: false },
+      klassType: { eager: false },
     }));
   });
 

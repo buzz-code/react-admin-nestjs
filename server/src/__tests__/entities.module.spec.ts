@@ -49,8 +49,8 @@ import { StudentGlobalReport } from "../db/view-entities/StudentGlobalReport.ent
 import { KnownAbsenceWithReportMonth } from "../db/view-entities/KnownAbsenceWithReportMonth.entity";
 import { GradeName } from "../db/entities/GradeName.entity";
 import { AttGradeEffect } from "../db/entities/AttGradeEffect";
-import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entity";
-import { AbsCountEffectByUser } from "@shared/view-entities/AbsCountEffectByUser.entity";
+import { GradeEffectByUser } from "src/db/view-entities/GradeEffectByUser.entity";
+import { AbsCountEffectByUser } from "src/db/view-entities/AbsCountEffectByUser.entity";
 import { LessonKlassName } from "../db/view-entities/LessonKlassName.entity";
 
 describe('EntitiesModule', () => {

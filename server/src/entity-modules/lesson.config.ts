@@ -8,8 +8,8 @@ function getConfig(): BaseEntityModuleOptions {
         entity: Lesson,
         query: {
             join: {
-                teacher: {},
-                lessonKlassName: {},
+                teacher: { eager: false },
+                lessonKlassName: { eager: false },
             },
         },
         exporter: {

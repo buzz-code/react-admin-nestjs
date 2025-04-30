@@ -34,8 +34,8 @@ import { KnownAbsenceWithReportMonth } from "./db/view-entities/KnownAbsenceWith
 import { GradeName } from "./db/entities/GradeName.entity";
 import { AttGradeEffect } from "./db/entities/AttGradeEffect";
 import teacherGradeReportStatusConfig from "./entity-modules/teacher-grade-report-status.config";
-import { GradeEffectByUser } from "@shared/view-entities/GradeEffectByUser.entity";
-import { AbsCountEffectByUser } from "@shared/view-entities/AbsCountEffectByUser.entity";
+import { GradeEffectByUser } from "src/db/view-entities/GradeEffectByUser.entity";
+import { AbsCountEffectByUser } from "src/db/view-entities/AbsCountEffectByUser.entity";
 import { LessonKlassName } from "./db/view-entities/LessonKlassName.entity";
 import importFileConfig from "./entity-modules/import-file.config";
 import { StudentSpeciality } from "./db/view-entities/StudentSpeciality.entity";
