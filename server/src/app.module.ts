@@ -11,6 +11,7 @@ import { AuthModule } from '@shared/auth/auth.module';
 import { YemotModule } from '@shared/utils/yemot/yemot.module';
 // import { yemotProcessorProvider } from 'src/yemot.processor';
 import yemotChain from './yemot/yemot.chain';
+import { YemotRequestImpl } from './yemot/yemot.request.impl';
 import { MailSendModule } from '@shared/utils/mail/mail-send.module';
 import { EntitiesModule } from './entities.module';
 import { getPinoConfig } from '@shared/config/pino.config';
@@ -24,7 +25,7 @@ import { getPinoConfig } from '@shared/config/pino.config';
     MailSendModule,
     EntitiesModule,
     AuthModule,
-    YemotModule.register(yemotChain)
+    YemotModule.register(yemotChain, YemotRequestImpl),
   ],
   controllers: [AppController],
   providers: [
