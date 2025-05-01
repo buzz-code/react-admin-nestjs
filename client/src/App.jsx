@@ -62,7 +62,7 @@ import { LoginPage } from '@shared/components/layout/LoginPage';
 import Tutorial from '@shared/components/views/Tutorial';
 import PageList from '@shared/components/views/PageList';
 import ScannerUpload from '@shared/components/views/ScannerUpload';
-import InLessonReport from '@shared/components/views/InLessonReport';
+import InLessonReport from 'src/reports/InLessonReport';
 import Roadmap from '@shared/components/views/Roadmap';
 import MichlolFileHelper from '@shared/components/views/MichlolFileHelper';
 

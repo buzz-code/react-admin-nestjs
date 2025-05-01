@@ -17,6 +17,7 @@ import PercentIcon from '@mui/icons-material/Percent';
 import BaseLayout from "@shared/components/layout/Layout";
 import BaseDashboard from '@shared/components/views/Dashboard';
 import { isInLessonReport, isScannerUpload } from '../shared/utils/permissionsUtil';
+import { useDashboardItems } from './settings/settingsUtil';
 
 const customMenuItems = [
     <MenuItemLink key="tutorial" to="/tutorial" primaryText="מדריך למשתמש" leftIcon={<HelpIcon />} />,
@@ -49,6 +50,7 @@ export const Layout = ({ children }) => (
     </BaseLayout>
 );
 
-export const Dashboard = () => (
-    <BaseDashboard />
-);
+export const Dashboard = () => {
+    const dashboardItems = useDashboardItems();
+    return <BaseDashboard dashboardItems={dashboardItems} />;
+};
