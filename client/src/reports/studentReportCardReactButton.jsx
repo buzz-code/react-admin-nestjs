@@ -4,7 +4,7 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
-import { useReportCardSettings } from '@shared/utils/settingsUtil';
+import { useReportCardSettings } from 'src/settings/settingsUtil';
 
 const defaultValues = {
     ...defaultYearFilter,
