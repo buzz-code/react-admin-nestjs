@@ -9,11 +9,10 @@ ENV NODE_ENV development
 
 WORKDIR /app
 
+# No need to do this, because external node_modules are mounted
 # COPY package*.json /app/
 # COPY yarn.lock /app/
-
 # RUN yarn install
-
 # COPY . .
 
 CMD ["yarn", "start:dev"]
@@ -65,5 +64,8 @@ COPY --from=builder /app/package*.json .
 COPY --from=builder /app/yarn.lock .
 COPY --from=builder /app/dist/ ./dist/
 COPY --from=builder /app/node_modules/ ./node_modules/
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-CMD ["node", "dist/src/main"]
+RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
