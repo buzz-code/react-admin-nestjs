@@ -16,7 +16,7 @@ import PercentIcon from '@mui/icons-material/Percent';
 
 import BaseLayout from "@shared/components/layout/Layout";
 import BaseDashboard from '@shared/components/views/Dashboard';
-import { isInLessonReport, isScannerUpload } from '../shared/utils/permissionsUtil';
+import { isInLessonReport, isScannerUpload } from './utils/appPermissions';
 import { useDashboardItems } from './settings/settingsUtil';
 
 const customMenuItems = [

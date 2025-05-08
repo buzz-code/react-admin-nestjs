@@ -3,7 +3,7 @@ import { useRedirect } from 'react-admin';
 import { useSavableData } from '../../shared/components/import/util';
 import { Datagrid as AttDatagrid } from 'src/entities/att-report';
 import { Datagrid as GradeDatagrid } from 'src/entities/grade';
-import { useIsInLessonReportWithLate } from '@shared/utils/permissionsUtil';
+import { useIsInLessonReportWithLate } from '../utils/appPermissions';
 import { InLessonReport } from './in-lesson-report';
 
 const entityConfig = [
