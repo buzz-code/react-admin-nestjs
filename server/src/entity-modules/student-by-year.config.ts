@@ -19,9 +19,8 @@ function getConfig(): BaseEntityModuleOptions {
         exporter: {
             getExportHeaders(): IHeader[] {
                 return [
-                    { value: 'id', label: 'מזהה' },
-                    { value: 'tz', label: 'תעודת זהות' },
-                    { value: 'name', label: 'שם' },
+                    { value: 'name', label: 'שם התלמידה' },
+                    { value: 'tz', label: 'תז התלמידה' },
                     { value: 'year', label: 'שנה' },
                 ];
             },
@@ -48,7 +47,9 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
 
         switch (pivotName) {
             case 'StudentAttendance': {
-                const headers = {};
+                const headers = {
+                    // add student tz and name to the headers
+                };
 
                 if (yearFilter?.value) {
                     data.forEach(item => item.year = [yearFilter.value]);

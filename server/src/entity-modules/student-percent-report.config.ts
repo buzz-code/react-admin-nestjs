@@ -44,6 +44,7 @@ function getConfig(): BaseEntityModuleOptions {
                 return [
                     { value: 'teacher.name', label: 'שם המורה' },
                     { value: 'student.name', label: 'שם התלמידה' },
+                    { value: 'student.tz', label: 'תז התלמידה' },
                     { value: 'studentBaseKlass.klassName', label: 'כיתת בסיס' },
                     { value: 'klass.name', label: 'כיתה' },
                     { value: 'lesson.name', label: 'שיעור' },
