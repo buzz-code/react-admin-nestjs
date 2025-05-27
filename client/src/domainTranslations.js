@@ -392,6 +392,7 @@ export default {
                 gradeAvg: 'ציון ממוצע',
                 attGradeEffect: 'קשר נוכחות ציון',
                 finalGrade: 'ציון סופי',
+                finalAttendance: 'נוכחות סופית',
                 estimation: 'הערכה',
                 comments: 'הערה',
                 estimatedAbsPercents: 'אחוז חיסור משוער',
@@ -430,6 +431,12 @@ export default {
         },
         grade_name: {
             name: 'שם ציון |||| שמות ציונים',
+            fields: {
+                ...generalResourceFieldsTranslation,
+            }
+        },
+        attendance_name: {
+            name: 'שם נוכחות |||| שמות נוכחות',
             fields: {
                 ...generalResourceFieldsTranslation,
             }

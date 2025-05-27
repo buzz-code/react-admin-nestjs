@@ -15,11 +15,12 @@ import { StudentBaseKlass } from 'src/db/view-entities/StudentBaseKlass.entity';
 import { StudentPercentReport } from 'src/db/view-entities/StudentPercentReport.entity';
 import { Image, ImageTargetEnum } from '@shared/entities/Image.entity';
 import { GradeName } from 'src/db/entities/GradeName.entity';
+import { AttendanceName } from 'src/db/entities/AttendanceName.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
 import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from 'src/utils/reportData.util';
-import { getDisplayGrade, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect, getDisplayable } from 'src/utils/studentReportData.util';
+import { getDisplayGrade, getDisplayAttendance, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect, getDisplayable } from 'src/utils/studentReportData.util';
 import { getReportDateFilter, dateFromString } from '@shared/utils/entity/filters.util';
 import { StudentSpeciality } from 'src/db/view-entities/StudentSpeciality.entity';
 
@@ -92,6 +93,7 @@ interface AppProps {
     knownAbsMap: Record<string, Record<string, number>>;
     att_grade_effect: AttGradeEffect[];
     grade_names: GradeName[];
+    attendance_names: AttendanceName[];
 };
 const useAppStyles = () => {
     const appStyle: React.CSSProperties = {
@@ -115,11 +117,11 @@ const App: React.FunctionComponent<AppProps> = (props) => {
                     <Header image={props.images.reportLogo} />
                 </th></tr></thead>
                 <tbody><tr><td>
-                    <ReportTable student={props.student} 
+                    <ReportTable student={props.student}
                         studentBaseKlass={props.studentBaseKlass} studentSpeciality={props.studentSpeciality}
                         reports={props.reports} reportParams={props.reportParams}
                         knownAbsMap={props.knownAbsMap}
-                        att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} />
+                        att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} attendance_names={props.attendance_names} />
                     <PersonalNote note={props.reportParams.personalNote} />
                     <YomanetNotice />
                 </td></tr></tbody>
@@ -201,8 +203,9 @@ interface ReportTableProps {
     knownAbsMap: AppProps['knownAbsMap'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
+    attendance_names: AppProps['attendance_names'];
 }
-const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, studentSpeciality, reports, reportParams, knownAbsMap, att_grade_effect, grade_names }) => {
+const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, studentBaseKlass, studentSpeciality, reports, reportParams, knownAbsMap, att_grade_effect, grade_names, attendance_names }) => {
     const studentCommentHeader = [
         !reportParams.downComment && { level: 4, label: 'התמחות', value: student?.comment }
     ];
@@ -228,7 +231,8 @@ const ReportTable: React.FunctionComponent<ReportTableProps> = ({ student, stude
             {reports.map((item, index) => (
                 <ReportTableContent key={index} reportData={item} reportParams={reportParams}
                     knownAbsMap={knownAbsMap}
-                    att_grade_effect={att_grade_effect} grade_names={grade_names} />
+                    att_grade_effect={att_grade_effect}
+                    grade_names={grade_names} attendance_names={attendance_names} />
             ))}
         </div>
     );
@@ -354,8 +358,9 @@ interface ReportTableContentProps {
     knownAbsMap: AppProps['knownAbsMap'];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
+    attendance_names: AppProps['attendance_names'];
 }
-const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ reportData, reportParams, knownAbsMap, att_grade_effect, grade_names }) => {
+const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ reportData, reportParams, knownAbsMap, att_grade_effect, grade_names, attendance_names }) => {
     const reportTableHeader = [
         { level: 2, label: '', value: reportParams.groupByKlass && reportData.name }
     ]
@@ -377,7 +382,7 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
 
                     {!reportParams.minimalReport && reportData.reports.map((item, index) => (
                         <ReportItem key={index} reportParams={reportParams} report={item}
-                            att_grade_effect={att_grade_effect} grade_names={grade_names} />
+                            att_grade_effect={att_grade_effect} grade_names={grade_names} attendance_names={attendance_names} />
                     ))}
 
                     {!reportParams.hideAbsTotal && reportParams.attendance && (
@@ -394,8 +399,9 @@ interface ReportItemProps {
     report: AppProps['reports'][number]['reports'][number];
     att_grade_effect: AppProps['att_grade_effect'];
     grade_names: AppProps['grade_names'];
+    attendance_names: AppProps['attendance_names'];
 }
-const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, att_grade_effect, grade_names }) => {
+const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, att_grade_effect, grade_names, attendance_names }) => {
     var unApprovedAbsCount = getUnknownAbsCount(report.absCount, report.approvedAbsCount);
     var gradeEffect = getGradeEffect(att_grade_effect, report.attPercents, unApprovedAbsCount);
     var displayGrade = getDisplayGrade(report.gradeAvg, gradeEffect, grade_names);
@@ -420,7 +426,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
                 {reportParams.debug && <td style={fullCellStyle}>{debugDetails}</td>}
             </>
             : <>
-                {reportParams.attendance && <td style={fullCellStyle}>{Math.round(report.attPercents * 100)}%</td>}
+                {reportParams.attendance && <td style={fullCellStyle}>{getDisplayAttendance(report.attPercents, attendance_names)}</td>}
                 {reportParams.grades && (
                     <td style={fullCellStyle}>
                         {(report.gradeAvg != undefined && report.gradeAvg != null && report.gradeAvg > 0)
@@ -505,12 +511,13 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         dataSource.getRepository(KnownAbsence).findBy({ studentReferenceId: params.studentId, year: params.year, isApproved: true, reportDate }),
     ])
 
-    const [klasses, lessons, teachers, att_grade_effect, grade_names] = await Promise.all([
+    const [klasses, lessons, teachers, att_grade_effect, grade_names, attendance_names] = await Promise.all([
         dataSource.getRepository(Klass).find({ where: { id: In(studentReports.map(item => item.klassReferenceId)) }, relations: { klassType: true } }),
         dataSource.getRepository(Lesson).find({ where: { id: In(studentReports.map(item => item.lessonReferenceId)) } }),
         dataSource.getRepository(Teacher).find({ where: { id: In(studentReports.map(item => item.teacherReferenceId)) } }),
         dataSource.getRepository(AttGradeEffect).find({ where: { userId: student.userId }, order: { percents: 'DESC', count: 'ASC' } }),
         dataSource.getRepository(GradeName).find({ where: { userId: student.userId }, order: { key: 'DESC' } }),
+        dataSource.getRepository(AttendanceName).find({ where: { userId: student.userId }, order: { key: 'DESC' } }),
     ]);
 
     if (params.attendance && !params.grades) {
@@ -534,6 +541,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         knownAbsMap,
         att_grade_effect,
         grade_names,
+        attendance_names,
     };
 }
 

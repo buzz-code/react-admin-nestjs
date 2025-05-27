@@ -37,6 +37,7 @@ import teacherGradeReportStatus from "src/entities/teacher-grade-report-status";
 import teacherSalaryReport from "src/entities/teacher-salary-report";
 import studentPercentReport from "src/entities/student-percent-report";
 import gradeName from "src/entities/grade-name";
+import attendanceName from "src/entities/attendance-name";
 import attGradeEffect from './entities/att-grade-effect';
 import Settings from 'src/settings/Settings';
 
@@ -130,6 +131,7 @@ const App = () => (
             <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
             <Resource name="att_report" {...attReport} options={{ menuGroup: 'settings' }} icon={ViewListIcon} />
             <Resource name="grade_name" {...gradeName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
+            <Resource name="attendance_name" {...attendanceName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
             <Resource name="att_grade_effect" {...attGradeEffect} options={{ menuGroup: 'settings' }} icon={CalculateIcon} />
             <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
             <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />

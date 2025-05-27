@@ -39,6 +39,7 @@ import { AbsCountEffectByUser } from "src/db/view-entities/AbsCountEffectByUser.
 import { LessonKlassName } from "./db/view-entities/LessonKlassName.entity";
 import importFileConfig from "./entity-modules/import-file.config";
 import { StudentSpeciality } from "./db/view-entities/StudentSpeciality.entity";
+import { AttendanceName } from "./db/entities/AttendanceName.entity";
 
 @Module({
     imports: [
@@ -76,6 +77,7 @@ import { StudentSpeciality } from "./db/view-entities/StudentSpeciality.entity";
         BaseEntityModule.register(teacherSalaryReportConfig),
         BaseEntityModule.register({ entity: KnownAbsenceWithReportMonth }),
         BaseEntityModule.register({ entity: GradeName }),
+        BaseEntityModule.register({ entity: AttendanceName }),
         BaseEntityModule.register({ entity: AttGradeEffect }),
         BaseEntityModule.register({ entity: GradeEffectByUser }),
         BaseEntityModule.register({ entity: AbsCountEffectByUser }),

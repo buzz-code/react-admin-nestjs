@@ -8,12 +8,13 @@ import { AbsCountEffectByUser } from "src/db/view-entities/AbsCountEffectByUser.
 import { GradeEffectByUser } from "src/db/view-entities/GradeEffectByUser.entity";
 import { AttGradeEffect } from "src/db/entities/AttGradeEffect";
 import { GradeName } from "src/db/entities/GradeName.entity";
+import { AttendanceName } from "src/db/entities/AttendanceName.entity";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { Lesson } from "src/db/entities/Lesson.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
 import { calcSum, getUniqueValues, groupDataByKeys, groupDataByKeysAndCalc } from "src/utils/reportData.util";
-import { calcReportsData, getDisplayGrade, getUnknownAbsCount } from "src/utils/studentReportData.util";
+import { calcReportsData, getDisplayGrade, getDisplayAttendance, getUnknownAbsCount } from "src/utils/studentReportData.util";
 import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from "src/utils/studentReportData.util";
 import { DataSource, In } from "typeorm";
 
@@ -64,6 +65,7 @@ interface StudentPercentReportWithDates extends StudentPercentReport {
     approvedAbsCount?: number;
     attGradeEffect?: number;
     finalGrade?: string;
+    finalAttendance?: string;
     estimation?: string;
     comments?: string;
 }
@@ -113,15 +115,19 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                 const [absCountEffectsMap, gradeEffectsMap] = await getAbsGradeEffect(Object.values(sprMap), this.dataSource);
                 const gradeNames = await this.dataSource.getRepository(GradeName)
                     .find({ where: { userId: getUserIdFromUser(auth) }, order: { key: 'DESC' } });
+                const attendanceNames = await this.dataSource.getRepository(AttendanceName)
+                    .find({ where: { userId: getUserIdFromUser(auth) }, order: { key: 'DESC' } });
 
                 Object.values(sprMap).forEach(item => {
                     item.attGradeEffect = gradeEffectsMap[getGradeEffectId(item)] ?? absCountEffectsMap[getAbsCountEffectId(item)];
                     item.finalGrade = getDisplayGrade(item.gradeAvg, item.attGradeEffect, gradeNames);
+                    item.finalAttendance = getDisplayAttendance(item.attPercents, attendanceNames);
                 });
 
                 const headers = {};
                 headers['attGradeEffect'] = { value: 'attGradeEffect', label: 'קשר נוכחות ציון' };
                 headers['finalGrade'] = { value: 'finalGrade', label: 'ציון סופי' };
+                headers['finalAttendance'] = { value: 'finalAttendance', label: 'נוכחות סופית' };
                 headers['estimation'] = { value: 'estimation', label: 'הערכה' };
                 headers['comments'] = { value: 'comments', label: 'הערה' };
                 headers['estimatedAbsPercents'] = { value: 'estimatedAbsPercents', label: 'אחוז חיסור משוער' };

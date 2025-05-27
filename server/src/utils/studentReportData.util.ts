@@ -5,6 +5,7 @@ import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { AttGradeEffect } from "src/db/entities/AttGradeEffect";
 import { GradeName } from "src/db/entities/GradeName.entity";
+import { AttendanceName } from "src/db/entities/AttendanceName.entity";
 
 interface ISprIdData {
     studentReferenceId: string;
@@ -135,9 +136,17 @@ export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNam
     // if (grade === 0) return '0%';
     if (!grade) return '';
     var finalGrade = getFinalGrade(grade * 100, gradeEffect);
-    var matchingGradeName = getGradeName(gradeNames, finalGrade);
+    var matchingGradeName = getItemNameByKey(gradeNames, finalGrade);
     var displayGrade = matchingGradeName ?? (Math.round(finalGrade) + '%');
     return displayGrade;
+}
+
+export function getDisplayAttendance(attPercents: number, attendanceNames: AttendanceName[] = []) {
+    if (attPercents === null || attPercents === undefined) return '';
+    var finalAttPercents = Math.round(attPercents * 100);
+    var matchingAttendanceName = getItemNameByKey(attendanceNames, finalAttPercents);
+    var displayAttendance = matchingAttendanceName ?? (finalAttPercents + '%');
+    return displayAttendance;
 }
 
 function getFinalGrade(grade: number, gradeEffect: number) {
@@ -146,8 +155,8 @@ function getFinalGrade(grade: number, gradeEffect: number) {
     return finalGrade;
 }
 
-function getGradeName(gradeNames: GradeName[], finalGrade: number) {
-    return gradeNames?.find(item => item.key <= finalGrade)?.name || null;
+function getItemNameByKey<T extends { key: number; name: string }>(items: T[], key: number) {
+    return items?.find(item => item.key <= key)?.name || null;
 }
 
 export function getGradeEffect(attGradeEffect: AttGradeEffect[], attPercents: number, absCount: number) {
