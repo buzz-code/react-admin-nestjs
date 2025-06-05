@@ -12,8 +12,8 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
 import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
-import { StringType } from "@shared/utils/entity/class-transformer";
+import { IsNotEmpty, IsUniqueCombination, MaxLength, IsBoolean } from "@shared/utils/validation/class-validator-he";
+import { StringType, BooleanType } from "@shared/utils/entity/class-transformer";
 
 @Index("students_users_idx", ["userId"], {})
 @Index(["userId", "tz", "year"], { unique: true })
@@ -60,6 +60,12 @@ export class Student implements IHasUserId {
   @MaxLength(1000, { always: true })
   @Column("varchar", { name: "address", nullable: true, length: 1000 })
   address: string;
+
+  @IsOptional({ always: true })
+  @IsBoolean({ groups: [CrudValidationGroups.CREATE, CrudValidationGroups.UPDATE] })
+  @BooleanType
+  @Column("boolean", { name: "is_active", default: true })
+  isActive: boolean;
 
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
