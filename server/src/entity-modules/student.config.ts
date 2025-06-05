@@ -2,6 +2,7 @@ import { CrudRequest } from "@dataui/crud";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
+import { getHebrewBooleanFormatter } from "@shared/utils/formatting/formatter.util";
 import { Student } from "src/db/entities/Student.entity";
 import { CommonReportData } from "@shared/utils/report/types";
 import studentReportCard from "../reports/studentReportCard";
@@ -21,6 +22,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'comment', label: 'הערה' },
                     { value: 'phone', label: 'טלפון' },
                     { value: 'year', label: 'כתובת' },
+                    { value: getHebrewBooleanFormatter('isActive'), label: 'פעיל' },
                 ];
             }
         },

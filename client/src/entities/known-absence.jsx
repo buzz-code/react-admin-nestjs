@@ -14,6 +14,7 @@ const filters = [
     ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" />,
     ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,
+    <NullableBooleanInput source="student.isActive" label="תלמידה פעילה" />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ ...filterByUserIdAndYear, 'klassReferenceIds:$cont': 'klassReferenceId' }} />,
     <DateInput source="reportDate" />,

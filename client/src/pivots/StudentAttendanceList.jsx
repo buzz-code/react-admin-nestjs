@@ -1,7 +1,7 @@
 import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
 import { CommonDatagrid, getPivotColumns } from "@shared/components/crudContainers/CommonList"
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from "@shared/components/fields/CommonReferenceInputFilter";
-import { ReferenceField, TextField, useListContext, TextInput, DateInput, BooleanInput } from "react-admin"
+import { BooleanField, ReferenceField, TextField, useListContext, TextInput, DateInput, BooleanInput, NullableBooleanInput } from "react-admin"
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonSelectArrayField } from "@shared/components/fields/CommonSelectArrayField";
@@ -11,6 +11,7 @@ const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
+    <NullableBooleanInput source="isActive" label="תלמידה פעילה" />,
     <CommonReferenceInputFilter source="klassReferenceIds:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
     <CommonReferenceInputFilter source="klassTypeReferenceIds:$cont" reference="klass_type" dynamicFilter={filterByUserId} alwaysOn />,
     <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
@@ -39,6 +40,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <ReferenceField key="userId" source="userId" reference="user" />}
             <TextField key="tz" source="tz" />
             <TextField key="name" source="name" />
+            <BooleanField key="isActive" source="isActive" />
             <CommonSelectArrayField key="year" source="year" choices={yearChoices} />
             {getPivotColumns(data)}
         </CommonDatagrid>

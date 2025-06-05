@@ -1,4 +1,4 @@
-import { DateField, DateInput, DateTimeInput, Labeled, maxLength, ReferenceField, ReferenceManyField, required, SelectField, TextField, TextInput } from 'react-admin';
+import { BooleanField, BooleanInput, DateField, DateInput, DateTimeInput, Labeled, maxLength, NullableBooleanInput, ReferenceField, ReferenceManyField, required, SelectField, SelectInput, TextField, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -17,6 +17,7 @@ const filters = [
     ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" />,
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
+    <NullableBooleanInput source="isActive" alwaysOn />,,
 ];
 
 const filterDefaultValues = {
@@ -40,6 +41,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="comment" />
             <TextField source="phone" />
             <TextField source="address" />
+            <BooleanField source="isActive" />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -56,6 +58,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <TextInput source="comment" validate={[maxLength(1000)]} />
         <TextInput source="phone" validate={[maxLength(1000)]} />
         <TextInput source="address" validate={[maxLength(1000)]} />
+        <BooleanInput source="isActive" defaultValue={true} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
         {!isCreate && <Labeled label="שיוך לכיתות">
@@ -72,7 +75,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['tz', 'name', 'comment', 'phone', 'address'],
+    fields: ['tz', 'name', 'comment', 'phone', 'address', 'isActive'],
 }
 
 const entity = {

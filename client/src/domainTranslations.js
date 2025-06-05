@@ -177,6 +177,7 @@ export default {
                 comment: 'הערה',
                 phone: 'טלפון',
                 address: 'כתובת',
+                isActive: 'פעיל?',
             }
         },
         student_by_year: {
@@ -321,6 +322,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
+                isActive: 'פעיל?',
                 'extra.klassId': 'כיתה',
                 'extra.lessonId': 'שיעור',
                 'year:$cont': 'שנה',

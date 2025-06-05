@@ -1,4 +1,4 @@
-import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, required, maxLength, SelectField } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, required, maxLength, SelectField, NullableBooleanInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -16,6 +16,7 @@ const filters = [
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,
+    <NullableBooleanInput source="student.isActive" label="תלמידה פעילה" />,
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,

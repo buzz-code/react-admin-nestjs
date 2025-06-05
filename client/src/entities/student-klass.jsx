@@ -1,4 +1,4 @@
-import { DateField, DateInput, DateTimeInput, ReferenceField, required, TextField, TextInput, SelectField } from 'react-admin';
+import { DateField, DateInput, DateTimeInput, NullableBooleanInput, ReferenceField, required, TextField, TextInput, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -17,6 +17,7 @@ const filters = [
     ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
+    <NullableBooleanInput source="student.isActive" label="תלמידה פעילה" />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 

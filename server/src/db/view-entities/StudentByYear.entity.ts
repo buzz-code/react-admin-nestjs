@@ -11,6 +11,7 @@ import { Klass } from "../entities/Klass.entity";
     .addSelect('students.user_id', 'user_id')
     .addSelect('students.tz', 'tz')
     .addSelect('students.name', 'name')
+    .addSelect('students.isActive', 'isActive')
     .addSelect('GROUP_CONCAT(DISTINCT student_klasses.year)', 'year')
     .addSelect('GROUP_CONCAT(DISTINCT student_klasses.klassReferenceId)', 'klassReferenceIds')
     .addSelect('GROUP_CONCAT(DISTINCT klasses.klassTypeReferenceId)', 'klassTypeReferenceIds')
@@ -31,6 +32,9 @@ export class StudentByYear implements IHasUserId {
 
   @Column({ name: 'name' })
   name: string;
+
+  @Column({ name: 'isActive', default: true })
+  isActive: boolean;
 
   @Column('simple-array', { nullable: true })
   year: string[];
