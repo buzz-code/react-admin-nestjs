@@ -2,7 +2,7 @@ import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { ParsedRequestParams } from '@dataui/crud-request';
 import { StudentByYear } from "src/db/view-entities/StudentByYear.entity";
-import { FindOptionsWhere, In } from "typeorm";
+import { FindOptionsWhere, In, Not } from "typeorm";
 import { IHeader } from "@shared/utils/exporter/types";
 import { AttReportWithReportMonth } from "src/db/view-entities/AttReportWithReportMonth.entity";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
@@ -55,19 +55,26 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     data.forEach(item => item.year = [yearFilter.value]);
                 }
 
+                const whereClause: FindOptionsWhere<AttReportWithReportMonth> = {
+                    userId: data[0].userId,
+                    studentReferenceId: In(studentIds),
+                    klassReferenceId: klassReferenceIdFilter?.value,
+                    klass: Utils.getKlassFilter(extra.isCheckKlassType, klassTypeReferenceIdFilter?.value),
+                    lessonReferenceId: extra?.lessonId,
+                    year: yearFilter?.value,
+                    reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
+                    reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
+                };
+
+                const excludedLessonIds = String(extra?.excludedLessonIds ?? '').split(',').map(id => Number(id)).filter(id => !isNaN(id));
+                if (extra?.excludedLessonIds && excludedLessonIds.length > 0) {
+                    whereClause.lessonReferenceId = Not(In(excludedLessonIds));
+                }
+
                 const pivotData = await this.dataSource
                     .getRepository(AttReportWithReportMonth)
                     .find({
-                        where: {
-                            userId: data[0].userId,
-                            studentReferenceId: In(studentIds),
-                            klassReferenceId: klassReferenceIdFilter?.value,
-                            klass: Utils.getKlassFilter(extra.isCheckKlassType, klassTypeReferenceIdFilter?.value),
-                            lessonReferenceId: extra?.lessonId,
-                            year: yearFilter?.value,
-                            reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
-                            reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
-                        },
+                        where: whereClause,
                         relations: {
                             klass: true,
                             lesson: true,

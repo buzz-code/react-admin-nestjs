@@ -6,6 +6,7 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonSelectArrayField } from "@shared/components/fields/CommonSelectArrayField";
 import { semesterChoices } from "src/entities/report-month";
+import CommonReferenceArrayInput from "@shared/components/fields/CommonReferenceArrayInput";
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -21,6 +22,7 @@ const filters = [
     <CommonReferenceInputFilter source="extra.reportMonthReferenceId" label="תקופת דיווח" reference="report_month" dynamicFilter={filterByUserId} />,
     <CommonAutocompleteInput source="extra.semester" label="מחצית" choices={semesterChoices} />,
     <BooleanInput source="extra.isCheckKlassType" label="סינון לפי שיוך כיתה" />,
+    <CommonReferenceArrayInput source="extra.excludedLessonIds" reference="lesson" label="הסר מקצועות מהדוח" dynamicFilter={filterByUserIdAndYear} />,
 ];
 
 const filterDefaultValues = {
