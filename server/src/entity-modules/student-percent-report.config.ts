@@ -68,6 +68,7 @@ interface StudentPercentReportWithDates extends StudentPercentReport {
     finalAttendance?: string;
     estimation?: string;
     comments?: string;
+    debug?: any;
 }
 class StudentPercentReportService<T extends Entity | StudentPercentReport> extends BaseEntityService<T> {
     protected async populatePivotData(pivotName: string, list: T[], extra: any, filter: any, auth: any) {
@@ -119,6 +120,12 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     .find({ where: { userId: getUserIdFromUser(auth) }, order: { key: 'DESC' } });
 
                 Object.values(sprMap).forEach(item => {
+                    item.debug = {
+                        absCountEffectId: getAbsCountEffectId(item),
+                        gradeEffectId: getGradeEffectId(item),
+                        absCountEffect: absCountEffectsMap[getAbsCountEffectId(item)],
+                        gradeEffect: gradeEffectsMap[getGradeEffectId(item)],
+                    };
                     item.attGradeEffect = gradeEffectsMap[getGradeEffectId(item)] ?? absCountEffectsMap[getAbsCountEffectId(item)];
                     item.finalGrade = getDisplayGrade(item.gradeAvg, item.attGradeEffect, gradeNames);
                     item.finalAttendance = getDisplayAttendance(item.attPercents, attendanceNames);
