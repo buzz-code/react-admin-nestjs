@@ -47,6 +47,9 @@ describe('StudentPercentReportConfig', () => {
       GradeName: {
         find: jest.fn(),
       },
+      AttendanceName: {
+        find: jest.fn(),
+      },
       AbsCountEffectByUser: {
         find: jest.fn(),
       },
@@ -121,7 +124,7 @@ describe('StudentPercentReportConfig', () => {
       ];
       const headers = config.exporter?.getExportHeaders(entityColumns) ?? [];
       expect(headers).toBeDefined();
-      expect(headers).toHaveLength(10);
+      expect(headers).toHaveLength(11);
       const labels = headers.map((h: IHeader) => {
         if (typeof h === 'string') return h;
         return (h as IColumn).label;
@@ -129,6 +132,7 @@ describe('StudentPercentReportConfig', () => {
       expect(labels).toEqual([
         'שם המורה',
         'שם התלמידה',
+        'תז התלמידה',
         'כיתת בסיס',
         'כיתה',
         'שיעור',

@@ -18,7 +18,7 @@ jest.mock('@shared/utils/mail/mail-send.service');
 // Create a mock generator for testing
 class MockReportGenerator extends BaseReportGenerator {
   fileFormat = CommonFileFormat.Pdf;
-  
+
   constructor() {
     super(
       (data) => 'test-report',
@@ -48,6 +48,7 @@ describe('StudentConfig', () => {
       { value: 'comment', label: 'הערה' },
       { value: 'phone', label: 'טלפון' },
       { value: 'year', label: 'כתובת' },
+      { value: expect.any(Function), label: 'פעיל' }
     ]);
   });
 
@@ -105,13 +106,13 @@ describe('StudentConfig', () => {
       const ServiceClass = studentConfig.service;
       // @ts-ignore - Constructor is protected but we need to test the service
       service = new ServiceClass(mockRepository, mockMailService);
-      
+
       // Mock the injected properties
       Object.defineProperty(service, 'dataSource', {
         value: mockDataSource,
         writable: true
       });
-      
+
       Object.defineProperty(service, 'exportDefinition', {
         value: studentConfig.exporter,
         writable: true
@@ -130,7 +131,7 @@ describe('StudentConfig', () => {
       const mockExtra = { report: 'studentReportCard', someOption: 'value' };
       const mockReq = {
         auth: { someAuth: true },
-        parsed: { 
+        parsed: {
           extra: mockExtra,
           fields: ['field1', 'field2'],
           search: {},

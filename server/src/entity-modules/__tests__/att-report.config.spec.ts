@@ -30,6 +30,7 @@ describe('att-report.config', () => {
       config.exporter.processReqForExport(mockReq as any, mockInnerFunc);
 
       expect(mockReq.options.query.join).toEqual({
+        studentBaseKlass: { eager: true },
         student: { eager: true },
         teacher: { eager: true },
         klass: { eager: true },
@@ -39,7 +40,7 @@ describe('att-report.config', () => {
 
       // Test getExportHeaders
       const headers = config.exporter.getExportHeaders(['id', 'name', 'absCount']);
-      expect(headers).toHaveLength(10); // Verify number of headers
+      expect(headers).toHaveLength(11); // Verify number of headers
       expect(headers[0]).toEqual({ value: 'teacher.name', label: 'שם המורה' });
     });
 

@@ -37,7 +37,7 @@ export function getUniqueValues<T, S>(arr: T[], getValue: (item: T) => S): S[] {
 }
 
 export function groupDataByKeys<T>(data: T[], keys: KeyOfType<T, any>[]): Record<string, T[]> {
-    return data.reduce((a, b) => {
+    return (data ?? []).reduce((a, b) => {
         const key = keys.map(k => b[k]).map(String).join('_');
         a[key] ??= [];
         a[key].push(b);

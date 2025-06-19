@@ -93,8 +93,8 @@ describe('StudentByYear Config', () => {
       expect(config.entity).toBe(StudentByYear);
       expect(config.exporter).toBeDefined();
       expect(config.exporter.getExportHeaders([])).toEqual([
-        { value: 'tz', label: 'תעודת זהות' },
-        { value: 'name', label: 'שם' },
+        { value: 'name', label: 'שם התלמידה' },
+        { value: 'tz', label: 'תז התלמידה' },
         { value: 'year', label: 'שנה' },
       ]);
     });
@@ -110,7 +110,8 @@ describe('StudentByYear Config', () => {
           name: 'Test 1',
           tz: '123',
           klassReferenceIds: ['1'],
-          klassTypeReferenceIds: ['1']
+          klassTypeReferenceIds: ['1'],
+          isActive: true
         },
         {
           id: 2,
@@ -119,7 +120,8 @@ describe('StudentByYear Config', () => {
           name: 'Test 2',
           tz: '456',
           klassReferenceIds: ['1'],
-          klassTypeReferenceIds: ['1']
+          klassTypeReferenceIds: ['1'],
+          isActive: true
         }
       ];
 
