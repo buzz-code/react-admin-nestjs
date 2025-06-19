@@ -37,7 +37,6 @@ function getConfig(): BaseEntityModuleOptions {
             },
             getExportHeaders(): IHeader[] {
                 return [
-                    { value: 'id', label: 'מזהה' },
                     { value: 'teacher.name', label: 'שם המורה' },
                     { value: 'student.name', label: 'שם התלמידה' },
                     { value: 'klass.name', label: 'כיתה' },

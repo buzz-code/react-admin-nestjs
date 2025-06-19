@@ -93,7 +93,6 @@ describe('StudentByYear Config', () => {
       expect(config.entity).toBe(StudentByYear);
       expect(config.exporter).toBeDefined();
       expect(config.exporter.getExportHeaders([])).toEqual([
-        { value: 'id', label: 'מזהה' },
         { value: 'tz', label: 'תעודת זהות' },
         { value: 'name', label: 'שם' },
         { value: 'year', label: 'שנה' },

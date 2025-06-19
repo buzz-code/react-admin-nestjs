@@ -21,6 +21,7 @@ function getConfig(): BaseEntityModuleOptions {
         exporter: {
             processReqForExport(req: CrudRequest, innerFunc) {
                 req.options.query.join = {
+                    studentBaseKlass: { eager: true },
                     student: { eager: true },
                     teacher: { eager: true },
                     klass: { eager: true },
@@ -30,9 +31,10 @@ function getConfig(): BaseEntityModuleOptions {
             },
             getExportHeaders(): IHeader[] {
                 return [
-                    { value: 'id', label: 'מזהה' },
                     { value: 'teacher.name', label: 'שם המורה' },
                     { value: 'student.name', label: 'שם התלמידה' },
+                    { value: 'student.tz', label: 'תז התלמידה' },
+                    { value: 'studentBaseKlass.klassName', label: 'כיתת בסיס' },
                     { value: 'klass.name', label: 'כיתה' },
                     { value: 'lesson.name', label: 'שיעור' },
                     { value: 'reportDate', label: 'תאריך דיווח' },
