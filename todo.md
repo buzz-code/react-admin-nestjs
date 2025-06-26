@@ -312,7 +312,9 @@ https://github.com/tinovyatkin/nest-puppeteer
 * add pre-push test run
 * add pre-commit test run
 * add health check for all services
-* 
+* update react-admin version
+check those features:
+https://github.com/marmelab/react-admin/pull/10344, https://github.com/marmelab/react-admin/pull/10347, https://github.com/marmelab/react-admin/pull/10762, https://github.com/marmelab/react-admin/pull/10690, https://github.com/marmelab/react-admin/pull/10640, https://github.com/marmelab/react-admin/pull/10605, https://github.com/marmelab/react-admin/pull/10571, https://github.com/marmelab/react-admin/pull/10518, https://github.com/marmelab/react-admin/pull/10367
 
 # todo later
 ## infrastucture
