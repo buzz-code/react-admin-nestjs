@@ -132,9 +132,11 @@ export function getUnknownAbsCount(absCount: number, knownAbs: number) {
     return Math.max(0, (absCount ?? 0) - (knownAbs ?? 0));
 }
 
-export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNames: GradeName[] = []) {
+export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNames: GradeName[] = [], showNeedsExamination: boolean = true) {
     // if (grade === 0) return '0%';
-    if (!grade) return '';
+    if (!grade) {
+        return showNeedsExamination ? 'טעונת בחינה' : '';
+    }
     var finalGrade = getFinalGrade(grade * 100, gradeEffect);
     var matchingGradeName = getItemNameByKey(gradeNames, finalGrade);
     var displayGrade = matchingGradeName ?? (Math.round(finalGrade) + '%');

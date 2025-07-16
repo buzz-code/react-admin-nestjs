@@ -224,9 +224,21 @@ describe('studentReportData.util', () => {
     });
 
     it('should handle edge cases', () => {
-      expect(getDisplayGrade(0, 0, mockGradeNames)).toBe('');
-      expect(getDisplayGrade(null, 0, mockGradeNames)).toBe('');
+      expect(getDisplayGrade(0, 0, mockGradeNames)).toBe('טעונת בחינה');
+      expect(getDisplayGrade(null, 0, mockGradeNames)).toBe('טעונת בחינה');
       expect(getDisplayGrade(0.85)).toBe('85%');
+    });
+
+    it('should show needs examination when flag is enabled', () => {
+      expect(getDisplayGrade(0, 0, mockGradeNames, true)).toBe('טעונת בחינה');
+      expect(getDisplayGrade(null, 0, mockGradeNames, true)).toBe('טעונת בחינה');
+      expect(getDisplayGrade(undefined, 0, mockGradeNames, true)).toBe('טעונת בחינה');
+    });
+
+    it('should show empty string when needs examination is disabled', () => {
+      expect(getDisplayGrade(0, 0, mockGradeNames, false)).toBe('');
+      expect(getDisplayGrade(null, 0, mockGradeNames, false)).toBe('');
+      expect(getDisplayGrade(undefined, 0, mockGradeNames, false)).toBe('');
     });
   });
 

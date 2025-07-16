@@ -174,7 +174,7 @@ const reportTemplate = `
                                                     <%= affected_grade %>%
                                                 <% } %> 
                                             <% } else { %>
-                                                &nbsp;
+                                                טעונת בחינה
                                             <% } %>
                                             </td>
                                         <% } %>
