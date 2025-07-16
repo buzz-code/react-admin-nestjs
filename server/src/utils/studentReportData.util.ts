@@ -64,7 +64,7 @@ export function getReportsFilterForReportCard(studentId: number, year: number, r
     if (reportDateFilter && globalLessonIds.length) {
         return [
             { ...commonFilter, reportDate: reportDateFilter },
-            { ...commonFilter, lessonReferenceId: In(globalLessonIds) },
+            { ...commonFilter, lessonReferenceId: In(globalLessonIds), reportDate: reportDateFilter },
         ];
     } else if (reportDateFilter) {
         return [{ ...commonFilter, reportDate: reportDateFilter }];

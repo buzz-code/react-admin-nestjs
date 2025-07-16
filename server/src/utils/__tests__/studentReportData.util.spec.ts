@@ -115,7 +115,8 @@ describe('studentReportData.util', () => {
       expect(result[1]).toEqual({
         studentReferenceId: 123,
         year: 2024,
-        lessonReferenceId: In(['1', '2', '3'])
+        lessonReferenceId: In(['1', '2', '3']),
+        reportDate: reportDateFilter  // This is the key fix - date filter should be included
       });
     });
 
@@ -134,6 +135,23 @@ describe('studentReportData.util', () => {
         year: 2024,
         lessonReferenceId: undefined
       });
+    });
+
+    it('should include date filter in global lessons when both are provided', () => {
+      const reportDateFilter = Between(new Date('2024-09-01'), new Date('2024-12-31'));
+      const result = getReportsFilterForReportCard(
+        456,
+        2024,
+        reportDateFilter,
+        '10,20',
+        'undefined'
+      );
+
+      expect(result).toHaveLength(2);
+      // Both filters should include the date constraint to prevent cross-semester bleeding
+      expect(result[0].reportDate).toEqual(reportDateFilter);
+      expect(result[1].reportDate).toEqual(reportDateFilter);
+      expect(result[1].lessonReferenceId).toEqual(In(['10', '20']));
     });
   });
 
