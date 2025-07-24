@@ -83,6 +83,7 @@ interface IStudentReportData {
     absPercents: number;
     gradeAvg: number;
     lastGrade: number;
+    maxGrade: number;
     estimatedAttPercents?: number;
     estimatedAbsPercents?: number;
 }
@@ -95,10 +96,11 @@ export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: { 
     const absPercents = 1 - attPercents;
 
     const grades = data.filter(item => item.type === 'grade');
-    let gradeAvg = null, lastGrade = null;
+    let gradeAvg = null, lastGrade = null, maxGrade = null;
     if (grades.length) {
         gradeAvg = roundFractional(calcAvg(grades, item => item.grade) / 100);
         lastGrade = (grades.at(-1)?.grade ?? 0) / 100;
+        maxGrade = Math.max(...grades.map(item => item.grade)) / 100;
     }
 
     let estimatedAttPercents, estimatedAbsPercents;
@@ -115,6 +117,7 @@ export function calcReportsData(data: AttReportAndGrade[], totalAbsencesData: { 
         absPercents,
         gradeAvg,
         lastGrade,
+        maxGrade,
         estimatedAttPercents,
         estimatedAbsPercents,
     };
@@ -130,6 +133,16 @@ export function getAttPercents(lessonsCount: number, absCount: number) {
 
 export function getUnknownAbsCount(absCount: number, knownAbs: number) {
     return Math.max(0, (absCount ?? 0) - (knownAbs ?? 0));
+}
+
+export function getRelevantGrade(isLastGrade: boolean, gradeAvg: number, lastGrade: number, maxGrade: number) {
+    if (isLastGrade) {
+        return lastGrade;
+    }
+    if (maxGrade > 1) {
+        return maxGrade;
+    }
+    return gradeAvg;
 }
 
 export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNames: GradeName[] = []) {

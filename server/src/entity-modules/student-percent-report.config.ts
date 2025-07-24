@@ -14,7 +14,7 @@ import { Lesson } from "src/db/entities/Lesson.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
 import { calcSum, getUniqueValues, groupDataByKeys, groupDataByKeysAndCalc } from "src/utils/reportData.util";
-import { calcReportsData, getDisplayGrade, getDisplayAttendance, getUnknownAbsCount } from "src/utils/studentReportData.util";
+import { calcReportsData, getDisplayGrade, getDisplayAttendance, getUnknownAbsCount, getRelevantGrade } from "src/utils/studentReportData.util";
 import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from "src/utils/studentReportData.util";
 import { DataSource, In } from "typeorm";
 
@@ -106,7 +106,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                     val.approvedAbsCount = reportData.approvedAbsCount;
                     val.absPercents = reportData.absPercents;
                     val.attPercents = reportData.attPercents;
-                    val.gradeAvg = extra?.lastGrade ? reportData.lastGrade : reportData.gradeAvg;
+                    val.gradeAvg = getRelevantGrade(extra?.lastGrade, reportData.gradeAvg, reportData.lastGrade, reportData.maxGrade);
 
                     const gradeReports = reports.filter(item => item.type === 'grade');
                     val.estimation = getUniqueValues(gradeReports, item => item.estimation).join(', ');

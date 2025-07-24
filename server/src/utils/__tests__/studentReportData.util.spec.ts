@@ -9,7 +9,8 @@ import {
   getAttPercents,
   getUnknownAbsCount,
   getDisplayGrade,
-  getGradeEffect
+  getGradeEffect,
+  getRelevantGrade
 } from '../studentReportData.util';
 import { AttReportAndGrade } from 'src/db/view-entities/AttReportAndGrade.entity';
 import { GradeName } from 'src/db/entities/GradeName.entity';
@@ -168,6 +169,7 @@ describe('studentReportData.util', () => {
       expect(result.absPercents).toBeCloseTo(0.07, 2);
       expect(result.gradeAvg).toBe(87.5);
       expect(result.lastGrade).toBe(90);
+      expect(result.maxGrade).toBe(90);
     });
 
     it('should calculate estimated percentages when estimatedLessonCount is provided', () => {
@@ -201,6 +203,23 @@ describe('studentReportData.util', () => {
       expect(getUnknownAbsCount(5, 6)).toBe(0);
       expect(getUnknownAbsCount(null, 3)).toBe(0);
       expect(getUnknownAbsCount(5, null)).toBe(5);
+    });
+  });
+
+  describe('getRelevantGrade', () => {
+    it('should return last grade if isLastGrade is true', () => {
+      expect(getRelevantGrade(true, 0.85, 0.9, 1)).toBe(0.9);
+      expect(getRelevantGrade(true, 0.75, 0.8, 1)).toBe(0.8);
+    });
+
+    it('should return max grade if isLastGrade is false and maxGrade > 1', () => {
+      expect(getRelevantGrade(false, 0.85, 0.9, 1.2)).toBe(1.2);
+      expect(getRelevantGrade(false, 0.75, 0.8, 1.5)).toBe(1.5);
+    });
+
+    it('should return gradeAvg if isLastGrade is false and maxGrade <= 1', () => {
+      expect(getRelevantGrade(false, 0.85, 0.9, 0.95)).toBe(0.85);
+      expect(getRelevantGrade(false, 0.75, 0.8, 0.85)).toBe(0.75);
     });
   });
 

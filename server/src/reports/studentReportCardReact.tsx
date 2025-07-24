@@ -20,7 +20,7 @@ import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
 import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from 'src/utils/reportData.util';
-import { getDisplayGrade, getDisplayAttendance, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect, getDisplayable } from 'src/utils/studentReportData.util';
+import { getDisplayGrade, getDisplayAttendance, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect, getDisplayable, getRelevantGrade } from 'src/utils/studentReportData.util';
 import { getReportDateFilter, dateFromString } from '@shared/utils/entity/filters.util';
 import { StudentSpeciality } from 'src/db/view-entities/StudentSpeciality.entity';
 
@@ -559,11 +559,11 @@ function getReports(
     const data = Object.entries(dataMap).map(([key, val]) => {
         const { userId, year, studentReferenceId, klassReferenceId, lessonReferenceId, teacherReferenceId } = val[0];
         const knownAbsences = knownAbsMap[klassReferenceId]?.[lessonReferenceId];
-        const { lessonsCount, absCount, approvedAbsCount, attPercents, absPercents, gradeAvg, lastGrade } = calcReportsData(val, [{ absnceCount: knownAbsences }]);
+        const { lessonsCount, absCount, approvedAbsCount, attPercents, absPercents, gradeAvg, lastGrade, maxGrade } = calcReportsData(val, [{ absnceCount: knownAbsences }]);
         const teacher = getItemById(teachers, val[0].teacherReferenceId);
         const klass = getItemById(klasses, val[0].klassReferenceId);
         const lesson = getItemById(lessons, val[0].lessonReferenceId);
-        const grade = reportParams.lastGrade ? lastGrade : gradeAvg;
+        const grade = getRelevantGrade(reportParams.lastGrade, gradeAvg, lastGrade, maxGrade);
 
         const dataItem: IExtenedStudentPercentReport = {
             id: '',

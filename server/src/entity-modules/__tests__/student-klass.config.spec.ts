@@ -95,9 +95,11 @@ describe('StudentKlassConfig', () => {
 
     it('should return correct export headers', () => {
       const headers = config.exporter?.getExportHeaders([]) ?? [];
-      expect(headers).toHaveLength(2);
+      expect(headers).toHaveLength(4);
       expect(headers).toEqual([
+        { value: 'student.tz', label: 'תז' },
         { value: 'student.name', label: 'שם התלמידה' },
+        { value: 'klass.key', label: 'קוד כיתה' },
         { value: 'klass.name', label: 'כיתה' },
       ]);
     });
