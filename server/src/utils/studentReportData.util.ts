@@ -148,6 +148,18 @@ export function getRelevantGrade(isLastGrade: boolean, gradeAvg: number, lastGra
 export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNames: GradeName[] = []) {
     // if (grade === 0) return '0%';
     if (!grade) return '';
+
+    // ========== investigation ==========
+    if (grade && typeof grade !== 'number') {
+        console.warn('getDisplayGrade: grade is not a number', grade, typeof grade);
+        grade = parseFloat(grade);
+    }
+    if (gradeEffect && typeof gradeEffect !== 'number') {
+        console.warn('getDisplayGrade: gradeEffect is not a number', gradeEffect, typeof gradeEffect);
+        gradeEffect = parseFloat(gradeEffect);
+    }
+    // ========== end of investigation ==========
+
     var finalGrade = getFinalGrade(grade * 100, gradeEffect);
     var matchingGradeName = getItemNameByKey(gradeNames, finalGrade);
     var displayGrade = matchingGradeName ?? (Math.round(finalGrade) + '%');
