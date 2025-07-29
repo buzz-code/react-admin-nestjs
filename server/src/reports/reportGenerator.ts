@@ -17,6 +17,7 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
         endDate: reqExtra.endDate,
         globalLessonReferenceIds: String(reqExtra.globalLessonReferenceIds),
         denyLessonReferenceIds: String(reqExtra.denyLessonReferenceIds),
+        klassTypeReferenceId: reqExtra.klassTypeReferenceId,
         attendance: reqExtra.attendance,
         grades: reqExtra.grades,
         personalNote: reqExtra.personalNote,

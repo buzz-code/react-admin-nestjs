@@ -4,6 +4,7 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
+import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { useReportCardSettings } from 'src/settings/settingsUtil';
 
 const defaultValues = {
@@ -24,6 +25,7 @@ export default ({ defaultRequestValues }) => {
             <DateInput source="endDate" label="תאריך סיום" />
             <CommonReferenceArrayInput source="globalLessonReferenceIds" reference="lesson" label="שיעורים ללא הגבלת תאריך" />
             <CommonReferenceArrayInput source="denyLessonReferenceIds" reference="lesson" label="שיעורים שלא ייכללו בתעודה" />
+            <CommonReferenceInput source="klassTypeReferenceId" reference="klass_type" label="שיוך כיתה" />,
             <TextInput source="personalNote" label="הערה לתלמידה" defaultValue='' />
         </BulkReportButton>
     );

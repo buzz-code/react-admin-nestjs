@@ -484,6 +484,7 @@ export interface IReportParams {
     endDate?: string;
     globalLessonReferenceIds?: string;
     denyLessonReferenceIds?: string;
+    klassTypeReferenceId?: string;
     attendance: boolean;
     grades: boolean;
     personalNote?: string;
@@ -500,10 +501,11 @@ export interface IReportParams {
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
     const reportDate = getReportDateFilter(dateFromString(params.startDate), dateFromString(params.endDate));
 
+    const klassIds = await getKlassIdsFromKlassType(dataSource, params.klassTypeReferenceId, params.userId);
     const [user, student, studentReports, studentBaseKlass, studentSpeciality, reportLogo, reportBottomLogo, knownAbsences] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
-        dataSource.getRepository(AttReportAndGrade).find({ where: getReportsFilterForReportCard(params.studentId, params.year, reportDate, params.globalLessonReferenceIds, params.denyLessonReferenceIds), order: { reportDate: 'ASC' } }),
+        dataSource.getRepository(AttReportAndGrade).find({ where: getReportsFilterForReportCard(params.studentId, params.year, reportDate, params.globalLessonReferenceIds, params.denyLessonReferenceIds, klassIds), order: { reportDate: 'ASC' } }),
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(StudentSpeciality).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportLogo }),
@@ -543,6 +545,16 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         grade_names,
         attendance_names,
     };
+}
+
+async function getKlassIdsFromKlassType(dataSource, klassTypeReferenceId: string, userId: number): Promise<number[]> {
+    if (!klassTypeReferenceId) return [];
+    const klasses = await dataSource.getRepository(Klass)
+        .find({
+            where: { klassTypeReferenceId, userId },
+            select: ['id']
+        });
+    return klasses.map(klass => klass.id);
 }
 
 function getReports(

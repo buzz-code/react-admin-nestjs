@@ -55,11 +55,15 @@ export function getKnownAbsenceFilterBySprAndDates(ids: string[], startDate: Dat
     });
 }
 
-export function getReportsFilterForReportCard(studentId: number, year: number, reportDateFilter: FindOperator<any>, globalLessonIdsStr: string, denyLessonIdStr: string): FindOptionsWhere<AttReportAndGrade>[] {
+export function getReportsFilterForReportCard(studentId: number, year: number, reportDateFilter: FindOperator<any>, globalLessonIdsStr: string, denyLessonIdStr: string, klassIds?: number[]): FindOptionsWhere<AttReportAndGrade>[] {
     const denyLessonIds = denyLessonIdStr.split(',').filter(item => item != 'undefined');
     const lessonFilter: FindOperator<number> = denyLessonIds.length ? Not(In(denyLessonIds)) : undefined;
-    const commonFilter = { studentReferenceId: studentId, year, lessonReferenceId: lessonFilter };
+    const commonFilter: FindOptionsWhere<AttReportAndGrade> = { studentReferenceId: studentId, year, lessonReferenceId: lessonFilter };
     const globalLessonIds = globalLessonIdsStr.split(',').filter(item => item != 'undefined');
+
+    if (klassIds?.length) {
+        commonFilter.klassReferenceId = In(klassIds);
+    }
 
     if (reportDateFilter && globalLessonIds.length) {
         return [
