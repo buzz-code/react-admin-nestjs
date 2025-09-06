@@ -1,4 +1,4 @@
-import { Column, DataSource, JoinColumn, ViewEntity } from "typeorm";
+import { Column, DataSource, JoinColumn, PrimaryColumn, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Klass } from "src/db/entities/Klass.entity";
 import { StudentKlass } from "src/db/entities/StudentKlass.entity";
@@ -34,7 +34,7 @@ import { Student } from "../entities/Student.entity";
     .addGroupBy('student_klasses.year')
 })
 export class StudentKlassReport implements IHasUserId {
-  @Column()
+  @PrimaryColumn()
   id: number;
 
   @Column("int", { name: "user_id" })
