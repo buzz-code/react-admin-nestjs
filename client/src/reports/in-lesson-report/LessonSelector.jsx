@@ -1,16 +1,23 @@
 import React, { useCallback, useState } from 'react';
 import { Box, Typography, Divider } from '@mui/material';
-import { SaveButton, useDataProvider, useNotify, TabbedForm, TextInput, Toolbar } from 'react-admin';
+import { TabbedForm, Toolbar, SaveButton, TextInput, useDataProvider, useNotify } from 'react-admin';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import CommonReferenceInput from '../../../shared/components/fields/CommonReferenceInput';
+import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter } from '@shared/utils/yearFilter';
 
 const lessonKeyAndName = item => `${item.name} (${item.key})`;
 
-export const LessonSelector = ({ onLessonFound }) => {
+export const LessonSelector = ({ onLessonFound, selectedTeacher }) => {
     const dataProvider = useDataProvider();
     const notify = useNotify();
     const [lessonKey, setLessonKey] = useState(null);
+
+    const lessonFilter = {
+        ...defaultYearFilter,
+    };
+    if (selectedTeacher) {
+        lessonFilter.teacherReferenceId = selectedTeacher.id;
+    }
 
     const handleGetLesson = useCallback(async () => {
         try {
@@ -18,7 +25,7 @@ export const LessonSelector = ({ onLessonFound }) => {
                 target: 'key',
                 id: lessonKey,
                 pagination: { page: 1, perPage: 1 },
-                filter: { year: defaultYearFilter.year },
+                filter: lessonFilter,
             });
             if (!lesson) {
                 throw new Error('Lesson not found');
@@ -50,7 +57,7 @@ export const LessonSelector = ({ onLessonFound }) => {
             console.error(e);
             notify('ra.message.lesson_not_found', { type: 'error' });
         }
-    }, [dataProvider, notify, lessonKey, onLessonFound]);
+    }, [dataProvider, notify, lessonKey, lessonFilter, onLessonFound]);
 
     return (
         <>
@@ -61,6 +68,11 @@ export const LessonSelector = ({ onLessonFound }) => {
                 <Typography variant="body2" color="text.secondary">
                     בחרי את השיעור שברצונך להעלות דוח נוכחות עבורו
                 </Typography>
+                {selectedTeacher && (
+                    <Typography variant="body2" color="primary" sx={{ mt: 1 }}>
+                        מורה נבחרת: {selectedTeacher.name} ({selectedTeacher.tz})
+                    </Typography>
+                )}
             </Box>
             <Divider />
             <Box padding={2}>
@@ -75,7 +87,7 @@ export const LessonSelector = ({ onLessonFound }) => {
                             optionValue='key'
                             optionText={lessonKeyAndName}
                             onChange={(e) => setLessonKey(e)}
-                            filter={defaultYearFilter}
+                            filter={lessonFilter}
                         />
                     </TabbedForm.Tab>
                     <TabbedForm.Tab label="מספר שיעור">

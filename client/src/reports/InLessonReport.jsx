@@ -3,7 +3,7 @@ import { useRedirect } from 'react-admin';
 import { useSavableData } from '../../shared/components/import/util';
 import { Datagrid as AttDatagrid } from 'src/entities/att-report';
 import { Datagrid as GradeDatagrid } from 'src/entities/grade';
-import { useIsInLessonReportWithLate } from '../utils/appPermissions';
+import { useIsInLessonReportWithLate, useIsInLessonReportStartWithTeacher } from '../utils/appPermissions';
 import { InLessonReport } from './in-lesson-report';
 
 const entityConfig = [
@@ -26,6 +26,7 @@ const entityConfig = [
 export default ({ gradeMode = false }) => {
     const redirect = useRedirect();
     const isShowLate = useIsInLessonReportWithLate();
+    const isStartWithTeacher = useIsInLessonReportStartWithTeacher();
     const { entityLabel, resource, Datagrid, redirectUrl } = useMemo(() => entityConfig[gradeMode ? 1 : 0], [gradeMode]);
     const fileName = useMemo(() => 'דיווח ' + entityLabel + ' ' + new Date().toISOString().split('T')[0], [entityLabel]);
     const [dataToSave, setDataToSave] = useState(null);
@@ -46,6 +47,7 @@ export default ({ gradeMode = false }) => {
             data={data}
             saveData={saveData}
             isShowLate={isShowLate}
+            isStartWithTeacher={isStartWithTeacher}
         />
     );
 };

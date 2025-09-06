@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Container, Paper, Stack } from '@mui/material';
 import { ReportContext, defaultContextValue } from './context';
 import { LessonSelector } from './LessonSelector';
+import { TeacherSelector } from './TeacherSelector';
 import { MainReport } from './MainReport';
 import { round } from '@shared/utils/numericUtil';
 import { useLateValue } from 'src/settings/settingsUtil';
@@ -14,11 +15,17 @@ export const InLessonReport = ({
     setDataToSave,
     data,
     saveData,
-    isShowLate
+    isShowLate,
+    isStartWithTeacher
 }) => {
     const [lesson, setLesson] = useState(null);
     const [students, setStudents] = useState(null);
+    const [selectedTeacher, setSelectedTeacher] = useState(null);
     const lateValue = useLateValue();
+
+    const handleTeacherSelect = useCallback((teacher) => {
+        setSelectedTeacher(teacher);
+    }, []);
 
     const handleLessonFound = useCallback(({ lesson, students }) => {
         setLesson(lesson);
@@ -27,6 +34,7 @@ export const InLessonReport = ({
 
     const handleCancel = useCallback(() => {
         setLesson(null);
+        setSelectedTeacher(null);
         setDataToSave(null);
     }, []);
 
@@ -79,7 +87,14 @@ export const InLessonReport = ({
             <Paper>
                 <Stack>
                     {!lesson ? (
-                        <LessonSelector onLessonFound={handleLessonFound} />
+                        isStartWithTeacher && !selectedTeacher ? (
+                            <TeacherSelector onTeacherSelected={handleTeacherSelect} />
+                        ) : (
+                            <LessonSelector
+                                onLessonFound={handleLessonFound}
+                                selectedTeacher={selectedTeacher}
+                            />
+                        )
                     ) : (
                         <ReportContext.Provider value={contextValue}>
                             <MainReport gradeMode={gradeMode} handleSave={handleSave} />
