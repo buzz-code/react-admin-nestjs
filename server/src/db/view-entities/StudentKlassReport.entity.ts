@@ -10,6 +10,7 @@ import { Student } from "../entities/Student.entity";
   expression: (dataSource: DataSource) => dataSource
     .createQueryBuilder()
     .select('students.id', 'id')
+    .addSelect('students.id', 'student_reference_id')
     .addSelect('students.tz', 'student_tz')
     .addSelect('students.name', 'student_name')
     .addSelect('student_klasses.user_id', 'user_id')
@@ -46,7 +47,7 @@ export class StudentKlassReport implements IHasUserId {
   @Column("varchar", { name: "student_tz", length: 10, nullable: true })
   studentTz: string;
 
-  @Column({ name: "id" })
+  @Column({ name: "student_reference_id" })
   studentReferenceId: number;
 
   @Column({ name: "student_name" })
