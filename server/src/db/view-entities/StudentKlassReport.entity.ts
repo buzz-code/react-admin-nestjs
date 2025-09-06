@@ -1,4 +1,4 @@
-import { Column, DataSource, JoinColumn, PrimaryColumn, ViewEntity } from "typeorm";
+import { Column, DataSource, JoinColumn, OneToOne, PrimaryColumn, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Klass } from "src/db/entities/Klass.entity";
 import { StudentKlass } from "src/db/entities/StudentKlass.entity";
@@ -80,6 +80,7 @@ export class StudentKlassReport implements IHasUserId {
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
   user: User;
 
+  @OneToOne(() => Student)
   @JoinColumn([{ name: "id", referencedColumnName: "id" }])
   student: Student;
 }
