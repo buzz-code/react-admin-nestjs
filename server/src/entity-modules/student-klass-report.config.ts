@@ -31,7 +31,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'student.name', label: 'שם' },
                     { value: 'student.comment', label: 'הערה' },
                     { value: 'student.phone', label: 'טלפון' },
-                    { value: 'student.year', label: 'כתובת' },
+                    { value: 'student.address', label: 'כתובת' },
                     { value: 'year', label: 'שנה' },
                     { value: 'klassName1', label: 'כיתת אם' },
                     { value: 'klassName2', label: 'מסלול' },
