@@ -94,7 +94,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
         fileTitle: params.isGrades ? 'קובץ ציונים' : 'קובץ נוכחות',
         headerRow,
         formattedData: lessonStudents[lesson.id].map(sk => (
-            [sk.klass.key, sk.student.tz, sk.student.name]
+            [sk.klass.key, sk.student.id, sk.student.name]
         )),
         sheetName: teacherReportStatus.reportMonthName ?? 'דיווח נוכחות',
         specialFields: [

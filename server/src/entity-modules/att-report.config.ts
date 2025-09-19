@@ -50,7 +50,7 @@ function getConfig(): BaseEntityModuleOptions {
                 return {
                     importFields: [
                         'klassId',
-                        'studentTz',
+                        'studentReferenceId',
                         '',
                         'lateCount',
                         'absCount',
