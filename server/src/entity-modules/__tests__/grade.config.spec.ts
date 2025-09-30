@@ -64,7 +64,7 @@ describe('grade.config', () => {
       it('should define correct import fields structure', () => {
         expect(importConfig.importFields).toEqual([
           'klassId',
-          'studentTz',
+          'studentReferenceId',
           '',
           'grade',
           'estimation',
