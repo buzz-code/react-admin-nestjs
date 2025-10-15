@@ -48,7 +48,7 @@ import text from "@shared/components/common-entities/text";
 import textByUser from "@shared/components/common-entities/text-by-user";
 import user from "@shared/components/common-entities/user";
 import auditLog from '@shared/components/common-entities/audit-log';
-import importFile from '@shared/components/common-entities/import-file';
+import importFile from 'src/entities/import-file';
 import mailAddress from '@shared/components/common-entities/mail-address';
 import recievedMail from '@shared/components/common-entities/recieved-mail';
 import page from '@shared/components/common-entities/page';
