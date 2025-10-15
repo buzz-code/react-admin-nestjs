@@ -13,6 +13,7 @@ export const InLessonReport = ({
     Datagrid,
     handleSuccess,
     setDataToSave,
+    setSignatureMetadata,
     data,
     saveData,
     isShowLate,
@@ -39,7 +40,7 @@ export const InLessonReport = ({
     }, []);
 
     const handleSave = useCallback((formData) => {
-        const { reportDates, howManyLessons, ...rest } = formData;
+        const { reportDates, howManyLessons, lessonTime, lessonTopic, signatureData, ...rest } = formData;
         const dataToSave = [];
 
         const entry = {
@@ -66,6 +67,17 @@ export const InLessonReport = ({
         });
 
         setDataToSave(dataToSave);
+        const hasAnySignatureField = lessonTime || lessonTopic || signatureData;
+
+        if (hasAnySignatureField) {
+            setSignatureMetadata({
+                lessonTime,
+                lessonTopic,
+                signatureData,
+            });
+        } else {
+            setSignatureMetadata(null);
+        }
     }, [lesson, gradeMode]);
 
     const contextValue = {

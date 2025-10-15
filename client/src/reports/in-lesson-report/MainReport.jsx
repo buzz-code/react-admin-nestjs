@@ -3,6 +3,7 @@ import { FormDataConsumer, SimpleForm, NumberInput, RecordContextProvider } from
 import Divider from '@mui/material/Divider';
 import { ReportHeader } from './ReportHeader';
 import { getDefaultReportDate, StudentList } from './StudentList';
+import LessonSignatureFields from '../../components/LessonSignatureFields';
 import { FormActions } from './FormActions';
 
 export const MainReport = ({ gradeMode, handleSave }) => {
@@ -28,6 +29,7 @@ export const MainReport = ({ gradeMode, handleSave }) => {
                                 reportDates={reportDates}
                                 setReportDates={setReportDates}
                             />
+                            <LessonSignatureFields />
                             <FormActions />
                         </RecordContextProvider>
                     )}

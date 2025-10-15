@@ -3,7 +3,7 @@ import { useRedirect } from 'react-admin';
 import { useSavableData } from '../../shared/components/import/util';
 import { Datagrid as AttDatagrid } from 'src/entities/att-report';
 import { Datagrid as GradeDatagrid } from 'src/entities/grade';
-import { useIsInLessonReportWithLate, useIsInLessonReportStartWithTeacher } from '../utils/appPermissions';
+import { useIsInLessonReportWithLate, useIsInLessonReportStartWithTeacher, useIsLessonSignature } from '../utils/appPermissions';
 import { InLessonReport } from './in-lesson-report';
 
 const entityConfig = [
@@ -23,14 +23,25 @@ const entityConfig = [
     },
 ];
 
+const useFileSource = () => {
+    const hasLessonSignaturePermission = useIsLessonSignature();
+
+    if (hasLessonSignaturePermission) {
+        return 'טופס נוכחות';
+    }
+    return undefined;
+};
+
 export default ({ gradeMode = false }) => {
     const redirect = useRedirect();
     const isShowLate = useIsInLessonReportWithLate();
     const isStartWithTeacher = useIsInLessonReportStartWithTeacher();
     const { entityLabel, resource, Datagrid, redirectUrl } = useMemo(() => entityConfig[gradeMode ? 1 : 0], [gradeMode]);
     const fileName = useMemo(() => 'דיווח ' + entityLabel + ' ' + new Date().toISOString().split('T')[0], [entityLabel]);
+    const fileSource = useFileSource();
     const [dataToSave, setDataToSave] = useState(null);
-    const { data, saveData } = useSavableData(resource, fileName, dataToSave);
+    const [signatureMetadata, setSignatureMetadata] = useState(null);
+    const { data, saveData } = useSavableData(resource, fileName, dataToSave, signatureMetadata, fileSource);
 
     const handleSuccess = useCallback(() => {
         redirect(redirectUrl);
@@ -44,6 +55,7 @@ export default ({ gradeMode = false }) => {
             fileName={fileName}
             handleSuccess={handleSuccess}
             setDataToSave={setDataToSave}
+            setSignatureMetadata={setSignatureMetadata}
             data={data}
             saveData={saveData}
             isShowLate={isShowLate}
