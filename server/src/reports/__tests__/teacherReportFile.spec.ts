@@ -171,11 +171,11 @@ describe('teacherReportFile', () => {
       const mockStudents = [
         {
           klass: { key: 'A1' },
-          student: { tz: '123', name: 'Student 1' },
+          student: { id: '123', tz: '123', name: 'Student 1' },
         },
         {
           klass: { key: 'A2' },
-          student: { tz: '456', name: 'Student 2' },
+          student: { id: '456', tz: '456', name: 'Student 2' },
         },
       ];
 
@@ -216,7 +216,7 @@ describe('teacherReportFile', () => {
       const mockStudents = [
         {
           klass: { key: 'A1' },
-          student: { tz: '123', name: 'Student 1' },
+          student: { id: '123', tz: '123', name: 'Student 1' },
         },
       ];
 
