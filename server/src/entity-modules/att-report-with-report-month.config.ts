@@ -70,7 +70,7 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
                     klassReferenceId: report.klassReferenceId,
                     lessonReferenceId: report.lessonReferenceId,
                     reportDate: req.parsed.extra.reportDate ?? report.reportDate,
-                    absnceCount: req.parsed.extra.absnceCount ?? report.absCount,
+                    absnceCount: req.parsed.extra.absnceCount ?? Math.round(report.absCount),
                     absnceCode: req.parsed.extra.absnceCode,
                     senderName: req.parsed.extra.senderName,
                     reason: req.parsed.extra.reason,
