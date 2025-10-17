@@ -17,7 +17,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 import BaseLayout from "@shared/components/layout/Layout";
 import BaseDashboard from '@shared/components/views/Dashboard';
-import { isInLessonReport, isScannerUpload } from './utils/appPermissions';
+import { isInLessonReport, isScannerUpload, isApprovedAbsencesUpload } from './utils/appPermissions';
 import { useDashboardItems } from './settings/settingsUtil';
 
 const customMenuItems = [
@@ -27,7 +27,7 @@ const customMenuItems = [
     ({ permissions }) => isScannerUpload(permissions) && <MenuItemLink key="scanner-upload" to="/scanner-upload" primaryText="העלאת קבצי סורק" leftIcon={<DocumentScannerIcon />} />,
     ({ permissions }) => isInLessonReport(permissions) && <MenuItemLink key="in-lesson-report-att" to="/in-lesson-report-att" primaryText="טופס נוכחות" leftIcon={<EventAvailableIcon />} />,
     ({ permissions }) => isInLessonReport(permissions) && <MenuItemLink key="in-lesson-report-grade" to="/in-lesson-report-grade" primaryText="טופס ציונים" leftIcon={<EditCalendarIcon />} />,
-    <MenuItemLink key="approved-absences-upload" to="/approved-absences-upload" primaryText="העלאת חיסורים מאושרים" leftIcon={<FileUploadIcon />} />,
+    ({ permissions }) => isApprovedAbsencesUpload(permissions) && <MenuItemLink key="approved-absences-upload" to="/approved-absences-upload" primaryText="העלאת חיסורים מאושרים" leftIcon={<FileUploadIcon />} />,
     <MenuItemLink key="roadmap" to="/roadmap" primaryText="פיתוחים עתידיים" leftIcon={<MapIcon />} />,
     <MenuItemLink key="michlol-file-helper" to="/michlol-file-helper" primaryText="עדכון קבצי מכלול" leftIcon={<ContentPasteSearchIcon />} />,
     <MenuItemLink key="settings" to="/settings" primaryText="הגדרות משתמש" leftIcon={<SettingsIcon />} />,

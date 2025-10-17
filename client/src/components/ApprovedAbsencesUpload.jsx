@@ -8,6 +8,9 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
+// React-Admin
+import { usePermissions } from 'react-admin';
+
 // Sub-components
 import FileUploadSection from './ApprovedAbsencesUpload/FileUploadSection';
 import PreviewSummary from './ApprovedAbsencesUpload/PreviewSummary';
@@ -19,7 +22,11 @@ import ActionButtons from './ApprovedAbsencesUpload/ActionButtons';
 import { useFileProcessor } from './ApprovedAbsencesUpload/useFileProcessor';
 import { useApplyAction } from './ApprovedAbsencesUpload/useApplyAction';
 
+// Permissions
+import { isApprovedAbsencesUpload } from '../utils/appPermissions';
+
 const ApprovedAbsencesUpload = () => {
+    const { permissions } = usePermissions();
     const [loading, setLoading] = useState(false);
     const [previewData, setPreviewData] = useState(null);
     const [fileName, setFileName] = useState('');
@@ -52,6 +59,19 @@ const ApprovedAbsencesUpload = () => {
     const handleFileSelect = () => {
         fileInputRef.current?.click();
     };
+
+    // Check permissions
+    if (!isApprovedAbsencesUpload(permissions)) {
+        return (
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Paper elevation={3} sx={{ p: 3 }}>
+                    <Typography variant="h6" color="error">
+                        אין לך הרשאה לגשת לעמוד זה
+                    </Typography>
+                </Paper>
+            </Container>
+        );
+    }
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
