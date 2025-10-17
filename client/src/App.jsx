@@ -66,6 +66,7 @@ import ScannerUpload from '@shared/components/views/ScannerUpload';
 import InLessonReport from 'src/reports/InLessonReport';
 import Roadmap from '@shared/components/views/Roadmap';
 import MichlolFileHelper from '@shared/components/views/MichlolFileHelper';
+import ApprovedAbsencesUpload from 'src/components/ApprovedAbsencesUpload';
 
 import BadgeIcon from '@mui/icons-material/Badge';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
@@ -168,6 +169,7 @@ const App = () => (
               <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
               <Route path="/roadmap" element={<Roadmap features={roadmapFeatures} />} />
               <Route path="/michlol-file-helper" element={<MichlolFileHelper />} />
+              <Route path="/approved-absences-upload" element={<ApprovedAbsencesUpload />} />
             </CustomRoutes>
 
             <CustomRoutes noLayout>
