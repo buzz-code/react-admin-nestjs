@@ -40,7 +40,7 @@ export const InLessonReport = ({
     }, []);
 
     const handleSave = useCallback((formData) => {
-        const { reportDates, howManyLessons, lessonTime, lessonTopic, signatureData, ...rest } = formData;
+        const { reportDates, howManyLessons, lessonDetails, signatureData, ...rest } = formData;
         const dataToSave = [];
 
         const entry = {
@@ -48,6 +48,7 @@ export const InLessonReport = ({
             klassReferenceId: lesson.klassReferenceIds[0],
             lessonReferenceId: lesson.id,
         };
+        
         reportDates.forEach((reportDate, index) => {
             const reportDateEntry = { ...entry, reportDate };
             Object.keys(rest).forEach((studentId) => {
@@ -67,18 +68,34 @@ export const InLessonReport = ({
         });
 
         setDataToSave(dataToSave);
-        const hasAnySignatureField = lessonTime || lessonTopic || signatureData;
+        
+        // Build metadata with per-date details
+        const dateDetailsMetadata = {};
+        if (lessonDetails) {
+            reportDates.forEach((reportDate, index) => {
+                const lessonTime = lessonDetails[index]?.lessonTime;
+                const lessonTopic = lessonDetails[index]?.lessonTopic;
+                
+                if (lessonTime || lessonTopic) {
+                    dateDetailsMetadata[reportDate] = {
+                        lessonTime,
+                        lessonTopic
+                    };
+                }
+            });
+        }
+
+        const hasAnySignatureField = signatureData || Object.keys(dateDetailsMetadata).length > 0;
 
         if (hasAnySignatureField) {
             setSignatureMetadata({
-                lessonTime,
-                lessonTopic,
+                dateDetails: dateDetailsMetadata,
                 signatureData,
             });
         } else {
             setSignatureMetadata(null);
         }
-    }, [lesson, gradeMode]);
+    }, [lesson, gradeMode, lateValue]);
 
     const contextValue = {
         ...defaultContextValue,

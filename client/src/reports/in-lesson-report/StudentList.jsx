@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useMemo } from 'react';
-import { NumberInput, DateInput, minValue, maxValue, useRecordContext, TextInput, maxLength } from 'react-admin';
+import { NumberInput, DateInput, minValue, maxValue, useRecordContext, TextInput, maxLength, TimeInput, required } from 'react-admin';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,12 +12,14 @@ import Button from '@mui/material/Button';
 import { CommonSliderInput } from '../../../shared/components/fields/CommonSliderInput';
 import { ReportContext } from './context';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
+import { useIsLessonSignature } from 'src/utils/appPermissions';
 
 export const getDefaultReportDate = () => new Date().toISOString().split('T')[0];
 
 export const StudentList = ({ reportDates, setReportDates }) => {
     const { gradeMode, isShowLate, students } = useContext(ReportContext);
     const record = useRecordContext();
+    const hasLessonSignaturePermission = useIsLessonSignature();
 
     const columns = useMemo(() => {
         const cols = [];
@@ -67,6 +69,23 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                     helperText={false}
                                 />
                                 <CommonHebrewDateField source={`reportDates[${index}]`} />
+                                
+                                {hasLessonSignaturePermission && (
+                                    <>
+                                        <TimeInput 
+                                            source={`lessonDetails[${index}].lessonTime`} 
+                                            label="זמן השיעור" 
+                                            fullWidth 
+                                            validate={[required()]} 
+                                        />
+                                        <TextInput 
+                                            source={`lessonDetails[${index}].lessonTopic`} 
+                                            label="נושא השיעור" 
+                                            fullWidth 
+                                            validate={[required()]} 
+                                        />
+                                    </>
+                                )}
                             </TableCell>
                         ))}
                     </TableRow>

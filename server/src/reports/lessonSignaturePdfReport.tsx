@@ -221,6 +221,17 @@ const HtmlDocument: React.FC<HtmlDocumentProps> = ({ title, children }) => {
 // ============================================================================
 // COMPONENT 1: Main Report Container
 // ============================================================================
+
+// Helper to get lesson details for a specific date
+const getLessonDetailsForDate = (metadata: any, date: Date): { lessonTime?: string, lessonTopic?: string } => {
+  if (!metadata?.dateDetails) {
+    return {};
+  }
+  
+  const dateString = date.toISOString().split('T')[0];
+  return metadata.dateDetails[dateString] || {};
+};
+
 const LessonSignatureReport: React.FunctionComponent<LessonSignaturePdfData | ErrorReportData> = (props) => {
   // Handle error case
   if ('error' in props && props.error) {
@@ -237,23 +248,63 @@ const LessonSignatureReport: React.FunctionComponent<LessonSignaturePdfData | Er
   const metadata = importFile.metadata;
   const entityConfig = getEntityConfig(importFile.entityName);
 
+  // Group records by date
+  const recordsByDate = studentRecords.reduce((acc, record) => {
+    const dateStr = new Date(record.data.reportDate).toISOString().split('T')[0];
+    if (!acc[dateStr]) {
+      acc[dateStr] = [];
+    }
+    acc[dateStr].push(record);
+    return acc;
+  }, {} as Record<string, typeof studentRecords>);
+
+  const dates = Object.keys(recordsByDate).sort();
+  const isMultipleDates = dates.length > 1;
+
   return (
     <HtmlDocument title={getReportName()}>
       <ReportHeader 
         title={entityConfig.title} 
         date={importFile.createdAt} 
       />
-      <LessonDetailsSection
-        lesson={lesson}
-        teacher={teacher}
-        klass={klass}
-        metadata={metadata}
-      />
-      <StudentRecordsTable
-        studentRecords={studentRecords}
-        entityConfig={entityConfig}
-        entityName={importFile.entityName}
-      />
+      
+      {isMultipleDates ? (
+        // Multiple dates: show section per date
+        dates.map((dateStr, index) => (
+          <React.Fragment key={dateStr}>
+            {index > 0 && <div style={{ pageBreakBefore: 'always' }} />}
+            <LessonDetailsSection
+              lesson={lesson}
+              teacher={teacher}
+              klass={klass}
+              metadata={metadata}
+              reportDate={new Date(dateStr)}
+            />
+            <StudentRecordsTable
+              studentRecords={recordsByDate[dateStr]}
+              entityConfig={entityConfig}
+              entityName={importFile.entityName}
+            />
+          </React.Fragment>
+        ))
+      ) : (
+        // Single date: show as before
+        <>
+          <LessonDetailsSection
+            lesson={lesson}
+            teacher={teacher}
+            klass={klass}
+            metadata={metadata}
+            reportDate={studentRecords.length > 0 ? new Date(studentRecords[0].data.reportDate) : undefined}
+          />
+          <StudentRecordsTable
+            studentRecords={studentRecords}
+            entityConfig={entityConfig}
+            entityName={importFile.entityName}
+          />
+        </>
+      )}
+      
       {metadata.signatureData && (
         <SignatureSection signatureData={metadata.signatureData} />
       )}
@@ -335,13 +386,15 @@ interface LessonDetailsSectionProps {
   teacher: Teacher;
   klass: Klass;
   metadata: any;
+  reportDate?: Date;  // New optional prop
 }
 
 const LessonDetailsSection: React.FC<LessonDetailsSectionProps> = ({ 
   lesson, 
   teacher, 
   klass, 
-  metadata 
+  metadata,
+  reportDate 
 }) => {
   const sectionContainerStyle: React.CSSProperties = {
     marginBottom: '20px',
@@ -366,6 +419,8 @@ const LessonDetailsSection: React.FC<LessonDetailsSectionProps> = ({
     ...labelStyle,
   };
 
+  const lessonDetails = reportDate ? getLessonDetailsForDate(metadata, reportDate) : {};
+
   return (
     <div style={sectionContainerStyle}>
       <h2 style={sectionTitleStyle}>פרטי השיעור</h2>
@@ -383,16 +438,22 @@ const LessonDetailsSection: React.FC<LessonDetailsSectionProps> = ({
             <td style={cellStyle}>כיתה:</td>
             <td>{klass.name}</td>
           </tr>
-          {metadata.lessonTime && (
+          {reportDate && (
             <tr>
-              <td style={cellStyle}>שעת השיעור:</td>
-              <td>{metadata.lessonTime}</td>
+              <td style={cellStyle}>תאריך:</td>
+              <td>{reportDate.toLocaleDateString('he-IL')}</td>
             </tr>
           )}
-          {metadata.lessonTopic && (
+          {lessonDetails.lessonTime && (
+            <tr>
+              <td style={cellStyle}>שעת השיעור:</td>
+              <td>{lessonDetails.lessonTime}</td>
+            </tr>
+          )}
+          {lessonDetails.lessonTopic && (
             <tr>
               <td style={cellStyle}>נושא השיעור:</td>
-              <td>{metadata.lessonTopic}</td>
+              <td>{lessonDetails.lessonTopic}</td>
             </tr>
           )}
         </tbody>
