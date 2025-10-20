@@ -7,7 +7,6 @@ export const appPermissions = {
   inLessonReportStartWithTeacher: 'inLessonReport.startWithTeacher',
   absCountEffect: 'absCountEffect',
   lessonSignature: 'lessonSignature',
-  approvedAbsencesUpload: 'approvedAbsencesUpload',
 };
 
 export const isScannerUpload = (permissions) => hasPermissionLogic(permissions, appPermissions.scannerUpload);
@@ -27,6 +26,3 @@ export const useIsAbsCountEffect = () => useHasPermission(appPermissions.absCoun
 
 export const isLessonSignature = (permissions) => isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.lessonSignature);
 export const useIsLessonSignature = () => useHasPermission(appPermissions.lessonSignature);
-
-export const isApprovedAbsencesUpload = (permissions) => isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.approvedAbsencesUpload);
-export const useIsApprovedAbsencesUpload = () => useHasPermission(appPermissions.approvedAbsencesUpload);
