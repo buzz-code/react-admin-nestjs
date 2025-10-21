@@ -27,7 +27,6 @@ const customMenuItems = [
     ({ permissions }) => isScannerUpload(permissions) && <MenuItemLink key="scanner-upload" to="/scanner-upload" primaryText="העלאת קבצי סורק" leftIcon={<DocumentScannerIcon />} />,
     ({ permissions }) => isInLessonReport(permissions) && <MenuItemLink key="in-lesson-report-att" to="/in-lesson-report-att" primaryText="טופס נוכחות" leftIcon={<EventAvailableIcon />} />,
     ({ permissions }) => isInLessonReport(permissions) && <MenuItemLink key="in-lesson-report-grade" to="/in-lesson-report-grade" primaryText="טופס ציונים" leftIcon={<EditCalendarIcon />} />,
-    <MenuItemLink key="approved-absences-upload" to="/approved-absences-upload" primaryText="העלאת חיסורים מאושרים" leftIcon={<FileUploadIcon />} />,
     <MenuItemLink key="roadmap" to="/roadmap" primaryText="פיתוחים עתידיים" leftIcon={<MapIcon />} />,
     <MenuItemLink key="michlol-file-helper" to="/michlol-file-helper" primaryText="עדכון קבצי מכלול" leftIcon={<ContentPasteSearchIcon />} />,
     <MenuItemLink key="settings" to="/settings" primaryText="הגדרות משתמש" leftIcon={<SettingsIcon />} />,
@@ -35,7 +34,11 @@ const customMenuItems = [
 ];
 
 const menuGroups = [
-    { name: 'data', icon: <DatasetIcon /> },
+    {
+        name: 'data', icon: <DatasetIcon />, routes: [
+            <MenuItemLink key="approved-absences-upload" to="/approved-absences-upload" primaryText="העלאת חיסורים מאושרים" leftIcon={<FileUploadIcon />} />
+        ]
+    },
     {
         name: 'report', icon: <AnalyticsIcon />, routes: [
             <MenuItemLink key="student-attendance" to="/student/student-attendance" primaryText="דוח נוכחות (פיבוט)" leftIcon={<SummarizeIcon />} />,
