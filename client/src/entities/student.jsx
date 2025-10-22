@@ -8,6 +8,8 @@ import { MultiReferenceField } from '@shared/components/fields/CommonReferenceFi
 import { useUnique } from '@shared/utils/useUnique';
 import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
 import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
+import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -28,6 +30,10 @@ const additionalBulkButtons = [
     // <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
     //     key='studentReportCard' name='studentReportCard' filename='תעודה' />,
     <StudentReportCardReactButton key='studentReportCardReact' defaultRequestValues={filterDefaultValues} />,
+    <BulkActionButton label='סימון פעיל/לא פעיל' icon={<CheckCircleIcon />} 
+        name='bulkUpdateActive' key='bulkUpdateActive' reloadOnEnd >
+        <BooleanInput source="isActive" label="פעיל" />
+    </BulkActionButton>,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {

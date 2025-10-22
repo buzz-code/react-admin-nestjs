@@ -10,6 +10,7 @@ import { BulkToPdfReportGenerator } from "@shared/utils/report/bulk-to-pdf.gener
 import studentReportCardReact from "src/reports/studentReportCardReact";
 import { getUserIdFromUser } from "@shared/auth/auth.util";
 import { generateStudentReportCard } from "src/reports/reportGenerator";
+import { In } from "typeorm";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -42,6 +43,23 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
             return generateStudentReportCard(userId, req.parsed.extra, generator);
         }
         return super.getReportData(req);
+    }
+
+    async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
+        switch (req.parsed.extra.action) {
+            case 'bulkUpdateActive': {
+                const ids = req.parsed.extra.ids.toString().split(',');
+                const isActive = req.parsed.extra.isActive === 'true' || req.parsed.extra.isActive === true;
+                
+                const result = await this.dataSource.getRepository(Student).update(
+                    { id: In(ids) },
+                    { isActive }
+                );
+
+                return `עודכנו ${result.affected} תלמידים`;
+            }
+        }
+        return super.doAction(req, body);
     }
 }
 
