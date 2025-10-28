@@ -73,12 +73,14 @@ export const InLessonReport = ({
         const dateDetailsMetadata = {};
         if (lessonDetails) {
             reportDates.forEach((reportDate, index) => {
-                const lessonTime = lessonDetails[index]?.lessonTime;
+                const lessonStartTime = lessonDetails[index]?.lessonStartTime;
+                const lessonEndTime = lessonDetails[index]?.lessonEndTime;
                 const lessonTopic = lessonDetails[index]?.lessonTopic;
-                
-                if (lessonTime || lessonTopic) {
+
+                if (lessonStartTime || lessonEndTime || lessonTopic) {
                     dateDetailsMetadata[reportDate] = {
-                        lessonTime,
+                        lessonStartTime,
+                        lessonEndTime,
                         lessonTopic
                     };
                 }

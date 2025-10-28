@@ -72,17 +72,22 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                 
                                 {hasLessonSignaturePermission && (
                                     <>
-                                        <TimeInput 
-                                            source={`lessonDetails[${index}].lessonTime`} 
-                                            label="זמן השיעור" 
-                                            fullWidth 
-                                            validate={[required()]} 
+                                        <TimeInput
+                                            source={`lessonDetails[${index}].lessonStartTime`}
+                                            label="זמן תחילת השיעור"
+                                            fullWidth
+                                            validate={[required()]}
                                         />
-                                        <TextInput 
-                                            source={`lessonDetails[${index}].lessonTopic`} 
-                                            label="נושא השיעור" 
-                                            fullWidth 
-                                            validate={[required()]} 
+                                        <TimeInput
+                                            source={`lessonDetails[${index}].lessonEndTime`}
+                                            label="זמן סיום השיעור"
+                                            fullWidth
+                                        />
+                                        <TextInput
+                                            source={`lessonDetails[${index}].lessonTopic`}
+                                            label="נושא השיעור"
+                                            fullWidth
+                                            validate={[required()]}
                                         />
                                     </>
                                 )}

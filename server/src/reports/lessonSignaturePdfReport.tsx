@@ -86,12 +86,12 @@ interface ErrorReportData {
 }
 
 const getReportData: IGetReportDataFunction = async (
-  params: LessonSignaturePdfParams, 
+  params: LessonSignaturePdfParams,
   dataSource: DataSource
 ): Promise<LessonSignaturePdfData | ErrorReportData> => {
   // 1. Load ImportFile
   const importFile = await dataSource.getRepository(ImportFile).findOne({
-    where: { 
+    where: {
       id: params.importFileId,
       userId: params.userId,
     }
@@ -112,7 +112,7 @@ const getReportData: IGetReportDataFunction = async (
     'att_report': AttReport,
     'grade': Grade,
   };
-  
+
   const entityClass = entityClassMap[importFile.entityName];
   if (!entityClass) {
     console.log(`Skipping import file ${params.importFileId} - unknown entity type: ${importFile.entityName}`);
@@ -124,7 +124,7 @@ const getReportData: IGetReportDataFunction = async (
   }
 
   const entityRepo = dataSource.getRepository(entityClass);
-  
+
   // 3. Load records by entityIds
   const records = await entityRepo.find({
     where: { id: In(importFile.entityIds) },
@@ -181,7 +181,7 @@ const getEntityConfig = (entityName: string) => {
     // Easy to add more entities in the future:
     // att_grade_effect: { title: 'טופס השפעת נוכחות על ציון', ... }
   };
-  
+
   return configs[entityName] || configs.att_report; // default fallback
 };
 
@@ -195,7 +195,7 @@ interface HtmlDocumentProps {
 
 const HtmlDocument: React.FC<HtmlDocumentProps> = ({ title, children }) => {
   const fontLinks = useFontLinks();
-  
+
   const containerStyle: React.CSSProperties = {
     ...convertToReactStyle(useStyles(ReportElementType.DOCUMENT)),
     direction: 'rtl',
@@ -222,12 +222,18 @@ const HtmlDocument: React.FC<HtmlDocumentProps> = ({ title, children }) => {
 // COMPONENT 1: Main Report Container
 // ============================================================================
 
+interface LessonDetails {
+  lessonStartTime?: string;
+  lessonEndTime?: string;
+  lessonTopic?: string;
+}
+
 // Helper to get lesson details for a specific date
-const getLessonDetailsForDate = (metadata: any, date: Date): { lessonTime?: string, lessonTopic?: string } => {
+const getLessonDetailsForDate = (metadata: Record<string, LessonDetails>, date: Date): LessonDetails => {
   if (!metadata?.dateDetails) {
     return {};
   }
-  
+
   const dateString = date.toISOString().split('T')[0];
   return metadata.dateDetails[dateString] || {};
 };
@@ -263,11 +269,11 @@ const LessonSignatureReport: React.FunctionComponent<LessonSignaturePdfData | Er
 
   return (
     <HtmlDocument title={getReportName()}>
-      <ReportHeader 
-        title={entityConfig.title} 
-        date={importFile.createdAt} 
+      <ReportHeader
+        title={entityConfig.title}
+        date={importFile.createdAt}
       />
-      
+
       {isMultipleDates ? (
         // Multiple dates: show section per date
         dates.map((dateStr, index) => (
@@ -304,7 +310,7 @@ const LessonSignatureReport: React.FunctionComponent<LessonSignaturePdfData | Er
           />
         </>
       )}
-      
+
       {metadata.signatureData && (
         <SignatureSection signatureData={metadata.signatureData} />
       )}
@@ -389,12 +395,12 @@ interface LessonDetailsSectionProps {
   reportDate?: Date;  // New optional prop
 }
 
-const LessonDetailsSection: React.FC<LessonDetailsSectionProps> = ({ 
-  lesson, 
-  teacher, 
-  klass, 
+const LessonDetailsSection: React.FC<LessonDetailsSectionProps> = ({
+  lesson,
+  teacher,
+  klass,
   metadata,
-  reportDate 
+  reportDate
 }) => {
   const sectionContainerStyle: React.CSSProperties = {
     marginBottom: '20px',
@@ -444,10 +450,16 @@ const LessonDetailsSection: React.FC<LessonDetailsSectionProps> = ({
               <td>{reportDate.toLocaleDateString('he-IL')}</td>
             </tr>
           )}
-          {lessonDetails.lessonTime && (
+          {lessonDetails.lessonStartTime && (
             <tr>
-              <td style={cellStyle}>שעת השיעור:</td>
-              <td>{lessonDetails.lessonTime}</td>
+              <td style={cellStyle}>שעת תחילת השיעור:</td>
+              <td>{lessonDetails.lessonStartTime}</td>
+            </tr>
+          )}
+          {lessonDetails.lessonEndTime && (
+            <tr>
+              <td style={cellStyle}>שעת סיום השיעור:</td>
+              <td>{lessonDetails.lessonEndTime}</td>
             </tr>
           )}
           {lessonDetails.lessonTopic && (
@@ -471,10 +483,10 @@ interface StudentRecordsTableProps {
   entityName: string;
 }
 
-const StudentRecordsTable: React.FC<StudentRecordsTableProps> = ({ 
-  studentRecords, 
+const StudentRecordsTable: React.FC<StudentRecordsTableProps> = ({
+  studentRecords,
   entityConfig,
-  entityName 
+  entityName
 }) => {
   const containerStyle: React.CSSProperties = {
     marginBottom: '30px',
@@ -595,7 +607,7 @@ const ReportFooter: React.FC = () => {
 };
 
 export default new ReactToPdfReportGenerator(
-  getReportName, 
-  getReportData, 
+  getReportName,
+  getReportData,
   wrapWithStyles(LessonSignatureReport, defaultReportStyles)
 );
