@@ -40,7 +40,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
     );
 }
 
-const semesterEnum = ['א', 'ב', 'שנתי'];
+const semesterEnum = ['א', 'ב', 'ג', 'שנתי'];
 export const semesterChoices = semesterEnum.map(item => ({ id: item, name: item }));
 
 const Inputs = ({ isCreate, isAdmin }) => {
