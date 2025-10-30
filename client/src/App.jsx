@@ -57,6 +57,7 @@ import paymentTrack from '@shared/components/common-entities/payment-track';
 import yemotCall from '@shared/components/common-entities/yemot-call';
 
 import { isShowUsersData, isEditPagesData, isEditPaymentTracksData, isAdmin } from "@shared/utils/permissionsUtil";
+import { isOnlyInLessonReport } from 'src/utils/appPermissions';
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
@@ -106,8 +107,23 @@ const App = () => (
         theme={appTheme} title='נוכחות'
         dashboard={Dashboard} layout={Layout} loginPage={LoginPage}
         requireAuth>
-        {permissions => (
-          <>
+        {permissions => {
+          const onlyInLesson = isOnlyInLessonReport(permissions) && !isAdmin(permissions);
+          if (onlyInLesson) {
+            return (
+              <>
+                <Resource name="teacher" />
+                <Resource name="lesson" />
+                <CustomRoutes>
+                  <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
+                  <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
+                </CustomRoutes>
+              </>
+            );
+          }
+
+          return (
+            <>
             <Resource name="teacher" {...teacher} options={{ menuGroup: 'data' }} icon={BadgeIcon} />
             <Resource name="klass_type" {...klassType} options={{ menuGroup: 'data' }} icon={CategoryIcon} />
             <Resource name="klass" {...klass} options={{ menuGroup: 'data' }} icon={SupervisedUserCircleIcon} />
@@ -180,7 +196,8 @@ const App = () => (
               <Route path="/settings" element={<Settings />} />
             </CustomRoutes>}
           </>
-        )}
+          );
+        }}
       </Admin>
     </RTLStyle>
   </BrowserRouter>

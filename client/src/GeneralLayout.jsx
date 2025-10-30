@@ -17,20 +17,23 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 import BaseLayout from "@shared/components/layout/Layout";
 import BaseDashboard from '@shared/components/views/Dashboard';
-import { isInLessonReport, isScannerUpload } from './utils/appPermissions';
+import { isInLessonReport, isScannerUpload, isOnlyInLessonReport } from './utils/appPermissions';
 import { useDashboardItems } from './settings/settingsUtil';
 
 const customMenuItems = [
-    <MenuItemLink key="tutorial" to="/tutorial" primaryText="מדריך למשתמש" leftIcon={<HelpIcon />} />,
-    <MenuItemLink key="pages-view" to="/pages-view" primaryText="הסברים נוספים" leftIcon={<ImportContactsIcon />} />,
-    ({ isAdmin }) => isAdmin && <MenuItemLink key="yemot-simulator" to="/yemot-simulator" primaryText="סימולטור" leftIcon={<CallIcon />} />,
-    ({ permissions }) => isScannerUpload(permissions) && <MenuItemLink key="scanner-upload" to="/scanner-upload" primaryText="העלאת קבצי סורק" leftIcon={<DocumentScannerIcon />} />,
-    ({ permissions }) => isInLessonReport(permissions) && <MenuItemLink key="in-lesson-report-att" to="/in-lesson-report-att" primaryText="טופס נוכחות" leftIcon={<EventAvailableIcon />} />,
-    ({ permissions }) => isInLessonReport(permissions) && <MenuItemLink key="in-lesson-report-grade" to="/in-lesson-report-grade" primaryText="טופס ציונים" leftIcon={<EditCalendarIcon />} />,
-    <MenuItemLink key="roadmap" to="/roadmap" primaryText="פיתוחים עתידיים" leftIcon={<MapIcon />} />,
-    <MenuItemLink key="michlol-file-helper" to="/michlol-file-helper" primaryText="עדכון קבצי מכלול" leftIcon={<ContentPasteSearchIcon />} />,
-    <MenuItemLink key="settings" to="/settings" primaryText="הגדרות משתמש" leftIcon={<SettingsIcon />} />,
-    // <MenuItemLink key="profile" to="/profile" primaryText="פרופיל" leftIcon={<PersonIcon />} />,
+    // static items: render only when NOT restricted to lesson-report-only
+    ({ permissions }) => !isOnlyInLessonReport(permissions) && <MenuItemLink key="tutorial" to="/tutorial" primaryText="מדריך למשתמש" leftIcon={<HelpIcon />} />,
+    ({ permissions }) => !isOnlyInLessonReport(permissions) && <MenuItemLink key="pages-view" to="/pages-view" primaryText="הסברים נוספים" leftIcon={<ImportContactsIcon />} />,
+    // admin-only
+    ({ isAdmin, permissions }) => !isOnlyInLessonReport(permissions) && isAdmin && <MenuItemLink key="yemot-simulator" to="/yemot-simulator" primaryText="סימולטור" leftIcon={<CallIcon />} />,
+    // permission-based items: show only when not restricted
+    ({ permissions }) => !isOnlyInLessonReport(permissions) && isScannerUpload(permissions) && <MenuItemLink key="scanner-upload" to="/scanner-upload" primaryText="העלאת קבצי סורק" leftIcon={<DocumentScannerIcon />} />,
+    // lesson report links: show when user has lesson-report permission OR when they're in-only mode
+    ({ permissions }) => (isInLessonReport(permissions) || isOnlyInLessonReport(permissions)) && <MenuItemLink key="in-lesson-report-att" to="/in-lesson-report-att" primaryText="טופס נוכחות" leftIcon={<EventAvailableIcon />} />,
+    ({ permissions }) => (isInLessonReport(permissions) || isOnlyInLessonReport(permissions)) && <MenuItemLink key="in-lesson-report-grade" to="/in-lesson-report-grade" primaryText="טופס ציונים" leftIcon={<EditCalendarIcon />} />,
+    ({ permissions }) => !isOnlyInLessonReport(permissions) && <MenuItemLink key="roadmap" to="/roadmap" primaryText="פיתוחים עתידיים" leftIcon={<MapIcon />} />,
+    ({ permissions }) => !isOnlyInLessonReport(permissions) && <MenuItemLink key="michlol-file-helper" to="/michlol-file-helper" primaryText="עדכון קבצי מכלול" leftIcon={<ContentPasteSearchIcon />} />,
+    ({ permissions }) => !isOnlyInLessonReport(permissions) && <MenuItemLink key="settings" to="/settings" primaryText="הגדרות משתמש" leftIcon={<SettingsIcon />} />,
 ];
 
 const menuGroups = [
