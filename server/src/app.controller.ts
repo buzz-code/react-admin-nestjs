@@ -42,7 +42,7 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req: AuthenticatedRequest) {
-    const userId = getUserIdFromUser(req.user);
+    const userId = getUserIdFromUser(req.user, true);
     if (!userId) {
       return req.user;
     }
