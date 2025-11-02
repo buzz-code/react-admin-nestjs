@@ -40,6 +40,8 @@ import { LessonKlassName } from "./db/view-entities/LessonKlassName.entity";
 import importFileConfig from "./entity-modules/import-file.config";
 import { StudentSpeciality } from "./db/view-entities/StudentSpeciality.entity";
 import { AttendanceName } from "./db/entities/AttendanceName.entity";
+import reportGroupConfig from "./entity-modules/report-group.config";
+import reportGroupSessionConfig from "./entity-modules/report-group-session.config";
 
 @Module({
     imports: [
@@ -60,6 +62,8 @@ import { AttendanceName } from "./db/entities/AttendanceName.entity";
         BaseEntityModule.register({ entity: StudentSpeciality }),
         BaseEntityModule.register(auditLogConfig),
         BaseEntityModule.register(importFileConfig),
+        BaseEntityModule.register(reportGroupConfig),
+        BaseEntityModule.register(reportGroupSessionConfig),
         BaseEntityModule.register({ entity: YemotCall }),
         BaseEntityModule.register(mailAddressConfig),
         BaseEntityModule.register({ entity: RecievedMail }),

@@ -472,5 +472,29 @@ export default {
                 effect: 'השפעה',
             }
         },
+        report_group: {
+            name: 'קבוצת דיווח |||| קבוצות דיווח',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                name: 'שם',
+                topic: 'נושא',
+                teacherReferenceId: 'מורה',
+                lessonReferenceId: 'שיעור',
+                klassReferenceId: 'כיתה',
+                year: 'שנה',
+                signatureData: 'חתימה',
+            }
+        },
+        report_group_session: {
+            name: 'מפגש דיווח |||| מפגשי דיווח',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                reportGroupId: 'קבוצת דיווח',
+                sessionDate: 'תאריך',
+                startTime: 'שעת התחלה',
+                endTime: 'שעת סיום',
+                topic: 'נושא',
+            }
+        },
     }
 };

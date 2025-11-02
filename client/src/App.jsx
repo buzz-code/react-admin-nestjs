@@ -39,6 +39,8 @@ import studentPercentReport from "src/entities/student-percent-report";
 import gradeName from "src/entities/grade-name";
 import attendanceName from "src/entities/attendance-name";
 import attGradeEffect from './entities/att-grade-effect';
+import reportGroup from './entities/report-group';
+import reportGroupSession from './entities/report-group-session';
 import Settings from 'src/settings/Settings';
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
@@ -140,6 +142,8 @@ const App = () => (
             <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
             <Resource name="teacher_grade_report_status" {...teacherGradeReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
             <Resource name="teacher_salary_report" {...teacherSalaryReport} options={{ menuGroup: 'report' }} icon={LocalAtmIcon} />
+            <Resource name="report_group" {...reportGroup} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
+            <Resource name="report_group_session" {...reportGroupSession} options={{ menuGroup: 'report' }} icon={DateRangeIcon} />
 
             <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
             <Resource name="text_by_user" {...textByUser} options={{ menuGroup: 'settings' }} icon={RateReviewIcon} />
