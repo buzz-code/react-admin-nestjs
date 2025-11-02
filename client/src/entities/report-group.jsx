@@ -4,6 +4,7 @@ import { getResourceComponents } from '@shared/components/crudContainers/CommonE
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
 import { yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 
 const filters = [
     <TextInput source="name:$cont" label="שם" alwaysOn />,
@@ -31,9 +32,12 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
     );
 };
 
+const Representation = CommonRepresentation;
+
 const entity = {
     Datagrid,
     filters,
+    Representation,
 };
 
 export default getResourceComponents(entity);
