@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { useRedirect } from 'react-admin';
+import { useRedirect, useDataProvider } from 'react-admin';
 import { useSavableData } from '../../shared/components/import/util';
 import { Datagrid as AttDatagrid } from 'src/entities/att-report';
 import { Datagrid as GradeDatagrid } from 'src/entities/grade';
@@ -23,10 +23,8 @@ const entityConfig = [
     },
 ];
 
-const useFileSource = () => {
-    const hasLessonSignaturePermission = useIsLessonSignature();
-
-    if (hasLessonSignaturePermission) {
+const useFileSource = (hasReportGroupPermission) => {
+    if (hasReportGroupPermission) {
         return 'טופס נוכחות';
     }
     return undefined;
@@ -34,11 +32,13 @@ const useFileSource = () => {
 
 export default ({ gradeMode = false }) => {
     const redirect = useRedirect();
+    const dataProvider = useDataProvider();
     const isShowLate = useIsInLessonReportWithLate();
     const isStartWithTeacher = useIsInLessonReportStartWithTeacher();
+    const hasReportGroupPermission = useIsLessonSignature();
     const { entityLabel, resource, Datagrid, redirectUrl } = useMemo(() => entityConfig[gradeMode ? 1 : 0], [gradeMode]);
     const fileName = useMemo(() => 'דיווח ' + entityLabel + ' ' + new Date().toISOString().split('T')[0], [entityLabel]);
-    const fileSource = useFileSource();
+    const fileSource = useFileSource(hasReportGroupPermission);
     const [dataToSave, setDataToSave] = useState(null);
     const [signatureMetadata, setSignatureMetadata] = useState(null);
     const { data, saveData } = useSavableData(resource, fileName, dataToSave, signatureMetadata, fileSource);
@@ -60,6 +60,8 @@ export default ({ gradeMode = false }) => {
             saveData={saveData}
             isShowLate={isShowLate}
             isStartWithTeacher={isStartWithTeacher}
+            dataProvider={dataProvider}
+            hasReportGroupPermission={hasReportGroupPermission}
         />
     );
 };
