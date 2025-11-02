@@ -27,6 +27,7 @@ import { CrudValidationGroups } from "@dataui/crud";
 import { StudentBaseKlass } from "../view-entities/StudentBaseKlass.entity";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
+import { ReportGroupSession } from "./ReportGroupSession.entity";
 
 @Index("grades_users_idx", ["userId"], {})
 @Index("grades_user_lesson_klass_year_idx", ["userId", "lessonReferenceId", "klassReferenceId", "year"], {})
@@ -180,4 +181,12 @@ export class Grade implements IHasUserId {
   @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
+
+  @Column({ nullable: true })
+  @Index("grades_report_group_session_id_idx")
+  reportGroupSessionId: number;
+
+  @ManyToOne(() => ReportGroupSession, session => session.grades, { nullable: true })
+  @JoinColumn({ name: 'reportGroupSessionId' })
+  reportGroupSession: ReportGroupSession;
 }

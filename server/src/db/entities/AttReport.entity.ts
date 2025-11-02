@@ -27,6 +27,7 @@ import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
+import { ReportGroupSession } from "./ReportGroupSession.entity";
 
 @Index("att_users_idx", ["userId"], {})
 @Index("att_user_sheet_name_lession_klass_year_idx", ["userId", "sheetName", "lessonReferenceId", "klassReferenceId", "year"], {})
@@ -184,4 +185,12 @@ export class AttReport implements IHasUserId {
   @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
+
+  @Column({ nullable: true })
+  @Index("att_reports_report_group_session_id_idx")
+  reportGroupSessionId: number;
+
+  @ManyToOne(() => ReportGroupSession, session => session.attReports, { nullable: true })
+  @JoinColumn({ name: 'reportGroupSessionId' })
+  reportGroupSession: ReportGroupSession;
 }
