@@ -5,6 +5,18 @@ import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } fro
 import { yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
+import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+
+const additionalBulkButtons = [
+    <BulkReportButton 
+        key='lessonSignaturePdf'
+        label='הורד דוחות PDF' 
+        icon={<PictureAsPdfIcon />} 
+        name='lessonSignaturePdf' 
+        filename='דוחות-קבוצות'
+    />
+];
 
 const filters = [
     <TextInput source="name:$cont" label="שם" alwaysOn />,
@@ -17,7 +29,10 @@ const filters = [
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
-        <CommonDatagrid {...props}>
+        <CommonDatagrid 
+            additionalBulkButtons={additionalBulkButtons}
+            {...props}
+        >
             {children}
             {isAdmin && <TextField source="id" />}
             <TextField source="name" />

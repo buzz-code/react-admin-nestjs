@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { DataSource, In } from 'typeorm';
 import { ImportFile } from '@shared/entities/ImportFile.entity';
+import { ReportGroup } from 'src/db/entities/ReportGroup.entity';
+import { ReportGroupSession } from 'src/db/entities/ReportGroupSession.entity';
 import { AttReport } from 'src/db/entities/AttReport.entity';
 import { Grade } from 'src/db/entities/Grade.entity';
 import { Student } from 'src/db/entities/Student.entity';
@@ -65,30 +67,178 @@ const defaultReportStyles: ReportStyles = [
 
 export interface LessonSignaturePdfParams {
   userId: number;
-  importFileId: number;
+  importFileId?: number;
+  reportGroupId?: number;
 }
 
 export interface LessonSignaturePdfData {
-  importFile: ImportFile;
+  // Core metadata
+  id: number;
+  userId: number;
+  createdAt: Date;
+  
+  // Lesson context
   teacher: Teacher;
   lesson: Lesson;
   klass: Klass;
+  
+  // Report data
+  entityName: 'att_report' | 'grade';
   studentRecords: Array<{
     student: Student;
     data: AttReport | Grade;
+    sessionId?: number;
+  }>;
+  
+  // Signature and session details
+  signatureData?: string;
+  sessions: Array<{
+    id?: number;
+    date: Date;
+    startTime?: string;
+    endTime?: string;
+    topic?: string;
   }>;
 }
 
 interface ErrorReportData {
   error: true;
   message: string;
-  importFileId: number;
+  id: number;
 }
 
 const getReportData: IGetReportDataFunction = async (
   params: LessonSignaturePdfParams,
   dataSource: DataSource
 ): Promise<LessonSignaturePdfData | ErrorReportData> => {
+  // Handle ReportGroup path
+  if (params.reportGroupId) {
+    return getReportDataFromReportGroup(params, dataSource);
+  }
+  
+  // Handle ImportFile path (legacy)
+  if (params.importFileId) {
+    return getReportDataFromImportFile(params, dataSource);
+  }
+
+  return {
+    error: true,
+    message: 'חסר מזהה קובץ או מזהה קבוצת דיווח',
+    id: 0
+  };
+};
+
+// Get report data from ReportGroup
+async function getReportDataFromReportGroup(
+  params: LessonSignaturePdfParams,
+  dataSource: DataSource
+): Promise<LessonSignaturePdfData | ErrorReportData> {
+  // 1. Load ReportGroup with relations
+  const reportGroup = await dataSource.getRepository(ReportGroup).findOne({
+    where: {
+      id: params.reportGroupId,
+      userId: params.userId,
+    },
+    relations: ['teacher', 'lesson', 'klass', 'sessions']
+  });
+
+  if (!reportGroup) {
+    console.log(`ReportGroup ${params.reportGroupId} not found`);
+    return {
+      error: true,
+      message: 'קבוצת דיווח לא נמצאה',
+      id: params.reportGroupId
+    };
+  }
+
+  if (!reportGroup.sessions || reportGroup.sessions.length === 0) {
+    console.log(`ReportGroup ${params.reportGroupId} has no sessions`);
+    return {
+      error: true,
+      message: 'קבוצת הדיווח לא כולל מפגשים',
+      id: params.reportGroupId
+    };
+  }
+
+  // 2. Load all AttReports and Grades for these sessions
+  const sessionIds = reportGroup.sessions.map(s => s.id);
+  
+  const [attReports, grades] = await Promise.all([
+    dataSource.getRepository(AttReport).find({
+      where: { reportGroupSessionId: In(sessionIds) },
+      relations: ['student']
+    }),
+    dataSource.getRepository(Grade).find({
+      where: { reportGroupSessionId: In(sessionIds) },
+      relations: ['student']
+    })
+  ]);
+
+  // 3. Combine records (prioritize AttReports, then Grades)
+  const recordsMap = new Map();
+  
+  // Add AttReports first
+  attReports.forEach(report => {
+    const key = `${report.reportGroupSessionId}-${report.studentReferenceId}`;
+    recordsMap.set(key, {
+      student: report.student,
+      data: report,
+      sessionId: report.reportGroupSessionId
+    });
+  });
+
+  // Add Grades if no AttReport exists for that student/session
+  grades.forEach(grade => {
+    const key = `${grade.reportGroupSessionId}-${grade.studentReferenceId}`;
+    if (!recordsMap.has(key)) {
+      recordsMap.set(key, {
+        student: grade.student,
+        data: grade,
+        sessionId: grade.reportGroupSessionId
+      });
+    }
+  });
+
+  const studentRecords = Array.from(recordsMap.values());
+
+  if (studentRecords.length === 0) {
+    console.log(`ReportGroup ${params.reportGroupId} has no records`);
+    return {
+      error: true,
+      message: 'לא נמצאו רשומות עבור קבוצת הדיווח',
+      id: params.reportGroupId
+    };
+  }
+
+  // 4. Build sessions array from ReportGroup sessions
+  const sessions = reportGroup.sessions.map(session => ({
+    id: session.id,
+    date: new Date(session.sessionDate),
+    startTime: session.startTime,
+    endTime: session.endTime,
+    topic: session.topic || reportGroup.topic
+  }));
+
+  // 5. Return clean ReportGroup-based structure
+  return {
+    id: reportGroup.id,
+    userId: reportGroup.userId,
+    createdAt: reportGroup.createdAt,
+    teacher: reportGroup.teacher,
+    lesson: reportGroup.lesson,
+    klass: reportGroup.klass,
+    entityName: attReports.length > 0 ? 'att_report' : 'grade',
+    studentRecords,
+    signatureData: reportGroup.signatureData,
+    sessions
+  };
+}
+
+// Get report data from ImportFile (legacy path)
+async function getReportDataFromImportFile(
+  params: LessonSignaturePdfParams,
+  dataSource: DataSource
+): Promise<LessonSignaturePdfData | ErrorReportData> {
   // 1. Load ImportFile
   const importFile = await dataSource.getRepository(ImportFile).findOne({
     where: {
@@ -103,7 +253,7 @@ const getReportData: IGetReportDataFunction = async (
     return {
       error: true,
       message: 'לא נמצא מטא-דאטה עבור קובץ זה (חתימה/פרטי שיעור)',
-      importFileId: params.importFileId
+      id: params.importFileId
     };
   }
 
@@ -119,7 +269,7 @@ const getReportData: IGetReportDataFunction = async (
     return {
       error: true,
       message: `סוג ישות לא נתמך: ${importFile.entityName}`,
-      importFileId: params.importFileId
+      id: params.importFileId
     };
   }
 
@@ -136,7 +286,7 @@ const getReportData: IGetReportDataFunction = async (
     return {
       error: true,
       message: 'לא נמצאו רשומות עבור קובץ זה',
-      importFileId: params.importFileId
+      id: params.importFileId
     };
   }
 
@@ -152,14 +302,39 @@ const getReportData: IGetReportDataFunction = async (
     data: record as AttReport | Grade
   }));
 
+  // 6. Build sessions array from metadata.dateDetails
+  const sessions: Array<{
+    date: Date;
+    startTime?: string;
+    endTime?: string;
+    topic?: string;
+  }> = [];
+
+  if (importFile.metadata.dateDetails) {
+    Object.entries(importFile.metadata.dateDetails).forEach(([dateStr, details]: [string, any]) => {
+      sessions.push({
+        date: new Date(dateStr),
+        startTime: details.lessonStartTime,
+        endTime: details.lessonEndTime,
+        topic: details.lessonTopic
+      });
+    });
+  }
+
+  // 7. Return unified structure (adapted from ImportFile)
   return {
-    importFile,
+    id: importFile.id,
+    userId: importFile.userId,
+    createdAt: importFile.createdAt,
     teacher,
     lesson,
     klass,
-    studentRecords
+    entityName: importFile.entityName as 'att_report' | 'grade',
+    studentRecords,
+    signatureData: importFile.metadata.signatureData,
+    sessions
   };
-};
+}
 
 const getReportName = () => 'קבצי דיווח למורה';
 
@@ -228,14 +403,40 @@ interface LessonDetails {
   lessonTopic?: string;
 }
 
-// Helper to get lesson details for a specific date
-const getLessonDetailsForDate = (metadata: Record<string, LessonDetails>, date: Date): LessonDetails => {
-  if (!metadata?.dateDetails) {
+// Helper to get lesson details for a specific session
+const getLessonDetailsForSession = (sessions: LessonSignaturePdfData['sessions'], sessionId?: number, fallbackDate?: Date): LessonDetails => {
+  if (!sessions || sessions.length === 0) {
     return {};
   }
 
-  const dateString = date.toISOString().split('T')[0];
-  return metadata.dateDetails[dateString] || {};
+  // Try to find by sessionId first (more accurate for ReportGroups)
+  if (sessionId) {
+    const session = sessions.find(s => s.id === sessionId);
+    if (session) {
+      return {
+        lessonStartTime: session.startTime,
+        lessonEndTime: session.endTime,
+        lessonTopic: session.topic
+      };
+    }
+  }
+
+  // Fallback to date matching (for ImportFile legacy path)
+  if (fallbackDate) {
+    const dateString = fallbackDate.toISOString().split('T')[0];
+    const session = sessions.find(s => 
+      new Date(s.date).toISOString().split('T')[0] === dateString
+    );
+    if (session) {
+      return {
+        lessonStartTime: session.startTime,
+        lessonEndTime: session.endTime,
+        lessonTopic: session.topic
+      };
+    }
+  }
+
+  return {};
 };
 
 const LessonSignatureReport: React.FunctionComponent<LessonSignaturePdfData | ErrorReportData> = (props) => {
@@ -243,76 +444,88 @@ const LessonSignatureReport: React.FunctionComponent<LessonSignaturePdfData | Er
   if ('error' in props && props.error) {
     return (
       <HtmlDocument title="שגיאה ביצירת דוח">
-        <ErrorReport message={props.message} importFileId={props.importFileId} />
+        <ErrorReport message={props.message} id={props.id} />
       </HtmlDocument>
     );
   }
 
   // Handle success case - cast to correct type after error check
-  const successData = props as LessonSignaturePdfData;
-  const { importFile, teacher, lesson, klass, studentRecords } = successData;
-  const metadata = importFile.metadata;
-  const entityConfig = getEntityConfig(importFile.entityName);
+  const data = props as LessonSignaturePdfData;
+  const { id, teacher, lesson, klass, studentRecords, entityName, sessions, signatureData, createdAt } = data;
+  const entityConfig = getEntityConfig(entityName);
 
-  // Group records by date
-  const recordsByDate = studentRecords.reduce((acc, record) => {
-    const dateStr = new Date(record.data.reportDate).toISOString().split('T')[0];
-    if (!acc[dateStr]) {
-      acc[dateStr] = [];
+  // Group records by sessionId (if available) or date
+  const recordsBySession = studentRecords.reduce((acc, record) => {
+    // Use sessionId as key if available, otherwise use date
+    const key = record.sessionId 
+      ? `session-${record.sessionId}` 
+      : `date-${new Date(record.data.reportDate).toISOString().split('T')[0]}`;
+    
+    if (!acc[key]) {
+      acc[key] = {
+        records: [],
+        sessionId: record.sessionId,
+        date: new Date(record.data.reportDate)
+      };
     }
-    acc[dateStr].push(record);
+    acc[key].records.push(record);
     return acc;
-  }, {} as Record<string, typeof studentRecords>);
+  }, {} as Record<string, { records: typeof studentRecords; sessionId?: number; date: Date }>);
 
-  const dates = Object.keys(recordsByDate).sort();
-  const isMultipleDates = dates.length > 1;
+  const sessionKeys = Object.keys(recordsBySession).sort();
+  const isMultipleSessions = sessionKeys.length > 1;
 
   return (
     <HtmlDocument title={getReportName()}>
       <ReportHeader
         title={entityConfig.title}
-        date={importFile.createdAt}
+        date={createdAt}
       />
 
-      {isMultipleDates ? (
-        // Multiple dates: show section per date
-        dates.map((dateStr, index) => (
-          <React.Fragment key={dateStr}>
-            {index > 0 && <div style={{ pageBreakBefore: 'always' }} />}
-            <LessonDetailsSection
-              lesson={lesson}
-              teacher={teacher}
-              klass={klass}
-              metadata={metadata}
-              reportDate={new Date(dateStr)}
-            />
-            <StudentRecordsTable
-              studentRecords={recordsByDate[dateStr]}
-              entityConfig={entityConfig}
-              entityName={importFile.entityName}
-            />
-          </React.Fragment>
-        ))
+      {isMultipleSessions ? (
+        // Multiple sessions: show section per session
+        sessionKeys.map((key, index) => {
+          const sessionData = recordsBySession[key];
+          return (
+            <React.Fragment key={key}>
+              {index > 0 && <div style={{ pageBreakBefore: 'always' }} />}
+              <LessonDetailsSection
+                lesson={lesson}
+                teacher={teacher}
+                klass={klass}
+                sessions={sessions}
+                sessionId={sessionData.sessionId}
+                reportDate={sessionData.date}
+              />
+              <StudentRecordsTable
+                studentRecords={sessionData.records}
+                entityConfig={entityConfig}
+                entityName={entityName}
+              />
+            </React.Fragment>
+          );
+        })
       ) : (
-        // Single date: show as before
+        // Single session: show as before
         <>
           <LessonDetailsSection
             lesson={lesson}
             teacher={teacher}
             klass={klass}
-            metadata={metadata}
+            sessions={sessions}
+            sessionId={studentRecords[0]?.sessionId}
             reportDate={studentRecords.length > 0 ? new Date(studentRecords[0].data.reportDate) : undefined}
           />
           <StudentRecordsTable
             studentRecords={studentRecords}
             entityConfig={entityConfig}
-            entityName={importFile.entityName}
+            entityName={entityName}
           />
         </>
       )}
 
-      {metadata.signatureData && (
-        <SignatureSection signatureData={metadata.signatureData} />
+      {signatureData && (
+        <SignatureSection signatureData={signatureData} />
       )}
       <ReportFooter />
     </HtmlDocument>
@@ -322,7 +535,7 @@ const LessonSignatureReport: React.FunctionComponent<LessonSignaturePdfData | Er
 // ============================================================================
 // ERROR COMPONENT: Error Report
 // ============================================================================
-const ErrorReport: React.FC<{ message: string; importFileId: number }> = ({ message, importFileId }) => {
+const ErrorReport: React.FC<{ message: string; id: number }> = ({ message, id }) => {
   const containerStyle: React.CSSProperties = {
     textAlign: 'center',
     padding: '40px',
@@ -353,8 +566,8 @@ const ErrorReport: React.FC<{ message: string; importFileId: number }> = ({ mess
     <div style={containerStyle}>
       <h1 style={titleStyle}>⚠️ שגיאה ביצירת דוח</h1>
       <p style={messageStyle}>{message}</p>
-      <p style={detailsStyle}>מזהה קובץ: {importFileId}</p>
-      <p style={detailsStyle}>נא לוודא שהקובץ כולל מטא-דאטה (חתימה ופרטי שיעור)</p>
+      <p style={detailsStyle}>מזהה: {id}</p>
+      <p style={detailsStyle}>נא לוודא שהנתונים כוללים מטא-דאטה (חתימה ופרטי שיעור)</p>
     </div>
   );
 };
@@ -391,15 +604,17 @@ interface LessonDetailsSectionProps {
   lesson: Lesson;
   teacher: Teacher;
   klass: Klass;
-  metadata: any;
-  reportDate?: Date;  // New optional prop
+  sessions: LessonSignaturePdfData['sessions'];
+  sessionId?: number;
+  reportDate?: Date;
 }
 
 const LessonDetailsSection: React.FC<LessonDetailsSectionProps> = ({
   lesson,
   teacher,
   klass,
-  metadata,
+  sessions,
+  sessionId,
   reportDate
 }) => {
   const sectionContainerStyle: React.CSSProperties = {
@@ -425,7 +640,7 @@ const LessonDetailsSection: React.FC<LessonDetailsSectionProps> = ({
     ...labelStyle,
   };
 
-  const lessonDetails = reportDate ? getLessonDetailsForDate(metadata, reportDate) : {};
+  const lessonDetails = getLessonDetailsForSession(sessions, sessionId, reportDate);
 
   return (
     <div style={sectionContainerStyle}>
