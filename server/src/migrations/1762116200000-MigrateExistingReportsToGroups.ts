@@ -152,7 +152,7 @@ export class MigrateExistingReportsToGroups1762116200000 implements MigrationInt
                 }
 
                 // Update ImportFile with reportGroupId
-                importFile.reportGroupId = savedReportGroup.id;
+                importFile.metadata.reportGroupId = savedReportGroup.id;
                 await importFileRepo.save(importFile);
 
                 console.log(`Successfully migrated ImportFile ${importFile.id} with ${uniqueDates.length} sessions`);
