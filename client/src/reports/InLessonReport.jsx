@@ -23,12 +23,7 @@ const entityConfig = [
     },
 ];
 
-const useFileSource = (hasReportGroupPermission) => {
-    if (hasReportGroupPermission) {
-        return 'טופס נוכחות';
-    }
-    return undefined;
-};
+const IN_LESSON_FILE_SOURCE = 'טופס נוכחות';
 
 export default ({ gradeMode = false }) => {
     const redirect = useRedirect();
@@ -38,10 +33,9 @@ export default ({ gradeMode = false }) => {
     const hasReportGroupPermission = useIsLessonSignature();
     const { entityLabel, resource, Datagrid, redirectUrl } = useMemo(() => entityConfig[gradeMode ? 1 : 0], [gradeMode]);
     const fileName = useMemo(() => 'דיווח ' + entityLabel + ' ' + new Date().toISOString().split('T')[0], [entityLabel]);
-    const fileSource = useFileSource(hasReportGroupPermission);
     const [dataToSave, setDataToSave] = useState(null);
     const [signatureMetadata, setSignatureMetadata] = useState(null);
-    const { data, saveData } = useSavableData(resource, fileName, dataToSave, signatureMetadata, fileSource);
+    const { data, saveData } = useSavableData(resource, fileName, dataToSave, signatureMetadata, IN_LESSON_FILE_SOURCE);
 
     const handleSuccess = useCallback(() => {
         redirect(redirectUrl);
