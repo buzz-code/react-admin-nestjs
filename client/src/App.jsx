@@ -59,7 +59,7 @@ import paymentTrack from '@shared/components/common-entities/payment-track';
 import yemotCall from '@shared/components/common-entities/yemot-call';
 
 import { isShowUsersData, isEditPagesData, isEditPaymentTracksData, isAdmin } from "@shared/utils/permissionsUtil";
-import { isOnlyInLessonReport } from 'src/utils/appPermissions';
+import { isLessonSignature, isOnlyInLessonReport } from 'src/utils/appPermissions';
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
@@ -142,8 +142,6 @@ const App = () => (
             <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
             <Resource name="teacher_grade_report_status" {...teacherGradeReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
             <Resource name="teacher_salary_report" {...teacherSalaryReport} options={{ menuGroup: 'report' }} icon={LocalAtmIcon} />
-            <Resource name="report_group" {...reportGroup} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
-            <Resource name="report_group_session" {...reportGroupSession} options={{ menuGroup: 'report' }} icon={DateRangeIcon} />
 
             <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
             <Resource name="text_by_user" {...textByUser} options={{ menuGroup: 'settings' }} icon={RateReviewIcon} />
@@ -177,6 +175,11 @@ const App = () => (
 
             {(isEditPaymentTracksData(permissions) || isShowUsersData(permissions)) && <>
               <Resource name="payment_track" {...paymentTrack} list={isEditPaymentTracksData(permissions) ? paymentTrack.list : null} options={{ menuGroup: 'admin' }} icon={MonetizationOnIcon} />
+            </>}
+
+            {isLessonSignature(permissions) && <>
+            <Resource name="report_group" {...reportGroup} options={{ menuGroup: 'settings' }} icon={GroupWorkIcon} />
+            <Resource name="report_group_session" {...reportGroupSession} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
             </>}
 
             <CustomRoutes>
