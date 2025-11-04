@@ -3,11 +3,14 @@ import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
+import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { useUnique } from '@shared/utils/useUnique';
+import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
+import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -26,9 +29,34 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
+const additionalBulkButtons = [
+    <BulkReportButton 
+        key='klassAttendanceReport'
+        label='הורד יומן נוכחות' 
+        icon={<AssignmentIcon />} 
+        name='klassAttendanceReport' 
+        filename='יומן-נוכחות'
+    >
+        <DateInput 
+            source="startDate" 
+            label="תאריך התחלה" 
+        />
+        <DateInput 
+            source="endDate" 
+            label="תאריך סיום" 
+        />
+        <CommonReferenceArrayInput 
+            source="lessonReferenceIds" 
+            reference="lesson" 
+            label="שיעורים" 
+            dynamicFilter={filterByUserIdAndYear}
+        />
+    </BulkReportButton>
+];
+
 const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
-        <CommonDatagrid {...props}>
+        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
