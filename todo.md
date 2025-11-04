@@ -309,6 +309,7 @@ https://github.com/tinovyatkin/nest-puppeteer
 * increase test coverage for 'server' folder
 
 # todo
+* add index to lessons of year & teacher, and year, teacher, key, and user id for each- ask ai how to plan it
 * add pre-push test run
 * add pre-commit test run
 * add health check for all services
