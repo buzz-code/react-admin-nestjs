@@ -177,7 +177,8 @@ const App = () => (
               <Resource name="payment_track" {...paymentTrack} list={isEditPaymentTracksData(permissions) ? paymentTrack.list : null} options={{ menuGroup: 'admin' }} icon={MonetizationOnIcon} />
             </>}
 
-            {isLessonSignature(permissions) && <>
+            {/* {isLessonSignature(permissions) && <> */}
+            {isAdmin(permissions) && <>
             <Resource name="report_group" {...reportGroup} options={{ menuGroup: 'settings' }} icon={GroupWorkIcon} />
             <Resource name="report_group_session" {...reportGroupSession} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
             </>}
