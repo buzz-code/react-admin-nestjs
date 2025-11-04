@@ -163,8 +163,8 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
     // Build and return Excel data
     const excelData = buildExcelData({
       klassName: klass?.name || '',
-      institutionName: user?.name || '',
-      institutionCode: user?.additionalData?.institutionCode || '',
+      institutionName: user?.userInfo?.organizationName || 'לא ידוע',
+      institutionCode: user?.userInfo?.organizationCode || 'לא ידוע',
       sessions,
       students,
       headerRow: [],
@@ -332,8 +332,7 @@ function getAttendanceMark(report: AttReport | null | undefined): string {
   const absPercent = report.howManyLessons > 0 ? report.absCount / report.howManyLessons : 0;
 
   if (absPercent === 0) return 'V';      // Full attendance
-  if (absPercent < 0.5) return '±';      // Partial absence
-  if (absPercent < 1.0) return '/';      // Mostly absent
+  if (absPercent < 1.0) return '±';      // Partial absence
   return 'X';                             // Full absence
 }
 
