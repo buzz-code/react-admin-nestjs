@@ -25,7 +25,7 @@ class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
         const userId = getUserIdFromUser(req.auth);
         const startDate = getAsDate(req.parsed.extra.startDate);
         const endDate = getAsDate(req.parsed.extra.endDate);
-        const lessonReferenceIds = req.parsed.extra.lessonReferenceIds
+        const lessonReferenceIds = ifNotUndefined(req.parsed.extra.lessonReferenceIds)
             ?.split(',')
             .map(Number)
             .filter(Boolean)
@@ -77,6 +77,10 @@ function getConfig(): BaseEntityModuleOptions {
 
 export default getConfig();
 
+function ifNotUndefined<T>(value: T | undefined): T | undefined {
+    return value !== 'undefined' ? value : undefined;
+}
+
 function getAsDate(dateStr: string | undefined): Date | undefined {
-    return dateStr ? new Date(dateStr) : undefined;
+    return ifNotUndefined(dateStr) ? new Date(dateStr) : undefined;
 }
