@@ -8,6 +8,8 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Teacher } from "./Teacher.entity";
@@ -23,7 +25,13 @@ import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 @Index("report_groups_user_id_year_idx", ["userId", "year"], {})
 @Entity("report_groups")
 export class ReportGroup implements IHasUserId {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
+  @BeforeInsert()
+  @BeforeUpdate()
+  async fillFields() {
+    fillDefaultYearValue(this);
+  }
+
+ @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
   @Column("int", { name: "user_id" })

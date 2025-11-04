@@ -490,6 +490,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 reportGroupId: 'קבוצת דיווח',
+                'reportGroup.year': 'שנה',
                 sessionDate: 'תאריך',
                 startTime: 'שעת התחלה',
                 endTime: 'שעת סיום',

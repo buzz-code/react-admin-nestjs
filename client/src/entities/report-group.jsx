@@ -1,8 +1,8 @@
-import { DateField, TextField, TextInput, SelectField, ReferenceField } from 'react-admin';
+import { DateField, TextField, TextInput, SelectField, ReferenceField, ReferenceManyCount } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
-import { yearChoices } from '@shared/utils/yearFilter';
+import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
@@ -27,6 +27,10 @@ const filters = [
     <CommonAutocompleteInput source="year" choices={yearChoices} />,
 ];
 
+const filterDefaultValues = {
+    ...defaultYearFilter,
+};
+
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
         <CommonDatagrid 
@@ -41,6 +45,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             <ReferenceField source="lessonReferenceId" reference="lesson" />
             <ReferenceField source="klassReferenceId" reference="klass" />
             <SelectField source="year" choices={yearChoices} />
+            <ReferenceManyCount label="שיעורים" reference="report_group_session" target="reportGroupId" />
             <DateField source="createdAt" showTime />
             {isAdmin && <DateField source="updatedAt" showTime />}
         </CommonDatagrid>
@@ -52,6 +57,7 @@ const Representation = CommonRepresentation;
 const entity = {
     Datagrid,
     filters,
+    filterDefaultValues,
     Representation,
 };
 
