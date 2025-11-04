@@ -258,12 +258,14 @@ function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportD
     {
       cell: { r: 0, c: 0 },
       value: titleRow1,
-      style: headerStyle
+      style: headerStyle,
+      merge: { s: { r: 0, c: 0 }, e: { r: 0, c: sessions.length } }
     },
     {
       cell: { r: 1, c: 0 },
       value: titleRow2,
-      style: subHeaderStyle
+      style: subHeaderStyle,
+      merge: { s: { r: 1, c: 0 }, e: { r: 1, c: sessions.length } }
     }
   ];
 
