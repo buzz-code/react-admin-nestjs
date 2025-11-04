@@ -1,5 +1,5 @@
 import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
-import { DataToExcelReportGenerator, IDataToExcelReportGenerator } from '@shared/utils/report/data-to-excel.generator';
+import { GenericDataToExcelReportGenerator, IDataToExcelReportGenerator } from '@shared/utils/report/data-to-excel.generator';
 import { BulkToZipReportGenerator } from '@shared/utils/report/bulk-to-zip.generator';
 import { ReportGroupSession } from 'src/db/entities/ReportGroupSession.entity';
 import { AttReport } from 'src/db/entities/AttReport.entity';
@@ -338,8 +338,7 @@ function getAttendanceMark(report: AttReport | null | undefined): string {
 
 const getReportName = (data: KlassAttendanceReportData) => `יומן נוכחות - ${data.klassName}`;
 
-const singleGenerator = new DataToExcelReportGenerator(getReportName);
-singleGenerator.getReportData = getReportData as any; // Override with our custom implementation
+const singleGenerator = new GenericDataToExcelReportGenerator<KlassAttendanceReportParams>(getReportName, getReportData);
 
 const generator = new BulkToZipReportGenerator(() => 'יומני נוכחות', singleGenerator);
 
