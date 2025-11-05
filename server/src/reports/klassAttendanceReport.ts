@@ -217,39 +217,21 @@ const tableStyle: Partial<ExcelJS.Style> = {
   font: { name: 'Arial', size: 11 }
 };
 
-function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportData {
-  const { klassName, institutionName, institutionCode, sessions, students } = data;
-
-  console.log('buildExcelData input:', {
-    klassName,
-    sessionCount: sessions.length,
-    studentCount: students.length,
-    firstStudent: students[0]?.studentName,
-    firstSession: sessions[0]?.date
-  });
-
-  // Build header rows
-  const titleRow1 = `יומן נוכחות ${institutionName} סמל מוסד ${institutionCode}`;
-  const titleRow2 = `כיתה ${klassName}`;
-
-  // Build session header rows
+// Build all data rows for the Excel sheet
+function buildDataRows(sessions: SessionData[], students: StudentAttendanceData[]): string[][] {
   const dayRow = ['יום בשבוע', ...sessions.map(s => s.dayOfWeek)];
   const dateRow = ['תאריך', ...sessions.map(s => formatDate(s.date))];
   const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
   const topicRow = ['נושא הלימוד', ...sessions.map(s => s.topic)];
   const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
   const teacherRow = ['שם המורה', ...sessions.map(s => s.teacherName)];
-
-  // Build separator row
   const separatorRow = ['', ...sessions.map(() => '--')];
+  
+  const studentRows = students.map(student => 
+    [student.studentName, ...student.attendanceMarks]
+  );
 
-  // Build student rows
-  const studentRows = students.map(student => {
-    return [student.studentName, ...student.attendanceMarks];
-  });
-
-  // Combine all rows (skip header titles initially, will add via specialFields)
-  const formattedData = [
+  return [
     [''],  // Empty row for title 1
     [''],  // Empty row for title 2
     [''],  // Empty spacing row
@@ -262,35 +244,42 @@ function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportD
     separatorRow,
     ...studentRows
   ];
+}
 
-  // Special fields for styling headers (merged cells will be added in Phase 4)
-  const specialFields: ISpecialField[] = [
+// Build special fields for merged title cells
+function buildTitleSpecialFields(
+  institutionName: string,
+  institutionCode: string,
+  klassName: string,
+  sessionCount: number
+): ISpecialField[] {
+  const titleRow1 = `יומן נוכחות ${institutionName} סמל מוסד ${institutionCode}`;
+  const titleRow2 = `כיתה ${klassName}`;
+
+  return [
     {
       cell: { r: 0, c: 0 },
       value: titleRow1,
       style: headerStyle,
-      merge: { s: { r: 0, c: 0 }, e: { r: 0, c: sessions.length } }
+      merge: { s: { r: 0, c: 0 }, e: { r: 0, c: sessionCount } }
     },
     {
       cell: { r: 1, c: 0 },
       value: titleRow2,
       style: subHeaderStyle,
-      merge: { s: { r: 1, c: 0 }, e: { r: 1, c: sessions.length } }
+      merge: { s: { r: 1, c: 0 }, e: { r: 1, c: sessionCount } }
     }
   ];
+}
 
-  console.log('buildExcelData output:', {
-    formattedDataRows: formattedData.length,
-    formattedDataCols: formattedData[0]?.length,
-    sampleRows: formattedData.slice(9, 12) // Show separator + first 2 students
-  });
-
-  // Add formattedData to specialFields as individual cells
-  // This bypasses the table structure and writes data directly
-  formattedData.forEach((row, rowIndex) => {
+// Convert data rows into special fields with styling
+function buildDataCellSpecialFields(rows: string[][]): ISpecialField[] {
+  const fields: ISpecialField[] = [];
+  
+  rows.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
-      if (cell !== '') {  // Skip empty cells to avoid overwriting
-        specialFields.push({
+      if (cell !== '') {
+        fields.push({
           cell: { r: rowIndex, c: colIndex },
           value: cell,
           style: tableStyle
@@ -298,19 +287,23 @@ function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportD
       }
     });
   });
+  
+  return fields;
+}
 
-  // Calculate border ranges
-  const lastRow = formattedData.length - 1;  // 0-indexed
-  const lastCol = sessions.length;  // 0-indexed (sessions + 1 column for names - 1 for 0-index)
+// Build border ranges for title, table, headers, and student names
+function buildBorderRanges(rowCount: number, sessionCount: number) {
+  const lastRow = rowCount - 1;
+  const lastCol = sessionCount;
 
-  const borderRanges = [
+  return [
     // Heavy border around title rows (rows 0-1)
     {
       from: { r: 0, c: 0 },
       to: { r: 1, c: lastCol },
       outerBorder: { style: 'medium' } as ExcelJS.Border
     },
-    // Heavy outer border around entire table (rows 3 onwards = dayRow to last student)
+    // Heavy outer border around entire table (rows 3 onwards)
     {
       from: { r: 3, c: 0 },
       to: { r: lastRow, c: lastCol },
@@ -322,13 +315,41 @@ function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportD
       to: { r: 8, c: lastCol },
       innerBorder: { style: 'thin' } as ExcelJS.Border
     },
-    // Light borders for student name column (first column of student rows = rows 10 onwards)
+    // Light borders for student name column (rows 10 onwards)
     {
       from: { r: 10, c: 0 },
       to: { r: lastRow, c: 0 },
       innerBorder: { style: 'thin' } as ExcelJS.Border
     }
   ];
+}
+
+// Main function - orchestrates building the Excel data structure
+function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportData {
+  const { klassName, institutionName, institutionCode, sessions, students } = data;
+
+  console.log('buildExcelData input:', {
+    klassName,
+    sessionCount: sessions.length,
+    studentCount: students.length
+  });
+
+  // 1. Build all data rows
+  const rows = buildDataRows(sessions, students);
+
+  // 2. Build special fields (titles + data cells)
+  const titleFields = buildTitleSpecialFields(institutionName, institutionCode, klassName, sessions.length);
+  const dataCellFields = buildDataCellSpecialFields(rows);
+  const specialFields = [...titleFields, ...dataCellFields];
+
+  // 3. Build border ranges
+  const borderRanges = buildBorderRanges(rows.length, sessions.length);
+
+  console.log('buildExcelData output:', {
+    rowCount: rows.length,
+    specialFieldCount: specialFields.length,
+    borderRangeCount: borderRanges.length
+  });
 
   return {
     klassName,
@@ -336,8 +357,8 @@ function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportD
     institutionCode,
     sessions,
     students,
-    headerRow: [],  // No table - using specialFields instead
-    formattedData: [],  // Empty since we're using specialFields
+    headerRow: [],
+    formattedData: [],
     sheetName: klassName || 'יומן נוכחות',
     specialFields,
     borderRanges
