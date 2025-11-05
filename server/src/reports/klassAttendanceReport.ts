@@ -123,7 +123,7 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
       .filter(session => lessonCountsBySession[session.id])
       .map(session => ({
         date: new Date(session.sessionDate),
-        dayOfWeek: getHebrewDayOfWeek(new Date(session.sessionDate)),
+        dayOfWeek: FORMATTING.getHebrewDayOfWeek(new Date(session.sessionDate)),
         startTime: session.startTime || '',
         endTime: session.endTime || '',
         topic: session.topic || session.reportGroup?.lesson?.name || '',
@@ -150,7 +150,7 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
         .map(session => {
           const key = `${student.id}_${session.id}`;
           const report = reportsByStudentAndSession[key];
-          return getAttendanceMark(report);
+          return FORMATTING.getAttendanceMark(report);
         });
 
       return {
@@ -161,7 +161,7 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
     console.log(`klass attendance report: built attendance data for ${students.length} students`);
 
     // Build and return Excel data
-    const excelData = buildExcelData({
+    const excelData = BUILDING.buildExcelData({
       klassName: klass?.name || '',
       institutionName: user?.userInfo?.organizationName || 'לא ידוע',
       institutionCode: user?.userInfo?.organizationCode || 'לא ידוע',
@@ -185,217 +185,220 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
   };
 
 
-// Header styling
-const headerStyle: Partial<ExcelJS.Style> = {
-  font: { bold: true, size: 16, name: 'Arial' },
-  alignment: {
-    horizontal: 'center',
-    vertical: 'middle',
-    readingOrder: 'rtl',
-  },
-  fill: {
-    type: 'pattern',
-    pattern: 'solid',
-    fgColor: { argb: 'FFE6F3FF' }
-  }
-};
-
-const subHeaderStyle: Partial<ExcelJS.Style> = {
-  font: { bold: true, size: 14, name: 'Arial' },
-  alignment: {
-    horizontal: 'center',
-    readingOrder: 'rtl'
-  }
-};
-
-const tableStyle: Partial<ExcelJS.Style> = {
-  alignment: {
-    horizontal: 'center',
-    readingOrder: 'rtl',
-    wrapText: true
-  },
-  font: { name: 'Arial', size: 11 }
-};
-
-// Build all data rows for the Excel sheet
-function buildDataRows(sessions: SessionData[], students: StudentAttendanceData[]): string[][] {
-  const dayRow = ['יום בשבוע', ...sessions.map(s => s.dayOfWeek)];
-  const dateRow = ['תאריך', ...sessions.map(s => formatDate(s.date))];
-  const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
-  const topicRow = ['נושא הלימוד', ...sessions.map(s => s.topic)];
-  const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
-  const teacherRow = ['שם המורה', ...sessions.map(s => s.teacherName)];
-  const separatorRow = ['', ...sessions.map(() => '--')];
-  
-  const studentRows = students.map(student => 
-    [student.studentName, ...student.attendanceMarks]
-  );
-
-  return [
-    [''],  // Empty row for title 1
-    [''],  // Empty row for title 2
-    [''],  // Empty spacing row
-    dayRow,
-    dateRow,
-    hoursRow,
-    topicRow,
-    lessonCountRow,
-    teacherRow,
-    separatorRow,
-    ...studentRows
-  ];
-}
-
-// Build title section: special fields (merged cells) + borders
-function buildTitleSection(
-  institutionName: string,
-  institutionCode: string,
-  klassName: string,
-  sessionCount: number
-) {
-  const titleRow1 = `יומן נוכחות ${institutionName} סמל מוסד ${institutionCode}`;
-  const titleRow2 = `כיתה ${klassName}`;
-  const lastCol = sessionCount;
-
-  return {
-    specialFields: [
-      {
-        cell: { r: 0, c: 0 },
-        value: titleRow1,
-        style: headerStyle,
-        merge: { s: { r: 0, c: 0 }, e: { r: 0, c: sessionCount } }
-      },
-      {
-        cell: { r: 1, c: 0 },
-        value: titleRow2,
-        style: subHeaderStyle,
-        merge: { s: { r: 1, c: 0 }, e: { r: 1, c: sessionCount } }
-      }
-    ],
-    borderRanges: [
-      // Heavy border around title rows (rows 0-1)
-      {
-        from: { r: 0, c: 0 },
-        to: { r: 1, c: lastCol },
-        outerBorder: { style: 'medium' } as ExcelJS.Border
-      }
-    ]
-  };
-}
-
-// Build data section: special fields (styled cells) + borders
-function buildDataSection(rows: string[][], sessionCount: number) {
-  const lastRow = rows.length - 1;
-  const lastCol = sessionCount;
-
-  // Convert rows to special fields
-  const specialFields: ISpecialField[] = [];
-  rows.forEach((row, rowIndex) => {
-    row.forEach((cell, colIndex) => {
-      if (cell !== '') {
-        specialFields.push({
-          cell: { r: rowIndex, c: colIndex },
-          value: cell,
-          style: tableStyle
-        });
-      }
-    });
-  });
-
-  // Define borders for table area
-  const borderRanges = [
-    // Heavy outer border around entire table (rows 3 onwards)
-    {
-      from: { r: 3, c: 0 },
-      to: { r: lastRow, c: lastCol },
-      outerBorder: { style: 'medium' } as ExcelJS.Border
+const STYLING: Record<string, Partial<ExcelJS.Style>> = {
+  headerStyle: {
+    font: { bold: true, size: 16, name: 'Arial' },
+    alignment: {
+      horizontal: 'center',
+      vertical: 'middle',
+      readingOrder: 'rtl',
     },
-    // Light borders for header section (dayRow through teacherRow = rows 3-8)
-    {
-      from: { r: 3, c: 0 },
-      to: { r: 8, c: lastCol },
-      innerBorder: { style: 'thin' } as ExcelJS.Border
-    },
-    // Light borders for student name column (rows 10 onwards)
-    {
-      from: { r: 10, c: 0 },
-      to: { r: lastRow, c: 0 },
-      innerBorder: { style: 'thin' } as ExcelJS.Border
+    fill: {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFE6F3FF' }
     }
-  ];
-
-  return { specialFields, borderRanges };
+  },
+  subHeaderStyle: {
+    font: { bold: true, size: 14, name: 'Arial' },
+    alignment: {
+      horizontal: 'center',
+      readingOrder: 'rtl'
+    }
+  },
+  tableStyle: {
+    alignment: {
+      horizontal: 'center',
+      readingOrder: 'rtl',
+      wrapText: true
+    },
+    font: { name: 'Arial', size: 11 }
+  }
 }
 
-// Main function - orchestrates building the Excel data structure
-function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportData {
-  const { klassName, institutionName, institutionCode, sessions, students } = data;
+const BUILDING = {
+  // Build all data rows for the Excel sheet
+  buildDataRows(sessions: SessionData[], students: StudentAttendanceData[]): string[][] {
+    const dayRow = ['יום בשבוע', ...sessions.map(s => s.dayOfWeek)];
+    const dateRow = ['תאריך', ...sessions.map(s => FORMATTING.formatDate(s.date))];
+    const hoursRow = ['שעות לימוד', ...sessions.map(s => `${FORMATTING.formatTime(s.startTime)}-${FORMATTING.formatTime(s.endTime)}`)];
+    const topicRow = ['נושא הלימוד', ...sessions.map(s => s.topic)];
+    const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
+    const teacherRow = ['שם המורה', ...sessions.map(s => s.teacherName)];
+    const separatorRow = ['', ...sessions.map(() => '--')];
 
-  console.log('buildExcelData input:', {
-    klassName,
-    sessionCount: sessions.length,
-    studentCount: students.length
-  });
+    const studentRows = students.map(student =>
+      [student.studentName, ...student.attendanceMarks]
+    );
 
-  // 1. Build all data rows
-  const rows = buildDataRows(sessions, students);
+    return [
+      [''],  // Empty row for title 1
+      [''],  // Empty row for title 2
+      [''],  // Empty spacing row
+      dayRow,
+      dateRow,
+      hoursRow,
+      topicRow,
+      lessonCountRow,
+      teacherRow,
+      separatorRow,
+      ...studentRows
+    ];
+  },
 
-  // 2. Build title section (merged headers + borders)
-  const titleSection = buildTitleSection(institutionName, institutionCode, klassName, sessions.length);
+  // Build title section: special fields (merged cells) + borders
+  buildTitleSection(
+    institutionName: string,
+    institutionCode: string,
+    klassName: string,
+    sessionCount: number
+  ) {
+    const titleRow1 = `יומן נוכחות ${institutionName} סמל מוסד ${institutionCode}`;
+    const titleRow2 = `כיתה ${klassName}`;
+    const lastCol = sessionCount;
 
-  // 3. Build data section (styled cells + borders)
-  const dataSection = buildDataSection(rows, sessions.length);
+    return {
+      specialFields: [
+        {
+          cell: { r: 0, c: 0 },
+          value: titleRow1,
+          style: STYLING.headerStyle,
+          merge: { s: { r: 0, c: 0 }, e: { r: 0, c: sessionCount } }
+        },
+        {
+          cell: { r: 1, c: 0 },
+          value: titleRow2,
+          style: STYLING.subHeaderStyle,
+          merge: { s: { r: 1, c: 0 }, e: { r: 1, c: sessionCount } }
+        }
+      ],
+      borderRanges: [
+        // Heavy border around title rows (rows 0-1)
+        {
+          from: { r: 0, c: 0 },
+          to: { r: 1, c: lastCol },
+          outerBorder: { style: 'medium' } as ExcelJS.Border
+        }
+      ]
+    };
+  },
 
-  // 4. Combine everything
-  const specialFields = [...titleSection.specialFields, ...dataSection.specialFields];
-  const borderRanges = [...titleSection.borderRanges, ...dataSection.borderRanges];
+  // Build data section: special fields (styled cells) + borders
+  buildDataSection(rows: string[][], sessionCount: number) {
+    const lastRow = rows.length - 1;
+    const lastCol = sessionCount;
 
-  console.log('buildExcelData output:', {
-    rowCount: rows.length,
-    specialFieldCount: specialFields.length,
-    borderRangeCount: borderRanges.length
-  });
+    // Convert rows to special fields
+    const specialFields: ISpecialField[] = [];
+    rows.forEach((row, rowIndex) => {
+      row.forEach((cell, colIndex) => {
+        if (cell !== '') {
+          specialFields.push({
+            cell: { r: rowIndex, c: colIndex },
+            value: cell,
+            style: STYLING.tableStyle
+          });
+        }
+      });
+    });
 
-  return {
-    klassName,
-    institutionName,
-    institutionCode,
-    sessions,
-    students,
-    headerRow: [],
-    formattedData: [],
-    sheetName: klassName || 'יומן נוכחות',
-    specialFields,
-    borderRanges
-  };
+    // Define borders for table area
+    const borderRanges = [
+      // Heavy outer border around entire table (rows 3 onwards)
+      {
+        from: { r: 3, c: 0 },
+        to: { r: lastRow, c: lastCol },
+        outerBorder: { style: 'medium' } as ExcelJS.Border
+      },
+      // Light borders for header section (dayRow through teacherRow = rows 3-8)
+      {
+        from: { r: 3, c: 0 },
+        to: { r: 8, c: lastCol },
+        innerBorder: { style: 'thin' } as ExcelJS.Border
+      },
+      // Light borders for student name column (rows 10 onwards)
+      {
+        from: { r: 10, c: 0 },
+        to: { r: lastRow, c: 0 },
+        innerBorder: { style: 'thin' } as ExcelJS.Border
+      }
+    ];
+
+    return { specialFields, borderRanges };
+  },
+
+  // Main function - orchestrates building the Excel data structure
+  buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportData {
+    const { klassName, institutionName, institutionCode, sessions, students } = data;
+
+    console.log('buildExcelData input:', {
+      klassName,
+      sessionCount: sessions.length,
+      studentCount: students.length
+    });
+
+    // 1. Build all data rows
+    const rows = BUILDING.buildDataRows(sessions, students);
+
+    // 2. Build title section (merged headers + borders)
+    const titleSection = BUILDING.buildTitleSection(institutionName, institutionCode, klassName, sessions.length);
+
+    // 3. Build data section (styled cells + borders)
+    const dataSection = BUILDING.buildDataSection(rows, sessions.length);
+
+    // 4. Combine everything
+    const specialFields = [...titleSection.specialFields, ...dataSection.specialFields];
+    const borderRanges = [...titleSection.borderRanges, ...dataSection.borderRanges];
+
+    console.log('buildExcelData output:', {
+      rowCount: rows.length,
+      specialFieldCount: specialFields.length,
+      borderRangeCount: borderRanges.length
+    });
+
+    return {
+      klassName,
+      institutionName,
+      institutionCode,
+      sessions,
+      students,
+      headerRow: [],
+      formattedData: [],
+      sheetName: klassName || 'יומן נוכחות',
+      specialFields,
+      borderRanges
+    };
+  }
 }
 
-function getHebrewDayOfWeek(date: Date): string {
-  const days = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
-  return days[date.getDay()];
-}
+const FORMATTING = {
+  getHebrewDayOfWeek(date: Date): string {
+    const days = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
+    return days[date.getDay()];
+  },
 
-function formatDate(date: Date): string {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear().toString().slice(2);  // Last 2 digits of year
-  return `${day}/${month}/${year}`;
-}
+  formatDate(date: Date): string {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear().toString().slice(2);  // Last 2 digits of year
+    return `${day}/${month}/${year}`;
+  },
 
-function formatTime(timeStr: string): string {
-  if (!timeStr) return '';
-  const [hours, minutes] = timeStr.split(':');
-  return `${hours}:${minutes}`;
-}
+  formatTime(timeStr: string): string {
+    if (!timeStr) return '';
+    const [hours, minutes] = timeStr.split(':');
+    return `${hours}:${minutes}`;
+  },
 
-function getAttendanceMark(report: AttReport | null | undefined): string {
-  if (!report) return '--';  // No report for this session
+  getAttendanceMark(report: AttReport | null | undefined): string {
+    if (!report) return '--';  // No report for this session
 
-  const absPercent = report.howManyLessons > 0 ? report.absCount / report.howManyLessons : 0;
+    const absPercent = report.howManyLessons > 0 ? report.absCount / report.howManyLessons : 0;
 
-  if (absPercent === 0) return 'V';      // Full attendance
-  if (absPercent < 1.0) return '±';      // Partial absence
-  return 'X';                             // Full absence
+    if (absPercent === 0) return 'V';      // Full attendance
+    if (absPercent < 1.0) return '±';      // Partial absence
+    return 'X';                             // Full absence
+  },
 }
 
 const getReportName = (data: KlassAttendanceReportData) => `יומן נוכחות - ${data.klassName}`;
