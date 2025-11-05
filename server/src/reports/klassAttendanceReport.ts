@@ -299,6 +299,37 @@ function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportD
     });
   });
 
+  // Calculate border ranges
+  const lastRow = formattedData.length - 1;  // 0-indexed
+  const lastCol = sessions.length;  // 0-indexed (sessions + 1 column for names - 1 for 0-index)
+
+  const borderRanges = [
+    // Heavy border around title rows (rows 0-1)
+    {
+      from: { r: 0, c: 0 },
+      to: { r: 1, c: lastCol },
+      outerBorder: { style: 'medium' } as ExcelJS.Border
+    },
+    // Heavy outer border around entire table (rows 3 onwards = dayRow to last student)
+    {
+      from: { r: 3, c: 0 },
+      to: { r: lastRow, c: lastCol },
+      outerBorder: { style: 'medium' } as ExcelJS.Border
+    },
+    // Light borders for header section (dayRow through teacherRow = rows 3-8)
+    {
+      from: { r: 3, c: 0 },
+      to: { r: 8, c: lastCol },
+      innerBorder: { style: 'thin' } as ExcelJS.Border
+    },
+    // Light borders for student name column (first column of student rows = rows 10 onwards)
+    {
+      from: { r: 10, c: 0 },
+      to: { r: lastRow, c: 0 },
+      innerBorder: { style: 'thin' } as ExcelJS.Border
+    }
+  ];
+
   return {
     klassName,
     institutionName,
@@ -308,7 +339,8 @@ function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportD
     headerRow: [],  // No table - using specialFields instead
     formattedData: [],  // Empty since we're using specialFields
     sheetName: klassName || 'יומן נוכחות',
-    specialFields
+    specialFields,
+    borderRanges
   };
 }
 
@@ -341,9 +373,7 @@ function getAttendanceMark(report: AttReport | null | undefined): string {
 }
 
 const getReportName = (data: KlassAttendanceReportData) => `יומן נוכחות - ${data.klassName}`;
-
 const singleGenerator = new GenericDataToExcelReportGenerator<KlassAttendanceReportParams>(getReportName, getReportData);
-
 const generator = new BulkToZipReportGenerator(() => 'יומני נוכחות', singleGenerator);
 
 export default generator;
