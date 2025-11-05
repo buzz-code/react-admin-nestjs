@@ -184,6 +184,39 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
     return excelData;
   };
 
+
+// Header styling
+const headerStyle: Partial<ExcelJS.Style> = {
+  font: { bold: true, size: 16, name: 'Arial' },
+  alignment: {
+    horizontal: 'center',
+    vertical: 'middle',
+    readingOrder: 'rtl',
+  },
+  fill: {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FFE6F3FF' }
+  }
+};
+
+const subHeaderStyle: Partial<ExcelJS.Style> = {
+  font: { bold: true, size: 14, name: 'Arial' },
+  alignment: {
+    horizontal: 'center',
+    readingOrder: 'rtl'
+  }
+};
+
+const tableStyle: Partial<ExcelJS.Style> = {
+  alignment: {
+    horizontal: 'center',
+    readingOrder: 'rtl',
+    wrapText: true
+  },
+  font: { name: 'Arial', size: 11 }
+};
+
 function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportData {
   const { klassName, institutionName, institutionCode, sessions, students } = data;
 
@@ -230,29 +263,6 @@ function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportD
     ...studentRows
   ];
 
-  // Header styling
-  const headerStyle: Partial<ExcelJS.Style> = {
-    font: { bold: true, size: 16, name: 'Arial' },
-    alignment: {
-      horizontal: 'center',
-      vertical: 'middle',
-      readingOrder: 'rtl'
-    },
-    fill: {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FFE6F3FF' }
-    }
-  };
-
-  const subHeaderStyle: Partial<ExcelJS.Style> = {
-    font: { bold: true, size: 14, name: 'Arial' },
-    alignment: {
-      horizontal: 'center',
-      readingOrder: 'rtl'
-    }
-  };
-
   // Special fields for styling headers (merged cells will be added in Phase 4)
   const specialFields: ISpecialField[] = [
     {
@@ -283,13 +293,7 @@ function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportD
         specialFields.push({
           cell: { r: rowIndex, c: colIndex },
           value: cell,
-          style: {
-            alignment: {
-              horizontal: 'center',
-              readingOrder: 'rtl'
-            },
-            font: { name: 'Arial', size: 11 }
-          }
+          style: tableStyle
         });
       }
     });
