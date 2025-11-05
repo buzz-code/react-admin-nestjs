@@ -246,40 +246,54 @@ function buildDataRows(sessions: SessionData[], students: StudentAttendanceData[
   ];
 }
 
-// Build special fields for merged title cells
-function buildTitleSpecialFields(
+// Build title section: special fields (merged cells) + borders
+function buildTitleSection(
   institutionName: string,
   institutionCode: string,
   klassName: string,
   sessionCount: number
-): ISpecialField[] {
+) {
   const titleRow1 = `יומן נוכחות ${institutionName} סמל מוסד ${institutionCode}`;
   const titleRow2 = `כיתה ${klassName}`;
+  const lastCol = sessionCount;
 
-  return [
-    {
-      cell: { r: 0, c: 0 },
-      value: titleRow1,
-      style: headerStyle,
-      merge: { s: { r: 0, c: 0 }, e: { r: 0, c: sessionCount } }
-    },
-    {
-      cell: { r: 1, c: 0 },
-      value: titleRow2,
-      style: subHeaderStyle,
-      merge: { s: { r: 1, c: 0 }, e: { r: 1, c: sessionCount } }
-    }
-  ];
+  return {
+    specialFields: [
+      {
+        cell: { r: 0, c: 0 },
+        value: titleRow1,
+        style: headerStyle,
+        merge: { s: { r: 0, c: 0 }, e: { r: 0, c: sessionCount } }
+      },
+      {
+        cell: { r: 1, c: 0 },
+        value: titleRow2,
+        style: subHeaderStyle,
+        merge: { s: { r: 1, c: 0 }, e: { r: 1, c: sessionCount } }
+      }
+    ],
+    borderRanges: [
+      // Heavy border around title rows (rows 0-1)
+      {
+        from: { r: 0, c: 0 },
+        to: { r: 1, c: lastCol },
+        outerBorder: { style: 'medium' } as ExcelJS.Border
+      }
+    ]
+  };
 }
 
-// Convert data rows into special fields with styling
-function buildDataCellSpecialFields(rows: string[][]): ISpecialField[] {
-  const fields: ISpecialField[] = [];
-  
+// Build data section: special fields (styled cells) + borders
+function buildDataSection(rows: string[][], sessionCount: number) {
+  const lastRow = rows.length - 1;
+  const lastCol = sessionCount;
+
+  // Convert rows to special fields
+  const specialFields: ISpecialField[] = [];
   rows.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
       if (cell !== '') {
-        fields.push({
+        specialFields.push({
           cell: { r: rowIndex, c: colIndex },
           value: cell,
           style: tableStyle
@@ -287,22 +301,9 @@ function buildDataCellSpecialFields(rows: string[][]): ISpecialField[] {
       }
     });
   });
-  
-  return fields;
-}
 
-// Build border ranges for title, table, headers, and student names
-function buildBorderRanges(rowCount: number, sessionCount: number) {
-  const lastRow = rowCount - 1;
-  const lastCol = sessionCount;
-
-  return [
-    // Heavy border around title rows (rows 0-1)
-    {
-      from: { r: 0, c: 0 },
-      to: { r: 1, c: lastCol },
-      outerBorder: { style: 'medium' } as ExcelJS.Border
-    },
+  // Define borders for table area
+  const borderRanges = [
     // Heavy outer border around entire table (rows 3 onwards)
     {
       from: { r: 3, c: 0 },
@@ -322,6 +323,8 @@ function buildBorderRanges(rowCount: number, sessionCount: number) {
       innerBorder: { style: 'thin' } as ExcelJS.Border
     }
   ];
+
+  return { specialFields, borderRanges };
 }
 
 // Main function - orchestrates building the Excel data structure
@@ -337,13 +340,15 @@ function buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportD
   // 1. Build all data rows
   const rows = buildDataRows(sessions, students);
 
-  // 2. Build special fields (titles + data cells)
-  const titleFields = buildTitleSpecialFields(institutionName, institutionCode, klassName, sessions.length);
-  const dataCellFields = buildDataCellSpecialFields(rows);
-  const specialFields = [...titleFields, ...dataCellFields];
+  // 2. Build title section (merged headers + borders)
+  const titleSection = buildTitleSection(institutionName, institutionCode, klassName, sessions.length);
 
-  // 3. Build border ranges
-  const borderRanges = buildBorderRanges(rows.length, sessions.length);
+  // 3. Build data section (styled cells + borders)
+  const dataSection = buildDataSection(rows, sessions.length);
+
+  // 4. Combine everything
+  const specialFields = [...titleSection.specialFields, ...dataSection.specialFields];
+  const borderRanges = [...titleSection.borderRanges, ...dataSection.borderRanges];
 
   console.log('buildExcelData output:', {
     rowCount: rows.length,
