@@ -46,4 +46,7 @@ const entity = {
   Representation,
 };
 
-export default getResourceComponents(entity);
+// todo: delete this file and use the shared one only
+// export default getResourceComponents(entity);
+import * as importFileEntity from '@shared/components/common-entities/import-file';
+export default importFileEntity;
