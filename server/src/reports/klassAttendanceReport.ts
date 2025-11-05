@@ -206,6 +206,19 @@ const STYLING: Record<string, Partial<ExcelJS.Style>> = {
       readingOrder: 'rtl'
     }
   },
+  tableHeaderStyle: {
+    alignment: {
+      horizontal: 'center',
+      readingOrder: 'rtl',
+      wrapText: true
+    },
+    font: { name: 'Arial', size: 11, bold: true },
+    fill: {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFF0F0F0' }  // Light gray background
+    }
+  },
   tableStyle: {
     alignment: {
       horizontal: 'center',
@@ -217,8 +230,8 @@ const STYLING: Record<string, Partial<ExcelJS.Style>> = {
 }
 
 const BUILDING = {
-  // Build all data rows for the Excel sheet
-  buildDataRows(sessions: SessionData[], students: StudentAttendanceData[]): string[][] {
+  // Build table header section: rows + special fields + borders
+  buildTableHeaderSection(sessions: SessionData[]) {
     const dayRow = ['יום בשבוע', ...sessions.map(s => s.dayOfWeek)];
     const dateRow = ['תאריך', ...sessions.map(s => FORMATTING.formatDate(s.date))];
     const hoursRow = ['שעות לימוד', ...sessions.map(s => `${FORMATTING.formatTime(s.startTime)}-${FORMATTING.formatTime(s.endTime)}`)];
@@ -227,23 +240,116 @@ const BUILDING = {
     const teacherRow = ['שם המורה', ...sessions.map(s => s.teacherName)];
     const separatorRow = ['', ...sessions.map(() => '--')];
 
-    const studentRows = students.map(student =>
-      [student.studentName, ...student.attendanceMarks]
-    );
-
-    return [
-      [''],  // Empty row for title 1
-      [''],  // Empty row for title 2
-      [''],  // Empty spacing row
+    const rows = [
       dayRow,
       dateRow,
       hoursRow,
       topicRow,
       lessonCountRow,
       teacherRow,
-      separatorRow,
-      ...studentRows
+      separatorRow
     ];
+
+    // Convert header rows to special fields with styling
+    const specialFields: ISpecialField[] = [];
+    rows.forEach((row, rowIndex) => {
+      const actualRowIndex = rowIndex + 3; // Offset by 3 (title rows + spacing)
+      row.forEach((cell, colIndex) => {
+        if (cell !== '') {
+          specialFields.push({
+            cell: { r: actualRowIndex, c: colIndex },
+            value: cell,
+            style: STYLING.tableHeaderStyle
+          });
+        }
+      });
+    });
+
+    // Define borders for header section (rows 3-8)
+    const lastCol = sessions.length;
+    const borderRanges = [
+      {
+        from: { r: 3, c: 0 },
+        to: { r: 9, c: lastCol },  // Include separator row
+        innerBorder: { style: 'thin' } as ExcelJS.Border
+      }
+    ];
+
+    return { rows, specialFields, borderRanges };
+  },
+
+  // Build table data section: student rows + special fields + borders
+  buildTableDataSection(students: StudentAttendanceData[], sessionCount: number, headerRowCount: number) {
+    const studentRows = students.map(student =>
+      [student.studentName, ...student.attendanceMarks]
+    );
+
+    const startRow = 3 + headerRowCount; // After title rows + header section
+    const lastRow = startRow + studentRows.length - 1;
+
+    // Convert student rows to special fields
+    const specialFields: ISpecialField[] = [];
+    studentRows.forEach((row, rowIndex) => {
+      const actualRowIndex = startRow + rowIndex;
+      row.forEach((cell, colIndex) => {
+        if (cell !== '') {
+          specialFields.push({
+            cell: { r: actualRowIndex, c: colIndex },
+            value: cell,
+            style: STYLING.tableStyle
+          });
+        }
+      });
+    });
+
+    // Define borders for student data section
+    const borderRanges = [
+      // Light borders for student name column
+      {
+        from: { r: startRow, c: 0 },
+        to: { r: lastRow, c: 0 },
+        innerBorder: { style: 'thin' } as ExcelJS.Border
+      }
+    ];
+
+    return { rows: studentRows, specialFields, borderRanges };
+  },
+
+  // Build complete table section: header + data + overall borders
+  buildTableSection(sessions: SessionData[], students: StudentAttendanceData[]) {
+    const headerSection = BUILDING.buildTableHeaderSection(sessions);
+    const dataSection = BUILDING.buildTableDataSection(students, sessions.length, headerSection.rows.length);
+
+    const allRows = [
+      [''],  // Empty row for title 1
+      [''],  // Empty row for title 2
+      [''],  // Empty spacing row
+      ...headerSection.rows,
+      ...dataSection.rows
+    ];
+
+    const lastRow = allRows.length - 1;
+    const lastCol = sessions.length;
+
+    // Combine special fields from both sections
+    const specialFields = [
+      ...headerSection.specialFields,
+      ...dataSection.specialFields
+    ];
+
+    // Combine border ranges + add outer border for entire table
+    const borderRanges = [
+      // Heavy outer border around entire table
+      {
+        from: { r: 3, c: 0 },
+        to: { r: lastRow, c: lastCol },
+        outerBorder: { style: 'medium' } as ExcelJS.Border
+      },
+      ...headerSection.borderRanges,
+      ...dataSection.borderRanges
+    ];
+
+    return { allRows, specialFields, borderRanges };
   },
 
   // Build title section: special fields (merged cells) + borders
@@ -283,50 +389,6 @@ const BUILDING = {
     };
   },
 
-  // Build data section: special fields (styled cells) + borders
-  buildDataSection(rows: string[][], sessionCount: number) {
-    const lastRow = rows.length - 1;
-    const lastCol = sessionCount;
-
-    // Convert rows to special fields
-    const specialFields: ISpecialField[] = [];
-    rows.forEach((row, rowIndex) => {
-      row.forEach((cell, colIndex) => {
-        if (cell !== '') {
-          specialFields.push({
-            cell: { r: rowIndex, c: colIndex },
-            value: cell,
-            style: STYLING.tableStyle
-          });
-        }
-      });
-    });
-
-    // Define borders for table area
-    const borderRanges = [
-      // Heavy outer border around entire table (rows 3 onwards)
-      {
-        from: { r: 3, c: 0 },
-        to: { r: lastRow, c: lastCol },
-        outerBorder: { style: 'medium' } as ExcelJS.Border
-      },
-      // Light borders for header section (dayRow through teacherRow = rows 3-8)
-      {
-        from: { r: 3, c: 0 },
-        to: { r: 8, c: lastCol },
-        innerBorder: { style: 'thin' } as ExcelJS.Border
-      },
-      // Light borders for student name column (rows 10 onwards)
-      {
-        from: { r: 10, c: 0 },
-        to: { r: lastRow, c: 0 },
-        innerBorder: { style: 'thin' } as ExcelJS.Border
-      }
-    ];
-
-    return { specialFields, borderRanges };
-  },
-
   // Main function - orchestrates building the Excel data structure
   buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportData {
     const { klassName, institutionName, institutionCode, sessions, students } = data;
@@ -337,21 +399,18 @@ const BUILDING = {
       studentCount: students.length
     });
 
-    // 1. Build all data rows
-    const rows = BUILDING.buildDataRows(sessions, students);
-
-    // 2. Build title section (merged headers + borders)
+    // 1. Build title section (merged headers + borders)
     const titleSection = BUILDING.buildTitleSection(institutionName, institutionCode, klassName, sessions.length);
 
-    // 3. Build data section (styled cells + borders)
-    const dataSection = BUILDING.buildDataSection(rows, sessions.length);
+    // 2. Build complete table section (header rows + student rows + borders)
+    const tableSection = BUILDING.buildTableSection(sessions, students);
 
-    // 4. Combine everything
-    const specialFields = [...titleSection.specialFields, ...dataSection.specialFields];
-    const borderRanges = [...titleSection.borderRanges, ...dataSection.borderRanges];
+    // 3. Combine everything
+    const specialFields = [...titleSection.specialFields, ...tableSection.specialFields];
+    const borderRanges = [...titleSection.borderRanges, ...tableSection.borderRanges];
 
     console.log('buildExcelData output:', {
-      rowCount: rows.length,
+      rowCount: tableSection.allRows.length,
       specialFieldCount: specialFields.length,
       borderRangeCount: borderRanges.length
     });
