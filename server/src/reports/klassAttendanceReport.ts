@@ -185,6 +185,20 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
   };
 
 
+// Row index constants
+const ROW_INDEX = {
+  TITLE_1: 0,
+  TITLE_2: 1,
+  SPACING: 2,
+  TABLE_START: 3,
+} as const;
+
+const ROW_COUNT = {
+  TITLE_ROWS: 2,
+  SPACING_ROWS: 1,
+  HEADER_OFFSET: 3,  // Title rows + spacing
+} as const;
+
 const STYLING: Record<string, Partial<ExcelJS.Style>> = {
   headerStyle: {
     font: { bold: true, size: 16, name: 'Arial' },
@@ -253,7 +267,7 @@ const BUILDING = {
     // Convert header rows to special fields with styling
     const specialFields: ISpecialField[] = [];
     rows.forEach((row, rowIndex) => {
-      const actualRowIndex = rowIndex + 3; // Offset by 3 (title rows + spacing)
+      const actualRowIndex = ROW_COUNT.HEADER_OFFSET + rowIndex;
       row.forEach((cell, colIndex) => {
         if (cell !== '') {
           specialFields.push({
@@ -265,32 +279,33 @@ const BUILDING = {
       });
     });
 
-    // Define borders for header section (rows 3-8)
+    // Define borders for header section
     const lastCol = sessions.length;
+    const startRow = ROW_INDEX.TABLE_START;
+    const endRow = startRow + rows.length - 1;
+    
     const borderRanges = [
       {
-        from: { r: 3, c: 0 },
-        to: { r: 9, c: lastCol },  // Include separator row
+        from: { r: startRow, c: 0 },
+        to: { r: endRow, c: lastCol },
         innerBorder: { style: 'thin' } as ExcelJS.Border
       }
     ];
 
-    return { rows, specialFields, borderRanges };
+    return { rowCount: rows.length, specialFields, borderRanges };
   },
 
   // Build table data section: student rows + special fields + borders
-  buildTableDataSection(students: StudentAttendanceData[], sessionCount: number, headerRowCount: number) {
-    const studentRows = students.map(student =>
-      [student.studentName, ...student.attendanceMarks]
-    );
-
-    const startRow = 3 + headerRowCount; // After title rows + header section
-    const lastRow = startRow + studentRows.length - 1;
+  buildTableDataSection(students: StudentAttendanceData[], headerRowCount: number) {
+    const startRow = ROW_COUNT.HEADER_OFFSET + headerRowCount;
+    const lastRow = startRow + students.length - 1;
 
     // Convert student rows to special fields
     const specialFields: ISpecialField[] = [];
-    studentRows.forEach((row, rowIndex) => {
+    students.forEach((student, rowIndex) => {
       const actualRowIndex = startRow + rowIndex;
+      const row = [student.studentName, ...student.attendanceMarks];
+      
       row.forEach((cell, colIndex) => {
         if (cell !== '') {
           specialFields.push({
@@ -302,9 +317,8 @@ const BUILDING = {
       });
     });
 
-    // Define borders for student data section
+    // Define borders for student name column
     const borderRanges = [
-      // Light borders for student name column
       {
         from: { r: startRow, c: 0 },
         to: { r: lastRow, c: 0 },
@@ -312,23 +326,16 @@ const BUILDING = {
       }
     ];
 
-    return { rows: studentRows, specialFields, borderRanges };
+    return { specialFields, borderRanges };
   },
 
   // Build complete table section: header + data + overall borders
   buildTableSection(sessions: SessionData[], students: StudentAttendanceData[]) {
     const headerSection = BUILDING.buildTableHeaderSection(sessions);
-    const dataSection = BUILDING.buildTableDataSection(students, sessions.length, headerSection.rows.length);
+    const dataSection = BUILDING.buildTableDataSection(students, headerSection.rowCount);
 
-    const allRows = [
-      [''],  // Empty row for title 1
-      [''],  // Empty row for title 2
-      [''],  // Empty spacing row
-      ...headerSection.rows,
-      ...dataSection.rows
-    ];
-
-    const lastRow = allRows.length - 1;
+    const totalRowCount = ROW_COUNT.HEADER_OFFSET + headerSection.rowCount + students.length;
+    const lastRow = totalRowCount - 1;
     const lastCol = sessions.length;
 
     // Combine special fields from both sections
@@ -341,7 +348,7 @@ const BUILDING = {
     const borderRanges = [
       // Heavy outer border around entire table
       {
-        from: { r: 3, c: 0 },
+        from: { r: ROW_INDEX.TABLE_START, c: 0 },
         to: { r: lastRow, c: lastCol },
         outerBorder: { style: 'medium' } as ExcelJS.Border
       },
@@ -349,7 +356,7 @@ const BUILDING = {
       ...dataSection.borderRanges
     ];
 
-    return { allRows, specialFields, borderRanges };
+    return { totalRowCount, specialFields, borderRanges };
   },
 
   // Build title section: special fields (merged cells) + borders
@@ -366,23 +373,23 @@ const BUILDING = {
     return {
       specialFields: [
         {
-          cell: { r: 0, c: 0 },
+          cell: { r: ROW_INDEX.TITLE_1, c: 0 },
           value: titleRow1,
           style: STYLING.headerStyle,
-          merge: { s: { r: 0, c: 0 }, e: { r: 0, c: sessionCount } }
+          merge: { s: { r: ROW_INDEX.TITLE_1, c: 0 }, e: { r: ROW_INDEX.TITLE_1, c: sessionCount } }
         },
         {
-          cell: { r: 1, c: 0 },
+          cell: { r: ROW_INDEX.TITLE_2, c: 0 },
           value: titleRow2,
           style: STYLING.subHeaderStyle,
-          merge: { s: { r: 1, c: 0 }, e: { r: 1, c: sessionCount } }
+          merge: { s: { r: ROW_INDEX.TITLE_2, c: 0 }, e: { r: ROW_INDEX.TITLE_2, c: sessionCount } }
         }
       ],
       borderRanges: [
-        // Heavy border around title rows (rows 0-1)
+        // Heavy border around title rows
         {
-          from: { r: 0, c: 0 },
-          to: { r: 1, c: lastCol },
+          from: { r: ROW_INDEX.TITLE_1, c: 0 },
+          to: { r: ROW_INDEX.TITLE_2, c: lastCol },
           outerBorder: { style: 'medium' } as ExcelJS.Border
         }
       ]
@@ -410,7 +417,7 @@ const BUILDING = {
     const borderRanges = [...titleSection.borderRanges, ...tableSection.borderRanges];
 
     console.log('buildExcelData output:', {
-      rowCount: tableSection.allRows.length,
+      rowCount: tableSection.totalRowCount,
       specialFieldCount: specialFields.length,
       borderRangeCount: borderRanges.length
     });
