@@ -6,6 +6,13 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 import { defaultYearFilter } from '@shared/utils/yearFilter';
 
 const lessonKeyAndName = item => `${item.name} (${item.key})`;
+const filterToQuery = searchText => {
+    const keyMatch = /\((\d+)\)/.exec(searchText);
+    if (keyMatch) {
+        return { key: keyMatch[1] };
+    }
+    return { 'name:$contL': searchText };
+};
 
 export const LessonSelector = ({ onLessonFound, selectedTeacher }) => {
     const dataProvider = useDataProvider();
@@ -86,6 +93,7 @@ export const LessonSelector = ({ onLessonFound, selectedTeacher }) => {
                             reference="lesson"
                             optionValue='key'
                             optionText={lessonKeyAndName}
+                            filterToQuery={filterToQuery}
                             onChange={(e) => setLessonKey(e)}
                             filter={lessonFilter}
                         />

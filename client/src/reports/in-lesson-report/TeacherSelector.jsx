@@ -5,6 +5,13 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 
 const teacherTzAndName = item => `${item.name} (${item.tz})`;
+const filterToQuery = searchText => {
+  const tzMatch = /\((\d+)\)/.exec(searchText);
+  if (tzMatch) {
+    return { tz: tzMatch[1] };
+  }
+  return { 'name:$contL': searchText };
+}
 
 export const TeacherSelector = ({ onTeacherSelected }) => {
   const [teacherKey, setTeacherKey] = useState('');
@@ -51,6 +58,7 @@ export const TeacherSelector = ({ onTeacherSelected }) => {
               reference="teacher"
               optionValue='tz'
               optionText={teacherTzAndName}
+              filterToQuery={filterToQuery}
               onChange={(e) => setTeacherKey(e)}
             />
           </TabbedForm.Tab>
