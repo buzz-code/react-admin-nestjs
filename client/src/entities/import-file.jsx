@@ -15,36 +15,36 @@ import { isLessonSignature } from 'src/utils/appPermissions';
  * app-specific features like lesson signature fields
  */
 
-const additionalBulkButtons = [
-  <BulkReportButton 
-    key='lessonSignaturePdf'
-    label='הורד דוחות PDF למורה' 
-    icon={<PictureAsPdfIcon />} 
-    name='lessonSignaturePdf' 
-    filename='דוחות-נוכחות'
-  />
-];
+// const additionalBulkButtons = [
+//   <BulkReportButton 
+//     key='lessonSignaturePdf'
+//     label='הורד דוחות PDF למורה' 
+//     icon={<PictureAsPdfIcon />} 
+//     name='lessonSignaturePdf' 
+//     filename='דוחות-נוכחות'
+//   />
+// ];
 
-const Datagrid = ({ children, ...props }) => {
-  const { permissions } = usePermissions();
-  const hasLessonSignature = isLessonSignature(permissions);
+// const Datagrid = ({ children, ...props }) => {
+//   const { permissions } = usePermissions();
+//   const hasLessonSignature = isLessonSignature(permissions);
 
-  return (
-    <ImportFileDatagrid
-      hasLessonSignature={hasLessonSignature}
-      additionalBulkButtons={hasLessonSignature ? additionalBulkButtons : []}
-      {...props}
-    >
-      {children}
-    </ImportFileDatagrid>
-  );
-};
+//   return (
+//     <ImportFileDatagrid
+//       hasLessonSignature={hasLessonSignature}
+//       additionalBulkButtons={hasLessonSignature ? additionalBulkButtons : []}
+//       {...props}
+//     >
+//       {children}
+//     </ImportFileDatagrid>
+//   );
+// };
 
-const entity = {
-  Datagrid,
-  filters,
-  Representation,
-};
+// const entity = {
+//   Datagrid,
+//   filters,
+//   Representation,
+// };
 
 // todo: delete this file and use the shared one only
 // export default getResourceComponents(entity);
