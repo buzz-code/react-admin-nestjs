@@ -6,6 +6,8 @@ import { BulkToPdfReportGenerator } from "@shared/utils/report/bulk-to-pdf.gener
 import { CommonReportData } from "@shared/utils/report/types";
 import { ReportGroup } from "../db/entities/ReportGroup.entity";
 import lessonSignaturePdfReport from "src/reports/lessonSignaturePdfReport";
+import { IHeader } from "@shared/utils/exporter/types";
+import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 
 class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityService<T> {
     reportsDict = {
@@ -47,7 +49,30 @@ function getConfig(): BaseEntityModuleOptions {
                 klass: { eager: false },
                 sessions: { eager: false },
             }
-        }
+        },
+        exporter: {
+            processReqForExport(req: CrudRequest, innerFunc) {
+                req.options.query.join = {
+                    teacher: { eager: true },
+                    lesson: { eager: true },
+                    klass: { eager: true },
+                    sessions: { eager: true },
+                };
+                return innerFunc(req);
+            },
+            getExportHeaders(): IHeader[] {
+                return [
+                    { label: 'שם', value: 'name' },
+                    { label: 'נושא', value: 'topic' },
+                    { label: 'מורה', value: 'teacher.name' },
+                    { label: 'שיעור', value: 'lesson.name' },
+                    { label: 'כיתה', value: 'klass.name' },
+                    { label: 'שנה', value: 'year' },
+                    { label: 'מספר שיעורים', value: 'sessions.length' },
+                    { label: 'נוצר בתאריך', value: getHebrewDateFormatter('createdAt') },
+                ];
+            }
+        },
     }
 }
 

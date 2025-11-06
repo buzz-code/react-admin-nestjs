@@ -177,11 +177,10 @@ const App = () => (
               <Resource name="payment_track" {...paymentTrack} list={isEditPaymentTracksData(permissions) ? paymentTrack.list : null} options={{ menuGroup: 'admin' }} icon={MonetizationOnIcon} />
             </>}
 
-            {/* {isLessonSignature(permissions) && <> */}
-            {isAdmin(permissions) && <>
-            <Resource name="report_group" {...reportGroup} options={{ menuGroup: 'settings' }} icon={GroupWorkIcon} />
-            <Resource name="report_group_session" {...reportGroupSession} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
-            </>}
+              {isLessonSignature(permissions) && <>
+                <Resource name="report_group" {...reportGroup} options={{ menuGroup: 'settings' }} icon={GroupWorkIcon} />
+                <Resource name="report_group_session" {...(isAdmin(permissions) ? reportGroupSession : {})} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
+              </>}
 
             <CustomRoutes>
               <Route path="/percent-report-with-dates" element={<PercentReportWithDatesList />} />
