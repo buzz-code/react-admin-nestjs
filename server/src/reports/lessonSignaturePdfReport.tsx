@@ -13,6 +13,7 @@ import { convertToReactStyle, ReportStyles } from '@shared/utils/report/react-us
 import { wrapWithStyles, useStyles, useFontLinks } from '@shared/utils/report/react-user-styles/StylesContext';
 import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { ReactToPdfReportGenerator } from '@shared/utils/report/react-to-pdf.generator';
+import { formatTime } from '@shared/utils/formatting/formatter.util';
 
 // Define report element types for styling
 enum ReportElementType {
@@ -668,13 +669,13 @@ const LessonDetailsSection: React.FC<LessonDetailsSectionProps> = ({
           {lessonDetails.lessonStartTime && (
             <tr>
               <td style={cellStyle}>שעת תחילת השיעור:</td>
-              <td>{lessonDetails.lessonStartTime}</td>
+              <td>{formatTime(lessonDetails.lessonStartTime)}</td>
             </tr>
           )}
           {lessonDetails.lessonEndTime && (
             <tr>
               <td style={cellStyle}>שעת סיום השיעור:</td>
-              <td>{lessonDetails.lessonEndTime}</td>
+              <td>{formatTime(lessonDetails.lessonEndTime)}</td>
             </tr>
           )}
           {lessonDetails.lessonTopic && (

@@ -10,6 +10,7 @@ import { ISpecialField } from '@shared/utils/importer/types';
 import * as ExcelJS from 'exceljs';
 import { getUniqueValues, groupDataByKeysAndCalc } from 'src/utils/reportData.util';
 import { ReportGroup } from 'src/db/entities/ReportGroup.entity';
+import { formatTime } from '@shared/utils/formatting/formatter.util';
 
 export interface KlassAttendanceReportParams {
   userId: number;
@@ -248,7 +249,7 @@ const BUILDING = {
   buildTableHeaderSection(sessions: SessionData[]) {
     const dayRow = ['יום בשבוע', ...sessions.map(s => s.dayOfWeek)];
     const dateRow = ['תאריך', ...sessions.map(s => FORMATTING.formatDate(s.date))];
-    const hoursRow = ['שעות לימוד', ...sessions.map(s => `${FORMATTING.formatTime(s.startTime)}-${FORMATTING.formatTime(s.endTime)}`)];
+    const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
     const topicRow = ['נושא הלימוד', ...sessions.map(s => s.topic)];
     const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
     const teacherRow = ['שם המורה', ...sessions.map(s => s.teacherName)];
@@ -448,12 +449,6 @@ const FORMATTING = {
     const month = date.getMonth() + 1;
     const year = date.getFullYear().toString().slice(2);  // Last 2 digits of year
     return `${day}/${month}/${year}`;
-  },
-
-  formatTime(timeStr: string): string {
-    if (!timeStr) return '';
-    const [hours, minutes] = timeStr.split(':');
-    return `${hours}:${minutes}`;
   },
 
   getAttendanceMark(report: AttReport | null | undefined): string {
