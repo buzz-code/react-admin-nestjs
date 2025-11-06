@@ -126,83 +126,83 @@ const App = () => (
 
           return (
             <>
-            <Resource name="teacher" {...teacher} options={{ menuGroup: 'data' }} icon={BadgeIcon} />
-            <Resource name="klass_type" {...klassType} options={{ menuGroup: 'data' }} icon={CategoryIcon} />
-            <Resource name="klass" {...klass} options={{ menuGroup: 'data' }} icon={SupervisedUserCircleIcon} />
-            <Resource name="lesson" {...lesson} options={{ menuGroup: 'data' }} icon={SchoolIcon} />
-            <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
-              <Route path="student-attendance" element={<StudentAttendanceList />} />
-            </Resource>
-            <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={WorkspacesIcon} />
-            <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
-            <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
-            <Resource name="known_absence" {...knownAbsence} options={{ menuGroup: 'data' }} icon={PlaylistRemoveIcon} />
+              <Resource name="teacher" {...teacher} options={{ menuGroup: 'data' }} icon={BadgeIcon} />
+              <Resource name="klass_type" {...klassType} options={{ menuGroup: 'data' }} icon={CategoryIcon} />
+              <Resource name="klass" {...klass} options={{ menuGroup: 'data' }} icon={SupervisedUserCircleIcon} />
+              <Resource name="lesson" {...lesson} options={{ menuGroup: 'data' }} icon={SchoolIcon} />
+              <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
+                <Route path="student-attendance" element={<StudentAttendanceList />} />
+              </Resource>
+              <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={WorkspacesIcon} />
+              <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
+              <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
+              <Resource name="known_absence" {...knownAbsence} options={{ menuGroup: 'data' }} icon={PlaylistRemoveIcon} />
 
-            <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
-            <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
-            <Resource name="teacher_grade_report_status" {...teacherGradeReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
-            <Resource name="teacher_salary_report" {...teacherSalaryReport} options={{ menuGroup: 'report' }} icon={LocalAtmIcon} />
+              <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
+              <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
+              <Resource name="teacher_grade_report_status" {...teacherGradeReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
+              <Resource name="teacher_salary_report" {...teacherSalaryReport} options={{ menuGroup: 'report' }} icon={LocalAtmIcon} />
 
-            <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
-            <Resource name="text_by_user" {...textByUser} options={{ menuGroup: 'settings' }} icon={RateReviewIcon} />
-            <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} icon={AlternateEmailIcon} />
-            <Resource name="image" {...image} options={{ menuGroup: 'settings' }} icon={ImageIcon} />
-            <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
-            <Resource name="att_report" {...attReport} options={{ menuGroup: 'settings' }} icon={ViewListIcon} />
-            <Resource name="grade_name" {...gradeName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
-            <Resource name="attendance_name" {...attendanceName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
-            <Resource name="att_grade_effect" {...attGradeEffect} options={{ menuGroup: 'settings' }} icon={CalculateIcon} />
-            <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
-            <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
-            <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
+              <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
+              <Resource name="text_by_user" {...textByUser} options={{ menuGroup: 'settings' }} icon={RateReviewIcon} />
+              <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} icon={AlternateEmailIcon} />
+              <Resource name="image" {...image} options={{ menuGroup: 'settings' }} icon={ImageIcon} />
+              <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
+              <Resource name="att_report" {...attReport} options={{ menuGroup: 'settings' }} icon={ViewListIcon} />
+              <Resource name="grade_name" {...gradeName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
+              <Resource name="attendance_name" {...attendanceName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
+              <Resource name="att_grade_effect" {...attGradeEffect} options={{ menuGroup: 'settings' }} icon={CalculateIcon} />
+              <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
+              <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
+              <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
 
-            
-            {isAdmin(permissions) && <>
-              <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
-              <Resource name="text" {...text} options={{ menuGroup: 'admin' }} />
-              <Resource name="yemot_call" {...yemotCall} options={{ menuGroup: 'admin' }} icon={SettingsPhoneIcon} />
-              <Resource name="recieved_mail" {...recievedMail} options={{ menuGroup: 'admin' }} icon={EmailIcon} />
-              <Resource name="audit_log" {...auditLog} options={{ menuGroup: 'admin' }} icon={LogoDevIcon} />
-            </>}
 
-            {isShowUsersData(permissions) && <>
-              <Resource name="user" {...user} create={isAdmin(permissions) && user.create} options={{ menuGroup: 'admin' }} icon={AccountBoxIcon} />
-            </>}
+              {isAdmin(permissions) && <>
+                <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />
+                <Resource name="text" {...text} options={{ menuGroup: 'admin' }} />
+                <Resource name="yemot_call" {...yemotCall} options={{ menuGroup: 'admin' }} icon={SettingsPhoneIcon} />
+                <Resource name="recieved_mail" {...recievedMail} options={{ menuGroup: 'admin' }} icon={EmailIcon} />
+                <Resource name="audit_log" {...auditLog} options={{ menuGroup: 'admin' }} icon={LogoDevIcon} />
+              </>}
 
-            {isEditPagesData(permissions) && <>
-              <Resource name="page" {...page} options={{ menuGroup: 'admin' }} icon={AutoStoriesIcon} />
-            </>}
+              {isShowUsersData(permissions) && <>
+                <Resource name="user" {...user} create={isAdmin(permissions) && user.create} options={{ menuGroup: 'admin' }} icon={AccountBoxIcon} />
+              </>}
 
-            {(isEditPaymentTracksData(permissions) || isShowUsersData(permissions)) && <>
-              <Resource name="payment_track" {...paymentTrack} list={isEditPaymentTracksData(permissions) ? paymentTrack.list : null} options={{ menuGroup: 'admin' }} icon={MonetizationOnIcon} />
-            </>}
+              {isEditPagesData(permissions) && <>
+                <Resource name="page" {...page} options={{ menuGroup: 'admin' }} icon={AutoStoriesIcon} />
+              </>}
+
+              {(isEditPaymentTracksData(permissions) || isShowUsersData(permissions)) && <>
+                <Resource name="payment_track" {...paymentTrack} list={isEditPaymentTracksData(permissions) ? paymentTrack.list : null} options={{ menuGroup: 'admin' }} icon={MonetizationOnIcon} />
+              </>}
 
               {isLessonSignature(permissions) && <>
                 <Resource name="report_group" {...reportGroup} options={{ menuGroup: 'settings' }} icon={GroupWorkIcon} />
                 <Resource name="report_group_session" {...(isAdmin(permissions) ? reportGroupSession : {})} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
               </>}
 
-            <CustomRoutes>
-              <Route path="/percent-report-with-dates" element={<PercentReportWithDatesList />} />
-              <Route path="/yemot-simulator" element={<YemotSimulator />} />
-              <Route path="/tutorial" element={<Tutorial />} />
-              <Route path="/pages-view" element={<PageList />} />
-              <Route path="/scanner-upload" element={<ScannerUpload />} />
-              <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
-              <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
-              <Route path="/roadmap" element={<Roadmap features={roadmapFeatures} />} />
-              <Route path="/michlol-file-helper" element={<MichlolFileHelper />} />
-              <Route path="/approved-absences-upload" element={<ApprovedAbsencesUpload />} />
-            </CustomRoutes>
+              <CustomRoutes>
+                <Route path="/percent-report-with-dates" element={<PercentReportWithDatesList />} />
+                <Route path="/yemot-simulator" element={<YemotSimulator />} />
+                <Route path="/tutorial" element={<Tutorial />} />
+                <Route path="/pages-view" element={<PageList />} />
+                <Route path="/scanner-upload" element={<ScannerUpload />} />
+                <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
+                <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
+                <Route path="/roadmap" element={<Roadmap features={roadmapFeatures} />} />
+                <Route path="/michlol-file-helper" element={<MichlolFileHelper />} />
+                <Route path="/approved-absences-upload" element={<ApprovedAbsencesUpload />} />
+              </CustomRoutes>
 
-            <CustomRoutes noLayout>
-              <Route path="/register" element={<RegisterPage />} />
-            </CustomRoutes>
+              <CustomRoutes noLayout>
+                <Route path="/register" element={<RegisterPage />} />
+              </CustomRoutes>
 
-            {!isAdmin(permissions) && <CustomRoutes>
-              <Route path="/settings" element={<Settings />} />
-            </CustomRoutes>}
-          </>
+              {!isAdmin(permissions) && <CustomRoutes>
+                <Route path="/settings" element={<Settings />} />
+              </CustomRoutes>}
+            </>
           );
         }}
       </Admin>
