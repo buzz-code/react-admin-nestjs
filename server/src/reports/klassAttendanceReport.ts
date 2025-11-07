@@ -123,16 +123,24 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
     // Build session data - each session includes report group info and signature
     const sessions: SessionData[] = allSessions
       .filter(session => lessonCountsBySession[session.id])
-      .map(session => ({
+      .map(session => {
+      const lessonName = session.reportGroup?.lesson?.name || '';
+      const sessionTopic = session.topic || '';
+      const topic = lessonName && sessionTopic 
+        ? `${lessonName} - ${sessionTopic}` 
+        : lessonName || sessionTopic;
+      
+      return {
         date: new Date(session.sessionDate),
         dayOfWeek: FORMATTING.getHebrewDayOfWeek(new Date(session.sessionDate)),
         startTime: session.startTime || '',
         endTime: session.endTime || '',
-        topic: session.topic || session.reportGroup?.lesson?.name || '',
+        topic,
         lessonCount: lessonCountsBySession[session.id],
         teacherName: session.reportGroup?.teacher?.name || '',
         signatureData: session.reportGroup?.signatureData
-      }));
+      };
+      });
 
     // Get unique students from attendance reports
     const uniqueStudentIds = getUniqueValues(attReports, r => r.studentReferenceId);
