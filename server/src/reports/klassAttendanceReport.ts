@@ -10,7 +10,7 @@ import { ISpecialField } from '@shared/utils/importer/types';
 import * as ExcelJS from 'exceljs';
 import { getUniqueValues, groupDataByKeysAndCalc } from 'src/utils/reportData.util';
 import { ReportGroup } from 'src/db/entities/ReportGroup.entity';
-import { formatTime } from '@shared/utils/formatting/formatter.util';
+import { formatTime, formatDate } from '@shared/utils/formatting/formatter.util';
 
 export interface KlassAttendanceReportParams {
   userId: number;
@@ -36,7 +36,6 @@ interface SessionData {
   topic: string;
   lessonCount: number;
   teacherName: string;
-  signatureData?: string;
 }
 
 interface StudentAttendanceData {
@@ -120,7 +119,7 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
       (reports) => reports[0]
     );
 
-    // Build session data - each session includes report group info and signature
+    // Build session data - each session includes report group info
     const sessions: SessionData[] = allSessions
       .filter(session => lessonCountsBySession[session.id])
       .map(session => {
@@ -138,7 +137,6 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
         topic,
         lessonCount: lessonCountsBySession[session.id],
         teacherName: session.reportGroup?.teacher?.name || '',
-        signatureData: session.reportGroup?.signatureData
       };
       });
 
@@ -258,7 +256,7 @@ const BUILDING = {
   // Build table header section: rows + special fields + borders
   buildTableHeaderSection(sessions: SessionData[]) {
     const dayRow = ['יום בשבוע', ...sessions.map(s => s.dayOfWeek)];
-    const dateRow = ['תאריך', ...sessions.map(s => FORMATTING.formatDate(s.date))];
+    const dateRow = ['תאריך', ...sessions.map(s => formatDate(s.date))];
     const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
     const topicRow = ['נושא הלימוד', ...sessions.map(s => s.topic)];
     const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
@@ -407,47 +405,6 @@ const BUILDING = {
     };
   },
 
-  // Build signature row: adds signatures under each session column
-  buildSignatureRow(sessions: SessionData[], tableEndRow: number) {
-    const signatureRow = tableEndRow + 2;  // Leave 2 rows spacing after table
-
-    const specialFields: ISpecialField[] = [];
-    const images: any[] = [];
-
-    // Add title in first column (same row as images)
-    specialFields.push({
-      cell: { r: signatureRow, c: 0 },
-      value: 'חתימת המורה',
-      style: {
-        font: { bold: true, size: 12, name: 'Arial' },
-        alignment: {
-          horizontal: 'center' as const,
-          vertical: 'middle' as const,
-          readingOrder: 'rtl' as const
-        }
-      }
-    });
-
-    // Add signature image under each session column (if signature exists)
-    sessions.forEach((session, colIndex) => {
-      if (session.signatureData) {
-        images.push({
-          imageBase64Data: session.signatureData,
-          position: {
-            tl: { row: signatureRow, col: colIndex + 1 },  // +1 because col 0 is the label
-            ext: { width: 80, height: 60 }  // Smaller size to fit in column
-          }
-        });
-      }
-    });
-
-    return {
-      specialFields,
-      images,
-      additionalRows: 8  // Signature row + image height
-    };
-  },
-
   // Main function - orchestrates building the Excel data structure
   buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportData {
     const { klassName, institutionName, institutionCode, sessions, students } = data;
@@ -464,23 +421,18 @@ const BUILDING = {
     // 2. Build complete table section (header rows + student rows + borders)
     const tableSection = BUILDING.buildTableSection(sessions, students);
 
-    // 3. Build signature row - one signature image under each session
-    const signatureRow = BUILDING.buildSignatureRow(sessions, tableSection.totalRowCount);
 
-    // 4. Combine everything
+    // 3. Combine everything
     const specialFields = [
       ...titleSection.specialFields, 
       ...tableSection.specialFields,
-      ...signatureRow.specialFields
     ];
     const borderRanges = [...titleSection.borderRanges, ...tableSection.borderRanges];
-    const images = signatureRow.images;
 
     console.log('buildExcelData output:', {
-      rowCount: tableSection.totalRowCount + signatureRow.additionalRows,
+      rowCount: tableSection.totalRowCount,
       specialFieldCount: specialFields.length,
       borderRangeCount: borderRanges.length,
-      imageCount: images.length
     });
 
     return {
@@ -494,7 +446,6 @@ const BUILDING = {
       sheetName: klassName || 'יומן נוכחות',
       specialFields,
       borderRanges,
-      images
     };
   }
 }
@@ -503,13 +454,6 @@ const FORMATTING = {
   getHebrewDayOfWeek(date: Date): string {
     const days = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
     return days[date.getDay()];
-  },
-
-  formatDate(date: Date): string {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear().toString().slice(2);  // Last 2 digits of year
-    return `${day}/${month}/${year}`;
   },
 
   getAttendanceMark(report: AttReport | null | undefined): string {

@@ -4,6 +4,8 @@ import { getResourceComponents } from '@shared/components/crudContainers/CommonE
 import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
+import TableChartIcon from '@mui/icons-material/TableChart';
 
 const filters = [
     <CommonReferenceInputFilter source="reportGroupId" reference="report_group" alwaysOn />,
@@ -16,9 +18,19 @@ const filterDefaultValues = {
     'reportGroup.year': defaultYearFilter.year,
 };
 
+const additionalBulkButtons = [
+    <BulkReportButton 
+        key='sessionsSummary'
+        label='דוח סיכום מפגשים' 
+        icon={<TableChartIcon />} 
+        name='sessionsSummary' 
+        filename='סיכום-מפגשים'
+    />
+];
+
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
-        <CommonDatagrid {...props}>
+        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
             {children}
             {isAdmin && <TextField source="id" />}
             <ReferenceField source="reportGroupId" reference="report_group" />
