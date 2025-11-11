@@ -5,7 +5,7 @@ import { CommonReferenceInputFilter } from '@shared/components/fields/CommonRefe
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
-import TableChartIcon from '@mui/icons-material/TableChart';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 const filters = [
     <CommonReferenceInputFilter source="reportGroupId" reference="report_group" alwaysOn />,
@@ -22,7 +22,7 @@ const additionalBulkButtons = [
     <BulkReportButton 
         key='sessionsSummary'
         label='דוח סיכום מפגשים' 
-        icon={<TableChartIcon />} 
+        icon={<PictureAsPdfIcon />} 
         name='sessionsSummary' 
         filename='סיכום-מפגשים'
     />

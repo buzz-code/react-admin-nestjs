@@ -179,7 +179,7 @@ const App = () => (
 
               {isLessonSignature(permissions) && <>
                 <Resource name="report_group" {...reportGroup} options={{ menuGroup: 'settings' }} icon={GroupWorkIcon} />
-                <Resource name="report_group_session" {...(isAdmin(permissions) ? reportGroupSession : {})} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
+                <Resource name="report_group_session" {...reportGroupSession} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
               </>}
 
               <CustomRoutes>
