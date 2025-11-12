@@ -78,7 +78,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                             label={`תאריך דוח ${index + 1}`}
                                             defaultValue={date}
                                             onChange={handleDateChange(index)}
-                                            maxDate={today}
+                                            validate={maxValue(today)}
                                             fullWidth
                                             helperText={false}
                                         />
