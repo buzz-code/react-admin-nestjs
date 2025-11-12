@@ -9,6 +9,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { CommonSliderInput } from '../../../shared/components/fields/CommonSliderInput';
 import { ReportContext } from './context';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
@@ -48,6 +50,14 @@ export const StudentList = ({ reportDates, setReportDates }) => {
         setReportDates(reportDates => [...reportDates, getDefaultReportDate()]);
     }, [setReportDates]);
 
+    const removeReportDate = useCallback((index) => {
+        setReportDates(reportDates => {
+            const newDates = [...reportDates];
+            newDates.splice(index, 1);
+            return newDates;
+        });
+    }, [setReportDates]);
+
     return (
         <TableContainer component={Paper}>
             <Table stickyHeader size='small'>
@@ -61,16 +71,29 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                 key={`date-${index}`}
                                 colSpan={columns.length}
                             >
-                                <DateInput
-                                    source={`reportDates[${index}]`}
-                                    label={`תאריך דוח ${index + 1}`}
-                                    defaultValue={date}
-                                    onChange={handleDateChange(index)}
-                                    maxDate={today}
-                                    fullWidth
-                                    helperText={false}
-                                />
-                                <CommonHebrewDateField source={`reportDates[${index}]`} />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <DateInput
+                                            source={`reportDates[${index}]`}
+                                            label={`תאריך דוח ${index + 1}`}
+                                            defaultValue={date}
+                                            onChange={handleDateChange(index)}
+                                            maxDate={today}
+                                            fullWidth
+                                            helperText={false}
+                                        />
+                                        <CommonHebrewDateField source={`reportDates[${index}]`} />
+                                    </div>
+                                    <IconButton
+                                        onClick={() => removeReportDate(index)}
+                                        color="error"
+                                        size="small"
+                                        aria-label="מחק תאריך"
+                                        title="מחק תאריך"
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </div>
                                 
                                 {hasLessonSignaturePermission && (
                                     <>
