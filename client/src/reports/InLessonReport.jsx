@@ -40,7 +40,11 @@ export default ({ gradeMode = false }) => {
 
     // Pre-save hook: creates ReportGroup & Sessions only when actually saving
     const preSaveHook = useCallback(async (data) => {
-        if (!hasReportGroupPermission || !data || !data._formData) {
+        if (!data || !data._formData) {
+            return null;
+        }
+        if (!hasReportGroupPermission) {
+            delete data._formData;
             return null;
         }
 
@@ -111,10 +115,10 @@ export default ({ gradeMode = false }) => {
     }, [hasReportGroupPermission, dataProvider, notify]);
 
     const { data, saveData } = useSavableData(
-        resource, 
-        fileName, 
-        dataToSave, 
-        signatureMetadata, 
+        resource,
+        fileName,
+        dataToSave,
+        signatureMetadata,
         IN_LESSON_FILE_SOURCE,
         preSaveHook
     );
