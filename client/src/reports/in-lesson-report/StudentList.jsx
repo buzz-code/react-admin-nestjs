@@ -84,15 +84,17 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                         />
                                         <CommonHebrewDateField source={`reportDates[${index}]`} />
                                     </div>
-                                    <IconButton
-                                        onClick={() => removeReportDate(index)}
-                                        color="error"
-                                        size="small"
-                                        aria-label="מחק תאריך"
-                                        title="מחק תאריך"
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
+                                    {index === reportDates.length - 1 && (
+                                        <IconButton
+                                            onClick={() => removeReportDate(index)}
+                                            color="error"
+                                            size="small"
+                                            aria-label="מחק תאריך"
+                                            title="מחק תאריך"
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    )}
                                 </div>
                                 
                                 {hasLessonSignaturePermission && (
