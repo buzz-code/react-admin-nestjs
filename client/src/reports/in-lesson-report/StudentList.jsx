@@ -20,6 +20,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
     const { gradeMode, isShowLate, students } = useContext(ReportContext);
     const record = useRecordContext();
     const hasLessonSignaturePermission = useIsLessonSignature();
+    const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
     const columns = useMemo(() => {
         const cols = [];
@@ -65,6 +66,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                     label={`תאריך דוח ${index + 1}`}
                                     defaultValue={date}
                                     onChange={handleDateChange(index)}
+                                    maxDate={today}
                                     fullWidth
                                     helperText={false}
                                 />
