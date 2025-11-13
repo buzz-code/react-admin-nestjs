@@ -1,7 +1,7 @@
 import { DateField, TextField, DateInput, ReferenceField, ReferenceManyCount } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
+import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
