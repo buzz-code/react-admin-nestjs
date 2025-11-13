@@ -6,12 +6,17 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
     <CommonReferenceInputFilter source="reportGroupId" reference="report_group" alwaysOn />,
+    <CommonReferenceInputFilter source="reportGroup.teacherReferenceId" reference="teacher" label='מורה' dynamicFilter={filterByUserId} />,
+    <CommonReferenceInputFilter source="reportGroup.lessonReferenceId" reference="lesson" label='שיעור' dynamicFilter={filterByUserIdAndYear} />,
+    <CommonReferenceInputFilter source="reportGroup.klassReferenceId" reference="klass" label='כיתה' dynamicFilter={filterByUserIdAndYear} />,
     <DateInput source="sessionDate:$gte" label="תאריך אחרי" />,
     <DateInput source="sessionDate:$lte" label="תאריך לפני" />,
     <CommonAutocompleteInput source="reportGroup.year" choices={yearChoices} />,
+    ...commonAdminFilters,
 ];
 
 const filterDefaultValues = {

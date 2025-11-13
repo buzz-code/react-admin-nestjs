@@ -7,6 +7,7 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 
 const additionalBulkButtons = [
     <BulkReportButton 
@@ -25,6 +26,7 @@ const filters = [
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonAutocompleteInput source="year" choices={yearChoices} />,
+    ...commonAdminFilters,
 ];
 
 const filterDefaultValues = {
