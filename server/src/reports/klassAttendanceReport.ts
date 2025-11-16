@@ -123,21 +123,15 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
     const sessions: SessionData[] = allSessions
       .filter(session => lessonCountsBySession[session.id])
       .map(session => {
-      const lessonName = session.reportGroup?.lesson?.name || '';
-      const sessionTopic = session.topic || '';
-      const topic = lessonName && sessionTopic 
-        ? `${lessonName} - ${sessionTopic}` 
-        : lessonName || sessionTopic;
-      
-      return {
-        date: new Date(session.sessionDate),
-        dayOfWeek: FORMATTING.getHebrewDayOfWeek(new Date(session.sessionDate)),
-        startTime: session.startTime || '',
-        endTime: session.endTime || '',
-        topic,
-        lessonCount: lessonCountsBySession[session.id],
-        teacherName: session.reportGroup?.teacher?.name || '',
-      };
+        return {
+          date: new Date(session.sessionDate),
+          dayOfWeek: FORMATTING.getHebrewDayOfWeek(new Date(session.sessionDate)),
+          startTime: session.startTime || '',
+          endTime: session.endTime || '',
+          topic: session.reportGroup?.lesson?.name || '',
+          lessonCount: lessonCountsBySession[session.id],
+          teacherName: session.reportGroup?.teacher?.name || '',
+        };
       });
 
     // Get unique students from attendance reports
@@ -258,7 +252,7 @@ const BUILDING = {
     const dayRow = ['יום בשבוע', ...sessions.map(s => s.dayOfWeek)];
     const dateRow = ['תאריך', ...sessions.map(s => formatDate(s.date))];
     const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
-    const topicRow = ['נושא הלימוד', ...sessions.map(s => s.topic)];
+    const topicRow = ['שיעור', ...sessions.map(s => s.topic)];
     const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
     const teacherRow = ['שם המורה', ...sessions.map(s => s.teacherName)];
     const separatorRow = ['', ...sessions.map(() => '--')];
@@ -292,7 +286,7 @@ const BUILDING = {
     const lastCol = sessions.length;
     const startRow = ROW_INDEX.TABLE_START;
     const endRow = startRow + rows.length - 1;
-    
+
     const borderRanges = [
       {
         from: { r: startRow, c: 0 },
@@ -314,7 +308,7 @@ const BUILDING = {
     students.forEach((student, rowIndex) => {
       const actualRowIndex = startRow + rowIndex;
       const row = [student.studentName, ...student.attendanceMarks];
-      
+
       row.forEach((cell, colIndex) => {
         if (cell !== '') {
           specialFields.push({
@@ -424,7 +418,7 @@ const BUILDING = {
 
     // 3. Combine everything
     const specialFields = [
-      ...titleSection.specialFields, 
+      ...titleSection.specialFields,
       ...tableSection.specialFields,
     ];
     const borderRanges = [...titleSection.borderRanges, ...tableSection.borderRanges];
