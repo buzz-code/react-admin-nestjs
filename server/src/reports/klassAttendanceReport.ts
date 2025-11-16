@@ -165,7 +165,7 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
 
     // Build and return Excel data
     const excelData = BUILDING.buildExcelData({
-      klassName: klass?.name || '',
+      klassName: klass?.displayName || klass?.name || '',
       institutionName: user?.userInfo?.organizationName || 'לא ידוע',
       institutionCode: user?.userInfo?.organizationCode || 'לא ידוע',
       sessions,
@@ -370,7 +370,7 @@ const BUILDING = {
     sessionCount: number
   ) {
     const titleRow1 = `יומן נוכחות ${institutionName} סמל מוסד ${institutionCode}`;
-    const titleRow2 = `כיתה ${klassName}`;
+    const titleRow2 = klassName;
     const lastCol = sessionCount;
 
     return {
