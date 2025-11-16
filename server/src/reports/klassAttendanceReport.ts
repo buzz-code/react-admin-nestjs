@@ -455,9 +455,9 @@ const FORMATTING = {
 
     const absPercent = report.howManyLessons > 0 ? report.absCount / report.howManyLessons : 0;
 
-    if (absPercent === 0) return 'V';      // Full attendance
-    if (absPercent < 1.0) return '±';      // Partial absence
-    return 'X';                             // Full absence
+    if (absPercent === 0) return '3';      // נוכחות מלאה - Full attendance
+    if (absPercent < 1.0) return '1';      // איחור - Partial absence (late)
+    return '0';                             // העדרות מלאה - Full absence
   },
 }
 
