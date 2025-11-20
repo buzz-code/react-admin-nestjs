@@ -8,6 +8,7 @@ import { ReportGroup } from "../db/entities/ReportGroup.entity";
 import lessonSignaturePdfReport from "src/reports/lessonSignaturePdfReport";
 import { IHeader } from "@shared/utils/exporter/types";
 import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
+import { Repository } from "typeorm";
 
 class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityService<T> {
     reportsDict = {
@@ -35,6 +36,24 @@ class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityServi
                 userId,
                 reportGroupId: parseInt(id),
             }));
+    }
+
+    async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
+        switch (req.parsed.extra.action) {
+            case 'updateSignatureData': {
+                const ids = String(req.parsed.extra.ids).split(',');
+                await this.updateSignatureData(ids, req.parsed.extra.signatureData);
+                return `עודכנו חתימות לקבוצות דיווח: ${ids.length}`;
+            }
+        }
+        return super.doAction(req, body);
+    }
+
+    private async updateSignatureData(ids: string[], signatureData: string) {
+        const repo = this.repo as Repository<ReportGroup>;
+        for (const id of ids) {
+            await repo.update({ id: parseInt(id) }, { signatureData });
+        }
     }
 }
 

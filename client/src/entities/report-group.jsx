@@ -1,4 +1,4 @@
-import { DateField, TextField, TextInput, SelectField, ReferenceField, ReferenceManyCount, DateTimeInput, required, maxLength } from 'react-admin';
+import { DateField, TextField, TextInput, SelectField, ReferenceField, ReferenceManyCount, DateTimeInput, required, maxLength, ImageInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
@@ -7,18 +7,26 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import SignatureIcon from '@mui/icons-material/Signature';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { CommonImageInput } from '@shared/components/fields/CommonImageInput';
+import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 
 const additionalBulkButtons = [
-    <BulkReportButton 
+    <BulkReportButton
         key='lessonSignaturePdf'
-        label='הורד דוחות PDF' 
-        icon={<PictureAsPdfIcon />} 
-        name='lessonSignaturePdf' 
+        label='הורד דוחות PDF'
+        icon={<PictureAsPdfIcon />}
+        name='lessonSignaturePdf'
         filename='דוחות-קבוצות'
-    />
+    />,
+    <BulkActionButton
+        key='updateSignatureData'
+        label='עדכן חתימה'
+        name='updateSignatureData'
+        icon={<SignatureIcon />}>
+        <ImageInput source="signatureData" accept="image/*" />
+    </BulkActionButton>,
 ];
 
 const filters = [
@@ -37,7 +45,7 @@ const filterDefaultValues = {
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
-        <CommonDatagrid 
+        <CommonDatagrid
             additionalBulkButtons={additionalBulkButtons}
             {...props}
         >
@@ -65,7 +73,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} validate={required()} />
         <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} validate={required()} />
         <CommonAutocompleteInput source="year" choices={yearChoices} validate={required()} />
-        <CommonImageInput source="signatureData" validate={required()} />
+        <ImageInput source="signatureData" validate={required()} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>
