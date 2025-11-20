@@ -1,4 +1,4 @@
-import { DateField, TextField, TextInput, SelectField, ReferenceField, ReferenceManyCount } from 'react-admin';
+import { DateField, TextField, TextInput, SelectField, ReferenceField, ReferenceManyCount, DateTimeInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
@@ -8,6 +8,8 @@ import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
+import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
+import { CommonImageInput } from '@shared/components/fields/CommonImageInput';
 
 const additionalBulkButtons = [
     <BulkReportButton 
@@ -54,10 +56,26 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
     );
 };
 
+const Inputs = ({ isCreate, isAdmin }) => {
+    return <>
+        {!isCreate && isAdmin && <TextInput source="id" disabled />}
+        <TextInput source="name" validate={[required(), maxLength(255)]} />
+        <TextInput source="topic" validate={[required(), maxLength(255)]} />
+        <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} validate={required()} />
+        <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} validate={required()} />
+        <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} validate={required()} />
+        <CommonAutocompleteInput source="year" choices={yearChoices} validate={required()} />
+        <CommonImageInput source="signatureData" validate={required()} />
+        {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+        {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+    </>
+}
+
 const Representation = CommonRepresentation;
 
 const entity = {
     Datagrid,
+    Inputs,
     filters,
     filterDefaultValues,
     Representation,
