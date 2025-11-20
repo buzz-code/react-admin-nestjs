@@ -7,7 +7,7 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import SignatureIcon from '@mui/icons-material/Signature';
+import DrawIcon from '@mui/icons-material/Draw';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
@@ -24,7 +24,7 @@ const additionalBulkButtons = [
         key='updateSignatureData'
         label='עדכן חתימה'
         name='updateSignatureData'
-        icon={<SignatureIcon />}>
+        icon={<DrawIcon />}>
         <ImageInput source="signatureData" accept="image/*" />
     </BulkActionButton>,
 ];
