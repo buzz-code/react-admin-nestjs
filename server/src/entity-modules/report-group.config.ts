@@ -43,7 +43,7 @@ class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityServi
             case 'updateSignatureData': {
                 const ids = String(req.parsed.extra.ids).split(',');
                 await this.updateSignatureData(ids, req.parsed.extra.signatureData);
-                return `עודכנו חתימות לקבוצות דיווח: ${ids.length}`;
+                return `עודכנו חתימות ל-${ids.length} קבוצות דוחות`;
             }
         }
         return super.doAction(req, body);
