@@ -1,4 +1,4 @@
-import { DateField, TextField, TextInput, SelectField, ReferenceField, ReferenceManyCount, DateTimeInput, required, maxLength, ImageInput } from 'react-admin';
+import { DateField, TextField, TextInput, SelectField, ReferenceField, ReferenceManyCount, DateTimeInput, required, maxLength } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
@@ -7,10 +7,9 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import DrawIcon from '@mui/icons-material/Draw';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
+import SignatureInput from '@shared/components/fields/signature/SignatureInput';
 
 const additionalBulkButtons = [
     <BulkReportButton
@@ -20,13 +19,6 @@ const additionalBulkButtons = [
         name='lessonSignaturePdf'
         filename='דוחות-קבוצות'
     />,
-    <BulkActionButton
-        key='updateSignatureData'
-        label='עדכן חתימה'
-        name='updateSignatureData'
-        icon={<DrawIcon />}>
-        <ImageInput source="signatureData" accept="image/*" />
-    </BulkActionButton>,
 ];
 
 const filters = [
@@ -73,7 +65,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} validate={required()} />
         <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} validate={required()} />
         <CommonAutocompleteInput source="year" choices={yearChoices} validate={required()} />
-        <ImageInput source="signatureData" validate={required()} />
+        <SignatureInput source="signatureData" label="חתימה דיגיטלית" validate={[required()]} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
     </>

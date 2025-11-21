@@ -9,6 +9,7 @@ import lessonSignaturePdfReport from "src/reports/lessonSignaturePdfReport";
 import { IHeader } from "@shared/utils/exporter/types";
 import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 import { Repository } from "typeorm";
+import { BadRequestException } from "@nestjs/common";
 
 class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityService<T> {
     reportsDict = {
@@ -50,6 +51,9 @@ class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityServi
     }
 
     private async updateSignatureData(ids: string[], signatureData: string) {
+        if (!signatureData || signatureData === 'undefined') {
+            throw new BadRequestException('לא סופקה חתימה לעדכון');
+        }
         const repo = this.repo as Repository<ReportGroup>;
         for (const id of ids) {
             await repo.update({ id: parseInt(id) }, { signatureData });
