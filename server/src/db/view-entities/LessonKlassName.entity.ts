@@ -10,7 +10,7 @@ import { Lesson } from "../entities/Lesson.entity";
     .addSelect('lessons.user_id', 'user_id')
     .addSelect("GROUP_CONCAT(DISTINCT klasses.name SEPARATOR ', ')", 'name')
     .from(Lesson, 'lessons')
-    .leftJoin(Klass, 'klasses', '(klasses.id = lessons.klassReferenceIds AND LOCATE(\',\', lessons.klassReferenceIds) = 0) OR FIND_IN_SET(klasses.id, lessons.klassReferenceIds)')
+    .leftJoin(Klass, 'klasses', 'JSON_CONTAINS(lessons.klass_reference_ids_json, CAST(klasses.id AS JSON))')
     .groupBy('lessons.id')
 })
 export class LessonKlassName implements IHasUserId {

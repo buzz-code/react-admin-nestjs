@@ -93,6 +93,15 @@ export class Lesson implements IHasUserId {
   @Column("simple-array", { nullable: true })
   klassReferenceIds: number[];
 
+  @Column({
+    type: "json",
+    name: "klass_reference_ids_json",
+    nullable: true,
+    asExpression: "CAST(CONCAT('[', COALESCE(klassReferenceIds, ''), ']') AS JSON)",
+    generatedType: "STORED"
+  })
+  klassReferenceIdsJson: string;
+
   @Column("varchar", { name: "teacher_id", length: 10, nullable: true })
   teacherId: string;
 
