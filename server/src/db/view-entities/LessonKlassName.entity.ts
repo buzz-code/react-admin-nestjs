@@ -4,14 +4,18 @@ import { Klass } from "../entities/Klass.entity";
 import { Lesson } from "../entities/Lesson.entity";
 
 @ViewEntity("lesson_klass_name", {
-  expression: (dataSource: DataSource) => dataSource
-    .createQueryBuilder()
-    .select('lessons.id', 'id')
-    .addSelect('lessons.user_id', 'user_id')
-    .addSelect("GROUP_CONCAT(DISTINCT klasses.name SEPARATOR ', ')", 'name')
-    .from(Lesson, 'lessons')
-    .leftJoin(Klass, 'klasses', 'JSON_CONTAINS(lessons.klass_reference_ids_json, CAST(klasses.id AS JSON))')
-    .groupBy('lessons.id')
+  expression: `
+    SELECT lessons.id AS id,
+           lessons.user_id AS user_id,
+           GROUP_CONCAT(DISTINCT klasses.name SEPARATOR ', ') AS name
+    FROM lessons
+    LEFT JOIN JSON_TABLE(
+      lessons.klass_reference_ids_json,
+      "$[*]" COLUMNS(klass_id INT PATH "$")
+    ) AS jt ON 1=1
+    LEFT JOIN klasses ON klasses.id = jt.klass_id
+    GROUP BY lessons.id, lessons.user_id
+  `
 })
 export class LessonKlassName implements IHasUserId {
   @Column()
