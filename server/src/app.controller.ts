@@ -6,6 +6,7 @@ import { LocalAuthGuard } from '@shared/auth/local-auth.guard';
 import { Response } from 'express';
 import { LocalRegisterAuthGuard } from '@shared/auth/local-register-auth.guard';
 import { getUserIdFromUser } from '@shared/auth/auth.util';
+import { isAdmin } from '@shared/utils/permissionsUtil';
 import { AuthenticatedRequest } from '@shared/auth/auth.types';
 
 @Controller()
@@ -53,7 +54,7 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @Post('auth/impersonate')
   async impersonate(@Request() req: AuthenticatedRequest, @Res() response: Response) {
-    if (!req.user.permissions.admin || !req.body.userId) {
+    if (!isAdmin(req.user) || !req.body.userId) {
       console.log('impersonate non authorized')
       throw new UnauthorizedException();
     }
