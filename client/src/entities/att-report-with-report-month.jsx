@@ -11,6 +11,7 @@ import { Inputs } from './att-report';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
+import { useIsLessonSignature } from 'src/utils/appPermissions';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -49,6 +50,7 @@ const additionalBulkButtons = [
 ];
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {
+    const hasReportGroupPermission = useIsLessonSignature();
     return (
         <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
             {children}
@@ -62,6 +64,11 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
                 <MultiReferenceField source='klassTypeReferenceId' reference='klass_type' />
             </MultiReferenceField>
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
+            {hasReportGroupPermission && (
+                <ReferenceField label="נושא" source="reportGroupSessionId" reference="report_group_session" link={false}>
+                    <TextField source="topic" />
+                </ReferenceField>
+            )}
             <MultiReferenceField source="reportMonthReferenceId" sortBy="reportMonth.name" reference="report_month" />
             <SelectField source="year" choices={yearChoices} />
             <DateField source="reportDate" />

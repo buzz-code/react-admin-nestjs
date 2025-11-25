@@ -2,6 +2,7 @@ import { Column, DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, V
 import { IHasUserId } from "@shared/base-entity/interface";
 import { AttReport } from "../entities/AttReport.entity";
 import { ReportMonth } from "../entities/ReportMonth.entity";
+import { ReportGroupSession } from "../entities/ReportGroupSession.entity";
 
 @ViewEntity("att_report_with_report_month", {
   expression: (dataSource: DataSource) => dataSource
@@ -25,4 +26,8 @@ export class AttReportWithReportMonth extends AttReport implements IHasUserId {
   @ManyToOne(() => ReportMonth, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'reportMonthReferenceId' })
   reportMonth: ReportMonth;
+
+  @ManyToOne(() => ReportGroupSession, session => session.attReports, { nullable: true })
+  @JoinColumn({ name: 'reportGroupSessionId' })
+  reportGroupSession: ReportGroupSession;
 }

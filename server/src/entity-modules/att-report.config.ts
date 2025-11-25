@@ -4,6 +4,7 @@ import { User } from "@shared/entities/User.entity";
 import { IHeader } from "@shared/utils/exporter/types";
 import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 import { AttReport } from "src/db/entities/AttReport.entity";
+import { hasPermission, isAdmin } from '@shared/utils/permissionsUtil';
 import { roundObjectProperty } from "src/utils/reportData.util";
 
 function getConfig(): BaseEntityModuleOptions {
@@ -16,6 +17,7 @@ function getConfig(): BaseEntityModuleOptions {
                 teacher: { eager: false },
                 lesson: { eager: false },
                 klass: { eager: false },
+                reportGroupSession: { eager: false },
             }
         },
         exporter: {
@@ -25,18 +27,20 @@ function getConfig(): BaseEntityModuleOptions {
                     student: { eager: true },
                     teacher: { eager: true },
                     klass: { eager: true },
-                    lesson: { eager: true }
+                    lesson: { eager: true },
+                    reportGroupSession: { eager: shouldShowTopic(req) }
                 };
                 return innerFunc(req);
             },
-            getExportHeaders(): IHeader[] {
-                return [
+            getExportHeaders(entityColumns?: string[], req?: CrudRequest): IHeader[] {
+                const headers: IHeader[] = [
                     { value: 'teacher.name', label: 'שם המורה' },
                     { value: 'student.name', label: 'שם התלמידה' },
                     { value: 'student.tz', label: 'תז התלמידה' },
                     { value: 'studentBaseKlass.klassName', label: 'כיתת בסיס' },
                     { value: 'klass.name', label: 'כיתה' },
                     { value: 'lesson.name', label: 'שיעור' },
+                    { value: 'reportGroupSession.topic', label: 'נושא השיעור' },
                     { value: 'reportDate', label: 'תאריך דיווח' },
                     { value: getHebrewDateFormatter('reportDate'), label: 'תאריך עברי' },
                     { value: 'howManyLessons', label: 'מספר שיעורים' },
@@ -45,6 +49,13 @@ function getConfig(): BaseEntityModuleOptions {
                     // { value: 'sheetName', label: 'חודש דיווח' },
                     { value: 'comments', label: 'הערות' },
                 ];
+                if (!shouldShowTopic(req)) {
+                    const topicIndex = headers.findIndex(h => typeof h === 'object' && h.value === 'reportGroupSession.topic');
+                    if (topicIndex !== -1) {
+                        headers.splice(topicIndex, 1);
+                    }
+                }
+                return headers;
             },
             getImportDefinition(importFields) {
                 return {
@@ -73,6 +84,11 @@ function getConfig(): BaseEntityModuleOptions {
 }
 
 export default getConfig();
+
+export const shouldShowTopic = (req: CrudRequest | undefined): boolean => {
+    if (!req) return false;
+    return isAdmin(req.auth) || hasPermission(req.auth, 'lessonSignature');
+};
 
 export const calcAttLateCount = (report: AttReport & { lateCount: number }, user: User) => {
     report.absCount = isNaN(report.absCount) ? 0 : Number(report.absCount);

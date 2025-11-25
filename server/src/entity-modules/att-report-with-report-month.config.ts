@@ -9,6 +9,7 @@ import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { validateBulk } from "@shared/base-entity/base-entity.util";
 import { fixReferences } from "@shared/utils/entity/fixReference.util";
 import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
+import { shouldShowTopic } from "./att-report.config";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -21,6 +22,7 @@ function getConfig(): BaseEntityModuleOptions {
                 lesson: { eager: false },
                 klass: { eager: false },
                 reportMonth: { eager: false },
+                reportGroupSession: { eager: false }
             }
         },
         exporter: {
@@ -32,15 +34,17 @@ function getConfig(): BaseEntityModuleOptions {
                     klass: { eager: true },
                     lesson: { eager: true },
                     reportMonth: { eager: true },
+                    reportGroupSession: { eager: shouldShowTopic(req) }
                 };
                 return innerFunc(req);
             },
-            getExportHeaders(): IHeader[] {
-                return [
+            getExportHeaders(entityColumns?: string[], req?: CrudRequest): IHeader[] {
+                const headers: IHeader[] = [
                     { value: 'teacher.name', label: 'שם המורה' },
                     { value: 'student.name', label: 'שם התלמידה' },
                     { value: 'klass.name', label: 'כיתה' },
                     { value: 'lesson.name', label: 'שיעור' },
+                    { value: 'reportGroupSession.topic', label: 'נושא השיעור' },
                     { value: 'reportMonth.name', label: 'חודש דיווח' },
                     { value: 'reportDate', label: 'תאריך דיווח' },
                     { value: getHebrewDateFormatter('reportDate'), label: 'תאריך עברי' },
@@ -50,6 +54,13 @@ function getConfig(): BaseEntityModuleOptions {
                     // { value: 'sheetName', label: 'חודש דיווח' },
                     { value: 'comments', label: 'הערות' },
                 ];
+                if (!shouldShowTopic(req)) {
+                    const topicIndex = headers.findIndex(h => typeof h === 'object' && h.value === 'reportGroupSession.topic');
+                    if (topicIndex !== -1) {
+                        headers.splice(topicIndex, 1);
+                    }
+                }
+                return headers;
             }
         },
         service: AttReportWithReportMonthService,

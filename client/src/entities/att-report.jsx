@@ -1,4 +1,5 @@
 import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, required, minValue, maxLength, SelectField } from 'react-admin';
+import { useIsLessonSignature } from 'src/utils/appPermissions';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -30,6 +31,7 @@ const filterDefaultValues = {
 };
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {
+    const hasReportGroupPermission = useIsLessonSignature();
     return (
         <CommonDatagrid {...props}>
             {children}
@@ -43,6 +45,11 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
                 <MultiReferenceField source='klassTypeReferenceId' reference='klass_type' />
             </MultiReferenceField>
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
+            {hasReportGroupPermission && (
+                <ReferenceField label="נושא" source="reportGroupSessionId" reference="report_group_session" link={false}>
+                    <TextField source="topic" />
+                </ReferenceField>
+            )}
             <SelectField source="year" choices={yearChoices} />
             <DateField source="reportDate" />
             <CommonHebrewDateField source="reportDate" />

@@ -13,6 +13,7 @@ describe('att-report.config', () => {
         teacher: { eager: false },
         lesson: { eager: false },
         klass: { eager: false },
+        reportGroupSession: { eager: false },
       });
     });
 
@@ -34,7 +35,8 @@ describe('att-report.config', () => {
         student: { eager: true },
         teacher: { eager: true },
         klass: { eager: true },
-        lesson: { eager: true }
+        lesson: { eager: true },
+        reportGroupSession: { eager: false },
       });
       expect(mockInnerFunc).toHaveBeenCalledWith(mockReq);
 
@@ -42,6 +44,23 @@ describe('att-report.config', () => {
       const headers = config.exporter.getExportHeaders(['id', 'name', 'absCount']);
       expect(headers).toHaveLength(11); // Verify number of headers
       expect(headers[0]).toEqual({ value: 'teacher.name', label: 'שם המורה' });
+
+      // When user has lessonSignature permission - reportGroupSession join should be added and header included
+      const mockReqWithPermissions = {
+        options: { query: { join: {} } },
+        auth: {
+          permissions: {
+            lessonSignature: true
+          }
+        }
+      };
+
+      config.exporter.processReqForExport(mockReqWithPermissions as any, mockInnerFunc);
+      expect((mockReqWithPermissions.options.query.join as any).reportGroupSession).toEqual({ eager: true });
+
+      const headersWithPermission = config.exporter.getExportHeaders(['id', 'name', 'absCount'], mockReqWithPermissions as any);
+      // Verify that the topic header exists when permission present
+      expect(headersWithPermission.find(h => typeof h === 'object' && h.value === 'reportGroupSession.topic')).toBeDefined();
     });
 
     it('should have proper import configuration', () => {
