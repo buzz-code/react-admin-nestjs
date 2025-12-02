@@ -24,18 +24,18 @@ const filterDefaultValues = {
 };
 
 const additionalBulkButtons = [
-    <BulkReportButton 
+    <BulkReportButton
         key='sessionsSummary'
-        label='דוח סיכום מפגשים' 
-        icon={<PictureAsPdfIcon />} 
-        name='sessionsSummary' 
+        label='דוח סיכום מפגשים'
+        icon={<PictureAsPdfIcon />}
+        name='sessionsSummary'
         filename='סיכום-מפגשים'
     />
 ];
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
-        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
+        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons} hasDelete>
             {children}
             {isAdmin && <TextField source="id" />}
             <ReferenceField source="reportGroupId" reference="report_group" />

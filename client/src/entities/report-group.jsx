@@ -37,10 +37,7 @@ const filterDefaultValues = {
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
-        <CommonDatagrid
-            additionalBulkButtons={additionalBulkButtons}
-            {...props}
-        >
+        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons} hasDelete>
             {children}
             {isAdmin && <TextField source="id" />}
             <TextField source="name" />
