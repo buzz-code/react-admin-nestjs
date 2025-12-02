@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useMemo } from 'react';
-import { NumberInput, DateInput, minValue, maxValue, useRecordContext, TextInput, maxLength, TimeInput, required } from 'react-admin';
+import { NumberInput, DateInput, minValue, maxValue, useRecordContext, TextInput, maxLength, required } from 'react-admin';
 import Table from '@mui/material/Table';
+import { CommonTimeInput } from '@shared/components/fields/CommonTimeInput';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -99,13 +100,13 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                 
                                 {hasLessonSignaturePermission && (
                                     <>
-                                        <TimeInput
+                                        <CommonTimeInput
                                             source={`lessonDetails[${index}].lessonStartTime`}
                                             label="זמן תחילת השיעור"
                                             fullWidth
                                             validate={[required()]}
                                         />
-                                        <TimeInput
+                                        <CommonTimeInput
                                             source={`lessonDetails[${index}].lessonEndTime`}
                                             label="זמן סיום השיעור"
                                             fullWidth
