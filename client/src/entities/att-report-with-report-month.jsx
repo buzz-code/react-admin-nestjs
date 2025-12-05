@@ -38,8 +38,8 @@ const filterDefaultValues = {
 
 const additionalBulkButtons = [
     <BulkActionButton label='הוספת חיסורים מאושרים' icon={<PlaylistRemoveIcon />} name='bulkKnownAbsences' >
-        <DateInput source="reportDate" resource="known_absence" validate={required()} />
-        <NumberInput source="absnceCount" resource="known_absence" validate={required()} defaultValue={1} />
+        <DateInput source="reportDate" resource="known_absence" />
+        <NumberInput source="absnceCount" resource="known_absence" defaultValue={1} />
         <NumberInput source="absnceCode" resource="known_absence" />
         <TextInput source="senderName" resource="known_absence" validate={maxLength(100)} defaultValue='' />
         <TextInput source="reason" resource="known_absence" validate={maxLength(500)} defaultValue='' />
