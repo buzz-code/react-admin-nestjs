@@ -1,5 +1,6 @@
 import { DateField, DateInput, NumberField, TextField, TextInput, ReferenceField, SelectField, required, NumberInput, BooleanInput, NullableBooleanInput, maxLength } from 'react-admin';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import HelpIcon from '@mui/icons-material/Help';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -47,7 +48,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextInput source="comment" resource="known_absence" validate={maxLength(500)} defaultValue='' />
             <BooleanInput source="isApproved" resource="known_absence" defaultValue={true} />
         </BulkActionButton>,
-        isAdmin && <BulkActionButton label='תיקון שיוך תלמידה v2' name='fixStudentReferenceV2' key='fixStudentReferenceV2' />,
+        isAdmin && <BulkActionButton label='תיקון שיוך תלמידה v2' name='fixStudentReferenceV2' key='fixStudentReferenceV2' icon={<HelpIcon />} reloadOnEnd />,
         <BulkFixReferenceButton key='fixReferences' />,
     ];
     const hasReportGroupPermission = useIsLessonSignature();
