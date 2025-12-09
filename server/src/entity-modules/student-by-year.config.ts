@@ -2,7 +2,7 @@ import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { ParsedRequestParams } from '@dataui/crud-request';
 import { StudentByYear } from "src/db/view-entities/StudentByYear.entity";
-import { FindOptionsWhere, In, Not } from "typeorm";
+import { FindOptionsWhere, In, Not, IsNull } from "typeorm";
 import { IHeader } from "@shared/utils/exporter/types";
 import { AttReportWithReportMonth } from "src/db/view-entities/AttReportWithReportMonth.entity";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
@@ -96,18 +96,29 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     studentMap[item.studentReferenceId].totalLessons += item.howManyLessons;
                 });
 
+                const commonWhere: FindOptionsWhere<KnownAbsenceWithReportMonth> = {
+                    isApproved: true,
+                    userId: data[0].userId,
+                    studentReferenceId: In(studentIds),
+                    klassReferenceId: klassReferenceIdFilter?.value,
+                    klass: Utils.getKlassFilter(extra.isCheckKlassType, klassTypeReferenceIdFilter?.value),
+                    reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
+                    reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
+                };
+
+                let knownAbsenceWhere: FindOptionsWhere<KnownAbsenceWithReportMonth> | FindOptionsWhere<KnownAbsenceWithReportMonth>[] = commonWhere;
+
+                if (extra?.excludedLessonIds && excludedLessonIds.length > 0) {
+                    knownAbsenceWhere = [
+                        { ...commonWhere, lessonReferenceId: Not(In(excludedLessonIds)) },
+                        { ...commonWhere, lessonReferenceId: IsNull() }
+                    ];
+                }
+
                 const totalAbsencesData = await this.dataSource
                     .getRepository(KnownAbsenceWithReportMonth)
                     .find({
-                        where: {
-                            isApproved: true,
-                            userId: data[0].userId,
-                            studentReferenceId: In(studentIds),
-                            klassReferenceId: klassReferenceIdFilter?.value,
-                            klass: Utils.getKlassFilter(extra.isCheckKlassType, klassTypeReferenceIdFilter?.value),
-                            reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
-                            reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
-                        },
+                        where: knownAbsenceWhere,
                         relations: {
                             klass: true,
                             reportMonth: true,
