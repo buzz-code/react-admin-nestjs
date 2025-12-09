@@ -94,6 +94,24 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
 
                 return `נוצרו ${reports.length} חיסורים מאושרים`;
             }
+            case 'fixStudentReferenceV2': {
+                const ids = req.parsed.extra.ids.toString().split(',');
+                const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
+
+                const reportsToSave = [];
+                for (const report of reports) {
+                    if (report.studentReferenceId && !report.studentTz) {
+                        report.studentTz = String(report.studentReferenceId)?.padStart(9, '0');
+                        report.studentReferenceId = null;
+                        await report.fillFields();
+                        reportsToSave.push(report);
+                    }
+                }
+                if (reportsToSave.length > 0) {
+                    await this.dataSource.getRepository(AttReport).save(reportsToSave);
+                }
+                return `עודכנו ${reportsToSave.length} רשומות`;
+            }
             case 'fixReferences': {
                 const ids = req.parsed.extra.ids.toString().split(',');
                 const referenceFields = {

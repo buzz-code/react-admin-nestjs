@@ -36,20 +36,20 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
-const additionalBulkButtons = [
-    <BulkActionButton label='הוספת חיסורים מאושרים' icon={<PlaylistRemoveIcon />} name='bulkKnownAbsences' >
-        <DateInput source="reportDate" resource="known_absence" />
-        <NumberInput source="absnceCount" resource="known_absence" defaultValue={1} />
-        <NumberInput source="absnceCode" resource="known_absence" />
-        <TextInput source="senderName" resource="known_absence" validate={maxLength(100)} defaultValue='' />
-        <TextInput source="reason" resource="known_absence" validate={maxLength(500)} defaultValue='' />
-        <TextInput source="comment" resource="known_absence" validate={maxLength(500)} defaultValue='' />
-        <BooleanInput source="isApproved" resource="known_absence" defaultValue={true} />
-    </BulkActionButton>,
-    <BulkFixReferenceButton key='fixReferences' />,
-];
-
 export const Datagrid = ({ isAdmin, children, ...props }) => {
+    const additionalBulkButtons = [
+        <BulkActionButton label='הוספת חיסורים מאושרים' icon={<PlaylistRemoveIcon />} name='bulkKnownAbsences' >
+            <DateInput source="reportDate" resource="known_absence" />
+            <NumberInput source="absnceCount" resource="known_absence" defaultValue={1} />
+            <NumberInput source="absnceCode" resource="known_absence" />
+            <TextInput source="senderName" resource="known_absence" validate={maxLength(100)} defaultValue='' />
+            <TextInput source="reason" resource="known_absence" validate={maxLength(500)} defaultValue='' />
+            <TextInput source="comment" resource="known_absence" validate={maxLength(500)} defaultValue='' />
+            <BooleanInput source="isApproved" resource="known_absence" defaultValue={true} />
+        </BulkActionButton>,
+        isAdmin && <BulkActionButton label='תיקון שיוך תלמידה v2' name='fixStudentReferenceV2' key='fixStudentReferenceV2' />,
+        <BulkFixReferenceButton key='fixReferences' />,
+    ];
     const hasReportGroupPermission = useIsLessonSignature();
     return (
         <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
