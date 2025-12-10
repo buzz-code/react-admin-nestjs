@@ -41,6 +41,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
             <DateField source="reportDate" />
+            <CommonHebrewDateField source="reportDate" />
             <NumberField source="absnceCount" />
             <NumberField source="absnceCode" />
             <TextField source="senderName" />
