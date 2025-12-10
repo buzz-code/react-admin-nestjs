@@ -1,4 +1,4 @@
-import { TextInput, DateInput } from 'react-admin';
+import { TextInput, DateInput, NumberInput } from 'react-admin';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
@@ -25,8 +25,9 @@ export default ({ defaultRequestValues }) => {
             <DateInput source="endDate" label="תאריך סיום" />
             <CommonReferenceArrayInput source="globalLessonReferenceIds" reference="lesson" label="שיעורים ללא הגבלת תאריך" />
             <CommonReferenceArrayInput source="denyLessonReferenceIds" reference="lesson" label="שיעורים שלא ייכללו בתעודה" />
-            <CommonReferenceInput source="klassTypeReferenceId" reference="klass_type" label="שיוך כיתה" />,
+            <CommonReferenceInput source="klassTypeReferenceId" reference="klass_type" label="שיוך כיתה" />
             <TextInput source="personalNote" label="הערה לתלמידה" defaultValue='' />
+            <NumberInput source="attendanceLessThan" label="הצג רק שורות עם נוכחות נמוכה מ (%)" />
         </BulkReportButton>
     );
 };

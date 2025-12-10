@@ -30,6 +30,7 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
         downComment: reqExtra.downComment,
         lastGrade: reqExtra.lastGrade,
         debug: reqExtra.debug,
+        attendanceLessThan: getAttPercentLessThanParam(reqExtra.attendanceLessThan),
     };
     console.log('student report card extra params: ', extraParams);
     const params = reqExtra.ids
@@ -44,6 +45,16 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
         generator,
         params,
     };
+}
+
+function getAttPercentLessThanParam(attendanceLessThanStr: string): number {
+    if (attendanceLessThanStr) {
+        const attLessThanNum = parseInt(attendanceLessThanStr);
+        if (!isNaN(attLessThanNum)) {
+            return attLessThanNum / 100;
+        }
+    }
+    return undefined;
 }
 
 export function getTeacherStatusFileReportParams(req: CrudRequest<any, any>): TeacherReportFileParams[] {
