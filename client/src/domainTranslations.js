@@ -370,6 +370,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 studentReferenceId: 'תלמידה',
+                'studentBaseKlass.klassName': 'כיתת בסיס',
                 teacherReferenceId: 'מורה',
                 klassReferenceId: 'כיתה',
                 lessonReferenceId: 'שיעור',
