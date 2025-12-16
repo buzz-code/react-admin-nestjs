@@ -39,8 +39,85 @@ This is a React Admin + NestJS application with MySQL database for managing educ
 - **Client**: `yarn test` (Jest with React Testing Library)
 
 ### Development Mode
-- **Server**: `yarn start:dev` (runs NestJS with watch mode)
-- **Client**: `yarn start` (runs Vite dev server with hot reload)
+
+#### Option 1: Docker Compose (Recommended)
+Using Docker Compose with the override file provides an isolated development environment with database:
+
+1. **Setup**:
+   ```bash
+   # Copy the override template
+   cp docker-compose.override.yml.template docker-compose.override.yml
+   
+   # Copy environment template
+   cp .env.template .env
+   
+   # Edit .env with your local settings
+   # For development, you can use simple values like:
+   # MYSQL_HOST=mysql
+   # MYSQL_USER=dev_user
+   # MYSQL_PASSWORD=dev_password
+   # MYSQL_DATABASE=dev_db
+   # MYSQL_ROOT_PASSWORD=root_password
+   # JWT_SECRET=your_jwt_secret
+   # ADMIN_USER=admin:admin_password
+   # SMTP_USER=smtp_user (optional for development)
+   # SMTP_PASSWORD=smtp_password (optional for development)
+   ```
+
+2. **Run in development mode**:
+   ```bash
+   # Build and start all services (frontend, backend, mysql, phpmyadmin)
+   docker compose up --build
+   
+   # Or run in detached mode
+   docker compose up -d --build
+   
+   # View logs
+   docker compose logs -f backend
+   docker compose logs -f frontend
+   ```
+
+3. **Access services**:
+   - Frontend: http://localhost:80
+   - Backend API: http://localhost:3000
+   - phpMyAdmin: http://localhost (check docker compose config for port)
+
+4. **Run migrations**:
+   ```bash
+   docker compose exec backend yarn typeorm:run
+   ```
+
+5. **Stop services**:
+   ```bash
+   docker compose down
+   
+   # Or to remove volumes (database data)
+   docker compose down -v
+   ```
+
+**How the override file works:**
+- `docker-compose.yml` defines production configuration
+- `docker-compose.override.yml` overrides for development:
+  - Sets `target: development` in build to use development Dockerfile stages
+  - Changes container names to *-dev suffix
+  - Development stages mount source code as volumes for hot reload
+  - Backend runs `yarn start:dev` (NestJS watch mode)
+  - Frontend runs `yarn start` (Vite dev server)
+
+**Benefits of Docker Compose for agents:**
+- Complete environment with database in one command
+- Isolated from host system
+- Consistent across different development machines
+- Easy to reset/clean environment
+- All dependencies managed by Docker
+- No need to install Node.js, MySQL locally
+
+#### Option 2: Local Development (Without Docker)
+If you need to run without Docker:
+
+- **Server**: `cd server && yarn start:dev` (runs NestJS with watch mode)
+- **Client**: `cd client && yarn start` (runs Vite dev server with hot reload)
+- **Note**: Requires local MySQL instance and proper configuration
 
 ### Linting
 - **Server**: `yarn lint` (ESLint + Prettier with strict rules)
@@ -107,6 +184,21 @@ describe('ServiceName', () => {
 - Always initialize submodules: `git submodule update --init --recursive`
 - Commit submodule changes separately from main repository changes
 - Update submodules when pulling changes: `git submodule update --recursive`
+
+**Important for AI Agents:**
+- **DO NOT** make changes directly in `client/shared/` or `server/shared/` directories
+- These are separate git repositories (submodules):
+  - `client/shared` → https://github.com/buzz-code/nra-client
+  - `server/shared` → https://github.com/buzz-code/nra-server
+- If changes are needed in shared folders:
+  1. Document all required changes in a dedicated file (e.g., `SHARED_FOLDER_CHANGES.md`)
+  2. Include:
+     - Exact file paths in the shared folders
+     - Current code vs. proposed changes (with line numbers)
+     - Why the changes are needed
+     - Technical details for implementing the changes
+  3. Repository owner will apply changes to the shared repositories manually
+  4. See `SHARED_FOLDER_CHANGES.md` for an example of documenting shared folder changes
 
 ## Important Environment Considerations
 
