@@ -5,12 +5,8 @@ services:
         container_name: frontend-dev
         build:
             target: development
-            args:
-                REACT_APP_API_URL: http://localhost:3000
-        environment:
-            REACT_APP_API_URL: http://localhost:3000
         ports:
-          - "80:80"
+          - "30013:80"
         volumes:
           - ./client:/app
           - /app/node_modules
@@ -20,7 +16,7 @@ services:
         build:
             target: development
         ports:
-          - "3000:3000"
+          - "30014:3000"
         volumes:
           - ./server:/app
           - /app/node_modules
@@ -31,7 +27,7 @@ services:
     phpmyadmin:
         container_name: php-myadmin-dev
         ports:
-          - "8080:80"
+          - "30015:80"
 
 networks:
     caddy:

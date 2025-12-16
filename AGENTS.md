@@ -80,9 +80,9 @@ Using Docker Compose with the override file provides an isolated development env
    ```
 
 3. **Access services**:
-   - Frontend: http://localhost:80
-   - Backend API: http://localhost:3000
-   - phpMyAdmin: http://localhost:8080
+   - Frontend: http://localhost:30013
+   - Backend API: http://localhost:30014
+   - phpMyAdmin: http://localhost:30015
 
 4. **Run migrations**:
    ```bash
