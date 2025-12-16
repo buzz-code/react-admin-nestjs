@@ -186,7 +186,7 @@ describe('StudentKlassConfig', () => {
         await service.getReportData(req);
 
         expect(mockRepository.find).toHaveBeenCalledWith({
-          where: { id: In(['1', '2', '3']) },
+          where: { id: In([1, 2, 3]) },
           select: { studentReferenceId: true },
         });
       });
@@ -208,7 +208,7 @@ describe('StudentKlassConfig', () => {
         await service.getReportData(req);
 
         expect(mockRepository.find).toHaveBeenCalledWith({
-          where: { id: In(['1', '2']) },
+          where: { id: In([1, 2]) },
           select: { studentReferenceId: true },
         });
       });
@@ -240,7 +240,7 @@ describe('StudentKlassConfig', () => {
 
         await service.doAction(req, {});
 
-        expect(mockRepository.findBy).toHaveBeenCalledWith({ id: In(['1', '2', '3']) });
+        expect(mockRepository.findBy).toHaveBeenCalledWith({ id: In([1, 2, 3]) });
         expect(mockRepository.save).toHaveBeenCalled();
       });
 
