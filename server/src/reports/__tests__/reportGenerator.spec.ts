@@ -119,7 +119,7 @@ describe('reportGenerator', () => {
 
       const mockRequest = createMockCrudRequest({
         ids: '10',
-        isGrades: true
+        isGrades: 'true'
       }, { id: mockUserId });
 
       const result = getTeacherStatusFileReportParams(mockRequest);
@@ -134,7 +134,7 @@ describe('reportGenerator', () => {
       const mockReplyToAddress = 'teacher@test.com';
       const mockRequest = createMockCrudRequest({
         ids: '30',
-        isGrades: true,
+        isGrades: 'true',
         mailSubject: 'Report for {0}',
         mailBody: 'Report content for {0}'
       }, { id: mockUserId });
