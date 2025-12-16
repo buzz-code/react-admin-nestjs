@@ -21,12 +21,18 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  const allowedOrigins = [
+    new RegExp('http(s?)://' + process.env.DOMAIN_NAME),
+    process.env.IP_ADDRESS && new RegExp('http(s?)://' + process.env.IP_ADDRESS + ':[\d]*'),
+  ];
+
+  if (process.env.NODE_ENV === 'development') {
+    allowedOrigins.push(new RegExp('http(s?)://localhost:[\d]*'));
+  }
+
   app.enableCors({
     credentials: true,
-    origin: [
-      new RegExp('http(s?)://' + process.env.DOMAIN_NAME),
-      process.env.IP_ADDRESS && new RegExp('http(s?)://' + process.env.IP_ADDRESS + ':[\d]*'),
-    ],
+    origin: allowedOrigins
   });
   app.use(bodyParser.json({ limit: '50mb' }));
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
