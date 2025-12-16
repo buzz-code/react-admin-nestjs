@@ -240,7 +240,7 @@ describe('StudentKlassConfig', () => {
 
         await service.doAction(req, {});
 
-        expect(mockRepository.findBy).toHaveBeenCalledWith({ id: In(['1', '2', '3']) });
+        expect(mockRepository.findBy).toHaveBeenCalledWith({ id: In([1, 2, 3]) });
         expect(mockRepository.save).toHaveBeenCalled();
       });
 

@@ -59,8 +59,8 @@ describe('reportGenerator', () => {
       const userId = '123';
       const reqExtra = {
         ids: '1,2,3',
-        attendance: true,
-        grades: true
+        attendance: 'true',
+        grades: 'true'
       };
       const generator: BaseReportGenerator = {} as any;
 
@@ -98,7 +98,7 @@ describe('reportGenerator', () => {
 
       const mockRequest = createMockCrudRequest({
         ids: '10,20',
-        isGrades: true,
+        isGrades: 'true',
         lessonReferenceId: '100'
       }, { id: mockUserId });
 
