@@ -4,6 +4,7 @@ import { User } from "src/db/entities/User.entity";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { CrudRequest } from "@dataui/crud";
 import { In } from "typeorm";
+import { getAsArray, getAsBoolean } from "src/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -17,8 +18,9 @@ class UserService<T extends Entity | User> extends BaseEntityService<T> {
     async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
         switch (req.parsed.extra.action) {
             case 'bulkUpdatePaid': {
-                const ids = req.parsed.extra.ids.toString().split(',');
-                const isPaid = req.parsed.extra.isPaid === 'true' || req.parsed.extra.isPaid === true;
+                const ids = getAsArray(req.parsed.extra.ids);
+                const isPaid = getAsBoolean(req.parsed.extra.isPaid) ?? false;
+                if (!ids) return 'לא נבחרו רשומות';
 
                 const result = await this.dataSource.getRepository(User).update(
                     { id: In(ids) },

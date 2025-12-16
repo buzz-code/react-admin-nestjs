@@ -7,6 +7,7 @@ import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util"
 import { generateCommonFileResponse } from "@shared/utils/report/report.util";
 import { Grade } from "src/db/entities/Grade.entity";
 import michlolPopulatedFile, { MichlolPopulatedFileParams } from "src/reports/michlolPopulatedFile";
+import { getAsString } from "src/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -81,7 +82,7 @@ class GradeService<T extends Entity | Grade> extends BaseEntityService<T> {
                 const generator = this.reportsDict[req.parsed.extra.action];
                 const params: MichlolPopulatedFileParams = {
                     userId: getUserIdFromUser(req.auth),
-                    michlolFileName: req.parsed.extra.fileName,
+                    michlolFileName: getAsString(req.parsed.extra.fileName),
                     michlolFileData: body.data,
                 }
                 return generateCommonFileResponse(generator, params, this.dataSource);

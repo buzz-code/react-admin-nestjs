@@ -10,6 +10,7 @@ import { IHeader } from "@shared/utils/exporter/types";
 import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 import { Repository } from "typeorm";
 import { BadRequestException } from "@nestjs/common";
+import { getAsNumberArray, getAsString } from "src/utils/queryParam.util";
 
 class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityService<T> {
     reportsDict = {
@@ -30,33 +31,33 @@ class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityServi
 
     private getLessonSignaturePdfParams(req: CrudRequest<any, any>) {
         const userId = getUserIdFromUser(req.auth);
-        return req.parsed.extra.ids
-            .toString()
-            .split(',')
-            .map(id => ({
+        return getAsNumberArray(req.parsed.extra.ids)
+            ?.map(id => ({
                 userId,
-                reportGroupId: parseInt(id),
+                reportGroupId: id,
             }));
     }
 
     async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
         switch (req.parsed.extra.action) {
             case 'updateSignatureData': {
-                const ids = String(req.parsed.extra.ids).split(',');
-                await this.updateSignatureData(ids, req.parsed.extra.signatureData);
+                const ids = getAsNumberArray(req.parsed.extra.ids);
+                if (!ids) return 'לא נבחרו רשומות';
+                const signatureData = getAsString(req.parsed.extra.signatureData);
+                await this.updateSignatureData(ids, signatureData);
                 return `עודכנו חתימות ל-${ids.length} קבוצות דוחות`;
             }
         }
         return super.doAction(req, body);
     }
 
-    private async updateSignatureData(ids: string[], signatureData: string) {
-        if (!signatureData || signatureData === 'undefined') {
+    private async updateSignatureData(ids: number[], signatureData: string | undefined) {
+        if (!signatureData) {
             throw new BadRequestException('לא סופקה חתימה לעדכון');
         }
         const repo = this.repo as Repository<ReportGroup>;
         for (const id of ids) {
-            await repo.update({ id: parseInt(id) }, { signatureData });
+            await repo.update({ id }, { signatureData });
         }
     }
 }

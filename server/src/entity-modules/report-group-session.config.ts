@@ -6,6 +6,7 @@ import { CommonReportData } from "@shared/utils/report/types";
 import { ReportGroupSession } from "../db/entities/ReportGroupSession.entity";
 import reportGroupSessionsSummary from "src/reports/reportGroupSessionsSummary";
 import { In } from "typeorm";
+import { getAsNumberArray, getAsNumber } from "src/utils/queryParam.util";
 
 class ReportGroupSessionService<T extends Entity | ReportGroupSession> extends BaseEntityService<T> {
     reportsDict = {
@@ -26,11 +27,7 @@ class ReportGroupSessionService<T extends Entity | ReportGroupSession> extends B
 
     private getSessionsSummaryParams(req: CrudRequest<any, any>) {
         const userId = getUserIdFromUser(req.auth);
-        const sessionIds = req.parsed.extra.ids
-            .toString()
-            .split(',')
-            .map(id => parseInt(id))
-            .filter(id => !isNaN(id));
+        const sessionIds = getAsNumberArray(req.parsed.extra.ids);
         
         return {
             userId,
@@ -41,12 +38,14 @@ class ReportGroupSessionService<T extends Entity | ReportGroupSession> extends B
     async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
         switch (req.parsed.extra.action) {
             case 'adjustTime': {
-                const ids = req.parsed.extra.ids.toString().split(',').map(Number).filter(id => !isNaN(id));
-                const hoursAdjustment = parseInt(req.parsed.extra.hoursAdjustment) || 0;
+                const ids = getAsNumberArray(req.parsed.extra.ids);
+                const hoursAdjustment = getAsNumber(req.parsed.extra.hoursAdjustment) || 0;
                 
                 if (hoursAdjustment === 0) {
                     return 'לא בוצע שינוי - יש להזין מספר שעות';
                 }
+
+                if (!ids) return 'לא נבחרו מפגשים';
 
                 const sessions = await this.dataSource.getRepository(ReportGroupSession).find({
                     where: { id: In(ids) }

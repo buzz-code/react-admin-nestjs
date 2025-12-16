@@ -6,6 +6,7 @@ import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity
 import { AttGradeEffect } from "src/db/entities/AttGradeEffect";
 import { GradeName } from "src/db/entities/GradeName.entity";
 import { AttendanceName } from "src/db/entities/AttendanceName.entity";
+import { getAsArray } from "./queryParam.util";
 
 interface ISprIdData {
     studentReferenceId: string;
@@ -56,23 +57,23 @@ export function getKnownAbsenceFilterBySprAndDates(ids: string[], startDate: Dat
 }
 
 export function getReportsFilterForReportCard(studentId: number, year: number, reportDateFilter: FindOperator<any>, globalLessonIdsStr: string, denyLessonIdStr: string, klassIds?: number[]): FindOptionsWhere<AttReportAndGrade>[] {
-    const denyLessonIds = denyLessonIdStr.split(',').filter(item => item != 'undefined');
-    const lessonFilter: FindOperator<number> = denyLessonIds.length ? Not(In(denyLessonIds)) : undefined;
+    const denyLessonIds = getAsArray(denyLessonIdStr);
+    const lessonFilter: FindOperator<number> = denyLessonIds?.length ? Not(In(denyLessonIds)) : undefined;
     const commonFilter: FindOptionsWhere<AttReportAndGrade> = { studentReferenceId: studentId, year, lessonReferenceId: lessonFilter };
-    const globalLessonIds = globalLessonIdsStr.split(',').filter(item => item != 'undefined');
+    const globalLessonIds = getAsArray(globalLessonIdsStr);
 
     if (klassIds?.length) {
         commonFilter.klassReferenceId = In(klassIds);
     }
 
-    if (reportDateFilter && globalLessonIds.length) {
+    if (reportDateFilter && globalLessonIds?.length) {
         return [
             { ...commonFilter, reportDate: reportDateFilter },
             { ...commonFilter, lessonReferenceId: In(globalLessonIds) },
         ];
     } else if (reportDateFilter) {
         return [{ ...commonFilter, reportDate: reportDateFilter }];
-    } else if (globalLessonIds.length) {
+    } else if (globalLessonIds?.length) {
         return [{ ...commonFilter, lessonReferenceId: In(globalLessonIds) }];
     } else {
         return [{ ...commonFilter }];

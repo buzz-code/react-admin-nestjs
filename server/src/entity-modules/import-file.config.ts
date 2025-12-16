@@ -7,6 +7,7 @@ import { BulkToPdfReportGenerator } from "@shared/utils/report/bulk-to-pdf.gener
 import { CommonReportData } from "@shared/utils/report/types";
 import { ImportFile } from "@shared/entities/ImportFile.entity";
 import lessonSignaturePdfReport from "src/reports/lessonSignaturePdfReport";
+import { getAsNumberArray } from "src/utils/queryParam.util";
 
 const entityNameDictionary = {
   student: 'תלמידות',
@@ -41,12 +42,10 @@ class ImportFileService<T extends Entity | ImportFile> extends BaseEntityService
 
   private getLessonSignaturePdfParams(req: CrudRequest<any, any>) {
     const userId = getUserIdFromUser(req.auth);
-    return req.parsed.extra.ids
-      .toString()
-      .split(',')
-      .map(id => ({
+    return getAsNumberArray(req.parsed.extra.ids)
+      ?.map(id => ({
         userId,
-        importFileId: parseInt(id),
+        importFileId: id,
       }));
   }
 }

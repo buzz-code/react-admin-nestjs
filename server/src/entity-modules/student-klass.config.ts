@@ -11,6 +11,7 @@ import { generateStudentReportCard } from "src/reports/reportGenerator";
 import studentReportCard from "src/reports/studentReportCard";
 import studentReportCardReact from "src/reports/studentReportCardReact";
 import { fixReferences } from "@shared/utils/entity/fixReference.util";
+import { getAsArray, getAsNumberArray } from "src/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -51,7 +52,8 @@ class StudentKlassService<T extends Entity | StudentKlass> extends BaseEntitySer
         if (req.parsed.extra.report in this.reportsDict) {
             const userId = getUserIdFromUser(req.auth);
             const generator = this.reportsDict[req.parsed.extra.report];
-            const ids = req.parsed.extra.ids.toString().split(',');
+            const ids = getAsArray(req.parsed.extra.ids);
+            if (!ids) return { generator, params: [] };
             const studentIds = await this.dataSource.getRepository(StudentKlass)
                 .find({ where: { id: In(ids) }, select: { studentReferenceId: true } })
                 .then(res => res.map(item => item.studentReferenceId));
@@ -64,7 +66,8 @@ class StudentKlassService<T extends Entity | StudentKlass> extends BaseEntitySer
     async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
         switch (req.parsed.extra.action) {
             case 'fixReferences': {
-                const ids = req.parsed.extra.ids.toString().split(',');
+                const ids = getAsNumberArray(req.parsed.extra.ids);
+                if (!ids) return 'לא נבחרו רשומות';
                 const referenceFields = {
                     studentTz: 'studentReferenceId',
                     klassId: 'klassReferenceId',

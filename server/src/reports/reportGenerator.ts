@@ -9,34 +9,33 @@ import { FormatString } from "@shared/utils/yemot/yemot.interface";
 import { DataSource } from "typeorm";
 import { MailSendService } from "@shared/utils/mail/mail-send.service";
 import { sendBulkTeacherMailWithFile } from "@shared/utils/report/bulk-mail-file.util";
+import { getAsArray, getAsBoolean, getAsNumber, getAsString } from "src/utils/queryParam.util";
 
 export function generateStudentReportCard(userId: any, reqExtra: any, generator: BaseReportGenerator) {
     const extraParams: Partial<IReportParams> = {
         year: reqExtra.year ?? getCurrentHebrewYear(),
-        startDate: reqExtra.startDate,
-        endDate: reqExtra.endDate,
-        globalLessonReferenceIds: String(reqExtra.globalLessonReferenceIds),
-        denyLessonReferenceIds: String(reqExtra.denyLessonReferenceIds),
-        klassTypeReferenceId: reqExtra.klassTypeReferenceId,
-        attendance: reqExtra.attendance,
-        grades: reqExtra.grades,
-        personalNote: reqExtra.personalNote,
-        groupByKlass: reqExtra.groupByKlass,
-        hideAbsTotal: reqExtra.hideAbsTotal,
-        minimalReport: reqExtra.minimalReport,
-        forceGrades: reqExtra.forceGrades,
-        forceAtt: reqExtra.forceAtt,
-        showStudentTz: reqExtra.showStudentTz,
-        downComment: reqExtra.downComment,
-        lastGrade: reqExtra.lastGrade,
-        debug: reqExtra.debug,
+        startDate: getAsString(reqExtra.startDate),
+        endDate: getAsString(reqExtra.endDate),
+        globalLessonReferenceIds: getAsString(reqExtra.globalLessonReferenceIds),
+        denyLessonReferenceIds: getAsString(reqExtra.denyLessonReferenceIds),
+        klassTypeReferenceId: getAsString(reqExtra.klassTypeReferenceId),
+        attendance: getAsBoolean(reqExtra.attendance),
+        grades: getAsBoolean(reqExtra.grades),
+        personalNote: getAsString(reqExtra.personalNote),
+        groupByKlass: getAsBoolean(reqExtra.groupByKlass),
+        hideAbsTotal: getAsBoolean(reqExtra.hideAbsTotal),
+        minimalReport: getAsBoolean(reqExtra.minimalReport),
+        forceGrades: getAsBoolean(reqExtra.forceGrades),
+        forceAtt: getAsBoolean(reqExtra.forceAtt),
+        showStudentTz: getAsBoolean(reqExtra.showStudentTz),
+        downComment: getAsBoolean(reqExtra.downComment),
+        lastGrade: getAsBoolean(reqExtra.lastGrade),
+        debug: getAsBoolean(reqExtra.debug),
         attendanceLessThan: getAttPercentLessThanParam(reqExtra.attendanceLessThan),
     };
     console.log('student report card extra params: ', extraParams);
-    const params = reqExtra.ids
-        .toString()
-        .split(',')
-        .map(id => ({
+    const params = getAsArray(reqExtra.ids)
+        ?.map(id => ({
             userId,
             studentId: id,
             ...extraParams
@@ -59,16 +58,14 @@ function getAttPercentLessThanParam(attendanceLessThanStr: string): number {
 
 export function getTeacherStatusFileReportParams(req: CrudRequest<any, any>): TeacherReportFileParams[] {
     console.log('teacher report file params: ', req.parsed.extra);
-    const isGrades = req.parsed.extra?.isGrades;
-    const lessonReferenceId = parseInt(req.parsed.extra?.lessonReferenceId);
-    const params = req.parsed.extra.ids
-        .toString()
-        .split(',')
-        .map(id => ({
+    const isGrades = getAsBoolean(req.parsed.extra?.isGrades);
+    const lessonReferenceId = getAsNumber(req.parsed.extra?.lessonReferenceId);
+    const params = getAsArray(req.parsed.extra.ids)
+        ?.map(id => ({
             userId: getUserIdFromUser(req.auth),
             id,
             isGrades,
-            lessonReferenceId: isNaN(lessonReferenceId) ? undefined : lessonReferenceId,
+            lessonReferenceId,
         }));
     return params;
 }
@@ -76,7 +73,7 @@ export function getTeacherStatusFileReportParams(req: CrudRequest<any, any>): Te
 export async function sendTeacherReportFileMail(req: CrudRequest<any, any>, dataSource: DataSource, mailSendService: MailSendService): Promise<string> {
     const params = getTeacherStatusFileReportParams(req);
     const generator = teacherReportFile;
-    const targetEntity = req.parsed.extra?.isGrades ? 'grade' : 'att_report';
+    const targetEntity = getAsBoolean(req.parsed.extra?.isGrades) ? 'grade' : 'att_report';
     const getEmailParamsFromData = async (params: TeacherReportFileParams, data: TeacherReportFileData[]) => {
         const replyToAddress = await getMailAddressForEntity(params.userId, targetEntity, dataSource);
         const textParams = [data[0].teacher.name, data[0].teacherReportStatus.reportMonthName, data.map(item => item.lesson.name).join(', ')];

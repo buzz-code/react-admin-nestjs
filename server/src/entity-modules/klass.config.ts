@@ -6,6 +6,7 @@ import { CommonReportData } from "@shared/utils/report/types";
 import { IHeader } from "@shared/utils/exporter/types";
 import { Klass } from "src/db/entities/Klass.entity";
 import klassAttendanceReportGenerator from "src/reports/klassAttendanceReport";
+import { getAsDate, getAsNumberArray } from "src/utils/queryParam.util";
 
 class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
     reportsDict = {
@@ -25,18 +26,12 @@ class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
         const userId = getUserIdFromUser(req.auth);
         const startDate = getAsDate(req.parsed.extra.startDate);
         const endDate = getAsDate(req.parsed.extra.endDate);
-        const lessonReferenceIds = getAsString(req.parsed.extra.lessonReferenceIds)
-            ?.split(',')
-            .map(Number)
-            .filter(Boolean)
-            .filter((val) => !isNaN(val));
+        const lessonReferenceIds = getAsNumberArray(req.parsed.extra.lessonReferenceIds);
 
-        return req.parsed.extra.ids
-            .toString()
-            .split(',')
-            .map(id => ({
+        return getAsNumberArray(req.parsed.extra.ids)
+            ?.map(id => ({
                 userId,
-                klassId: Number(id),
+                klassId: id,
                 startDate,
                 endDate,
                 lessonReferenceIds
@@ -77,14 +72,3 @@ function getConfig(): BaseEntityModuleOptions {
 
 export default getConfig();
 
-function ifNotUndefined<T>(value: T | undefined): T | undefined {
-    return value !== 'undefined' ? value : undefined;
-}
-
-function getAsDate(dateStr: string | undefined): Date | undefined {
-    return ifNotUndefined(dateStr) ? new Date(dateStr) : undefined;
-}
-
-function getAsString(value: string | undefined): string | undefined {
-    return ifNotUndefined(value) ? String(value) : undefined;
-}

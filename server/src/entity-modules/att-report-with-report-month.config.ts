@@ -10,6 +10,7 @@ import { validateBulk } from "@shared/base-entity/base-entity.util";
 import { fixReferences } from "@shared/utils/entity/fixReference.util";
 import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 import { shouldShowTopic } from "./att-report.config";
+import { getAsArray, getAsDate, getAsNumber, getAsBoolean, getAsString, getAsNumberArray } from "src/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -72,7 +73,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
         switch (req.parsed.extra.action) {
             case 'bulkKnownAbsences': {
-                const ids = req.parsed.extra.ids.toString().split(',');
+                const ids = getAsArray(req.parsed.extra.ids);
+                if (!ids) return 'לא נבחרו רשומות';
                 const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
 
                 const knownAbsences: Array<Partial<KnownAbsence>> = reports.map(report => ({
@@ -80,13 +82,13 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
                     studentReferenceId: report.studentReferenceId,
                     klassReferenceId: report.klassReferenceId,
                     lessonReferenceId: report.lessonReferenceId,
-                    reportDate: req.parsed.extra.reportDate ?? report.reportDate,
-                    absnceCount: req.parsed.extra.absnceCount ?? Math.round(report.absCount),
-                    absnceCode: req.parsed.extra.absnceCode,
-                    senderName: req.parsed.extra.senderName,
-                    reason: req.parsed.extra.reason,
-                    comment: req.parsed.extra.comment,
-                    isApproved: req.parsed.extra.isApproved,
+                    reportDate: getAsDate(req.parsed.extra.reportDate) ?? report.reportDate,
+                    absnceCount: getAsNumber(req.parsed.extra.absnceCount) ?? Math.round(report.absCount),
+                    absnceCode: getAsNumber(req.parsed.extra.absnceCode),
+                    senderName: getAsString(req.parsed.extra.senderName),
+                    reason: getAsString(req.parsed.extra.reason),
+                    comment: getAsString(req.parsed.extra.comment),
+                    isApproved: getAsBoolean(req.parsed.extra.isApproved),
                     year: report.year,
                 }))
                 await validateBulk<T>(knownAbsences, KnownAbsence);
@@ -95,7 +97,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
                 return `נוצרו ${reports.length} חיסורים מאושרים`;
             }
             case 'fixStudentReferenceV2': {
-                const ids = req.parsed.extra.ids.toString().split(',');
+                const ids = getAsArray(req.parsed.extra.ids);
+                if (!ids) return 'לא נבחרו רשומות';
                 const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
 
                 const reportsToSave = [];
@@ -113,7 +116,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
                 return `עודכנו ${reportsToSave.length} רשומות`;
             }
             case 'fixReferences': {
-                const ids = req.parsed.extra.ids.toString().split(',');
+                const ids = getAsNumberArray(req.parsed.extra.ids);
+                if (!ids) return 'לא נבחרו רשומות';
                 const referenceFields = {
                     studentTz: 'studentReferenceId',
                     klassId: 'klassReferenceId',

@@ -11,6 +11,7 @@ import { KnownAbsenceWithReportMonth } from "src/db/view-entities/KnownAbsenceWi
 import { Klass } from "src/db/entities/Klass.entity";
 import { formatPercent } from "@shared/utils/formatting/formatter.util";
 import { roundObjectProperty } from "src/utils/reportData.util";
+import { getAsNumberArray } from "src/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -66,8 +67,8 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                 };
 
-                const excludedLessonIds = String(extra?.excludedLessonIds ?? '').split(',').map(id => Number(id)).filter(id => !isNaN(id));
-                if (extra?.excludedLessonIds && excludedLessonIds.length > 0) {
+                const excludedLessonIds = getAsNumberArray(extra?.excludedLessonIds)
+                if (excludedLessonIds?.length > 0) {
                     whereClause.lessonReferenceId = Not(In(excludedLessonIds));
                 }
 

@@ -11,6 +11,7 @@ import studentReportCardReact from "src/reports/studentReportCardReact";
 import { getUserIdFromUser } from "@shared/auth/auth.util";
 import { generateStudentReportCard } from "src/reports/reportGenerator";
 import { In } from "typeorm";
+import { getAsArray, getAsBoolean } from "src/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -48,9 +49,10 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
     async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
         switch (req.parsed.extra.action) {
             case 'bulkUpdateActive': {
-                const ids = req.parsed.extra.ids.toString().split(',');
-                const isActive = req.parsed.extra.isActive === 'true' || req.parsed.extra.isActive === true;
-                
+                const ids = getAsArray(req.parsed.extra.ids);
+                const isActive = getAsBoolean(req.parsed.extra.isActive) ?? false;
+                if (!ids) return 'לא נבחרו רשומות';
+
                 const result = await this.dataSource.getRepository(Student).update(
                     { id: In(ids) },
                     { isActive }

@@ -7,6 +7,7 @@ import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { In, Repository } from "typeorm";
 import { Student } from "src/db/entities/Student.entity";
 import { Teacher } from "src/db/entities/Teacher.entity";
+import { getAsArray } from "src/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
@@ -37,7 +38,8 @@ class AuditLogService<T extends Entity | AuditLog> extends BaseEntityService<T> 
         switch (req.parsed.extra.action) {
             case 'revert': {
                 let successCount = 0;
-                const ids = req.parsed.extra.ids.toString().split(',');
+                const ids = getAsArray(req.parsed.extra.ids);
+                if (!ids) return 'לא נבחרו רשומות';
                 const repo = this.repo as Repository<AuditLog>;
                 const auditLogs = await repo.findBy({ id: In(ids) });
 
