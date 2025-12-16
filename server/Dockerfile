@@ -5,15 +5,17 @@ RUN apk add --no-cache \
     ttf-freefont \
     chromium
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV NODE_ENV development
 
 WORKDIR /app
 
-# No need to do this, because external node_modules are mounted
-# COPY package*.json /app/
-# COPY yarn.lock /app/
-# RUN yarn install
-# COPY . .
+COPY package*.json /app/
+COPY yarn.lock /app/
+
+RUN PUPPETEER_SKIP_DOWNLOAD=true yarn install
+
+COPY . .
 
 CMD ["yarn", "start:dev"]
 

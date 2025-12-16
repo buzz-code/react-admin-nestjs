@@ -61,6 +61,9 @@ Using Docker Compose with the override file provides an isolated development env
    # ADMIN_USER=admin:admin_password
    # SMTP_USER=smtp_user (optional for development)
    # SMTP_PASSWORD=smtp_password (optional for development)
+   
+   # Initialize git submodules
+   git submodule update --init --recursive
    ```
 
 2. **Run in development mode**:
@@ -79,7 +82,7 @@ Using Docker Compose with the override file provides an isolated development env
 3. **Access services**:
    - Frontend: http://localhost:80
    - Backend API: http://localhost:3000
-   - phpMyAdmin: http://localhost (check docker compose config for port)
+   - phpMyAdmin: http://localhost:8080
 
 4. **Run migrations**:
    ```bash
