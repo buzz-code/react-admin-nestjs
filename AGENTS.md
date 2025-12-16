@@ -40,7 +40,6 @@ This is a React Admin + NestJS application with MySQL database for managing educ
 
 ### Development Mode
 
-#### Option 1: Docker Compose (Recommended)
 Using Docker Compose with the override file provides an isolated development environment with database:
 
 1. **Setup**:
@@ -111,13 +110,6 @@ Using Docker Compose with the override file provides an isolated development env
 - Easy to reset/clean environment
 - All dependencies managed by Docker
 - No need to install Node.js, MySQL locally
-
-#### Option 2: Local Development (Without Docker)
-If you need to run without Docker:
-
-- **Server**: `cd server && yarn start:dev` (runs NestJS with watch mode)
-- **Client**: `cd client && yarn start` (runs Vite dev server with hot reload)
-- **Note**: Requires local MySQL instance and proper configuration
 
 ### Linting
 - **Server**: `yarn lint` (ESLint + Prettier with strict rules)

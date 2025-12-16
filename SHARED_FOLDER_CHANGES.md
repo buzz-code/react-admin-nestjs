@@ -130,20 +130,125 @@ The `contentLength` field serves two purposes:
 - Two-step commit process
 
 ### Option 2: Separate PRs to Shared Repositories
+**Can this be done?** Yes, this is technically feasible with proper setup.
+
 **Process:**
 1. Agent creates separate PRs directly to nra-client and nra-server repositories
 2. After PRs are merged, update submodule references in main repository
 3. Create PR in main repository with updated submodule references
 
+**How to implement:**
+
+**Setup Requirements:**
+1. Grant GitHub agent access to shared repositories:
+   - Add Copilot bot/agent as collaborator with write access to:
+     - https://github.com/buzz-code/nra-client
+     - https://github.com/buzz-code/nra-server
+   - Or use GitHub App installation with appropriate permissions
+
+2. Configure agent workflow:
+   ```yaml
+   # In main repository, agent needs to:
+   # 1. Detect changes needed in shared folders
+   # 2. Clone shared repository separately
+   # 3. Create branch, make changes, push to shared repo
+   # 4. Create PR in shared repo using GitHub API
+   # 5. Wait for PR approval/merge (or auto-merge if configured)
+   # 6. Update submodule reference in main repo
+   ```
+
+**Detailed workflow:**
+1. **Agent detects shared folder changes needed:**
+   - Analyzes test failures or requirements
+   - Identifies which shared repo needs updates
+
+2. **Create PR in shared repository:**
+   ```bash
+   # For nra-client changes:
+   cd /tmp
+   git clone https://github.com/buzz-code/nra-client.git
+   cd nra-client
+   git checkout -b fix/test-contentLength-validation
+   
+   # Make changes (e.g., edit providers/__tests__/dataProvider.test.js)
+   # ... apply fixes ...
+   
+   git add .
+   git commit -m "fix: add contentLength to mock file responses in tests"
+   git push origin fix/test-contentLength-validation
+   
+   # Create PR using GitHub CLI or API
+   gh pr create \
+     --title "fix: add contentLength to mock file responses in tests" \
+     --body "Fixes test failures by adding required contentLength field" \
+     --base main
+   ```
+
+3. **After PR is merged, update main repository:**
+   ```bash
+   cd /path/to/react-admin-nestjs
+   
+   # Update submodule to latest commit
+   git submodule update --remote client/shared
+   
+   # Or update to specific commit
+   cd client/shared
+   git fetch origin
+   git checkout <merged-commit-sha>
+   cd ../..
+   
+   # Commit the submodule reference update
+   git add client/shared
+   git commit -m "chore: update client/shared submodule to include test fixes"
+   git push
+   ```
+
+**GitHub Actions automation:**
+You can automate this with GitHub Actions workflow:
+```yaml
+# .github/workflows/update-submodules.yml
+name: Update Submodules
+on:
+  workflow_dispatch:
+    inputs:
+      submodule:
+        description: 'Which submodule to update'
+        required: true
+        type: choice
+        options:
+          - client/shared
+          - server/shared
+          
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Update submodule
+        run: |
+          git submodule update --remote ${{ inputs.submodule }}
+          git add ${{ inputs.submodule }}
+          git commit -m "chore: update ${{ inputs.submodule }} submodule"
+          git push
+```
+
 **Pros:**
 - Direct updates to source repositories
 - Standard PR workflow
 - Changes tracked in shared repo history
+- Can be fully automated
+- Proper code review in shared repos
 
 **Cons:**
 - Requires repository access permissions for agents
-- More complex coordination
+- More complex coordination (multiple PRs)
 - Agents need to handle multiple repositories
+- Need to manage submodule update timing
+- Potential for synchronization issues if multiple agents work simultaneously
 
 ### Option 3: Shared Repository Agent Workflow
 **Process:**
