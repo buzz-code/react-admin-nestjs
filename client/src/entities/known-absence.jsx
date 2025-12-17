@@ -6,6 +6,7 @@ import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } fro
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
