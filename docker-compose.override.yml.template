@@ -5,15 +5,32 @@ services:
         container_name: frontend-dev
         build:
             target: development
+        ports:
+            - "3000:3000"    # Main Vite dev server port
+            - "24678:24678"  # Vite HMR (Hot Module Replacement) port
+        volumes:
+            - ./client:/app
+            - /app/node_modules  # Prevent overwriting node_modules in container
+            - /app/dist         # Prevent overwriting dist in container
 
     backend:
         container_name: backend-dev
         build:
             target: development
+        ports:
+            - "3001:3000"  # Map container port 3000 to host port 3001
+        volumes:
+            - ./server:/app
+            - /app/node_modules  # Prevent overwriting node_modules in container
+            - /app/dist         # Prevent overwriting dist in container
 
     mysql:
         container_name: mysql-dev
+        ports:
+            - "3306:3306"  # MySQL port for local access
 
     phpmyadmin:
         container_name: php-myadmin-dev
+        ports:
+            - "8080:80"  # PhpMyAdmin web interface
 
