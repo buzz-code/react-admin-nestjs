@@ -6,7 +6,7 @@ services:
         build:
             target: development
         ports:
-            - "3000:3000"    # Main Vite dev server port
+            - "3000:80"      # Map host 3000 to container port 80
             - "24678:24678"  # Vite HMR (Hot Module Replacement) port
         volumes:
             - ./client:/app
@@ -30,3 +30,8 @@ services:
         ports:
             - "8080:80"  # PhpMyAdmin web interface
 
+networks:
+    caddy:
+        external: false
+    elknet:
+        external: false
