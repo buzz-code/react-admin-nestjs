@@ -452,6 +452,7 @@ CREATE TABLE `report_month` (
   `endDate` date NOT NULL,
   `semester` varchar(255) NOT NULL DEFAULT 'שנתי',
   `year` int DEFAULT NULL,
+  
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -546,6 +547,7 @@ CREATE TABLE `report_groups` (
   `lessonReferenceId` int DEFAULT NULL,
   `klassReferenceId` int DEFAULT NULL,
   `year` int DEFAULT NULL,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -576,6 +578,7 @@ CREATE TABLE `report_group_sessions` (
   `startTime` time DEFAULT NULL,
   `endTime` time DEFAULT NULL,
   `topic` varchar(255) DEFAULT NULL,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `report_group_sessions_user_id_idx` (`userId`),
@@ -664,7 +667,7 @@ CREATE TABLE `audit_log` (
   `entityId` int NOT NULL,
   `entityName` varchar(255) NOT NULL,
   `operation` varchar(255) NOT NULL,
-  `entityData` json NOT NULL,
+  `entityData` text NOT NULL,
   `isReverted` tinyint(1) NOT NULL DEFAULT '0',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -686,6 +689,7 @@ CREATE TABLE `yemot_call` (
   `ApiRealDID` varchar(255) DEFAULT NULL,
   `ApiPhone` varchar(255) DEFAULT NULL,
   `ApiExtension` varchar(255) DEFAULT NULL,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data` json DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -700,6 +704,7 @@ CREATE TABLE `mail_address` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
   `address` varchar(255) NOT NULL,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -718,6 +723,7 @@ CREATE TABLE `recieved_mail` (
   `to` varchar(255) DEFAULT NULL,
   `subject` varchar(500) DEFAULT NULL,
   `body` longtext,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -732,6 +738,7 @@ CREATE TABLE `page` (
   `userId` int NOT NULL,
   `title` varchar(255) NOT NULL,
   `content` longtext,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -748,6 +755,7 @@ CREATE TABLE `image` (
   `filename` varchar(255) NOT NULL,
   `mimetype` varchar(100) DEFAULT NULL,
   `data` longblob,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -762,6 +770,7 @@ CREATE TABLE `payment_track` (
   `name` varchar(255) NOT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   `studentNumberLimit` int DEFAULT NULL,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -783,6 +792,7 @@ CREATE TABLE `import_file` (
   `filename` varchar(255) NOT NULL,
   `entityName` varchar(255) NOT NULL,
   `status` varchar(50) DEFAULT 'pending',
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -999,9 +1009,9 @@ FROM att_grade_effect;
 -- View: teacher_lesson_report_status
 CREATE OR REPLACE VIEW `teacher_lesson_report_status` AS
 SELECT 
-  CONCAT(COALESCE(l.userId, 'null'), '_', COALESCE(l.teacherReferenceId, 'null'), '_',
+  CONCAT(COALESCE(l.user_id, 'null'), '_', COALESCE(l.teacherReferenceId, 'null'), '_',
          COALESCE(l.id, 'null'), '_', COALESCE(rm.id, 'null'), '_', COALESCE(l.year, 'null')) AS id,
-  l.userId,
+  l.user_id,
   l.teacherReferenceId AS teacherId,
   l.id AS lessonId,
   l.name AS lessonName,
@@ -1016,15 +1026,15 @@ CROSS JOIN report_month rm
 LEFT JOIN att_reports ar ON ar.lessonReferenceId = l.id 
   AND ar.report_date BETWEEN rm.startDate AND rm.endDate
   AND ar.user_id = rm.userId
-WHERE l.userId = rm.userId AND l.year = rm.year
-GROUP BY l.userId, l.teacherReferenceId, l.id, rm.id, l.year;
+WHERE l.user_id = rm.userId AND l.year = rm.year
+GROUP BY l.user_id, l.teacherReferenceId, l.id, rm.id, l.year;
 
 -- View: teacher_report_status
 CREATE OR REPLACE VIEW `teacher_report_status` AS
 SELECT 
-  CONCAT(COALESCE(tlrs.userId, 'null'), '_', COALESCE(tlrs.teacherId, 'null'), '_',
+  CONCAT(COALESCE(tlrs.user_id, 'null'), '_', COALESCE(tlrs.teacherId, 'null'), '_',
          COALESCE(tlrs.reportMonthId, 'null'), '_', COALESCE(tlrs.year, 'null')) AS id,
-  tlrs.userId,
+  tlrs.user_id,
   tlrs.teacherId,
   t.name AS teacherName,
   t.comment AS teacherComment,
@@ -1038,15 +1048,15 @@ SELECT
 FROM teacher_lesson_report_status tlrs
 LEFT JOIN teachers t ON tlrs.teacherId = t.id
 LEFT JOIN report_month rm ON tlrs.reportMonthId = rm.id
-GROUP BY tlrs.userId, tlrs.teacherId, tlrs.reportMonthId, tlrs.year
+GROUP BY tlrs.user_id, tlrs.teacherId, tlrs.reportMonthId, tlrs.year
 ORDER BY tlrs.reportMonthId, tlrs.teacherId;
 
 -- View: teacher_lesson_grade_report_status
 CREATE OR REPLACE VIEW `teacher_lesson_grade_report_status` AS
 SELECT 
-  CONCAT(COALESCE(l.userId, 'null'), '_', COALESCE(l.teacherReferenceId, 'null'), '_',
+  CONCAT(COALESCE(l.user_id, 'null'), '_', COALESCE(l.teacherReferenceId, 'null'), '_',
          COALESCE(l.id, 'null'), '_', COALESCE(rm.id, 'null'), '_', COALESCE(l.year, 'null')) AS id,
-  l.userId,
+  l.user_id,
   l.teacherReferenceId AS teacherId,
   l.id AS lessonId,
   l.name AS lessonName,
@@ -1061,15 +1071,15 @@ CROSS JOIN report_month rm
 LEFT JOIN grades g ON g.lessonReferenceId = l.id 
   AND g.report_date BETWEEN rm.startDate AND rm.endDate
   AND g.user_id = rm.userId
-WHERE l.userId = rm.userId AND l.year = rm.year
-GROUP BY l.userId, l.teacherReferenceId, l.id, rm.id, l.year;
+WHERE l.user_id = rm.userId AND l.year = rm.year
+GROUP BY l.user_id, l.teacherReferenceId, l.id, rm.id, l.year;
 
 -- View: teacher_grade_report_status
 CREATE OR REPLACE VIEW `teacher_grade_report_status` AS
 SELECT 
-  CONCAT(COALESCE(tlgrs.userId, 'null'), '_', COALESCE(tlgrs.teacherId, 'null'), '_',
+  CONCAT(COALESCE(tlgrs.user_id, 'null'), '_', COALESCE(tlgrs.teacherId, 'null'), '_',
          COALESCE(tlgrs.reportMonthId, 'null'), '_', COALESCE(tlgrs.year, 'null')) AS id,
-  tlgrs.userId,
+  tlgrs.user_id,
   tlgrs.teacherId,
   t.name AS teacherName,
   t.comment AS teacherComment,
@@ -1083,7 +1093,7 @@ SELECT
 FROM teacher_lesson_grade_report_status tlgrs
 LEFT JOIN teachers t ON tlgrs.teacherId = t.id
 LEFT JOIN report_month rm ON tlgrs.reportMonthId = rm.id
-GROUP BY tlgrs.userId, tlgrs.teacherId, tlgrs.reportMonthId, tlgrs.year
+GROUP BY tlgrs.user_id, tlgrs.teacherId, tlgrs.reportMonthId, tlgrs.year
 ORDER BY tlgrs.reportMonthId, tlgrs.teacherId;
 
 -- View: teacher_salary_report  
