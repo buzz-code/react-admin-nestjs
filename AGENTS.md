@@ -5,29 +5,37 @@
 Full-stack application with:
 - **Backend**: NestJS (TypeScript) in `/server`
 - **Frontend**: React with React-Admin (JavaScript/JSX) in `/client`
-- **Shared Code**: Git submodules (must be initialized before building/testing)
+- **Shared Code**: Git submodules (automatically initialized by Docker)
   - `client/shared` - [nra-client](https://github.com/buzz-code/nra-client)
   - `server/shared` - [nra-server](https://github.com/buzz-code/nra-server)
 
 ## Quick Start
 
-### 1. Clone and Initialize
+**All development is done through Docker containers - no local setup required!**
+
+### 1. Clone Repository
 ```bash
 git clone <repository-url>
 cd react-admin-nestjs
 git submodule update --init --recursive
 ```
 
-### 2. Docker Development (Recommended)
-
-**Setup:**
+### 2. Setup Environment
 ```bash
 cp docker-compose.override.yml.template docker-compose.override.yml
 cp .env.template .env
 # Edit .env with your configuration
 ```
 
-**Start:**
+### 3. Install Dependencies (Before Starting Docker)
+Dependencies must be installed on the host machine before starting containers (due to volume mounting):
+```bash
+cd server && yarn install
+cd ../client && yarn install
+cd ..
+```
+
+### 4. Start Docker Stack
 ```bash
 docker compose up -d
 ```
@@ -48,20 +56,6 @@ docker compose down
 - Backend API: http://localhost:3001
 - MySQL: localhost:3306
 - PhpMyAdmin: http://localhost:8080
-
-### 3. Local Development (Without Docker)
-
-**Install Dependencies:**
-```bash
-cd server && yarn install
-cd ../client && yarn install
-```
-
-**Run Tests:**
-```bash
-cd server && yarn test
-cd ../client && yarn test
-```
 
 ## Database Management
 
@@ -106,16 +100,16 @@ docker exec mysql-dev mysql -uroot -p{rootpass} \
 
 ## Testing
 
+Tests are run inside Docker containers:
+
 **Backend (NestJS + Jest):**
 ```bash
-cd server
-yarn test
+docker exec backend-dev yarn test
 ```
 
 **Frontend (React + Jest):**
 ```bash
-cd client
-yarn test
+docker exec frontend-dev yarn test
 ```
 
 **Always** run backend tests before frontend tests.
