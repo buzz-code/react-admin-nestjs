@@ -309,14 +309,15 @@ exec npm run start:prod
 ### Migration State Alignment
 
 **Important**: The `data.sql` file contains a database dump with:
-1. Schema that reflects migrations up to a certain point (September 2023 snapshot)
-2. A `migrations` table with records of applied migrations
+1. Complete schema reflecting all migrations up to December 2024
+2. A `migrations` table with records of all 126 applied migrations (matching all 124 migration files)
+
+**Status**: The database and migrations are fully aligned. Running `yarn typeorm:run` will show "No migrations are pending" because all migrations have been recorded in the migrations table.
 
 When starting fresh:
-- If all migrations in `data.sql` are recorded in the `migrations` table, running `yarn typeorm:run` will only apply new migrations
-- If the schema is ahead of the migration records (common with SQL dumps), you may see "already exists" errors
-  - In this case, check which migrations are missing from the `migrations` table
-  - Manually insert missing migration records, or recreate the database from migrations instead of data.sql
+- The data.sql automatically initializes the database with all schema changes
+- All migration records are present in the `migrations` table
+- Running migrations will execute successfully with no errors
 
 ### Keeping Database and Code Aligned
 

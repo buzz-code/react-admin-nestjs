@@ -44,3 +44,8 @@ services:
             private-network:
             caddy: null
 
+networks:
+    caddy:
+        external: false
+    elknet:
+        external: false
