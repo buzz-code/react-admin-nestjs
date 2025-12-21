@@ -597,3 +597,33 @@ INSERT INTO `report_group_sessions` (`id`, `userId`, `reportGroupId`, `sessionDa
 (10, 2, 5, '2024-10-19', '11:00:00', '12:30:00', 'Control structures');
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ============================================================
+-- Views
+-- Critical view entities required by the application
+-- ============================================================
+
+-- View: student_base_klass
+CREATE OR REPLACE VIEW `student_base_klass` AS
+SELECT 
+  `student_klasses`.`studentReferenceId` AS `id`,
+  `student_klasses`.`user_id` AS `user_id`,
+  `student_klasses`.`year` AS `year`,
+  GROUP_CONCAT(DISTINCT IF(`klass_types`.`klassTypeEnum` = 'כיתת אם', `klasses`.`name`, NULL) SEPARATOR ', ') AS `base_klass`
+FROM `student_klasses`
+LEFT JOIN `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`
+LEFT JOIN `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`
+GROUP BY `studentReferenceId`, `user_id`, `year`;
+
+-- View: lesson_klass_name
+CREATE OR REPLACE VIEW `lesson_klass_name` AS
+SELECT 
+  `lessons`.`id` AS `id`,
+  `lessons`.`user_id` AS `user_id`,
+  `lessons`.`year` AS `year`,
+  `lessons`.`name` AS `lesson_name`,
+  GROUP_CONCAT(DISTINCT `klasses`.`name` ORDER BY `klasses`.`key` SEPARATOR ', ') AS `klass_names`
+FROM `lessons`
+LEFT JOIN `klasses` ON FIND_IN_SET(`klasses`.`id`, `lessons`.`klassReferenceIds`)
+GROUP BY `lessons`.`id`, `lessons`.`user_id`, `lessons`.`year`, `lessons`.`name`;
+
