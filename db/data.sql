@@ -102,7 +102,7 @@ INSERT INTO `migrations` (`timestamp`, `name`) VALUES
 (1706608882654, 'addUserBccAddress'),
 (1706794821688, 'addStudentIndexes'),
 (1707032874492, 'makeGradeNameNullable'),
-(1707244388438, 'changeGradeToBeDecimal1707244388438'),
+(1707244388438, 'migrationschangeGradeToBeDecimal'),
 (1707765928446, 'addFullSuccessToImportFile'),
 (1708371629107, 'updateAttAndGradeViewAddEstimation'),
 (1708547027795, 'addAttReportIndexes'),
