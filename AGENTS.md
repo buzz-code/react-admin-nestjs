@@ -105,13 +105,18 @@ cp .env.template .env
 
 3. Start services:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 4. View logs:
 ```bash
-docker-compose logs -f frontend
-docker-compose logs -f backend
+docker compose logs -f frontend
+docker compose logs -f backend
+```
+
+5. Stop services:
+```bash
+docker compose down
 ```
 
 ## Puppeteer Configuration
@@ -231,12 +236,140 @@ ports:
                      ↓
 4. Docker Setup (Copy templates, configure env)
                      ↓
-5. Start Development (docker-compose up)
+5. Start Development (docker compose up)
                      ↓
 6. Develop & Test (Iterate with HMR)
                      ↓
 7. Build & Deploy (Production builds)
 ```
+
+## Database Setup and Migrations
+
+### Initial Database Setup
+
+The MySQL database is initialized automatically when the container first starts using `/db/data.sql`. This file contains:
+- Complete database schema (tables, views, indexes)
+- Initial migration records
+- Sample/seed data
+
+**Important Notes:**
+- The `data.sql` file had DEFINER clauses removed for portability across different MySQL user configurations
+- The database user specified in `.env` needs full permissions on the database
+- Initial setup grants: `GRANT ALL PRIVILEGES ON {MYSQL_DATABASE}.* TO '{MYSQL_USER}'@'%'`
+
+### Database Mounting
+
+The database uses a Docker volume for data persistence:
+```yaml
+volumes:
+  db_data:  # Persists MySQL data across container restarts
+```
+
+Data initialization happens automatically via the MySQL Docker image's `/docker-entrypoint-initdb.d/` mechanism:
+```dockerfile
+# From db/Dockerfile
+FROM mysql:8.4
+COPY data.sql /docker-entrypoint-initdb.d
+```
+
+This runs only on the first container start when the data directory is empty.
+
+### Running Migrations
+
+Migrations are managed by TypeORM and located in `server/src/migrations/`.
+
+#### From Host Machine:
+```bash
+cd server
+yarn typeorm:run     # Run pending migrations (TypeScript)
+yarn typeorm:revert  # Revert last migration
+```
+
+#### From Docker Container:
+```bash
+# Run migrations inside the backend container
+docker exec backend-dev yarn typeorm:run
+
+# Or for production (uses compiled JavaScript)
+docker exec backend-dev yarn typeorm:run:js
+```
+
+#### Production Container
+
+The production backend container automatically runs migrations on startup via the `docker-entrypoint.sh` script:
+```bash
+#!/bin/sh
+# Run database migrations
+npm run typeorm:run:js
+
+# Start the application
+exec npm run start:prod
+```
+
+### Migration State Alignment
+
+**Important**: The `data.sql` file contains a database dump with:
+1. Schema that reflects migrations up to a certain point (September 2023 snapshot)
+2. A `migrations` table with records of applied migrations
+
+When starting fresh:
+- If all migrations in `data.sql` are recorded in the `migrations` table, running `yarn typeorm:run` will only apply new migrations
+- If the schema is ahead of the migration records (common with SQL dumps), you may see "already exists" errors
+  - In this case, check which migrations are missing from the `migrations` table
+  - Manually insert missing migration records, or recreate the database from migrations instead of data.sql
+
+### Keeping Database and Code Aligned
+
+To ensure the database schema matches your application code:
+
+1. **For Development**: Use migrations to evolve the schema
+   ```bash
+   # Generate migration from entity changes
+   cd server
+   yarn typeorm:generate src/migrations/MyMigrationName
+   ```
+
+2. **For Production**: Always run migrations before deploying new code
+   - The production Docker container handles this automatically via docker-entrypoint.sh
+   - For manual deployments: `yarn typeorm:run:js`
+
+3. **Verify Alignment**:
+   ```bash
+   # Check which migrations have been run
+   docker exec mysql-dev mysql -u{user} -p{pass} -D {database} -e "SELECT * FROM migrations ORDER BY timestamp DESC LIMIT 10;"
+   
+   # Count total migrations in database vs codebase
+   docker exec mysql-dev mysql -u{user} -p{pass} -D {database} -e "SELECT COUNT(*) FROM migrations;"
+   ls server/src/migrations/*.ts | wc -l
+   ```
+
+4. **Updating data.sql**: If you need to refresh the data.sql file:
+   ```bash
+   docker exec mysql-dev mysqldump -u{user} -p{pass} {database} > db/data.sql
+   # Remove DEFINER clauses for portability
+   sed -i 's/\/\*!50013 DEFINER=`[^`]*`@`[^`]*` SQL SECURITY DEFINER \*\///' db/data.sql
+   ```
+
+### Creating New Migrations
+
+```bash
+cd server
+
+# Generate a migration from entity changes
+yarn typeorm:generate src/migrations/MyMigrationName
+
+# Create an empty migration
+yarn typeorm:create src/migrations/MyMigrationName
+```
+
+### Database Connection Troubleshooting
+
+If the backend can't connect to MySQL:
+1. Ensure all containers are on the same Docker network (`private-network` in dev)
+2. Check `MYSQL_HOST` in `.env` matches the MySQL service name (`mysql` in docker-compose)
+3. Verify MySQL container is fully started: `docker compose logs mysql`
+4. Test connection: `docker exec backend-dev nc -zv mysql 3306`
+5. Check permissions: `docker exec mysql-dev mysql -uroot -p{pass} -e "SHOW GRANTS FOR '{user}'@'%';"`
 
 ## Additional Resources
 
