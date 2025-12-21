@@ -955,7 +955,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `att_report_and_grade` AS select concat('a-',`att_reports`.`id`) AS `id`,'att' AS `type`,`att_reports`.`user_id` AS `user_id`,`att_reports`.`year` AS `year`,`att_reports`.`studentReferenceId` AS `studentReferenceId`,`att_reports`.`teacherReferenceId` AS `teacherReferenceId`,`att_reports`.`lessonReferenceId` AS `lessonReferenceId`,`att_reports`.`klassReferenceId` AS `klassReferenceId`,`att_reports`.`report_date` AS `report_date`,`att_reports`.`how_many_lessons` AS `how_many_lessons`,`att_reports`.`abs_count` AS `abs_count`,`att_reports`.`approved_abs_count` AS `approved_abs_count`,NULL AS `grade`,`att_reports`.`comments` AS `comments`,`att_reports`.`sheet_name` AS `sheet_name` from `att_reports` union select concat('g-',`grades`.`id`) AS `id`,'grade' AS `type`,`grades`.`user_id` AS `user_id`,`grades`.`year` AS `year`,`grades`.`studentReferenceId` AS `studentReferenceId`,`grades`.`teacherReferenceId` AS `teacherReferenceId`,`grades`.`lessonReferenceId` AS `lessonReferenceId`,`grades`.`klassReferenceId` AS `klassReferenceId`,`grades`.`report_date` AS `report_date`,`grades`.`how_many_lessons` AS `how_many_lessons`,NULL AS `abs_count`,NULL AS `approved_abs_count`,`grades`.`grade` AS `grade`,`grades`.`comments` AS `comments`,NULL AS `sheet_name` from `grades` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -973,7 +973,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `student_base_klass` AS select `student_klasses`.`year` AS `year`,`student_klasses`.`studentReferenceId` AS `id`,`student_klasses`.`student_tz` AS `tz`,`student_klasses`.`user_id` AS `user_id`,group_concat(if((`klass_types`.`klassTypeEnum` = 'כיתת אם'),`klasses`.`name`,NULL) separator ', ') AS `base_klass` from ((`student_klasses` left join `klasses` on(((`klasses`.`id` = `student_klasses`.`klassReferenceId`) or ((`klasses`.`key` = `student_klasses`.`klass_id`) and (`klasses`.`user_id` = `student_klasses`.`user_id`))))) left join `klass_types` on(((`klass_types`.`id` = `klasses`.`klassTypeReferenceId`) or ((`klass_types`.`id` = `klasses`.`klass_type_id`) and (`klass_types`.`user_id` = `klasses`.`user_id`))))) group by `student_klasses`.`studentReferenceId`,`student_klasses`.`student_tz`,`student_klasses`.`user_id`,`student_klasses`.`year` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -991,7 +991,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `student_by_year` AS select `students`.`id` AS `id`,`students`.`tz` AS `tz`,`students`.`name` AS `name`,`students`.`user_id` AS `user_id`,group_concat(distinct `student_klasses`.`year` separator ',') AS `year` from (`student_klasses` left join `students` on((`students`.`id` = `student_klasses`.`studentReferenceId`))) group by `students`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1009,7 +1009,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `student_global_report` AS select concat(coalesce(`atag`.`studentReferenceId`,'null'),'_',coalesce(`atag`.`teacherReferenceId`,'null'),'_',coalesce(`atag`.`klassReferenceId`,'null'),'_',coalesce(`atag`.`lessonReferenceId`,'null')) AS `id`,`atag`.`user_id` AS `user_id`,`atag`.`year` AS `year`,`atag`.`studentReferenceId` AS `studentReferenceId`,`atag`.`teacherReferenceId` AS `teacherReferenceId`,`atag`.`klassReferenceId` AS `klassReferenceId`,`atag`.`lessonReferenceId` AS `lessonReferenceId`,sum(`atag`.`how_many_lessons`) AS `lessons_count`,sum(`atag`.`abs_count`) AS `abs_count`,avg(`atag`.`grade`) AS `grade_avg` from `att_report_and_grade` `atag` group by `atag`.`studentReferenceId`,`atag`.`teacherReferenceId`,`atag`.`klassReferenceId`,`atag`.`lessonReferenceId`,`atag`.`user_id`,`atag`.`year` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1027,7 +1027,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `student_klasses_report` AS select `student_klasses`.`year` AS `year`,`students`.`id` AS `id`,`students`.`name` AS `studentName`,`student_klasses`.`student_tz` AS `student_tz`,`student_klasses`.`user_id` AS `user_id`,group_concat(if((`klass_types`.`klassTypeEnum` = 'כיתת אם'),`klasses`.`name`,NULL) separator ', ') AS `klasses_1`,group_concat(if((`klass_types`.`klassTypeEnum` = 'מסלול'),`klasses`.`name`,NULL) separator ', ') AS `klasses_2`,group_concat(if((`klass_types`.`klassTypeEnum` = 'התמחות'),`klasses`.`name`,NULL) separator ', ') AS `klasses_3`,group_concat(if(((`klass_types`.`klassTypeEnum` = 'אחר') or (`klass_types`.`klassTypeEnum` is null)),`klasses`.`name`,NULL) separator ', ') AS `klasses_null` from (((`student_klasses` left join `klasses` on(((`klasses`.`id` = `student_klasses`.`klassReferenceId`) or ((`klasses`.`key` = `student_klasses`.`klass_id`) and (`klasses`.`user_id` = `student_klasses`.`user_id`))))) left join `klass_types` on(((`klass_types`.`id` = `klasses`.`klassTypeReferenceId`) or ((`klass_types`.`id` = `klasses`.`klass_type_id`) and (`klass_types`.`user_id` = `klasses`.`user_id`))))) left join `students` on(((`students`.`id` = `student_klasses`.`studentReferenceId`) or ((`students`.`tz` = `student_klasses`.`student_tz`) and (`students`.`user_id` = `student_klasses`.`user_id`))))) group by `students`.`id`,`student_klasses`.`student_tz`,`student_klasses`.`user_id`,`student_klasses`.`year` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1045,7 +1045,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `student_percent_report` AS select `sgr`.`id` AS `id`,`sgr`.`user_id` AS `user_id`,`sgr`.`year` AS `year`,`sgr`.`studentReferenceId` AS `studentReferenceId`,`sgr`.`teacherReferenceId` AS `teacherReferenceId`,`sgr`.`klassReferenceId` AS `klassReferenceId`,`sgr`.`lessonReferenceId` AS `lessonReferenceId`,`sgr`.`lessons_count` AS `lessons_count`,`sgr`.`abs_count` AS `abs_count`,(coalesce(`sgr`.`abs_count`,0) / greatest(coalesce(`sgr`.`lessons_count`,1),1)) AS `abs_percents`,(1 - (coalesce(`sgr`.`abs_count`,0) / greatest(coalesce(`sgr`.`lessons_count`,1),1))) AS `att_percents`,(`sgr`.`grade_avg` / 100) AS `grade_avg` from `student_global_report` `sgr` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1063,7 +1063,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `teacher_lesson_report_status` AS select `teachers`.`id` AS `teacherId`,`lessons`.`id` AS `lessonId`,`lessons`.`year` AS `year`,`report_months`.`id` AS `reportMonthId`,`teachers`.`user_id` AS `userId`,(case when (count(`att_reports`.`id`) > 0) then 1 else 0 end) AS `isReported` from (((`teachers` join `lessons` on((`lessons`.`teacherReferenceId` = `teachers`.`id`))) left join `report_month` `report_months` on((`report_months`.`userId` = `teachers`.`user_id`))) left join `att_reports` on(((`att_reports`.`teacherReferenceId` = `teachers`.`id`) and (`att_reports`.`lessonReferenceId` = `lessons`.`id`) and (`att_reports`.`report_date` <= `report_months`.`endDate`) and (`att_reports`.`report_date` >= `report_months`.`startDate`)))) where ((coalesce(`lessons`.`start_date`,`report_months`.`endDate`) <= `report_months`.`endDate`) and (coalesce(`lessons`.`end_date`,`report_months`.`startDate`) >= `report_months`.`startDate`)) group by `teachers`.`id`,`lessons`.`id`,`report_months`.`id` order by `report_months`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1081,7 +1081,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `teacher_report_status` AS select `tlrs`.`userId` AS `userId`,`tlrs`.`year` AS `year`,`tlrs`.`teacherId` AS `teacherId`,`tlrs`.`reportMonthId` AS `reportMonthId`,`teacher`.`name` AS `teacherName`,`rm`.`name` AS `reportMonthName`,concat(`tlrs`.`userId`,'_',`tlrs`.`teacherId`,'_',coalesce(`tlrs`.`reportMonthId`,'null')) AS `id`,group_concat(distinct (case when (`tlrs`.`isReported` = 1) then `tlrs`.`lessonId` end) order by `tlrs`.`lessonId` ASC separator ',') AS `reportedLessons`,group_concat(distinct (case when (`tlrs`.`isReported` = 0) then `tlrs`.`lessonId` end) order by `tlrs`.`lessonId` ASC separator ',') AS `notReportedLessons` from ((`teacher_lesson_report_status` `tlrs` left join `teachers` `teacher` on((`tlrs`.`teacherId` = `teacher`.`id`))) left join `report_month` `rm` on((`tlrs`.`reportMonthId` = `rm`.`id`))) group by `tlrs`.`userId`,`tlrs`.`teacherId`,`tlrs`.`reportMonthId`,`tlrs`.`year` order by `tlrs`.`reportMonthId`,`tlrs`.`teacherId` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1099,7 +1099,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`testuser`@`%` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `teacher_salary_report` AS select distinct `att_reports`.`teacherReferenceId` AS `teacherReferenceId`,`att_reports`.`klassReferenceId` AS `klassReferenceId`,`att_reports`.`lessonReferenceId` AS `lessonReferenceId`,`report_months`.`id` AS `reportMonthId`,concat(`att_reports`.`user_id`,'_',`att_reports`.`teacherReferenceId`,'_',`att_reports`.`lessonReferenceId`,'_',`att_reports`.`klassReferenceId`,'_',`att_reports`.`how_many_lessons`,'_',`report_months`.`id`) AS `id`,`att_reports`.`user_id` AS `userId`,`att_reports`.`how_many_lessons` AS `how_many_lessons` from (`att_reports` left join `report_month` `report_months` on(((`att_reports`.`user_id` = `report_months`.`userId`) and (`att_reports`.`report_date` <= `report_months`.`endDate`) and (`att_reports`.`report_date` >= `report_months`.`startDate`)))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1117,7 +1117,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `text_by_user` AS select `t_base`.`name` AS `name`,`t_base`.`description` AS `description`,`users`.`id` AS `userId`,`t_user`.`id` AS `overrideTextId`,concat(`users`.`id`,'_',`t_base`.`id`) AS `id`,coalesce(`t_user`.`value`,`t_base`.`value`) AS `value` from ((`texts` `t_base` left join `users` on((1 = 1))) left join `texts` `t_user` on(((`t_user`.`name` = `t_base`.`name`) and (`t_user`.`user_id` = `users`.`id`)))) where (`t_base`.`user_id` = 0) order by `users`.`id`,`t_base`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1132,4 +1132,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-21 12:16:26
+-- Dump completed on 2025-12-21 12:47:42
