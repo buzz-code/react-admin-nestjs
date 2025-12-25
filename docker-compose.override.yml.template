@@ -5,11 +5,14 @@ services:
         container_name: frontend-dev
         build:
             target: development
+        environment:
+            PORT: 3000
         ports:
             - "3000:3000"    # Main Vite dev server port
-            - "24678:24678"  # Vite HMR (Hot Module Replacement) port
         volumes:
             - ./client:/app
+        networks:
+            - private-network
 
     backend:
         container_name: backend-dev
@@ -19,6 +22,8 @@ services:
             - "3001:3000"  # Map container port 3000 to host port 3001
         volumes:
             - ./server:/app
+        networks:
+            - private-network
 
     mysql:
         container_name: mysql-dev
@@ -29,4 +34,12 @@ services:
         container_name: php-myadmin-dev
         ports:
             - "8080:80"  # PhpMyAdmin web interface
+        networks:
+            - private-network
 
+networks:
+    private-network:
+    caddy:
+        external: false
+    elknet:
+        external: false

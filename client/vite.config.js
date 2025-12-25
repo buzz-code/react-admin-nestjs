@@ -11,10 +11,7 @@ export default ({ mode }) => {
             port: Number(process.env.PORT || 3000),
             hmr: {
                 overlay: true,
-                port: 24678,
-                timeout: 1000,
-                clientPort: 24678,
-                host: 'localhost',
+                clientPort: 3000,
             },
         },
         define: {
