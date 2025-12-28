@@ -67,6 +67,7 @@ import Tutorial from '@shared/components/views/Tutorial';
 import PageList from '@shared/components/views/PageList';
 import ScannerUpload from '@shared/components/views/ScannerUpload';
 import InLessonReport from 'src/reports/InLessonReport';
+import { TeacherPersonalAreaWrapper } from 'src/components/TeacherPersonalAreaWrapper';
 import Roadmap from '@shared/components/views/Roadmap';
 import MichlolFileHelper from '@shared/components/views/MichlolFileHelper';
 import ApprovedAbsencesUpload from 'src/components/ApprovedAbsencesUpload';
@@ -116,9 +117,12 @@ const App = () => (
               <>
                 <Resource name="teacher" />
                 <Resource name="lesson" />
+                <Resource name="att_report" />
+                <Resource name="student_percent_report" />
+                <Resource name="student_by_year" />
                 <CustomRoutes>
-                  <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
-                  <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
+                  <Route path="/in-lesson-report-att/*" element={<TeacherPersonalAreaWrapper />} />
+                  <Route path="/in-lesson-report-grade/*" element={<TeacherPersonalAreaWrapper gradeMode />} />
                 </CustomRoutes>
               </>
             );

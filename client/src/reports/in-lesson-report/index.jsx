@@ -23,10 +23,11 @@ export const InLessonReport = ({
     dataProvider,
     hasReportGroupPermission,
     preSaveHook,
+    preSelectedTeacher,
 }) => {
     const [lesson, setLesson] = useState(null);
     const [students, setStudents] = useState(null);
-    const [selectedTeacher, setSelectedTeacher] = useState(null);
+    const [selectedTeacher, setSelectedTeacher] = useState(preSelectedTeacher || null);
     const lateValue = useLateValue();
     const notify = useNotify();
 
@@ -111,7 +112,7 @@ export const InLessonReport = ({
             <Paper>
                 <Stack>
                     {!lesson ? (
-                        isStartWithTeacher && !selectedTeacher ? (
+                        (isStartWithTeacher && !selectedTeacher && !preSelectedTeacher) ? (
                             <TeacherSelector onTeacherSelected={handleTeacherSelect} />
                         ) : (
                             <LessonSelector
