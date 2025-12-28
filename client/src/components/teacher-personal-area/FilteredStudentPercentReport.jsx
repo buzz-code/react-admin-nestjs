@@ -1,7 +1,37 @@
 import React from 'react';
-import { List, usePermissions, useGetList } from 'react-admin';
-import { Datagrid } from '../../entities/student-percent-report';
+import { List, usePermissions, useGetList, NumberField, TextField, SelectField, useRecordContext } from 'react-admin';
 import { Box, CircularProgress, Alert } from '@mui/material';
+import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
+import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
+import { yearChoices } from '@shared/utils/yearFilter';
+import { ShowMatchingRecordsButton } from '@shared/components/fields/ShowMatchingRecordsButton';
+
+const TeacherPercentDatagrid = ({ isAdmin, ...props }) => {
+  return (
+    <CommonDatagrid {...props}>
+      <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student_by_year" optionalTarget="tz" />
+      <TextField source="studentBaseKlass.klassName" />
+      <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
+      <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
+      <SelectField source="year" choices={yearChoices} />
+      <NumberField source="lessonsCount" />
+      <NumberField source="absCount" />
+      <NumberField source="absPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
+      <NumberField source="attPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
+      <NumberField source="gradeAvg" options={{ style: 'percent', maximumFractionDigits: 2 }} />
+      <ShowMatchingAttReportsButton />
+    </CommonDatagrid>
+  );
+};
+
+const ShowMatchingAttReportsButton = ({ ...props }) => {
+  const { studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId } = useRecordContext();
+  const filter = { studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId };
+
+  return (
+    <ShowMatchingRecordsButton filter={filter} resource="att_report" />
+  );
+};
 
 export const FilteredStudentPercentReport = ({ teacherId }) => {
   const { permissions } = usePermissions();
@@ -43,7 +73,7 @@ export const FilteredStudentPercentReport = ({ teacherId }) => {
       actions={false}
       title="דוח אחוזים"
     >
-      <Datagrid isAdmin={isAdmin} bulkActionButtons={false} />
+      <TeacherPercentDatagrid isAdmin={isAdmin} bulkActionButtons={false} />
     </List>
   );
 };
