@@ -7,6 +7,8 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
+import { ActionButton } from 'src/components/ActionButton';
+import {isApprovedAbsencesBulk} from 'src/utils/appPermissions';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -32,6 +34,16 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
+export const ApprovedAbsencesAction = ({ permissions }) => 
+{
+    const approvedAbsencesBulk = isApprovedAbsencesBulk(permissions) && !isAdmin(permissions);
+    
+     if (!approvedAbsencesBulk) return null;
+      return(
+       <ActionButton label="חיסורים מאושרים" name="approvedAbsences"/>
+ )};
+  
+  
 const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
         <CommonDatagrid {...props}>
@@ -88,6 +100,7 @@ const entity = {
     filters,
     importer,
     filterDefaultValues,
+    additionalListActions: <ApprovedAbsencesAction />,
 };
 
 export default getResourceComponents(entity);
