@@ -33,17 +33,11 @@ export const FilteredStudentAttendanceList = ({ teacherId }) => {
     );
   }
 
-  // Permanent filter by teacher ID through extra.teacherReferenceId
-  const permanentFilter = {
-    'extra.teacherReferenceId': teacherId,
-  };
-
   return (
     <List
       resource="student_by_year/pivot?extra.pivot=StudentAttendance"
-      filter={permanentFilter}
       filterDefaultValues={{
-        ...permanentFilter,
+        'extra.teacherReferenceId': teacherId,
         'year:$cont': new Date().getFullYear(),
         extra: {
           isCheckKlassType: true,

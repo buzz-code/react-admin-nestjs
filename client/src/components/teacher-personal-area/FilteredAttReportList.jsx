@@ -43,7 +43,6 @@ export const FilteredAttReportList = ({ teacherId }) => {
   return (
     <List
       resource="att_report"
-      filter={permanentFilter}
       filterDefaultValues={permanentFilter}
       disableSyncWithLocation
       actions={false}

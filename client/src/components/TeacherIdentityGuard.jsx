@@ -70,7 +70,7 @@ export const TeacherIdentityGuard = ({ onTeacherIdentified }) => {
             autoFocus
             sx={{ mb: 3 }}
             inputProps={{
-              pattern: '[0-9]*',
+              pattern: '[0-9]+',
               inputMode: 'numeric',
             }}
           />

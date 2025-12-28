@@ -67,7 +67,6 @@ export const FilteredStudentPercentReport = ({ teacherId }) => {
   return (
     <List
       resource="student_percent_report"
-      filter={permanentFilter}
       filterDefaultValues={permanentFilter}
       disableSyncWithLocation
       actions={false}

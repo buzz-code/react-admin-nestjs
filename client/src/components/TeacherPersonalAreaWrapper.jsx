@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { useRedirect, useDataProvider, useNotify } from 'react-admin';
+import { useDataProvider, useNotify } from 'react-admin';
 import { TeacherIdentityGuard } from './TeacherIdentityGuard';
 import { TeacherPersonalArea } from './TeacherPersonalArea';
 import { useSavableData } from '../../shared/components/import/util';
@@ -29,7 +29,6 @@ const IN_LESSON_FILE_SOURCE = 'טופס נוכחות';
 
 export const TeacherPersonalAreaWrapper = ({ gradeMode = false }) => {
   const [identifiedTeacher, setIdentifiedTeacher] = useState(null);
-  const redirect = useRedirect();
   const dataProvider = useDataProvider();
   const notify = useNotify();
   const isShowLate = useIsInLessonReportWithLate();
