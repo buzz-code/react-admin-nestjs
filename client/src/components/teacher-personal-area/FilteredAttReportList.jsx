@@ -1,7 +1,13 @@
 import React from 'react';
-import { List, Datagrid as RaDatagrid, usePermissions, useGetList } from 'react-admin';
+import { List, usePermissions, useGetList, EditButton, useRecordContext } from 'react-admin';
 import { Datagrid } from '../../entities/att-report';
 import { Box, CircularProgress, Alert } from '@mui/material';
+
+// Custom edit button for the datagrid
+const EditRowButton = () => {
+  const record = useRecordContext();
+  return <EditButton resource="att_report" record={record} />;
+};
 
 export const FilteredAttReportList = ({ teacherId }) => {
   const { permissions } = usePermissions();
@@ -43,7 +49,9 @@ export const FilteredAttReportList = ({ teacherId }) => {
       actions={false}
       title="היסטוריית דיווחים"
     >
-      <Datagrid isAdmin={isAdmin} bulkActionButtons={false} />
+      <Datagrid isAdmin={isAdmin} bulkActionButtons={false}>
+        <EditRowButton />
+      </Datagrid>
     </List>
   );
 };

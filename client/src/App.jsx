@@ -117,7 +117,7 @@ const App = () => (
               <>
                 <Resource name="teacher" />
                 <Resource name="lesson" />
-                <Resource name="att_report" />
+                <Resource name="att_report" {...attReport} list={null} show={null} />
                 <Resource name="student_percent_report" />
                 <Resource name="student_by_year" />
                 <CustomRoutes>
