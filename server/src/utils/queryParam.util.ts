@@ -3,19 +3,23 @@ export function ifNotUndefined<T>(value: T | undefined): T | undefined {
 }
 
 export function getAsDate(dateStr: string | undefined): Date | undefined {
-    return ifNotUndefined(dateStr) ? new Date(dateStr) : undefined;
+    const val = ifNotUndefined(dateStr);
+    return val !== undefined ? new Date(val) : undefined;
 }
 
 export function getAsString(value: string | undefined): string | undefined {
-    return ifNotUndefined(value) ? String(value) : undefined;
+    const val = ifNotUndefined(value);
+    return val !== undefined ? String(val) : undefined;
 }
 
-export function getAsBoolean(value: string | undefined): boolean | undefined {
-    return ifNotUndefined(value) ? value === 'true' : undefined;
+export function getAsBoolean(value: string | boolean | undefined): boolean | undefined {
+    const val = ifNotUndefined(value);
+    return val !== undefined ? String(val) === 'true' : undefined;
 }
 
 export function getAsNumber(value: string | undefined): number | undefined {
-    return ifNotUndefined(value) ? Number(value) : undefined;
+    const val = ifNotUndefined(value);
+    return val !== undefined ? Number(val) : undefined;
 }
 
 export function getAsArray(value: string | undefined): string[] | undefined {
