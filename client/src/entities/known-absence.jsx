@@ -83,19 +83,21 @@ const importer = {
     fields: ['studentTz', 'klassId', 'lessonId', 'reportDate', 'absnceCount', 'absnceCode', 'senderName', 'reason', 'comment', 'isApproved'],
 }
 
+const additionalListActions = [
+    <ActionButton
+        key="approvedAbsences"
+        label="חיסורים מאושרים"
+        name="approvedAbsences"
+    />,
+];
+
 const entity = {
     Datagrid,
     Inputs,
     filters,
     importer,
     filterDefaultValues,
-   additionalListActions: [
-  <ActionButton
-    key="approvedAbsences"
-    label="חיסורים מאושרים"
-    name="approvedAbsences"
-  />,
-],
+    additionalListActions,
 
 };
 
