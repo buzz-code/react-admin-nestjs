@@ -7,7 +7,7 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
-import { ActionButton } from 'src/components/ActionButton';
+import { BulkApproveAbsences } from 'src/components/BulkApproveAbsences';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -84,7 +84,7 @@ const importer = {
 }
 
 const additionalListActions = [
-    <ActionButton
+    <BulkApproveAbsences
         key="approvedAbsences"
         label="חיסורים מאושרים"
         name="approvedAbsences"
