@@ -1,4 +1,4 @@
-import { calcAvg, calcPercents, calcSum, getNumericValueOrNull, keepBetween, roundFractional } from "src/utils/reportData.util";
+import { calcAvg, calcPercents, calcSum, getNumericValueOrNull, keepBetween, roundFractional } from "@shared/utils/reportData.util";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { FindOptionsWhere, FindOperator, In, Not, Any } from "typeorm";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
