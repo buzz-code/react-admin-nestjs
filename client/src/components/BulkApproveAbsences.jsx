@@ -9,26 +9,25 @@ export const BulkApproveAbsences = ({ label, name, permissions }) => {
     const resource = useResourceContext();
     const refresh = useRefresh();
     const notify = useNotify();
-    if ( !isApprovedAbsencesBulk(permissions)) return null;
-    
-     const handleSave = async (values, onClose) => {
+    if (!isApprovedAbsencesBulk(permissions)) return null;
+    const handleSave = async (values, onClose) => {
         const payload = values.approvedAbsences.map(row => ({
-        studentReferenceId: values.studentReferenceId,
-        reportDate: values.reportDate,
-        absnceCode: values.absnceCode || null,
-        senderName: values.senderName || null,
-        reason: values.reason || null,
-        comment: values.comment || null,
-        isApproved: values.isApproved,
-        klassReferenceId: row.klassReferenceId,
-        lessonReferenceId: row.lessonReferenceId || null,
-        absnceCount: row.absnceCount,
+            studentReferenceId: values.studentReferenceId,
+            reportDate: values.reportDate,
+            absnceCode: values.absnceCode || null,
+            senderName: values.senderName || null,
+            reason: values.reason || null,
+            comment: values.comment || null,
+            isApproved: values.isApproved,
+            klassReferenceId: row.klassReferenceId,
+            lessonReferenceId: row.lessonReferenceId || null,
+            absnceCount: row.absnceCount,
         }));
         try {
-        const response = await dataProvider.createMany(resource, payload);
-            handleActionSuccess(notify)(response);
-            refresh();
-            onClose?.();
+            const response = await dataProvider.createMany(resource, payload);
+                handleActionSuccess(notify)(response);
+                refresh();
+                onClose?.();
         }
         catch (err) {
             handleError(notify)(err);
@@ -53,6 +52,6 @@ export const BulkApproveAbsences = ({ label, name, permissions }) => {
                     </SimpleFormIterator>
                 </ArrayInput>
             </SimpleForm>
-        )}/>
+        )} />
     );
 };

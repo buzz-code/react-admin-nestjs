@@ -98,7 +98,6 @@ const entity = {
     importer,
     filterDefaultValues,
     additionalListActions,
-
 };
 
 export default getResourceComponents(entity);
