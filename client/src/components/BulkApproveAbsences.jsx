@@ -9,7 +9,7 @@ export const BulkApproveAbsences = ({ label, name, permissions }) => {
     const resource = useResourceContext();
     const refresh = useRefresh();
     const notify = useNotify();
-    if (isApprovedAbsencesBulk(permissions)) return null;
+    if ( !isApprovedAbsencesBulk(permissions)) return null;
     
      const handleSave = async (values, onClose) => {
         const payload = values.approvedAbsences.map(row => ({
