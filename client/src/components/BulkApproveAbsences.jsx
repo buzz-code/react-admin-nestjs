@@ -2,14 +2,15 @@ import { useDataProvider, useNotify, useResourceContext, useRefresh, SimpleForm,
 import { ActionOrDialogButton } from '@shared/components/crudContainers/ActionOrDialogButton';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { handleActionSuccess, handleError } from '@shared/utils/notifyUtil';
-import { isApprovedAbsencesBulk } from 'src/utils/appPermissions';
+import { useIsApprovedAbsencesBulk } from 'src/utils/appPermissions';
 
-export const BulkApproveAbsences = ({ label, name, permissions }) => {
+export const BulkApproveAbsences = ({ label, name }) => {
     const dataProvider = useDataProvider();
     const resource = useResourceContext();
     const refresh = useRefresh();
     const notify = useNotify();
-    if (!isApprovedAbsencesBulk(permissions)) return null;
+    const canBulkApproveAbsences = useIsApprovedAbsencesBulk();
+    if (!canBulkApproveAbsences) return null;
     
     const handleSave = async (values, onClose) => {
         const payload = values.approvedAbsences.map(row => ({

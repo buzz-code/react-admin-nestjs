@@ -8,7 +8,7 @@ export const appPermissions = {
   inLessonReportStartWithTeacher: 'inLessonReport.startWithTeacher',
   absCountEffect: 'absCountEffect',
   lessonSignature: 'lessonSignature',
-  approvedAbsencesBulk:'approvedAbsencesBulk'
+  approvedAbsencesBulk: 'approvedAbsencesBulk',
 };
 
 export const isScannerUpload = (permissions) => hasPermissionLogic(permissions, appPermissions.scannerUpload);
