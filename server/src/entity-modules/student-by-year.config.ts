@@ -11,7 +11,7 @@ import { KnownAbsenceWithReportMonth } from "src/db/view-entities/KnownAbsenceWi
 import { Klass } from "src/db/entities/Klass.entity";
 import { formatPercent } from "@shared/utils/formatting/formatter.util";
 import { roundObjectProperty } from "src/utils/reportData.util";
-import { getAsNumberArray } from "src/utils/queryParam.util";
+import { getAsNumberArray } from "@shared/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {

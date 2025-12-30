@@ -10,7 +10,7 @@ import { validateBulk } from "@shared/base-entity/base-entity.util";
 import { fixReferences } from "@shared/utils/entity/fixReference.util";
 import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 import { shouldShowTopic } from "./att-report.config";
-import { getAsArray, getAsDate, getAsNumber, getAsBoolean, getAsString, getAsNumberArray } from "src/utils/queryParam.util";
+import { getAsArray, getAsDate, getAsNumber, getAsBoolean, getAsString, getAsNumberArray } from "@shared/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {

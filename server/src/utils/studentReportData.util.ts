@@ -6,7 +6,7 @@ import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity
 import { AttGradeEffect } from "src/db/entities/AttGradeEffect";
 import { GradeName } from "src/db/entities/GradeName.entity";
 import { AttendanceName } from "src/db/entities/AttendanceName.entity";
-import { getAsArray } from "./queryParam.util";
+import { getAsArray } from "@shared/utils/queryParam.util";
 
 interface ISprIdData {
     studentReferenceId: string;

@@ -4,7 +4,7 @@ import { User } from "src/db/entities/User.entity";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { CrudRequest } from "@dataui/crud";
 import { In } from "typeorm";
-import { getAsArray, getAsBoolean } from "src/utils/queryParam.util";
+import { getAsArray, getAsBoolean } from "@shared/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
