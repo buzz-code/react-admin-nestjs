@@ -86,7 +86,7 @@ const importer = {
 const additionalListActions = [
     <BulkApproveAbsences
         key="approvedAbsences"
-        label="חיסורים מאושרים"
+        label="אישור חיסורים לתלמידה"
         name="approvedAbsences"
     />,
 ];

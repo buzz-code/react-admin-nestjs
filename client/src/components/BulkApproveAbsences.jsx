@@ -37,8 +37,8 @@ export const BulkApproveAbsences = ({ label, name }) => {
     };
 
     return (
-        <ActionOrDialogButton label={label} name="approvedAbsences" dialogContent={({ onClose }) => (
-            <SimpleForm onSubmit={values => handleSave(values, onClose)}>
+        <ActionOrDialogButton label={label} name="approvedAbsences" title="אישור חיסורים מרוכז" dialogContent={({ onClose }) => (
+            <SimpleForm defaultValues={{approvedAbsences:[{absnceCount: 1}]}} onSubmit={values => handleSave(values, onClose)}>
                 <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} label="תלמידה" />
                 <DateInput source="reportDate" validate={required()} label="תאריך" />
                 <NumberInput source="absnceCode" label="קוד חיסור" />
@@ -46,11 +46,11 @@ export const BulkApproveAbsences = ({ label, name }) => {
                 <TextInput source="reason" validate={maxLength(500)} label="סיבה" />
                 <TextInput source="comment" validate={maxLength(500)} label="הערה" />
                 <BooleanInput source="isApproved" defaultValue label="מאושר" />
-                <ArrayInput source="approvedAbsences" initialValues={[{ absnceCount: 1 }]} label="חיסורים לאישור">
+                <ArrayInput source="approvedAbsences" label="חיסורים לאישור">
                     <SimpleFormIterator>
                         <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} label="כיתה" />
                         <CommonReferenceInput source="lessonReferenceId" reference="lesson" label="שיעור" />
-                        <NumberInput source="absnceCount" validate={required()} label="מספר חיסורים" defaultValue={1} />
+                        <NumberInput source="absnceCount" validate={required()} label="מספר חיסורים"/>
                     </SimpleFormIterator>
                 </ArrayInput>
             </SimpleForm>
