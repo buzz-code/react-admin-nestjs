@@ -17,7 +17,8 @@ const appTheme = createTheme({
   isRtl: true
 });
 
-import { Dashboard, Layout } from 'src/GeneralLayout';
+import { Layout } from 'src/GeneralLayout';
+import { DashboardPermissions} from 'src/DashboardPermissions';
 
 import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityGuesser';
 import attReport from "src/entities/att-report";
@@ -107,7 +108,7 @@ const App = () => (
     <RTLStyle>
       <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider}
         theme={appTheme} title='נוכחות'
-        dashboard={Dashboard} layout={Layout} loginPage={LoginPage}
+        dashboard={DashboardPermissions} layout={Layout} loginPage={LoginPage}
         requireAuth>
         {permissions => {
           const onlyInLesson = isOnlyInLessonReport(permissions) && !isAdmin(permissions);

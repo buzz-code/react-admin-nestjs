@@ -9,6 +9,7 @@ export const appPermissions = {
   absCountEffect: 'absCountEffect',
   lessonSignature: 'lessonSignature',
   approvedAbsencesBulk: 'approvedAbsencesBulk',
+  teacher:'teacher',
 };
 
 export const isScannerUpload = (permissions) => hasPermissionLogic(permissions, appPermissions.scannerUpload);
@@ -34,3 +35,6 @@ export const useIsLessonSignature = () => useHasPermission(appPermissions.lesson
 
 export const isApprovedAbsencesBulk = (permissions) => isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.approvedAbsencesBulk);
 export const useIsApprovedAbsencesBulk = () => useHasPermission(appPermissions.approvedAbsencesBulk);
+
+export const isTeacher = (permissions) => isAdmin(permissions)|| hasPermissionLogic(permissions,appPermissions.teacher);  
+export const useIsTeacher = () => useHasPermission(appPermissions.teacher);
