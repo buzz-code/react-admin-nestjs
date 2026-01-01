@@ -136,7 +136,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {students
+                    {students && students
                         .filter(student => student.student)
                         .map(student => (
                             <TableRow key={student.student.id}>

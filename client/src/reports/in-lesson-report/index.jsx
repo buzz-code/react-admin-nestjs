@@ -25,8 +25,8 @@ export const InLessonReport = ({
     preSaveHook,
 }) => {
     const storePrefix = gradeMode ? 'InLessonReport.Grade' : 'InLessonReport.Att';
-    const [lesson, setLesson] = useStore(`${storePrefix}.lesson`, null);
-    const [students, setStudents] = useStore(`${storePrefix}.students`, null);
+    const [lessonContext, setLessonContext] = useStore(`${storePrefix}.context`, null);
+    const { lesson, students } = lessonContext || {};
     const [selectedTeacher, setSelectedTeacher] = useStore(`${storePrefix}.selectedTeacher`, null);
     const [, setFormData] = useStore(`${storePrefix}.form`, null);
     const [, setReportDates] = useStore(`${storePrefix}.reportDates`, null);
@@ -38,27 +38,24 @@ export const InLessonReport = ({
     }, [setSelectedTeacher]);
 
     const handleLessonFound = useCallback(({ lesson, students }) => {
-        setLesson(lesson);
-        setStudents(students);
-    }, [setLesson, setStudents]);
+        setLessonContext({ lesson, students });
+    }, [setLessonContext]);
 
     const handleCancel = useCallback(() => {
-        setLesson(null);
-        setStudents(null);
+        setLessonContext(null);
         setSelectedTeacher(null);
         setDataToSave(null);
         setFormData(null);
         setReportDates(null);
-    }, [setLesson, setStudents, setSelectedTeacher, setDataToSave, setFormData, setReportDates]);
+    }, [setLessonContext, setSelectedTeacher, setDataToSave, setFormData, setReportDates]);
 
     const handleSuccessWrapped = useCallback(() => {
-        setLesson(null);
-        setStudents(null);
+        setLessonContext(null);
         setSelectedTeacher(null);
         setFormData(null);
         setReportDates(null);
         handleSuccess();
-    }, [handleSuccess, setLesson, setStudents, setSelectedTeacher, setFormData, setReportDates]);
+    }, [handleSuccess, setLessonContext, setSelectedTeacher, setFormData, setReportDates]);
 
     const handleSave = useCallback(async (formData) => {
         const { reportDates, howManyLessons, lessonDetails, signatureData, ...rest } = formData;
