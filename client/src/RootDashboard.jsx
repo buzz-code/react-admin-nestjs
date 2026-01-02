@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDataProvider, SimpleForm, TextInput, useNotify, Toolbar ,SaveButton } from 'react-admin';
+import { useDataProvider, SimpleForm, TextInput, useNotify, Toolbar, SaveButton } from 'react-admin';
 import { useObjectStore } from 'src/utils/storeUtil';
 import { Dashboard } from 'src/GeneralLayout';
 import { useIsTeacherView } from 'src/utils/appPermissions';
@@ -12,10 +12,11 @@ export const RootDashboard = (props) => {
       <TeacherGuard>
         <Dashboard {...props} />
       </TeacherGuard>
-    
-    );}
+
+    );
+  }
   else {
-     return <Dashboard {...props} />;
+    return <Dashboard {...props} />;
   }
 }
 
@@ -38,24 +39,24 @@ const TeacherGuard = ({ children }) => {
     const { tz } = values;
     const result = await dataProvider.getList('teacher', {
       pagination: { page: 1, perPage: 1 },
-      filter: { tz  }
+      filter: { tz }
     });
     const teacher = result.data[0] || null;
 
     if (teacher) {
       setTeacher(teacher);
-    } 
-    else {
-        notify('Teacher not found', { type: 'warning' });
     }
-   };
-     
+    else {
+      notify('Teacher not found', { type: 'warning' });
+    }
+  };
+
   return (
     <SimpleForm key="view-search-form" onSubmit={handleSubmit} resource="teacher"
-     toolbar={<Toolbar> 
-                <SaveButton label="כניסה" />
-            </Toolbar>}>
+      toolbar={<Toolbar>
+        <SaveButton label="כניסה" />
+      </Toolbar>}>
       <TextInput source="tz" label="ת.ז" />
-    </SimpleForm> 
+    </SimpleForm>
   );
 }
