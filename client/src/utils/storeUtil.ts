@@ -1,4 +1,4 @@
-import {useStore } from 'react-admin';
+import { useStore } from 'react-admin';
 
 export interface ObjectStore {
     value: any | null;

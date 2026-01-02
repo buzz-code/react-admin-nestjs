@@ -1,4 +1,4 @@
-import { useHasPermission, hasPermissionLogic, isAdmin } from '@shared/utils/permissionsUtil';
+import { useHasPermission, hasPermissionLogic,   isAdmin } from '@shared/utils/permissionsUtil';
 
 export const appPermissions = {
   scannerUpload: 'scannerUpload',
@@ -9,7 +9,7 @@ export const appPermissions = {
   absCountEffect: 'absCountEffect',
   lessonSignature: 'lessonSignature',
   approvedAbsencesBulk: 'approvedAbsencesBulk',
-  teacher:'teacher',
+  teacherView:'teacherView',
 };
 
 export const isScannerUpload = (permissions) => hasPermissionLogic(permissions, appPermissions.scannerUpload);
@@ -36,5 +36,6 @@ export const useIsLessonSignature = () => useHasPermission(appPermissions.lesson
 export const isApprovedAbsencesBulk = (permissions) => isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.approvedAbsencesBulk);
 export const useIsApprovedAbsencesBulk = () => useHasPermission(appPermissions.approvedAbsencesBulk);
 
-export const isTeacher = (permissions) => isAdmin(permissions)|| hasPermissionLogic(permissions,appPermissions.teacher);  
-export const useIsTeacher = () => useHasPermission(appPermissions.teacher);
+export const isTeacherView = (permissions) => isAdmin(permissions)|| hasPermissionLogic(permissions,appPermissions.teacherView);  
+export const useIsTeacherView = () => useHasPermission(appPermissions.teacherView);
+
