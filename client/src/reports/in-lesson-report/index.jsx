@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Container, Paper, Stack } from '@mui/material';
 import { useNotify } from 'react-admin';
 import { ReportContext, defaultContextValue } from './context';
@@ -23,12 +23,18 @@ export const InLessonReport = ({
     dataProvider,
     hasReportGroupPermission,
     preSaveHook,
+    teacher,
 }) => {
     const [lesson, setLesson] = useState(null);
     const [students, setStudents] = useState(null);
-    const [selectedTeacher, setSelectedTeacher] = useState(null);
+    const [selectedTeacher, setSelectedTeacher] = useState(teacher || null);
     const lateValue = useLateValue();
     const notify = useNotify();
+    useEffect(() => {
+        if (teacher && !selectedTeacher) {
+            setSelectedTeacher(teacher);
+        }
+    }, [teacher]);
 
     const handleTeacherSelect = useCallback((teacher) => {
         setSelectedTeacher(teacher);
@@ -41,13 +47,13 @@ export const InLessonReport = ({
 
     const handleCancel = useCallback(() => {
         setLesson(null);
-        setSelectedTeacher(null);
+        setSelectedTeacher(teacher || null);
         setDataToSave(null);
-    }, []);
+    }, [teacher, setDataToSave]);
 
     const handleSave = useCallback(async (formData) => {
         const { reportDates, howManyLessons, lessonDetails, signatureData, ...rest } = formData;
-        
+
         // Build dataToSave array WITHOUT reportGroupSessionId
         // The preSaveHook will add it when actually saving
         const dataToSave = [];
@@ -56,15 +62,15 @@ export const InLessonReport = ({
             klassReferenceId: lesson.klassReferenceIds[0],
             lessonReferenceId: lesson.id,
         };
-        
+
         reportDates.forEach((reportDate, index) => {
-            const reportDateEntry = { 
-                ...entry, 
+            const reportDateEntry = {
+                ...entry,
                 reportDate,
                 // Store index for preSaveHook to match with sessions
                 _dateIndex: index,
             };
-            
+
             Object.keys(rest).forEach((studentId) => {
                 const newEntry = { ...reportDateEntry, studentReferenceId: studentId };
                 if (gradeMode) {

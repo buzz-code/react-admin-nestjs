@@ -6,6 +6,7 @@ import { Datagrid as GradeDatagrid } from 'src/entities/grade';
 import { useIsInLessonReportWithLate, useIsInLessonReportStartWithTeacher, useIsLessonSignature } from '../utils/appPermissions';
 import { InLessonReport } from './in-lesson-report';
 import { getCurrentHebrewYear } from '@shared/utils/yearFilter';
+import { useObjectStore } from 'src/utils/storeUtil';
 
 const entityConfig = [
     {
@@ -37,6 +38,7 @@ export default ({ gradeMode = false }) => {
     const fileName = useMemo(() => 'דיווח ' + entityLabel + ' ' + new Date().toISOString().split('T')[0], [entityLabel]);
     const [dataToSave, setDataToSave] = useState(null);
     const [signatureMetadata, setSignatureMetadata] = useState(null);
+    const { value: teacher } = useObjectStore('teacher');
 
     // Pre-save hook: creates ReportGroup & Sessions only when actually saving
     const preSaveHook = useCallback(async (data) => {
@@ -143,6 +145,7 @@ export default ({ gradeMode = false }) => {
             dataProvider={dataProvider}
             hasReportGroupPermission={hasReportGroupPermission}
             preSaveHook={preSaveHook}
+            teacher={teacher}
         />
     );
 };
