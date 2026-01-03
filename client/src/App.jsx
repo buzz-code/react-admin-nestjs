@@ -113,7 +113,7 @@ const App = () => (
         {permissions => {
           const onlyInLesson = isOnlyInLessonReport(permissions) && !isAdmin(permissions);
           const teacherView = isTeacherView(permissions) && !isAdmin(permissions);
-          if (onlyInLesson || teacherView) {
+          if (onlyInLesson) {
             return (
               <>
                 <Resource name="teacher" />
@@ -125,6 +125,19 @@ const App = () => (
               </>
             );
           }
+          if (teacherView) {
+            return (
+              <>
+                <Resource name="teacher" />
+                <Resource name="lesson" />
+                <CustomRoutes>
+                  <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
+                  <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
+                </CustomRoutes>
+              </>
+            );
+          }
+
 
           return (
             <>

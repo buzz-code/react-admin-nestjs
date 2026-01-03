@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import { Box, Typography, Divider } from '@mui/material';
 import { TabbedForm, Toolbar, SaveButton, TextInput, useDataProvider, useNotify } from 'react-admin';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -19,12 +19,13 @@ export const LessonSelector = ({ onLessonFound, selectedTeacher }) => {
     const notify = useNotify();
     const [lessonKey, setLessonKey] = useState(null);
 
-    const lessonFilter = {
-        ...defaultYearFilter,
-    };
-    if (selectedTeacher) {
-        lessonFilter.teacherReferenceId = selectedTeacher.id;
-    }
+    const lessonFilter = useMemo(() => {
+        const filter = { ...defaultYearFilter };
+        if (selectedTeacher) {
+            filter.teacherReferenceId = selectedTeacher.id;
+        }
+        return filter;
+    }, [selectedTeacher]);
 
     const handleGetLesson = useCallback(async () => {
         try {

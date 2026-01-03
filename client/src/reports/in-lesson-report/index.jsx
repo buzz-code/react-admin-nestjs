@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Container, Paper, Stack } from '@mui/material';
 import { useNotify, useStore } from 'react-admin';
 import { ReportContext, defaultContextValue } from './context';
@@ -23,15 +23,21 @@ export const InLessonReport = ({
     dataProvider,
     hasReportGroupPermission,
     preSaveHook,
+    teacher,
 }) => {
     const storePrefix = gradeMode ? 'InLessonReport.Grade' : 'InLessonReport.Att';
     const [lessonContext, setLessonContext] = useStore(`${storePrefix}.context`, null);
     const { lesson, students } = lessonContext || {};
-    const [selectedTeacher, setSelectedTeacher] = useStore(`${storePrefix}.selectedTeacher`, null);
+    const [selectedTeacher, setSelectedTeacher] = useStore(`${storePrefix}.selectedTeacher`, teacher || null);
     const [, setFormData] = useStore(`${storePrefix}.form`, null);
     const [, setReportDates] = useStore(`${storePrefix}.reportDates`, null);
     const lateValue = useLateValue();
     const notify = useNotify();
+    useEffect(() => {
+        if (teacher && !selectedTeacher) {
+            setSelectedTeacher(teacher);
+        }
+    }, [teacher]);
 
     const handleTeacherSelect = useCallback((teacher) => {
         setSelectedTeacher(teacher);
@@ -43,23 +49,23 @@ export const InLessonReport = ({
 
     const handleCancel = useCallback(() => {
         setLessonContext(null);
-        setSelectedTeacher(null);
+        setSelectedTeacher(teacher || null);
         setDataToSave(null);
         setFormData(null);
         setReportDates(null);
-    }, [setLessonContext, setSelectedTeacher, setDataToSave, setFormData, setReportDates]);
+    }, [teacher, setLessonContext, setSelectedTeacher, setDataToSave, setFormData, setReportDates]);
 
     const handleSuccessWrapped = useCallback(() => {
         setLessonContext(null);
-        setSelectedTeacher(null);
+        setSelectedTeacher(teacher || null);
         setFormData(null);
         setReportDates(null);
         handleSuccess();
-    }, [handleSuccess, setLessonContext, setSelectedTeacher, setFormData, setReportDates]);
+    }, [teacher, handleSuccess, setLessonContext, setSelectedTeacher, setFormData, setReportDates]);
 
     const handleSave = useCallback(async (formData) => {
         const { reportDates, howManyLessons, lessonDetails, signatureData, ...rest } = formData;
-        
+
         // Build dataToSave array WITHOUT reportGroupSessionId
         // The preSaveHook will add it when actually saving
         const dataToSave = [];
@@ -68,15 +74,15 @@ export const InLessonReport = ({
             klassReferenceId: lesson.klassReferenceIds[0],
             lessonReferenceId: lesson.id,
         };
-        
+
         reportDates.forEach((reportDate, index) => {
-            const reportDateEntry = { 
-                ...entry, 
+            const reportDateEntry = {
+                ...entry,
                 reportDate,
                 // Store index for preSaveHook to match with sessions
                 _dateIndex: index,
             };
-            
+
             Object.keys(rest).forEach((studentId) => {
                 const newEntry = { ...reportDateEntry, studentReferenceId: studentId };
                 if (gradeMode) {
