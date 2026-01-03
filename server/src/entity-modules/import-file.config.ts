@@ -7,7 +7,7 @@ import { BulkToPdfReportGenerator } from "@shared/utils/report/bulk-to-pdf.gener
 import { CommonReportData } from "@shared/utils/report/types";
 import { ImportFile } from "@shared/entities/ImportFile.entity";
 import lessonSignaturePdfReport from "src/reports/lessonSignaturePdfReport";
-import { getAsNumberArray } from "src/utils/queryParam.util";
+import { getAsNumberArray } from "@shared/utils/queryParam.util";
 
 const entityNameDictionary = {
   student: 'תלמידות',

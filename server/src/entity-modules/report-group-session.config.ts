@@ -6,7 +6,7 @@ import { CommonReportData } from "@shared/utils/report/types";
 import { ReportGroupSession } from "../db/entities/ReportGroupSession.entity";
 import reportGroupSessionsSummary from "src/reports/reportGroupSessionsSummary";
 import { In } from "typeorm";
-import { getAsNumberArray, getAsNumber } from "src/utils/queryParam.util";
+import { getAsNumberArray, getAsNumber } from "@shared/utils/queryParam.util";
 
 class ReportGroupSessionService<T extends Entity | ReportGroupSession> extends BaseEntityService<T> {
     reportsDict = {

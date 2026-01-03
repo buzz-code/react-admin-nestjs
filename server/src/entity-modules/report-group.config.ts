@@ -10,7 +10,7 @@ import { IHeader } from "@shared/utils/exporter/types";
 import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 import { Repository } from "typeorm";
 import { BadRequestException } from "@nestjs/common";
-import { getAsNumberArray, getAsString } from "src/utils/queryParam.util";
+import { getAsNumberArray, getAsString } from "@shared/utils/queryParam.util";
 
 class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityService<T> {
     reportsDict = {

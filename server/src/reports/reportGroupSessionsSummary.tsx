@@ -3,7 +3,7 @@ import { DataSource, In } from 'typeorm';
 import { ReportGroupSession } from 'src/db/entities/ReportGroupSession.entity';
 import { AttReport } from 'src/db/entities/AttReport.entity';
 import { Grade } from 'src/db/entities/Grade.entity';
-import { groupDataByKeysAndCalc } from 'src/utils/reportData.util';
+import { groupDataByKeysAndCalc } from '@shared/utils/reportData.util';
 import { formatDate } from '@shared/utils/formatting/formatter.util';
 import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { ReactToPdfReportGenerator } from '@shared/utils/report/react-to-pdf.generator';

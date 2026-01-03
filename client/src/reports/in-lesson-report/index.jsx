@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { Container, Paper, Stack } from '@mui/material';
-import { useNotify } from 'react-admin';
+import { useNotify, useStore } from 'react-admin';
 import { ReportContext, defaultContextValue } from './context';
 import { LessonSelector } from './LessonSelector';
 import { TeacherSelector } from './TeacherSelector';
@@ -25,9 +25,12 @@ export const InLessonReport = ({
     preSaveHook,
     teacher,
 }) => {
-    const [lesson, setLesson] = useState(null);
-    const [students, setStudents] = useState(null);
-    const [selectedTeacher, setSelectedTeacher] = useState(teacher || null);
+    const storePrefix = gradeMode ? 'InLessonReport.Grade' : 'InLessonReport.Att';
+    const [lessonContext, setLessonContext] = useStore(`${storePrefix}.context`, null);
+    const { lesson, students } = lessonContext || {};
+    const [selectedTeacher, setSelectedTeacher] = useStore(`${storePrefix}.selectedTeacher`, teacher || null);
+    const [, setFormData] = useStore(`${storePrefix}.form`, null);
+    const [, setReportDates] = useStore(`${storePrefix}.reportDates`, null);
     const lateValue = useLateValue();
     const notify = useNotify();
     useEffect(() => {
@@ -38,18 +41,27 @@ export const InLessonReport = ({
 
     const handleTeacherSelect = useCallback((teacher) => {
         setSelectedTeacher(teacher);
-    }, []);
+    }, [setSelectedTeacher]);
 
     const handleLessonFound = useCallback(({ lesson, students }) => {
-        setLesson(lesson);
-        setStudents(students);
-    }, []);
+        setLessonContext({ lesson, students });
+    }, [setLessonContext]);
 
     const handleCancel = useCallback(() => {
-        setLesson(null);
+        setLessonContext(null);
         setSelectedTeacher(teacher || null);
         setDataToSave(null);
-    }, [teacher, setDataToSave]);
+        setFormData(null);
+        setReportDates(null);
+    }, [teacher, setLessonContext, setSelectedTeacher, setDataToSave, setFormData, setReportDates]);
+
+    const handleSuccessWrapped = useCallback(() => {
+        setLessonContext(null);
+        setSelectedTeacher(teacher || null);
+        setFormData(null);
+        setReportDates(null);
+        handleSuccess();
+    }, [teacher, handleSuccess, setLessonContext, setSelectedTeacher, setFormData, setReportDates]);
 
     const handleSave = useCallback(async (formData) => {
         const { reportDates, howManyLessons, lessonDetails, signatureData, ...rest } = formData;
@@ -108,7 +120,7 @@ export const InLessonReport = ({
         Datagrid,
         data,
         saveData,
-        handleSuccess,
+        handleSuccess: handleSuccessWrapped,
         handleCancel,
     };
 
@@ -127,7 +139,7 @@ export const InLessonReport = ({
                         )
                     ) : (
                         <ReportContext.Provider value={contextValue}>
-                            <MainReport gradeMode={gradeMode} handleSave={handleSave} />
+                            <MainReport gradeMode={gradeMode} handleSave={handleSave} storePrefix={storePrefix} />
                         </ReportContext.Provider>
                     )}
                 </Stack>

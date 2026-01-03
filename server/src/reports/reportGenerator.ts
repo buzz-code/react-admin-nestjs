@@ -9,7 +9,7 @@ import { FormatString } from "@shared/utils/yemot/yemot.interface";
 import { DataSource } from "typeorm";
 import { MailSendService } from "@shared/utils/mail/mail-send.service";
 import { sendBulkTeacherMailWithFile } from "@shared/utils/report/bulk-mail-file.util";
-import { getAsArray, getAsBoolean, getAsNumber, getAsString } from "src/utils/queryParam.util";
+import { getAsArray, getAsBoolean, getAsNumber, getAsString } from "@shared/utils/queryParam.util";
 
 export function generateStudentReportCard(userId: any, reqExtra: any, generator: BaseReportGenerator) {
     const extraParams: Partial<IReportParams> = {

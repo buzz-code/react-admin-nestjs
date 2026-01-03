@@ -5,7 +5,7 @@ import { IHeader } from "@shared/utils/exporter/types";
 import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util";
 import { AttReport } from "src/db/entities/AttReport.entity";
 import { hasPermission, isAdmin } from '@shared/utils/permissionsUtil';
-import { roundObjectProperty } from "src/utils/reportData.util";
+import { roundObjectProperty } from "@shared/utils/reportData.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {

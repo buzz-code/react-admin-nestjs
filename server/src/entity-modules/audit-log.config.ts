@@ -7,7 +7,7 @@ import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { In, Repository } from "typeorm";
 import { Student } from "src/db/entities/Student.entity";
 import { Teacher } from "src/db/entities/Teacher.entity";
-import { getAsArray } from "src/utils/queryParam.util";
+import { getAsArray } from "@shared/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {

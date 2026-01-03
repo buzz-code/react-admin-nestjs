@@ -8,7 +8,7 @@ import { User } from '@shared/entities/User.entity';
 import { In, Between, MoreThanOrEqual, LessThanOrEqual, FindOptionsWhere, FindOperator } from 'typeorm';
 import { ISpecialField } from '@shared/utils/importer/types';
 import * as ExcelJS from 'exceljs';
-import { getUniqueValues, groupDataByKeysAndCalc } from 'src/utils/reportData.util';
+import { getUniqueValues, groupDataByKeysAndCalc } from '@shared/utils/reportData.util';
 import { ReportGroup } from 'src/db/entities/ReportGroup.entity';
 import { formatTime, formatDate } from '@shared/utils/formatting/formatter.util';
 
