@@ -68,7 +68,6 @@ import Tutorial from '@shared/components/views/Tutorial';
 import PageList from '@shared/components/views/PageList';
 import ScannerUpload from '@shared/components/views/ScannerUpload';
 import InLessonReport from 'src/reports/InLessonReport';
-import { TeacherPersonalAreaWrapper } from 'src/components/TeacherPersonalAreaWrapper';
 import Roadmap from '@shared/components/views/Roadmap';
 import MichlolFileHelper from '@shared/components/views/MichlolFileHelper';
 import ApprovedAbsencesUpload from 'src/components/ApprovedAbsencesUpload';
@@ -114,7 +113,9 @@ const App = () => (
         {permissions => {
           const onlyInLesson = isOnlyInLessonReport(permissions) && !isAdmin(permissions);
           const teacherView = isTeacherView(permissions) && !isAdmin(permissions);
-          if (onlyInLesson) {
+          
+          // Combine onlyInLesson and teacherView - both use the same dashboard with teacher authentication
+          if (onlyInLesson || teacherView) {
             return (
               <>
                 <Resource name="teacher" />
@@ -122,18 +123,6 @@ const App = () => (
                 <Resource name="att_report" {...attReport} list={null} show={null} />
                 <Resource name="student_percent_report" />
                 <Resource name="student_by_year" />
-                <CustomRoutes>
-                  <Route path="/in-lesson-report-att/*" element={<TeacherPersonalAreaWrapper />} />
-                  <Route path="/in-lesson-report-grade/*" element={<TeacherPersonalAreaWrapper gradeMode />} />
-                </CustomRoutes>
-              </>
-            );
-          }
-          if (teacherView) {
-            return (
-              <>
-                <Resource name="teacher" />
-                <Resource name="lesson" />
                 <CustomRoutes>
                   <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
                   <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />

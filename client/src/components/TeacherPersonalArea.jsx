@@ -6,13 +6,12 @@ import {
   Tabs,
   Tab,
   Container,
-  Button,
 } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import HistoryIcon from '@mui/icons-material/History';
 import PivotTableChartIcon from '@mui/icons-material/PivotTableChart';
 import PercentIcon from '@mui/icons-material/Percent';
+import { useObjectStore } from 'src/utils/storeUtil';
 
 import { InLessonReport } from '../reports/in-lesson-report';
 import { FilteredAttReportList } from './teacher-personal-area/FilteredAttReportList';
@@ -33,56 +32,21 @@ function TabPanel({ children, value, index, ...other }) {
   );
 }
 
-export const TeacherPersonalArea = ({
-  teacher,
-  onLogout,
-  gradeMode,
-  resource,
-  Datagrid,
-  handleSuccess,
-  setDataToSave,
-  setSignatureMetadata,
-  data,
-  saveData,
-  isShowLate,
-  dataProvider,
-  hasReportGroupPermission,
-  preSaveHook,
-}) => {
+export const TeacherPersonalArea = () => {
   const [currentTab, setCurrentTab] = useState(0);
+  const { value: teacher } = useObjectStore('teacher');
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
   };
 
+  if (!teacher) {
+    return null; // TeacherGuard will handle authentication
+  }
+
   return (
     <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
       <Paper elevation={2}>
-        {/* Header */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            px: 3,
-            py: 2,
-            borderBottom: 1,
-            borderColor: 'divider',
-          }}
-        >
-          <Typography variant="h5" component="h1">
-            שלום, {teacher.name}
-          </Typography>
-          <Button
-            variant="outlined"
-            startIcon={<LogoutIcon />}
-            onClick={onLogout}
-            size="small"
-          >
-            יציאה
-          </Button>
-        </Box>
-
         {/* Tabs */}
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs
@@ -117,20 +81,9 @@ export const TeacherPersonalArea = ({
         {/* Tab Panels */}
         <TabPanel value={currentTab} index={0}>
           <InLessonReport
-            gradeMode={gradeMode}
-            resource={resource}
-            Datagrid={Datagrid}
-            handleSuccess={handleSuccess}
-            setDataToSave={setDataToSave}
-            setSignatureMetadata={setSignatureMetadata}
-            data={data}
-            saveData={saveData}
-            isShowLate={isShowLate}
-            isStartWithTeacher={false}
-            dataProvider={dataProvider}
-            hasReportGroupPermission={hasReportGroupPermission}
-            preSaveHook={preSaveHook}
+            teacher={teacher}
             preSelectedTeacher={teacher}
+            isStartWithTeacher={false}
           />
         </TabPanel>
 
