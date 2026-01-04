@@ -36,6 +36,6 @@ export const useIsLessonSignature = () => useHasPermission(appPermissions.lesson
 export const isApprovedAbsencesBulk = (permissions) => isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.approvedAbsencesBulk);
 export const useIsApprovedAbsencesBulk = () => useHasPermission(appPermissions.approvedAbsencesBulk);
 
-export const isTeacherView = (permissions) => isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.teacherView);
+export const isTeacherView = (permissions) => hasPermissionLogic(permissions, appPermissions.teacherView);
 export const useIsTeacherView = () => useHasPermission(appPermissions.teacherView);
 
