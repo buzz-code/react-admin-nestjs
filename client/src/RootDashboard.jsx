@@ -20,7 +20,7 @@ export const RootDashboard = (props) => {
   }
 }
 
-const TeacherGuard = ({ children }) => {
+export const TeacherGuard = ({ children }) => {
   const dataProvider = useDataProvider();
   const notify = useNotify();
   const { value: teacher, set: setTeacher, clear } = useObjectStore('teacher');

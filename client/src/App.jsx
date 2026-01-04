@@ -18,7 +18,7 @@ const appTheme = createTheme({
 });
 
 import { Layout } from 'src/GeneralLayout';
-import { RootDashboard } from 'src/RootDashboard';
+import { RootDashboard, TeacherGuard } from 'src/RootDashboard';
 
 import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityGuesser';
 import attReport from "src/entities/att-report";
@@ -131,8 +131,16 @@ const App = () => (
                 <Resource name="teacher" />
                 <Resource name="lesson" />
                 <CustomRoutes>
-                  <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
-                  <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
+                  <Route path="/in-lesson-report-att/*" element={
+                    <TeacherGuard>
+                      <InLessonReport />
+                    </TeacherGuard>
+                  } />
+                  <Route path="/in-lesson-report-grade/*" element={
+                    <TeacherGuard>
+                      <InLessonReport gradeMode />
+                    </TeacherGuard>
+                  } />
                 </CustomRoutes>
               </>
             );
