@@ -47,21 +47,22 @@ export const InLessonReport = ({
         setLessonContext({ lesson, students });
     }, [setLessonContext]);
 
-    const handleCancel = useCallback(() => {
+    const clearData = useCallback(() => {
         setLessonContext(null);
         setSelectedTeacher(teacher || null);
-        setDataToSave(null);
         setFormData(null);
         setReportDates(null);
     }, [teacher, setLessonContext, setSelectedTeacher, setDataToSave, setFormData, setReportDates]);
 
+    const handleCancel = useCallback(() => {
+        clearData();
+        setDataToSave(null);
+    }, [clearData, setDataToSave]);
+
     const handleSuccessWrapped = useCallback(() => {
-        setLessonContext(null);
-        setSelectedTeacher(teacher || null);
-        setFormData(null);
-        setReportDates(null);
+        clearData();
         handleSuccess();
-    }, [teacher, handleSuccess, setLessonContext, setSelectedTeacher, setFormData, setReportDates]);
+    }, [clearData, handleSuccess]);
 
     const handleSave = useCallback(async (formData) => {
         const { reportDates, howManyLessons, lessonDetails, signatureData, ...rest } = formData;
