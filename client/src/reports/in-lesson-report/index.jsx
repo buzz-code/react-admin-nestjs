@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Container, Paper, Stack } from '@mui/material';
-import { useNotify } from 'react-admin';
+import { useNotify, useStore } from 'react-admin';
 import { ReportContext, defaultContextValue } from './context';
 import { LessonSelector } from './LessonSelector';
 import { TeacherSelector } from './TeacherSelector';
@@ -8,6 +8,7 @@ import { MainReport } from './MainReport';
 import { round } from '@shared/utils/numericUtil';
 import { useLateValue } from 'src/settings/settingsUtil';
 import { getCurrentHebrewYear } from '@shared/utils/yearFilter';
+import { getDefaultReportDate } from './StudentList';
 
 export const InLessonReport = ({
     gradeMode,
@@ -23,32 +24,51 @@ export const InLessonReport = ({
     dataProvider,
     hasReportGroupPermission,
     preSaveHook,
+    teacher,
     preSelectedTeacher,
 }) => {
-    const [lesson, setLesson] = useState(null);
-    const [students, setStudents] = useState(null);
-    const [selectedTeacher, setSelectedTeacher] = useState(preSelectedTeacher || null);
+    const storePrefix = gradeMode ? 'InLessonReport.Grade' : 'InLessonReport.Att';
+    const [lessonContext, setLessonContext] = useStore(`${storePrefix}.context`, null);
+    const { lesson, students } = lessonContext || {};
+    const [selectedTeacher, setSelectedTeacher] = useStore(`${storePrefix}.selectedTeacher`, teacher || preSelectedTeacher || null);
+    const [, setFormData] = useStore(`${storePrefix}.form`, null);
+    const [, setReportDates] = useStore(`${storePrefix}.reportDates`, null);
     const lateValue = useLateValue();
     const notify = useNotify();
+    useEffect(() => {
+        if ((teacher || preSelectedTeacher) && !selectedTeacher) {
+            setSelectedTeacher(teacher || preSelectedTeacher);
+        }
+    }, [teacher, preSelectedTeacher, selectedTeacher, setSelectedTeacher]);
 
     const handleTeacherSelect = useCallback((teacher) => {
         setSelectedTeacher(teacher);
-    }, []);
+    }, [setSelectedTeacher]);
 
     const handleLessonFound = useCallback(({ lesson, students }) => {
-        setLesson(lesson);
-        setStudents(students);
-    }, []);
+        setLessonContext({ lesson, students });
+    }, [setLessonContext]);
+
+    const clearData = useCallback(() => {
+        setLessonContext(null);
+        setSelectedTeacher(teacher || preSelectedTeacher || null);
+        setFormData(null);
+        setReportDates([getDefaultReportDate()]);
+    }, [teacher, preSelectedTeacher, setLessonContext, setSelectedTeacher, setFormData, setReportDates]);
 
     const handleCancel = useCallback(() => {
-        setLesson(null);
-        setSelectedTeacher(null);
+        clearData();
         setDataToSave(null);
-    }, []);
+    }, [clearData, setDataToSave]);
+
+    const handleSuccessWrapped = useCallback(() => {
+        clearData();
+        handleSuccess();
+    }, [clearData, handleSuccess]);
 
     const handleSave = useCallback(async (formData) => {
         const { reportDates, howManyLessons, lessonDetails, signatureData, ...rest } = formData;
-        
+
         // Build dataToSave array WITHOUT reportGroupSessionId
         // The preSaveHook will add it when actually saving
         const dataToSave = [];
@@ -57,15 +77,15 @@ export const InLessonReport = ({
             klassReferenceId: lesson.klassReferenceIds[0],
             lessonReferenceId: lesson.id,
         };
-        
+
         reportDates.forEach((reportDate, index) => {
-            const reportDateEntry = { 
-                ...entry, 
+            const reportDateEntry = {
+                ...entry,
                 reportDate,
                 // Store index for preSaveHook to match with sessions
                 _dateIndex: index,
             };
-            
+
             Object.keys(rest).forEach((studentId) => {
                 const newEntry = { ...reportDateEntry, studentReferenceId: studentId };
                 if (gradeMode) {
@@ -103,7 +123,7 @@ export const InLessonReport = ({
         Datagrid,
         data,
         saveData,
-        handleSuccess,
+        handleSuccess: handleSuccessWrapped,
         handleCancel,
     };
 
@@ -112,7 +132,7 @@ export const InLessonReport = ({
             <Paper>
                 <Stack>
                     {!lesson ? (
-                        (isStartWithTeacher && !selectedTeacher && !preSelectedTeacher) ? (
+                        (isStartWithTeacher && !selectedTeacher && !teacher && !preSelectedTeacher) ? (
                             <TeacherSelector onTeacherSelected={handleTeacherSelect} />
                         ) : (
                             <LessonSelector
@@ -122,7 +142,7 @@ export const InLessonReport = ({
                         )
                     ) : (
                         <ReportContext.Provider value={contextValue}>
-                            <MainReport gradeMode={gradeMode} handleSave={handleSave} />
+                            <MainReport gradeMode={gradeMode} handleSave={handleSave} storePrefix={storePrefix} />
                         </ReportContext.Provider>
                     )}
                 </Stack>

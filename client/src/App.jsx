@@ -17,7 +17,8 @@ const appTheme = createTheme({
   isRtl: true
 });
 
-import { Dashboard, Layout } from 'src/GeneralLayout';
+import { Layout } from 'src/GeneralLayout';
+import { RootDashboard } from 'src/RootDashboard';
 
 import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityGuesser';
 import attReport from "src/entities/att-report";
@@ -59,7 +60,7 @@ import paymentTrack from '@shared/components/common-entities/payment-track';
 import yemotCall from '@shared/components/common-entities/yemot-call';
 
 import { isShowUsersData, isEditPagesData, isEditPaymentTracksData, isAdmin } from "@shared/utils/permissionsUtil";
-import { isLessonSignature, isOnlyInLessonReport } from 'src/utils/appPermissions';
+import { isLessonSignature, isOnlyInLessonReport, isTeacherView } from 'src/utils/appPermissions';
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
@@ -108,10 +109,11 @@ const App = () => (
     <RTLStyle>
       <Admin dataProvider={dataProvider} i18nProvider={i18nProvider} authProvider={authProvider}
         theme={appTheme} title='נוכחות'
-        dashboard={Dashboard} layout={Layout} loginPage={LoginPage}
+        dashboard={RootDashboard} layout={Layout} loginPage={LoginPage}
         requireAuth>
         {permissions => {
           const onlyInLesson = isOnlyInLessonReport(permissions) && !isAdmin(permissions);
+          const teacherView = isTeacherView(permissions) && !isAdmin(permissions);
           if (onlyInLesson) {
             return (
               <>
@@ -127,6 +129,19 @@ const App = () => (
               </>
             );
           }
+          if (teacherView) {
+            return (
+              <>
+                <Resource name="teacher" />
+                <Resource name="lesson" />
+                <CustomRoutes>
+                  <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
+                  <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
+                </CustomRoutes>
+              </>
+            );
+          }
+
 
           return (
             <>

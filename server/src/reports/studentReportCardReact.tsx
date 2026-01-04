@@ -19,7 +19,7 @@ import { AttendanceName } from 'src/db/entities/AttendanceName.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { formatHebrewDate } from '@shared/utils/formatting/formatter.util';
-import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from 'src/utils/reportData.util';
+import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from '@shared/utils/reportData.util';
 import { getDisplayGrade, getDisplayAttendance, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect, getDisplayable, getRelevantGrade } from 'src/utils/studentReportData.util';
 import { getReportDateFilter, dateFromString } from '@shared/utils/entity/filters.util';
 import { StudentSpeciality } from 'src/db/view-entities/StudentSpeciality.entity';

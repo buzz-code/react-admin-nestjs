@@ -13,7 +13,7 @@ import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
 import { Lesson } from "src/db/entities/Lesson.entity";
 import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity";
 import { StudentPercentReport } from "src/db/view-entities/StudentPercentReport.entity";
-import { calcSum, getUniqueValues, groupDataByKeys, groupDataByKeysAndCalc } from "src/utils/reportData.util";
+import { calcSum, getUniqueValues, groupDataByKeys, groupDataByKeysAndCalc } from "@shared/utils/reportData.util";
 import { calcReportsData, getDisplayGrade, getDisplayAttendance, getUnknownAbsCount, getRelevantGrade } from "src/utils/studentReportData.util";
 import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from "src/utils/studentReportData.util";
 import { DataSource, In } from "typeorm";

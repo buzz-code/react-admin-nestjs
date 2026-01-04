@@ -7,6 +7,7 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
+import { BulkApproveAbsences } from 'src/components/BulkApproveAbsences';
 
 const filters = [
     ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
@@ -82,12 +83,21 @@ const importer = {
     fields: ['studentTz', 'klassId', 'lessonId', 'reportDate', 'absnceCount', 'absnceCode', 'senderName', 'reason', 'comment', 'isApproved'],
 }
 
+const additionalListActions = [
+    <BulkApproveAbsences
+        key="approvedAbsences"
+        label="אישור חיסורים לתלמידה"
+        name="approvedAbsences"
+    />,
+];
+
 const entity = {
     Datagrid,
     Inputs,
     filters,
     importer,
     filterDefaultValues,
+    additionalListActions,
 };
 
 export default getResourceComponents(entity);

@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
-import { FormDataConsumer, SimpleForm, NumberInput, RecordContextProvider } from 'react-admin';
+import React from 'react';
+import { FormDataConsumer, SimpleForm, NumberInput, RecordContextProvider, useStore } from 'react-admin';
 import Divider from '@mui/material/Divider';
 import { ReportHeader } from './ReportHeader';
 import { getDefaultReportDate, StudentList } from './StudentList';
 import LessonSignatureFields from '../../components/LessonSignatureFields';
 import { FormActions } from './FormActions';
+import { AutoPersistInStore } from './AutoPersistInStore';
 
-export const MainReport = ({ gradeMode, handleSave }) => {
-    const [reportDates, setReportDates] = useState([getDefaultReportDate()]);
+export const MainReport = ({ gradeMode, handleSave, storePrefix }) => {
+    const [reportDates, setReportDates] = useStore(`${storePrefix}.reportDates`, [getDefaultReportDate()]);
 
     return (
         <>
             <ReportHeader />
             <SimpleForm toolbar={null} onSubmit={handleSave}>
+                <AutoPersistInStore storeKey={`${storePrefix}.form`} />
                 <FormDataConsumer>
                     {({ formData }) => (
                         <RecordContextProvider value={formData}>

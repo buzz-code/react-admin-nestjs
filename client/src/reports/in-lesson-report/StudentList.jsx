@@ -39,10 +39,10 @@ export const StudentList = ({ reportDates, setReportDates }) => {
         return cols;
     }, [gradeMode, isShowLate]);
 
-    const handleDateChange = useCallback((index) => (date) => {
+    const handleDateChange = useCallback((index) => (event) => {
         setReportDates(reportDates => {
             const newDates = [...reportDates];
-            newDates[index] = date;
+            newDates[index] = event.target.value;
             return newDates;
         });
     }, [setReportDates]);
@@ -136,7 +136,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {students
+                    {students && students
                         .filter(student => student.student)
                         .map(student => (
                             <TableRow key={student.student.id}>

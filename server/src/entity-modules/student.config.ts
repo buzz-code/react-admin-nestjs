@@ -11,7 +11,7 @@ import studentReportCardReact from "src/reports/studentReportCardReact";
 import { getUserIdFromUser } from "@shared/auth/auth.util";
 import { generateStudentReportCard } from "src/reports/reportGenerator";
 import { In } from "typeorm";
-import { getAsArray, getAsBoolean } from "src/utils/queryParam.util";
+import { getAsArray, getAsBoolean } from "@shared/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {

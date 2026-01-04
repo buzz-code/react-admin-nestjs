@@ -1,4 +1,4 @@
-import { calcAvg, calcPercents, calcSum, getNumericValueOrNull, keepBetween, roundFractional } from "src/utils/reportData.util";
+import { calcAvg, calcPercents, calcSum, getNumericValueOrNull, keepBetween, roundFractional } from "@shared/utils/reportData.util";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { FindOptionsWhere, FindOperator, In, Not, Any } from "typeorm";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
@@ -6,7 +6,7 @@ import { AttReportAndGrade } from "src/db/view-entities/AttReportAndGrade.entity
 import { AttGradeEffect } from "src/db/entities/AttGradeEffect";
 import { GradeName } from "src/db/entities/GradeName.entity";
 import { AttendanceName } from "src/db/entities/AttendanceName.entity";
-import { getAsArray } from "./queryParam.util";
+import { getAsArray } from "@shared/utils/queryParam.util";
 
 interface ISprIdData {
     studentReferenceId: string;

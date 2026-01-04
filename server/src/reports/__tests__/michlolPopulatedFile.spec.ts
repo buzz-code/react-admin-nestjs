@@ -7,11 +7,11 @@ import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import michlolPopulatedFile, { MichlolPopulatedFileParams } from '../michlolPopulatedFile';
 import * as yearUtil from '@shared/utils/entity/year.util';
-import * as reportDataUtil from 'src/utils/reportData.util';
+import * as reportDataUtil from '@shared/utils/reportData.util';
 import * as studentReportDataUtil from 'src/utils/studentReportData.util';
 
 jest.mock('@shared/utils/entity/year.util');
-jest.mock('src/utils/reportData.util');
+jest.mock('@shared/utils/reportData.util');
 jest.mock('src/utils/studentReportData.util');
 
 describe('michlolPopulatedFile', () => {

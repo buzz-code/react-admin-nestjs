@@ -7,7 +7,7 @@ import { getHebrewDateFormatter } from "@shared/utils/formatting/formatter.util"
 import { generateCommonFileResponse } from "@shared/utils/report/report.util";
 import { Grade } from "src/db/entities/Grade.entity";
 import michlolPopulatedFile, { MichlolPopulatedFileParams } from "src/reports/michlolPopulatedFile";
-import { getAsString } from "src/utils/queryParam.util";
+import { getAsString } from "@shared/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
