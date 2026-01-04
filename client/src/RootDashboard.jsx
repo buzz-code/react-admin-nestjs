@@ -3,6 +3,7 @@ import { useDataProvider, SimpleForm, TextInput, useNotify, Toolbar, SaveButton 
 import { useObjectStore } from 'src/utils/storeUtil';
 import { Dashboard } from 'src/GeneralLayout';
 import { useIsTeacherView } from 'src/utils/appPermissions';
+import { TeacherPersonalArea } from 'src/components/TeacherPersonalArea';
 import Button from '@mui/material/Button';
 
 export const RootDashboard = (props) => {
@@ -10,9 +11,8 @@ export const RootDashboard = (props) => {
   if (isTeacherView) {
     return (
       <TeacherGuard>
-        <Dashboard {...props} />
+        <TeacherPersonalArea />
       </TeacherGuard>
-
     );
   }
   else {
@@ -20,7 +20,8 @@ export const RootDashboard = (props) => {
   }
 }
 
-const TeacherGuard = ({ children }) => {
+// Export TeacherGuard so it can be used to protect custom routes
+export const TeacherGuard = ({ children }) => {
   const dataProvider = useDataProvider();
   const notify = useNotify();
   const { value: teacher, set: setTeacher, clear } = useObjectStore('teacher');

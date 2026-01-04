@@ -18,7 +18,7 @@ const appTheme = createTheme({
 });
 
 import { Layout } from 'src/GeneralLayout';
-import { RootDashboard } from 'src/RootDashboard';
+import { RootDashboard, TeacherGuard } from 'src/RootDashboard';
 
 import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityGuesser';
 import attReport from "src/entities/att-report";
@@ -113,26 +113,27 @@ const App = () => (
         {permissions => {
           const onlyInLesson = isOnlyInLessonReport(permissions) && !isAdmin(permissions);
           const teacherView = isTeacherView(permissions) && !isAdmin(permissions);
-          if (onlyInLesson) {
+          
+          // Combine onlyInLesson and teacherView - both use the same dashboard with teacher authentication
+          if (onlyInLesson || teacherView) {
             return (
               <>
                 <Resource name="teacher" />
                 <Resource name="lesson" />
+                <Resource name="att_report" {...attReport} list={null} show={null} />
+                <Resource name="student_percent_report" />
+                <Resource name="student_by_year" />
                 <CustomRoutes>
-                  <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
-                  <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
-                </CustomRoutes>
-              </>
-            );
-          }
-          if (teacherView) {
-            return (
-              <>
-                <Resource name="teacher" />
-                <Resource name="lesson" />
-                <CustomRoutes>
-                  <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
-                  <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
+                  <Route path="/in-lesson-report-att/*" element={
+                    <TeacherGuard>
+                      <InLessonReport />
+                    </TeacherGuard>
+                  } />
+                  <Route path="/in-lesson-report-grade/*" element={
+                    <TeacherGuard>
+                      <InLessonReport gradeMode />
+                    </TeacherGuard>
+                  } />
                 </CustomRoutes>
               </>
             );

@@ -38,7 +38,7 @@ export const InLessonReport = ({
         if (teacher && !selectedTeacher) {
             setSelectedTeacher(teacher);
         }
-    }, [teacher]);
+    }, [teacher, selectedTeacher, setSelectedTeacher]);
 
     const handleTeacherSelect = useCallback((teacher) => {
         setSelectedTeacher(teacher);
@@ -53,7 +53,7 @@ export const InLessonReport = ({
         setSelectedTeacher(teacher || null);
         setFormData(null);
         setReportDates([getDefaultReportDate()]);
-    }, [teacher, setLessonContext, setSelectedTeacher, setDataToSave, setFormData, setReportDates]);
+    }, [teacher, setLessonContext, setSelectedTeacher, setFormData, setReportDates]);
 
     const handleCancel = useCallback(() => {
         clearData();
@@ -131,7 +131,7 @@ export const InLessonReport = ({
             <Paper>
                 <Stack>
                     {!lesson ? (
-                        isStartWithTeacher && !selectedTeacher ? (
+                        (isStartWithTeacher && !selectedTeacher && !teacher) ? (
                             <TeacherSelector onTeacherSelected={handleTeacherSelect} />
                         ) : (
                             <LessonSelector
