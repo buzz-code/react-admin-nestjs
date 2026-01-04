@@ -82,7 +82,6 @@ export const TeacherPersonalArea = () => {
         <TabPanel value={currentTab} index={0}>
           <InLessonReport
             teacher={teacher}
-            preSelectedTeacher={teacher}
             isStartWithTeacher={false}
           />
         </TabPanel>

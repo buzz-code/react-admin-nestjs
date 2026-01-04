@@ -25,21 +25,20 @@ export const InLessonReport = ({
     hasReportGroupPermission,
     preSaveHook,
     teacher,
-    preSelectedTeacher,
 }) => {
     const storePrefix = gradeMode ? 'InLessonReport.Grade' : 'InLessonReport.Att';
     const [lessonContext, setLessonContext] = useStore(`${storePrefix}.context`, null);
     const { lesson, students } = lessonContext || {};
-    const [selectedTeacher, setSelectedTeacher] = useStore(`${storePrefix}.selectedTeacher`, teacher || preSelectedTeacher || null);
+    const [selectedTeacher, setSelectedTeacher] = useStore(`${storePrefix}.selectedTeacher`, teacher || null);
     const [, setFormData] = useStore(`${storePrefix}.form`, null);
     const [, setReportDates] = useStore(`${storePrefix}.reportDates`, null);
     const lateValue = useLateValue();
     const notify = useNotify();
     useEffect(() => {
-        if ((teacher || preSelectedTeacher) && !selectedTeacher) {
-            setSelectedTeacher(teacher || preSelectedTeacher);
+        if (teacher && !selectedTeacher) {
+            setSelectedTeacher(teacher);
         }
-    }, [teacher, preSelectedTeacher, selectedTeacher, setSelectedTeacher]);
+    }, [teacher, selectedTeacher, setSelectedTeacher]);
 
     const handleTeacherSelect = useCallback((teacher) => {
         setSelectedTeacher(teacher);
@@ -51,10 +50,10 @@ export const InLessonReport = ({
 
     const clearData = useCallback(() => {
         setLessonContext(null);
-        setSelectedTeacher(teacher || preSelectedTeacher || null);
+        setSelectedTeacher(teacher || null);
         setFormData(null);
         setReportDates([getDefaultReportDate()]);
-    }, [teacher, preSelectedTeacher, setLessonContext, setSelectedTeacher, setFormData, setReportDates]);
+    }, [teacher, setLessonContext, setSelectedTeacher, setFormData, setReportDates]);
 
     const handleCancel = useCallback(() => {
         clearData();
@@ -132,7 +131,7 @@ export const InLessonReport = ({
             <Paper>
                 <Stack>
                     {!lesson ? (
-                        (isStartWithTeacher && !selectedTeacher && !teacher && !preSelectedTeacher) ? (
+                        (isStartWithTeacher && !selectedTeacher && !teacher) ? (
                             <TeacherSelector onTeacherSelected={handleTeacherSelect} />
                         ) : (
                             <LessonSelector

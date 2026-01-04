@@ -20,7 +20,8 @@ export const RootDashboard = (props) => {
   }
 }
 
-const TeacherGuard = ({ children }) => {
+// Export TeacherGuard so it can be used to protect custom routes
+export const TeacherGuard = ({ children }) => {
   const dataProvider = useDataProvider();
   const notify = useNotify();
   const { value: teacher, set: setTeacher, clear } = useObjectStore('teacher');
