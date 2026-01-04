@@ -8,6 +8,7 @@ import { MainReport } from './MainReport';
 import { round } from '@shared/utils/numericUtil';
 import { useLateValue } from 'src/settings/settingsUtil';
 import { getCurrentHebrewYear } from '@shared/utils/yearFilter';
+import { getDefaultReportDate } from './StudentList';
 
 export const InLessonReport = ({
     gradeMode,
@@ -51,7 +52,7 @@ export const InLessonReport = ({
         setLessonContext(null);
         setSelectedTeacher(teacher || null);
         setFormData(null);
-        setReportDates(null);
+        setReportDates([getDefaultReportDate()]);
     }, [teacher, setLessonContext, setSelectedTeacher, setDataToSave, setFormData, setReportDates]);
 
     const handleCancel = useCallback(() => {
