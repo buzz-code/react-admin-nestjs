@@ -12,14 +12,11 @@ import { Inputs } from './att-report';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
+import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import { useIsLessonSignature } from 'src/utils/appPermissions';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" />,
+    ...commonAdminFilters,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,

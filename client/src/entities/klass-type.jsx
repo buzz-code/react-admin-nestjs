@@ -6,9 +6,10 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { filterByUserId, CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
+import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    adminUserFilter,
     <NumberInput source="key" />,
     <TextInput source="name:$cont" alwaysOn />,
 ];

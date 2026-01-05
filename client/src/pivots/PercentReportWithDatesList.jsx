@@ -6,9 +6,10 @@ import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } fro
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import { ShowMatchingRecordsButton } from '@shared/components/fields/ShowMatchingRecordsButton';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    adminUserFilter,
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,
     <BooleanInput source="extra.lastGrade" label="חשב ציון אחרון" alwaysOn defaultChecked />,
