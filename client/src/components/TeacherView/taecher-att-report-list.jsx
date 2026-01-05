@@ -4,14 +4,14 @@ import { useObjectStore } from 'src/utils/storeUtil';
 
 const BaseList = attReport.list;
 
-const techaeAttReportList = (props) => {
+const teacherAttReportList = (props) => {
     const { value: teacher } = useObjectStore('teacher');
     const teacherFilter = {
-        teacherReferenceId: teacher?.tz
+        teacherReferenceId: teacher.tz
     };
 
     return <TeacherGuard>  <BaseList {...props} filter={teacherFilter} /> </TeacherGuard>;
 
 
 }
-export default { list: techaeAttReportList };
+export default { list: teacherAttReportList };
