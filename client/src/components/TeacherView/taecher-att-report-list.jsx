@@ -7,7 +7,7 @@ const BaseList = attReport.list;
 const teacherAttReportList = (props) => {
     const { value: teacher } = useObjectStore('teacher');
     const teacherFilter = {
-        teacherReferenceId: teacher.tz
+        teacherReferenceId: teacher?.id
     };
 
     return <TeacherGuard>  <BaseList {...props} filter={teacherFilter} /> </TeacherGuard>;
