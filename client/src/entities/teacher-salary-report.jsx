@@ -5,9 +5,10 @@ import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/f
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
+import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    adminUserFilter,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="reportMonthReferenceId" reference="report_month" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klass.klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,

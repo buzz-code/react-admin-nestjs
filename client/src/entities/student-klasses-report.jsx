@@ -6,9 +6,10 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
+import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    adminUserFilter,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId1:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonReferenceInputFilter source="klassReferenceId2:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} />,

@@ -7,9 +7,10 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { CommonSelectArrayField } from "@shared/components/fields/CommonSelectArrayField";
 import { semesterChoices } from "src/entities/report-month";
 import CommonReferenceArrayInput from "@shared/components/fields/CommonReferenceArrayInput";
+import { adminUserFilter } from "@shared/components/fields/PermissionFilter";
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    adminUserFilter,
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
     <NullableBooleanInput source="isActive" label="תלמידה פעילה" />,

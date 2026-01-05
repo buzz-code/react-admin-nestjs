@@ -11,13 +11,10 @@ import { useUnique } from '@shared/utils/useUnique';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" />,
+    ...commonAdminFilters,
     <NumberInput source="key" />,
     <TextInput source="name:$cont" alwaysOn />,
     <CommonReferenceInputFilter source="klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,

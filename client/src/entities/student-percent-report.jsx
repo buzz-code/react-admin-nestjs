@@ -6,9 +6,10 @@ import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } fro
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import { ShowMatchingRecordsButton } from '@shared/components/fields/ShowMatchingRecordsButton';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
+    adminUserFilter,
     // <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     // <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,

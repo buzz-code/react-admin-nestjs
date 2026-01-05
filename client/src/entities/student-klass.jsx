@@ -8,13 +8,10 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
 import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
+import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" />,
+    ...commonAdminFilters,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <NullableBooleanInput source="student.isActive" label="תלמידה פעילה" />,

@@ -7,14 +7,10 @@ import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } fro
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
-import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
+import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" />,
+    ...commonAdminFilters,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,

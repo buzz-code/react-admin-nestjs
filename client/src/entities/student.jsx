@@ -10,13 +10,10 @@ import { CommonReferenceInputFilter } from '@shared/components/fields/CommonRefe
 import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
-    ({ isAdmin }) => isAdmin && <CommonReferenceInputFilter source="userId" reference="user" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$gte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="createdAt:$lte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$gte" />,
-    ({ isAdmin }) => isAdmin && <DateInput source="updatedAt:$lte" />,
+    ...commonAdminFilters,
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
     <NullableBooleanInput source="isActive" alwaysOn />,,
