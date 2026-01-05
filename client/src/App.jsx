@@ -19,10 +19,12 @@ const appTheme = createTheme({
 
 import { Layout } from 'src/GeneralLayout';
 import { RootDashboard } from 'src/RootDashboard';
+import { TeacherGuard } from './components/TeacherView/TeacherAccess';
 
 import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityGuesser';
 import attReport from "src/entities/att-report";
 import attReportWithReportMonth from './entities/att-report-with-report-month';
+import techaeAttReportList from 'src/components/TeacherView/taecher-att-report-list';
 import grade from "src/entities/grade";
 import klass from "src/entities/klass";
 import klassType from "src/entities/klass-type";
@@ -100,7 +102,6 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import { TeacherGuard } from './components/TeacherAccess';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -131,6 +132,7 @@ const App = () => (
               <>
                 <Resource name="teacher" />
                 <Resource name="lesson" />
+                <Resource name="att_report_with_report_month" {...techaeAttReportList} icon={ViewListIcon} />
                 <CustomRoutes>
                   <Route path="/in-lesson-report-att/*" element={<TeacherGuard> <InLessonReport /> </TeacherGuard>} />
                   <Route path="/in-lesson-report-grade/*" element={<TeacherGuard> <InLessonReport gradeMode /> </TeacherGuard>} />
