@@ -142,7 +142,8 @@ INSERT INTO `migrations` (`timestamp`, `name`) VALUES
 (1763834256494, 'optimizeLessonKlassNameView1763834256494'),
 (1763931783912, 'OptimizeLessonKlassJoin1763931783912'),
 (1763933862682, 'OptimizeLessonKlassJsonTable1763933862682'),
-(1767646406606, 'FixImportFileSchema1767646406606');
+(1767646406606, 'FixImportFileSchema1767646406606'),
+(1767647010979, 'FixAttReportView1767647010979');
 
 -- ============================================================
 -- Table: users
@@ -1085,12 +1086,12 @@ FROM texts;
 -- View: att_report_with_report_month
 CREATE OR REPLACE VIEW `att_report_with_report_month` AS
 SELECT 
-  ar.*,
-  rm.id AS reportMonthId,
-  rm.name AS reportMonthName
+  rm.id AS reportMonthReferenceId,
+  ar.*
 FROM att_reports ar
-LEFT JOIN report_month rm ON ar.report_date BETWEEN rm.startDate AND rm.endDate 
-  AND ar.user_id = rm.userId AND ar.year = rm.year;
+LEFT JOIN report_month rm ON ar.user_id = rm.userId 
+  AND ar.report_date <= rm.endDate 
+  AND ar.report_date >= rm.startDate;
 
 -- View: grade_with_report_month
 CREATE OR REPLACE VIEW `grade_with_report_month` AS
