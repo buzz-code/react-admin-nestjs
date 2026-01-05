@@ -8,6 +8,7 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
+import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 
 const filters = [
     ...commonAdminFilters,
