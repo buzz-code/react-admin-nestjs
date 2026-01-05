@@ -5,7 +5,7 @@ import { ReportHeader } from './ReportHeader';
 import { getDefaultReportDate, StudentList } from './StudentList';
 import LessonSignatureFields from '../../components/LessonSignatureFields';
 import { FormActions } from './FormActions';
-import { AutoPersistInStore } from './AutoPersistInStore';
+import { AutoPersistInStore } from '@shared/components/form/AutoPersistInStore';
 
 export const MainReport = ({ gradeMode, handleSave, storePrefix }) => {
     const [reportDates, setReportDates] = useStore(`${storePrefix}.reportDates`, [getDefaultReportDate()]);
