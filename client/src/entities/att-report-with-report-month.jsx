@@ -13,6 +13,7 @@ import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDat
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
+import { useIsLessonSignature } from 'src/utils/appPermissions';
 
 const filters = [
     ...commonAdminFilters,
