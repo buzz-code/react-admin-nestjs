@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useStore } from 'react-admin';
-import { debounce } from 'lodash';
+import { debounce, isEqual } from 'lodash';
 
 export const AutoPersistInStore = ({ storeKey }) => {
     const { watch, reset, getValues } = useFormContext();
@@ -25,13 +25,15 @@ export const AutoPersistInStore = ({ storeKey }) => {
     // Debounce to avoid too many writes
     useEffect(() => {
         const save = debounce((val) => {
-            setSavedValue(val);
+            if (!isEqual(val, savedValue)) {
+                setSavedValue(val);
+            }
         }, 1000);
         
         save(values);
         
         return () => save.cancel();
-    }, [values, setSavedValue]);
+    }, [values, setSavedValue, savedValue]);
 
     return null;
 };
