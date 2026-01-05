@@ -18,7 +18,7 @@ const appTheme = createTheme({
 });
 
 import { Layout } from 'src/GeneralLayout';
-import { RootDashboard, TeacherGuard } from 'src/RootDashboard';
+import { RootDashboard } from 'src/RootDashboard';
 
 import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityGuesser';
 import attReport from "src/entities/att-report";
@@ -100,6 +100,7 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { TeacherGuard } from './components/TeacherAccess';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -131,16 +132,8 @@ const App = () => (
                 <Resource name="teacher" />
                 <Resource name="lesson" />
                 <CustomRoutes>
-                  <Route path="/in-lesson-report-att/*" element={
-                    <TeacherGuard>
-                      <InLessonReport />
-                    </TeacherGuard>
-                  } />
-                  <Route path="/in-lesson-report-grade/*" element={
-                    <TeacherGuard>
-                      <InLessonReport gradeMode />
-                    </TeacherGuard>
-                  } />
+                  <Route path="/in-lesson-report-att/*" element={<TeacherGuard> <InLessonReport /> </TeacherGuard>} />
+                  <Route path="/in-lesson-report-grade/*" element={<TeacherGuard> <InLessonReport gradeMode /> </TeacherGuard>} />
                 </CustomRoutes>
               </>
             );
