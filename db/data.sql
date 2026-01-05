@@ -141,7 +141,8 @@ INSERT INTO `migrations` (`timestamp`, `name`) VALUES
 (1762283756079, 'regenerateReportGroupSessions1762283756079'),
 (1763834256494, 'optimizeLessonKlassNameView1763834256494'),
 (1763931783912, 'OptimizeLessonKlassJoin1763931783912'),
-(1763933862682, 'OptimizeLessonKlassJsonTable1763933862682');
+(1763933862682, 'OptimizeLessonKlassJsonTable1763933862682'),
+(1767646406606, 'FixImportFileSchema1767646406606');
 
 -- ============================================================
 -- Table: users
@@ -912,12 +913,14 @@ DROP TABLE IF EXISTS `import_file`;
 CREATE TABLE `import_file` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
-  `filename` varchar(255) NOT NULL,
+  `fileName` varchar(255) NOT NULL,
+  `fileSource` varchar(255) NOT NULL,
+  `entityIds` text NOT NULL,
   `entityName` varchar(255) NOT NULL,
-  `status` varchar(50) DEFAULT 'pending',
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `fullSuccess` tinyint(1) DEFAULT NULL,
+  `response` varchar(255) DEFAULT NULL,
+  `metadata` json DEFAULT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
