@@ -7,6 +7,7 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import { ShowMatchingRecordsButton } from '@shared/components/fields/ShowMatchingRecordsButton';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
+import { isTeacherView } from 'src/utils/appPermissions';
 
 const filters = [
     adminUserFilter,
@@ -16,7 +17,7 @@ const filters = [
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,
     <NullableBooleanInput source="student.isActive" label="תלמידה פעילה" />,
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
-    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
+    ({ permissions }) => !isTeacherView(permissions) && (<CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />),
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonReferenceInputFilter source="klass.klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ ...filterByUserIdAndYear, teacherReferenceId: 'teacherReferenceId', 'klassReferenceIds:$cont': 'klassReferenceId' }} />,

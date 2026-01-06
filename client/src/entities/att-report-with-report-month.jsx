@@ -13,7 +13,7 @@ import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDat
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
-import { useIsLessonSignature } from 'src/utils/appPermissions';
+import { useIsLessonSignature, isTeacherView } from 'src/utils/appPermissions';
 
 const filters = [
     ...commonAdminFilters,
@@ -22,7 +22,7 @@ const filters = [
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,
     <NullableBooleanInput source="student.isActive" label="תלמידה פעילה" />,
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
-    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
+    ({ permissions }) => !isTeacherView(permissions) && (<CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />),
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonReferenceInputFilter source="klass.klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ ...filterByUserIdAndYear, teacherReferenceId: 'teacherReferenceId', 'klassReferenceIds:$cont': 'klassReferenceId' }} />,
