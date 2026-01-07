@@ -742,17 +742,19 @@ LEFT JOIN `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`
 LEFT JOIN `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`
 GROUP BY `studentReferenceId`, `user_id`, `year`;
 
--- View: lesson_klass_name
+-- View: lesson_klass_name (Fixed to match entity definition)
 CREATE OR REPLACE VIEW `lesson_klass_name` AS
 SELECT 
   `lessons`.`id` AS `id`,
   `lessons`.`user_id` AS `user_id`,
-  `lessons`.`year` AS `year`,
-  `lessons`.`name` AS `lesson_name`,
-  GROUP_CONCAT(DISTINCT `klasses`.`name` ORDER BY `klasses`.`key` SEPARATOR ', ') AS `klass_names`
+  GROUP_CONCAT(DISTINCT `klasses`.`name` ORDER BY `klasses`.`key` SEPARATOR ', ') AS `name`
 FROM `lessons`
-LEFT JOIN `klasses` ON FIND_IN_SET(`klasses`.`id`, `lessons`.`klassReferenceIds`)
-GROUP BY `lessons`.`id`, `lessons`.`user_id`, `lessons`.`year`, `lessons`.`name`;
+LEFT JOIN JSON_TABLE(
+  `lessons`.`klass_reference_ids_json`,
+  "$[*]" COLUMNS(`klass_id` INT PATH "$")
+) AS `jt` ON 1=1
+LEFT JOIN `klasses` ON `klasses`.`id` = `jt`.`klass_id`
+GROUP BY `lessons`.`id`, `lessons`.`user_id`;
 
 
 -- ============================================================
@@ -776,9 +778,11 @@ CREATE TABLE `texts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `texts` (`id`, `user_id`, `name`, `description`, `value`) VALUES
-(1, 1, 'welcome_message', 'Welcome message for homepage', 'Welcome to our school management system'),
-(2, 1, 'footer_text', 'Footer copyright text', '© 5786 School Management System'),
-(3, 2, 'announcement', 'School announcement', 'Important: School will be closed on holidays');
+(1, 0, 'base_text_1', 'Base text template 1', 'Default value 1'),
+(2, 0, 'base_text_2', 'Base text template 2', 'Default value 2'),
+(3, 1, 'welcome_message', 'Welcome message for homepage', 'Welcome to our school management system'),
+(4, 1, 'footer_text', 'Footer copyright text', '© 5786 School Management System'),
+(5, 2, 'announcement', 'School announcement', 'Important: School will be closed on holidays');
 
 -- ============================================================
 -- Table: audit_log
@@ -808,15 +812,19 @@ INSERT INTO `audit_log` (`id`, `userId`, `entityId`, `entityName`, `operation`, 
 DROP TABLE IF EXISTS `yemot_call`;
 CREATE TABLE `yemot_call` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `ApiCallId` varchar(255) NOT NULL,
-  `ApiDID` varchar(255) DEFAULT NULL,
-  `ApiRealDID` varchar(255) DEFAULT NULL,
-  `ApiPhone` varchar(255) DEFAULT NULL,
-  `ApiExtension` varchar(255) DEFAULT NULL,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `userId` int NOT NULL,
+  `apiCallId` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `history` mediumtext NOT NULL,
+  `currentStep` varchar(255) NOT NULL,
   `data` json DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `isOpen` tinyint(1) NOT NULL DEFAULT '1',
+  `hasError` tinyint(1) NOT NULL DEFAULT '0',
+  `errorMessage` varchar(255) DEFAULT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `yemot_call_api_call_id_idx` (`apiCallId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
@@ -827,12 +835,12 @@ DROP TABLE IF EXISTS `mail_address`;
 CREATE TABLE `mail_address` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `alias` varchar(255) NOT NULL,
+  `entity` varchar(255) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_mail_address_userId_address` (`userId`, `address`)
+  UNIQUE KEY `IDX_mail_address_userId_entity` (`userId`, `entity`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
@@ -843,11 +851,13 @@ DROP TABLE IF EXISTS `recieved_mail`;
 CREATE TABLE `recieved_mail` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
-  `from` varchar(255) DEFAULT NULL,
-  `to` varchar(255) DEFAULT NULL,
-  `subject` varchar(500) DEFAULT NULL,
-  `body` longtext,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `mailData` json NOT NULL,
+  `from` varchar(255) NOT NULL,
+  `to` varchar(255) NOT NULL,
+  `subject` text DEFAULT NULL,
+  `body` text DEFAULT NULL,
+  `entityName` varchar(255) NOT NULL,
+  `importFileIds` text NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -859,10 +869,9 @@ CREATE TABLE `recieved_mail` (
 DROP TABLE IF EXISTS `page`;
 CREATE TABLE `page` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `userId` int NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `content` longtext,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `description` varchar(255) NOT NULL,
+  `value` longtext NOT NULL,
+  `order` int DEFAULT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -876,12 +885,12 @@ DROP TABLE IF EXISTS `image`;
 CREATE TABLE `image` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
-  `filename` varchar(255) NOT NULL,
-  `mimetype` varchar(100) DEFAULT NULL,
-  `data` longblob,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `fileData` json NOT NULL,
+  `imageTarget` varchar(255) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_image_userId_imageTarget` (`userId`, `imageTarget`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
@@ -892,18 +901,19 @@ DROP TABLE IF EXISTS `payment_track`;
 CREATE TABLE `payment_track` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `studentNumberLimit` int DEFAULT NULL,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `description` longtext NOT NULL,
+  `monthlyPrice` decimal(10,2) NOT NULL,
+  `annualPrice` decimal(10,2) NOT NULL,
+  `studentNumberLimit` int NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `payment_track` (`id`, `name`, `price`, `studentNumberLimit`) VALUES
-(1, 'Basic Plan', 99.00, 50),
-(2, 'Standard Plan', 199.00, 150),
-(3, 'Premium Plan', 299.00, 500);
+INSERT INTO `payment_track` (`id`, `name`, `description`, `monthlyPrice`, `annualPrice`, `studentNumberLimit`) VALUES
+(1, 'Basic Plan', 'Basic plan for small schools', 9.99, 99.00, 50),
+(2, 'Standard Plan', 'Standard plan for medium schools', 19.99, 199.00, 150),
+(3, 'Premium Plan', 'Premium plan for large schools', 29.99, 299.00, 500);
 
 -- ============================================================
 -- Table: import_file
@@ -932,18 +942,44 @@ DROP TABLE IF EXISTS `att_grade_effect`;
 CREATE TABLE `att_grade_effect` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
-  `key` int NOT NULL,
-  `name` varchar(500) DEFAULT NULL,
-  `gradeEffect` varchar(255) DEFAULT NULL,
-  `absEffect` varchar(255) DEFAULT NULL,
+  `percents` int DEFAULT NULL,
+  `count` int DEFAULT NULL,
+  `effect` int NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `att_grade_effect_user_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `att_grade_effect` (`id`, `user_id`, `key`, `name`, `gradeEffect`, `absEffect`) VALUES
-(1, 1, 1, 'Standard', 'normal', 'normal'),
-(2, 1, 2, 'Reduced Impact', 'reduced', 'reduced');
+INSERT INTO `att_grade_effect` (`id`, `user_id`, `percents`, `count`, `effect`) VALUES
+(1, 1, 90, 1, 5),
+(2, 1, 80, 3, 3),
+(3, 1, 70, 5, 1),
+(4, 2, 85, 2, 4),
+(5, 2, 75, 4, 2);
+
+-- ============================================================
+-- Table: numbers
+-- Numbers table for generating sequences (used in views)
+-- ============================================================
+DROP TABLE IF EXISTS `numbers`;
+CREATE TABLE `numbers` (
+  `number` int NOT NULL,
+  PRIMARY KEY (`number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Insert numbers 0-100 for attendance/grade calculations
+INSERT INTO `numbers` (`number`) VALUES
+(0),(1),(2),(3),(4),(5),(6),(7),(8),(9),(10),
+(11),(12),(13),(14),(15),(16),(17),(18),(19),(20),
+(21),(22),(23),(24),(25),(26),(27),(28),(29),(30),
+(31),(32),(33),(34),(35),(36),(37),(38),(39),(40),
+(41),(42),(43),(44),(45),(46),(47),(48),(49),(50),
+(51),(52),(53),(54),(55),(56),(57),(58),(59),(60),
+(61),(62),(63),(64),(65),(66),(67),(68),(69),(70),
+(71),(72),(73),(74),(75),(76),(77),(78),(79),(80),
+(81),(82),(83),(84),(85),(86),(87),(88),(89),(90),
+(91),(92),(93),(94),(95),(96),(97),(98),(99),(100);
 
 -- ============================================================
 -- Additional Views - All TypeORM View Entities
@@ -1039,48 +1075,61 @@ LEFT JOIN students ON students.id = student_klasses.studentReferenceId
 LEFT JOIN klasses ON klasses.id = student_klasses.klassReferenceId
 GROUP BY students.id;
 
--- View: student_klass_report
-CREATE OR REPLACE VIEW `student_klass_report` AS
+-- View: student_klass_report (Fixed to use student_klasses_report view name)
+CREATE OR REPLACE VIEW `student_klasses_report` AS
 SELECT 
-  CONCAT(COALESCE(sk.studentReferenceId, 'null'), '_', COALESCE(sk.klassReferenceId, 'null'), '_',
-         COALESCE(sk.user_id, 'null'), '_', COALESCE(sk.year, 'null')) AS id,
-  sk.studentReferenceId,
-  sk.klassReferenceId,
-  sk.user_id,
-  sk.year,
-  s.name AS studentName,
-  s.tz AS studentTz,
-  k.name AS klassName
-FROM student_klasses sk
-LEFT JOIN students s ON s.id = sk.studentReferenceId
-LEFT JOIN klasses k ON k.id = sk.klassReferenceId;
+  students.id AS id,
+  students.id AS student_reference_id,
+  students.tz AS student_tz,
+  students.name AS student_name,
+  student_klasses.user_id,
+  student_klasses.year,
+  GROUP_CONCAT(DISTINCT IF(klass_types.klassTypeEnum = 'כיתת אם', student_klasses.klassReferenceId, NULL) SEPARATOR ',') AS klassReferenceId_1,
+  GROUP_CONCAT(DISTINCT IF(klass_types.klassTypeEnum = 'מסלול', student_klasses.klassReferenceId, NULL) SEPARATOR ',') AS klassReferenceId_2,
+  GROUP_CONCAT(DISTINCT IF(klass_types.klassTypeEnum = 'התמחות', student_klasses.klassReferenceId, NULL) SEPARATOR ',') AS klassReferenceId_3,
+  GROUP_CONCAT(DISTINCT IF(klass_types.klassTypeEnum = 'אחר' OR klass_types.klassTypeEnum IS NULL, student_klasses.klassReferenceId, NULL) SEPARATOR ',') AS klassReferenceId_null,
+  GROUP_CONCAT(DISTINCT IF(klass_types.klassTypeEnum = 'כיתת אם', klasses.name, NULL) SEPARATOR ', ') AS klass_name_1,
+  GROUP_CONCAT(DISTINCT IF(klass_types.klassTypeEnum = 'מסלול', klasses.name, NULL) SEPARATOR ', ') AS klass_name_2,
+  GROUP_CONCAT(DISTINCT IF(klass_types.klassTypeEnum = 'התמחות', klasses.name, NULL) SEPARATOR ', ') AS klass_name_3,
+  GROUP_CONCAT(DISTINCT IF(klass_types.klassTypeEnum = 'אחר' OR klass_types.klassTypeEnum IS NULL, klasses.name, NULL) SEPARATOR ', ') AS klass_name_null
+FROM student_klasses
+LEFT JOIN klasses ON klasses.id = student_klasses.klassReferenceId
+LEFT JOIN klass_types ON klass_types.id = klasses.klassTypeReferenceId
+LEFT JOIN students ON students.id = student_klasses.studentReferenceId
+GROUP BY students.id, student_klasses.user_id, student_klasses.year;
 
--- View: student_percent_report
+-- View: student_percent_report (Fixed to match entity definition)
 CREATE OR REPLACE VIEW `student_percent_report` AS
 SELECT 
-  CONCAT(COALESCE(studentReferenceId, 'null'), '_', COALESCE(user_id, 'null'), '_', COALESCE(year, 'null')) AS id,
-  studentReferenceId,
-  user_id,
-  year,
-  SUM(how_many_lessons) AS total_lessons,
-  SUM(abs_count) AS total_absences,
-  CASE 
-    WHEN SUM(how_many_lessons) > 0 
-    THEN (SUM(abs_count) / SUM(how_many_lessons)) * 100 
-    ELSE 0 
-  END AS absence_percentage
-FROM att_reports
-GROUP BY studentReferenceId, user_id, year;
+  sgr.id,
+  sgr.user_id,
+  sgr.year,
+  sgr.studentReferenceId,
+  sgr.teacherReferenceId,
+  sgr.klassReferenceId,
+  sgr.lessonReferenceId,
+  sgr.lessons_count,
+  sgr.abs_count,
+  COALESCE(sgr.abs_count, 0) / GREATEST(COALESCE(sgr.lessons_count, 1), 1) AS abs_percents,
+  (1 - COALESCE(sgr.abs_count, 0) / GREATEST(COALESCE(sgr.lessons_count, 1), 1)) AS att_percents,
+  sgr.grade_avg / 100 AS grade_avg
+FROM student_global_report sgr;
 
--- View: text_by_user
+-- View: text_by_user (Fixed to include filepath)
 CREATE OR REPLACE VIEW `text_by_user` AS
 SELECT 
-  texts.id,
-  texts.user_id AS userId,
-  texts.name,
-  texts.description,
-  texts.value
-FROM texts;
+  CONCAT(users.id, '_', t_base.id) AS id,
+  users.id AS userId,
+  t_base.name,
+  t_base.description,
+  COALESCE(t_user.value, t_base.value) AS value,
+  COALESCE(t_user.filepath, t_base.filepath) AS filepath,
+  t_user.id AS overrideTextId
+FROM texts t_base
+LEFT JOIN users ON users.effective_id IS NULL
+LEFT JOIN texts t_user ON t_user.name = t_base.name AND t_user.user_id = users.id
+WHERE t_base.user_id = 0
+ORDER BY users.id, t_base.id;
 
 -- View: att_report_with_report_month
 CREATE OR REPLACE VIEW `att_report_with_report_month` AS
@@ -1102,35 +1151,65 @@ FROM grades g
 LEFT JOIN report_month rm ON g.report_date BETWEEN rm.startDate AND rm.endDate 
   AND g.user_id = rm.userId AND g.year = rm.year;
 
--- View: known_absence_with_report_month
+-- View: known_absence_with_report_month (Fixed to include reportMonthReferenceId)
 CREATE OR REPLACE VIEW `known_absence_with_report_month` AS
 SELECT 
   ka.*,
-  rm.id AS reportMonthId,
+  rm.id AS reportMonthReferenceId,
   rm.name AS reportMonthName
 FROM known_absences ka
 LEFT JOIN report_month rm ON ka.report_date BETWEEN rm.startDate AND rm.endDate 
   AND ka.user_id = rm.userId AND ka.year = rm.year;
 
--- View: grade_effect_by_user
+-- View: grade_effect_by_user (Fixed to use numbers table with proper calculation)
 CREATE OR REPLACE VIEW `grade_effect_by_user` AS
 SELECT 
-  id,
-  user_id,
-  `key`,
-  name,
-  gradeEffect
-FROM att_grade_effect;
+  CONCAT(users.id, '_', numbers.number) AS id,
+  users.id AS userId,
+  numbers.number AS number,
+  CAST(
+    COALESCE(
+      SUBSTRING_INDEX(
+        MAX(
+          CASE WHEN att_grade_effect.percents <= numbers.number 
+          THEN CONCAT(LPAD(att_grade_effect.percents, 10, '0'), '|', att_grade_effect.effect)
+          ELSE NULL END
+        ), 
+        '|', -1
+      ),
+      '0'
+    ) AS SIGNED
+  ) + 0 AS effect
+FROM numbers
+LEFT JOIN users ON 1 = 1
+LEFT JOIN att_grade_effect ON att_grade_effect.user_id = users.id
+GROUP BY users.id, numbers.number
+ORDER BY users.id, numbers.number;
 
--- View: abs_count_effect_by_user
+-- View: abs_count_effect_by_user (Fixed to use numbers table with proper calculation)
 CREATE OR REPLACE VIEW `abs_count_effect_by_user` AS
 SELECT 
-  id,
-  user_id,
-  `key`,
-  name,
-  absEffect
-FROM att_grade_effect;
+  CONCAT(users.id, '_', numbers.number) AS id,
+  users.id AS userId,
+  numbers.number AS number,
+  CAST(
+    COALESCE(
+      SUBSTRING_INDEX(
+        MAX(
+          CASE WHEN att_grade_effect.count <= numbers.number 
+          THEN CONCAT(LPAD(att_grade_effect.count, 10, '0'), '|', att_grade_effect.effect)
+          ELSE NULL END
+        ), 
+        '|', -1
+      ),
+      '0'
+    ) AS SIGNED
+  ) + 0 AS effect
+FROM numbers
+LEFT JOIN users ON 1 = 1
+LEFT JOIN att_grade_effect ON att_grade_effect.user_id = users.id
+GROUP BY users.id, numbers.number
+ORDER BY users.id, numbers.number;
 
 -- View: teacher_lesson_report_status
 CREATE OR REPLACE VIEW `teacher_lesson_report_status` AS
@@ -1155,12 +1234,12 @@ LEFT JOIN att_reports ar ON ar.lessonReferenceId = l.id
 WHERE l.user_id = rm.userId AND l.year = rm.year
 GROUP BY l.user_id, l.teacherReferenceId, l.id, rm.id, l.year;
 
--- View: teacher_report_status
+-- View: teacher_report_status (Fixed to use userId instead of user_id)
 CREATE OR REPLACE VIEW `teacher_report_status` AS
 SELECT 
-  CONCAT(COALESCE(tlrs.user_id, 'null'), '_', COALESCE(tlrs.teacherId, 'null'), '_',
+  CONCAT(COALESCE(tlrs.userId, 'null'), '_', COALESCE(tlrs.teacherId, 'null'), '_',
          COALESCE(tlrs.reportMonthId, 'null'), '_', COALESCE(tlrs.year, 'null')) AS id,
-  tlrs.user_id,
+  tlrs.userId,
   tlrs.teacherId,
   t.name AS teacherName,
   t.comment AS teacherComment,
@@ -1174,7 +1253,7 @@ SELECT
 FROM teacher_lesson_report_status tlrs
 LEFT JOIN teachers t ON tlrs.teacherId = t.id
 LEFT JOIN report_month rm ON tlrs.reportMonthId = rm.id
-GROUP BY tlrs.user_id, tlrs.teacherId, tlrs.reportMonthId, tlrs.year
+GROUP BY tlrs.userId, tlrs.teacherId, tlrs.reportMonthId, tlrs.year
 ORDER BY tlrs.reportMonthId, tlrs.teacherId;
 
 -- View: teacher_lesson_grade_report_status
@@ -1200,12 +1279,12 @@ LEFT JOIN grades g ON g.lessonReferenceId = l.id
 WHERE l.user_id = rm.userId AND l.year = rm.year
 GROUP BY l.user_id, l.teacherReferenceId, l.id, rm.id, l.year;
 
--- View: teacher_grade_report_status
+-- View: teacher_grade_report_status (Fixed to use userId instead of user_id)
 CREATE OR REPLACE VIEW `teacher_grade_report_status` AS
 SELECT 
-  CONCAT(COALESCE(tlgrs.user_id, 'null'), '_', COALESCE(tlgrs.teacherId, 'null'), '_',
+  CONCAT(COALESCE(tlgrs.userId, 'null'), '_', COALESCE(tlgrs.teacherId, 'null'), '_',
          COALESCE(tlgrs.reportMonthId, 'null'), '_', COALESCE(tlgrs.year, 'null')) AS id,
-  tlgrs.user_id,
+  tlgrs.userId,
   tlgrs.teacherId,
   t.name AS teacherName,
   t.comment AS teacherComment,
@@ -1219,30 +1298,24 @@ SELECT
 FROM teacher_lesson_grade_report_status tlgrs
 LEFT JOIN teachers t ON tlgrs.teacherId = t.id
 LEFT JOIN report_month rm ON tlgrs.reportMonthId = rm.id
-GROUP BY tlgrs.user_id, tlgrs.teacherId, tlgrs.reportMonthId, tlgrs.year
+GROUP BY tlgrs.userId, tlgrs.teacherId, tlgrs.reportMonthId, tlgrs.year
 ORDER BY tlgrs.reportMonthId, tlgrs.teacherId;
 
--- View: teacher_salary_report  
+-- View: teacher_salary_report (Fixed to match entity definition - using att_report_with_report_month)
 CREATE OR REPLACE VIEW `teacher_salary_report` AS
 SELECT 
-  CONCAT(COALESCE(t.id, 'null'), '_', COALESCE(rm.id, 'null'), '_', COALESCE(t.year, 'null')) AS id,
-  t.id AS teacherId,
-  t.user_id AS userId,
-  t.name AS teacherName,
-  t.year,
-  rm.id AS reportMonthId,
-  rm.name AS reportMonthName,
-  COUNT(DISTINCT ar.id) AS attendance_reports_count,
-  COUNT(DISTINCT g.id) AS grade_reports_count,
-  SUM(ar.how_many_lessons) AS total_lessons_taught
-FROM teachers t
-CROSS JOIN report_month rm
-LEFT JOIN att_reports ar ON ar.teacherReferenceId = t.id 
-  AND ar.report_date BETWEEN rm.startDate AND rm.endDate
-  AND ar.user_id = rm.userId
-LEFT JOIN grades g ON g.teacherReferenceId = t.id 
-  AND g.report_date BETWEEN rm.startDate AND rm.endDate
-  AND g.user_id = rm.userId
-WHERE t.user_id = rm.userId AND t.year = rm.year
-GROUP BY t.id, rm.id, t.year;
+  CONCAT(COALESCE(att_reports.user_id, 'null'), '_', COALESCE(att_reports.teacherReferenceId, 'null'), '_',
+         COALESCE(att_reports.lessonReferenceId, 'null'), '_', COALESCE(att_reports.klassReferenceId, 'null'), '_',
+         COALESCE(att_reports.how_many_lessons, 'null'), '_', COALESCE(att_reports.year, 'null'), '_',
+         COALESCE(att_reports.reportMonthReferenceId, 'null')) AS id,
+  att_reports.user_id AS userId,
+  att_reports.teacherReferenceId,
+  att_reports.lessonReferenceId,
+  att_reports.klassReferenceId,
+  att_reports.how_many_lessons AS how_many_lessons,
+  att_reports.year,
+  att_reports.reportMonthReferenceId
+FROM att_report_with_report_month att_reports
+GROUP BY att_reports.user_id, att_reports.teacherReferenceId, att_reports.lessonReferenceId, 
+         att_reports.klassReferenceId, att_reports.how_many_lessons, att_reports.year, att_reports.reportMonthReferenceId;
 
