@@ -1,5 +1,5 @@
-import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, required, minValue, maxLength, SelectField, usePermissions } from 'react-admin';
-import { useIsLessonSignature, isTeacherView } from 'src/utils/appPermissions';
+import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, required, minValue, maxLength, SelectField } from 'react-admin';
+import { useIsLessonSignature, useIsTeacherView } from 'src/utils/appPermissions';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -62,8 +62,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
 }
 
 export const Inputs = ({ isCreate, isAdmin }) => {
-    const { permissions } = usePermissions();
-    const isTeacher = isTeacherView(permissions);
+    const isTeacher = useIsTeacherView();
 
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
