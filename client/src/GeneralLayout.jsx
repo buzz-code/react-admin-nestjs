@@ -47,8 +47,7 @@ const menuGroups = [
     }),
     ({ permissions }) => !isOnlyInLessonReport(permissions) && ({
         name: 'report', icon: <AnalyticsIcon />, routes: [
-            ...(!isTeacherView(permissions) ? [
-                <MenuItemLink key="student-attendance" to="/student/student-attendance" primaryText="דוח נוכחות (פיבוט)" leftIcon={<SummarizeIcon />} />] : []),
+            ({ permissions }) => !isTeacherView(permissions) && <MenuItemLink key="student-attendance" to="/student/student-attendance" primaryText="דוח נוכחות (פיבוט)" leftIcon={<SummarizeIcon />} />,
             <MenuItemLink key="percent-report-with-dates" to="/percent-report-with-dates" primaryText="דוח אחוזים לתלמידה" leftIcon={<PercentIcon />} />
         ]
     }),
