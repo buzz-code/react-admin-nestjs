@@ -1029,41 +1029,41 @@ FROM grades;
 
 -- View: student_global_report
 CREATE OR REPLACE VIEW `student_global_report` AS
-SELECT `atag`.`year` AS `year`,
-    `atag`.`teacherReferenceId` AS `teacherReferenceId`,
+SELECT \`atag\`.\`year\` AS \`year\`,
+    \`atag\`.\`teacherReferenceId\` AS \`teacherReferenceId\`,
     CONCAT(
         COALESCE(studentReferenceId, "null"),
         "_",
-        COALESCE(`atag`.`teacherReferenceId`, "null"),
+        COALESCE(\`atag\`.\`teacherReferenceId\`, "null"),
         "_",
         COALESCE(klassReferenceId, "null"),
         "_",
         COALESCE(lessonReferenceId, "null"),
         "_",
-        COALESCE(`atag`.`user_id`, "null"),
+        COALESCE(\`atag\`.\`user_id\`, "null"),
         "_",
-        COALESCE(`atag`.`year`, "null")
-    ) AS `id`,
-    `atag`.`user_id` AS `user_id`,
+        COALESCE(\`atag\`.\`year\`, "null")
+    ) AS \`id\`,
+    \`atag\`.\`user_id\` AS \`user_id\`,
     studentReferenceId,
     klassReferenceId,
     lessonReferenceId,
     CASE
-        WHEN `klass_types`.`klassTypeEnum` = "כיתת אם" THEN 1
+        WHEN \`klass_types\`.\`klassTypeEnum\` = "כיתת אם" THEN 1
         ELSE 0
-    END AS `isBaseKlass`,
-    SUM(how_many_lessons) AS `lessons_count`,
-    SUM(abs_count) AS `abs_count`,
-    AVG(grade) AS `grade_avg`
-FROM `att_report_and_grade` `atag`
-    LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `atag`.`klassReferenceId`
-    LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`
+    END AS \`isBaseKlass\`,
+    SUM(how_many_lessons) AS \`lessons_count\`,
+    SUM(abs_count) AS \`abs_count\`,
+    AVG(grade) AS \`grade_avg\`
+FROM \`att_report_and_grade\` \`atag\`
+    LEFT JOIN \`klasses\` \`klasses\` ON \`klasses\`.\`id\` = \`atag\`.\`klassReferenceId\`
+    LEFT JOIN \`klass_types\` \`klass_types\` ON \`klass_types\`.\`id\` = \`klasses\`.\`klassTypeReferenceId\`
 GROUP BY studentReferenceId,
-    `atag`.`teacherReferenceId`,
+    \`atag\`.\`teacherReferenceId\`,
     klassReferenceId,
     lessonReferenceId,
-    `atag`.`user_id`,
-    `atag`.`year`;
+    \`atag\`.\`user_id\`,
+    \`atag\`.\`year\`;
 
 -- View: student_speciality
 CREATE OR REPLACE VIEW `student_speciality` AS
@@ -1185,20 +1185,20 @@ FROM `student_global_report` `sgr`;
 
 -- View: text_by_user
 CREATE OR REPLACE VIEW `text_by_user` AS
-SELECT `t_base`.`name` AS `name`,
-    `t_base`.`description` AS `description`,
-    `users`.`id` AS `userId`,
-    `t_user`.`id` AS `overrideTextId`,
-    CONCAT(`users`.`id`, "_", `t_base`.`id`) AS `id`,
-    COALESCE(`t_user`.`value`, `t_base`.`value`) AS `value`,
-    COALESCE(`t_user`.`filepath`, `t_base`.`filepath`) AS `filepath`
-FROM `texts` `t_base`
-    LEFT JOIN `users` `users` ON `users`.`effective_id` is null
-    LEFT JOIN `texts` `t_user` ON `t_user`.`name` = `t_base`.`name`
-    AND `t_user`.`user_id` = `users`.`id`
-WHERE `t_base`.`user_id` = 0
-ORDER BY `users`.`id` ASC,
-    `t_base`.`id` ASC;
+SELECT \`t_base\`.\`name\` AS \`name\`,
+    \`t_base\`.\`description\` AS \`description\`,
+    \`users\`.\`id\` AS \`userId\`,
+    \`t_user\`.\`id\` AS \`overrideTextId\`,
+    CONCAT(\`users\`.\`id\`, "_", \`t_base\`.\`id\`) AS \`id\`,
+    COALESCE(\`t_user\`.\`value\`, \`t_base\`.\`value\`) AS \`value\`,
+    COALESCE(\`t_user\`.\`filepath\`, \`t_base\`.\`filepath\`) AS \`filepath\`
+FROM \`texts\` \`t_base\`
+    LEFT JOIN \`users\` \`users\` ON \`users\`.\`effective_id\` is null
+    LEFT JOIN \`texts\` \`t_user\` ON \`t_user\`.\`name\` = \`t_base\`.\`name\`
+    AND \`t_user\`.\`user_id\` = \`users\`.\`id\`
+WHERE \`t_base\`.\`user_id\` = 0
+ORDER BY \`users\`.\`id\` ASC,
+    \`t_base\`.\`id\` ASC;
 
 -- View: att_report_with_report_month
 CREATE OR REPLACE VIEW att_report_with_report_month AS
@@ -1211,12 +1211,12 @@ FROM att_reports
 
 -- View: grade_with_report_month
 CREATE OR REPLACE VIEW `grade_with_report_month` AS
-SELECT `report_months`.`id` AS `reportMonthReferenceId`,
+SELECT \`report_months\`.\`id\` AS \`reportMonthReferenceId\`,
     grades.*
-FROM `grades` `grades`
-    LEFT JOIN `report_month` `report_months` ON `grades`.`user_id` = `report_months`.`userId`
-    AND `grades`.`report_date` <= `report_months`.`endDate`
-    AND `grades`.`report_date` >= `report_months`.`startDate`;
+FROM \`grades\` \`grades\`
+    LEFT JOIN \`report_month\` \`report_months\` ON \`grades\`.\`user_id\` = \`report_months\`.\`userId\`
+    AND \`grades\`.\`report_date\` <= \`report_months\`.\`endDate\`
+    AND \`grades\`.\`report_date\` >= \`report_months\`.\`startDate\`;
 
 -- View: known_absence_with_report_month
 CREATE OR REPLACE VIEW known_absence_with_report_month AS
@@ -1347,34 +1347,34 @@ ORDER BY tlrs.reportMonthId, tlrs.teacherId;
 
 -- View: teacher_lesson_grade_report_status
 CREATE OR REPLACE VIEW `teacher_lesson_grade_report_status` AS
-SELECT `teachers`.`id` AS `teacherId`,
-    `lessons`.`id` AS `lessonId`,
-    `lessons`.`year` AS `year`,
-    `lessons`.`name` AS `lessonName`,
-    `report_months`.`id` AS `reportMonthId`,
-    `teachers`.`user_id` AS `userId`,
+SELECT \`teachers\`.\`id\` AS \`teacherId\`,
+    \`lessons\`.\`id\` AS \`lessonId\`,
+    \`lessons\`.\`year\` AS \`year\`,
+    \`lessons\`.\`name\` AS \`lessonName\`,
+    \`report_months\`.\`id\` AS \`reportMonthId\`,
+    \`teachers\`.\`user_id\` AS \`userId\`,
     CASE
-        WHEN COUNT(`grades`.`id`) > 0 THEN 1
+        WHEN COUNT(\`grades\`.\`id\`) > 0 THEN 1
         ELSE 0
-    END AS `isReported`
-FROM `teachers` `teachers`
-    INNER JOIN `lessons` `lessons` ON `lessons`.`teacherReferenceId` = `teachers`.`id`
-    LEFT JOIN `report_month` `report_months` ON `report_months`.`userId` = `teachers`.`user_id`
-    LEFT JOIN `grade_with_report_month` `grades` ON `grades`.`teacherReferenceId` = `teachers`.`id`
-    AND `grades`.`lessonReferenceId` = `lessons`.`id`
-    AND `grades`.`reportMonthReferenceId` = `report_months`.`id`
+    END AS \`isReported\`
+FROM \`teachers\` \`teachers\`
+    INNER JOIN \`lessons\` \`lessons\` ON \`lessons\`.\`teacherReferenceId\` = \`teachers\`.\`id\`
+    LEFT JOIN \`report_month\` \`report_months\` ON \`report_months\`.\`userId\` = \`teachers\`.\`user_id\`
+    LEFT JOIN \`grade_with_report_month\` \`grades\` ON \`grades\`.\`teacherReferenceId\` = \`teachers\`.\`id\`
+    AND \`grades\`.\`lessonReferenceId\` = \`lessons\`.\`id\`
+    AND \`grades\`.\`reportMonthReferenceId\` = \`report_months\`.\`id\`
 WHERE COALESCE(
-        `lessons`.`start_date`,
-        `report_months`.`endDate`
-    ) <= `report_months`.`endDate`
+        \`lessons\`.\`start_date\`,
+        \`report_months\`.\`endDate\`
+    ) <= \`report_months\`.\`endDate\`
     AND COALESCE(
-        `lessons`.`end_date`,
-        `report_months`.`startDate`
-    ) >= `report_months`.`startDate`
-GROUP BY `teachers`.`id`,
-    `lessons`.`id`,
-    `report_months`.`id`
-ORDER BY `report_months`.`id` ASC;
+        \`lessons\`.\`end_date\`,
+        \`report_months\`.\`startDate\`
+    ) >= \`report_months\`.\`startDate\`
+GROUP BY \`teachers\`.\`id\`,
+    \`lessons\`.\`id\`,
+    \`report_months\`.\`id\`
+ORDER BY \`report_months\`.\`id\` ASC;
 
 -- View: teacher_grade_report_status
 CREATE OR REPLACE VIEW teacher_grade_report_status AS
