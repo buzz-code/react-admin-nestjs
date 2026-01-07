@@ -1,5 +1,5 @@
 import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, required, minValue, maxLength, SelectField } from 'react-admin';
-import { useIsLessonSignature } from 'src/utils/appPermissions';
+import { useIsLessonSignature, useIsTeacherView } from 'src/utils/appPermissions';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -62,11 +62,13 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
 }
 
 export const Inputs = ({ isCreate, isAdmin }) => {
+    const isTeacher = useIsTeacherView();
+
     return <>
         {!isCreate && isAdmin && <TextInput source="id" disabled />}
         {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
         <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />
-        <CommonReferenceInput source="teacherReferenceId" reference="teacher" validate={required()} dynamicFilter={filterByUserId} />
+        {!isTeacher && <CommonReferenceInput source="teacherReferenceId" reference="teacher" validate={required()} dynamicFilter={filterByUserId} />}
         <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserIdAndYear} />
         <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} dynamicFilter={filterByUserIdAndYear} />
         <DateInput source="reportDate" validate={required()} />
