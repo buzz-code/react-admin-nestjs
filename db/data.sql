@@ -780,9 +780,11 @@ CREATE TABLE `texts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `texts` (`id`, `user_id`, `name`, `description`, `value`) VALUES
-(1, 1, 'welcome_message', 'Welcome message for homepage', 'Welcome to our school management system'),
-(2, 1, 'footer_text', 'Footer copyright text', '© 5786 School Management System'),
-(3, 2, 'announcement', 'School announcement', 'Important: School will be closed on holidays');
+(1, 0, 'welcome_message', 'Welcome message for homepage', 'Welcome to our school management system'),
+(2, 0, 'footer_text', 'Footer copyright text', '© 5786 School Management System'),
+(3, 0, 'announcement', 'School announcement', 'Important: School will be closed on holidays'),
+(4, 1, 'welcome_message', 'Welcome message override for user 1', 'Welcome user 1!'),
+(5, 2, 'announcement', 'Announcement override for user 2', 'Important update for user 2');
 
 -- ============================================================
 -- Table: audit_log
