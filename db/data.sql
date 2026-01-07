@@ -885,7 +885,8 @@ DROP TABLE IF EXISTS `image`;
 CREATE TABLE `image` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
-  `fileData` json NOT NULL,
+  `fileDataSrc` mediumtext NOT NULL,
+  `fileDataTitle` text NOT NULL,
   `imageTarget` varchar(255) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -1216,7 +1217,7 @@ CREATE OR REPLACE VIEW `teacher_lesson_report_status` AS
 SELECT 
   CONCAT(COALESCE(l.user_id, 'null'), '_', COALESCE(l.teacherReferenceId, 'null'), '_',
          COALESCE(l.id, 'null'), '_', COALESCE(rm.id, 'null'), '_', COALESCE(l.year, 'null')) AS id,
-  l.user_id,
+  l.user_id AS userId,
   l.teacherReferenceId AS teacherId,
   l.id AS lessonId,
   l.name AS lessonName,
@@ -1261,7 +1262,7 @@ CREATE OR REPLACE VIEW `teacher_lesson_grade_report_status` AS
 SELECT 
   CONCAT(COALESCE(l.user_id, 'null'), '_', COALESCE(l.teacherReferenceId, 'null'), '_',
          COALESCE(l.id, 'null'), '_', COALESCE(rm.id, 'null'), '_', COALESCE(l.year, 'null')) AS id,
-  l.user_id,
+  l.user_id AS userId,
   l.teacherReferenceId AS teacherId,
   l.id AS lessonId,
   l.name AS lessonName,
