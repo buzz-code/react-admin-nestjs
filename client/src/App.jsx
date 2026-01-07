@@ -24,7 +24,7 @@ import { TeacherGuard } from './components/TeacherView/TeacherAccess';
 import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityGuesser';
 import attReport from "src/entities/att-report";
 import attReportWithReportMonth from './entities/att-report-with-report-month';
-import teacherAttReportList from 'src/components/TeacherView/taecher-att-report-list';
+import teacherAttReport from 'src/components/TeacherView/taecher-att-report-list';
 import TeacherPercentReportWithDatesList from 'src/components/TeacherView/percent-report-with-dates-list';
 import TeacherStudentAttendanceList from 'src/components/TeacherView/student-attendance-list';
 import grade from "src/entities/grade";
@@ -134,7 +134,7 @@ const App = () => (
               <>
                 <Resource name="teacher" />
                 <Resource name="lesson" />
-                <Resource name="att_report_with_report_month" {...teacherAttReportList} icon={ViewListIcon} />
+                <Resource name="att_report_with_report_month" {...teacherAttReport} icon={ViewListIcon} />
                 <CustomRoutes>
                   <Route path="/in-lesson-report-att/*" element={<TeacherGuard> <InLessonReport /> </TeacherGuard>} />
                   <Route path="/in-lesson-report-grade/*" element={<TeacherGuard> <InLessonReport gradeMode /> </TeacherGuard>} />

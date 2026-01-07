@@ -3,6 +3,7 @@ import { TeacherGuard } from "src/components/TeacherView/TeacherAccess.jsx";
 import { useObjectStore } from "src/utils/storeUtil";
 
 const BaseList = attReport.list;
+const BaseEdit = attReport.edit;
 
 const teacherAttReportList = (props) => {
   const { value: teacher } = useObjectStore("teacher");
@@ -16,4 +17,15 @@ const teacherAttReportList = (props) => {
     </TeacherGuard>
   );
 };
-export default { list: teacherAttReportList };
+
+const teacherAttReportEdit = (props) => {
+  return (
+    <TeacherGuard>
+      <BaseEdit {...props} />
+    </TeacherGuard>
+  );
+};
+export default {
+  list: teacherAttReportList,
+  edit: teacherAttReportEdit,
+};
