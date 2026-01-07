@@ -145,7 +145,8 @@ INSERT INTO `migrations` (`timestamp`, `name`) VALUES
 (1767646406606, 'FixImportFileSchema1767646406606'),
 (1767647010979, 'FixAttReportView1767647010979'),
 (1767647010980, 'FixAllViews1767647010980'),
-(1767647702833, 'FixDataDatesAndOverlaps1767647702833');
+(1767647702833, 'FixDataDatesAndOverlaps1767647702833'),
+(1767647800000, 'FixSchemaMisalignments1767647800000');
 
 -- ============================================================
 -- Table: users
@@ -811,15 +812,19 @@ INSERT INTO `audit_log` (`id`, `userId`, `entityId`, `entityName`, `operation`, 
 DROP TABLE IF EXISTS `yemot_call`;
 CREATE TABLE `yemot_call` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `ApiCallId` varchar(255) NOT NULL,
-  `ApiDID` varchar(255) DEFAULT NULL,
-  `ApiRealDID` varchar(255) DEFAULT NULL,
-  `ApiPhone` varchar(255) DEFAULT NULL,
-  `ApiExtension` varchar(255) DEFAULT NULL,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `userId` int NOT NULL,
+  `apiCallId` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `history` mediumtext NOT NULL,
+  `currentStep` varchar(255) NOT NULL,
+  `data` text DEFAULT NULL,
+  `isOpen` tinyint NOT NULL,
+  `hasError` tinyint NOT NULL DEFAULT 0,
+  `errorMessage` varchar(255) DEFAULT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `data` json DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `yemot_call_api_call_id_idx` (`apiCallId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
@@ -830,12 +835,12 @@ DROP TABLE IF EXISTS `mail_address`;
 CREATE TABLE `mail_address` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `alias` varchar(255) NOT NULL,
+  `entity` varchar(255) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_mail_address_userId_address` (`userId`, `address`)
+  UNIQUE KEY `IDX_mail_address_userId_entity` (`userId`, `entity`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
@@ -846,11 +851,13 @@ DROP TABLE IF EXISTS `recieved_mail`;
 CREATE TABLE `recieved_mail` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
-  `from` varchar(255) DEFAULT NULL,
-  `to` varchar(255) DEFAULT NULL,
-  `subject` varchar(500) DEFAULT NULL,
-  `body` longtext,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `mailData` text NOT NULL,
+  `from` varchar(255) NOT NULL,
+  `to` varchar(255) NOT NULL,
+  `subject` text DEFAULT NULL,
+  `body` text DEFAULT NULL,
+  `entityName` varchar(255) NOT NULL,
+  `importFileIds` text NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -862,10 +869,9 @@ CREATE TABLE `recieved_mail` (
 DROP TABLE IF EXISTS `page`;
 CREATE TABLE `page` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `userId` int NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `content` longtext,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `description` varchar(255) NOT NULL,
+  `value` longtext NOT NULL,
+  `order` int DEFAULT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -879,12 +885,13 @@ DROP TABLE IF EXISTS `image`;
 CREATE TABLE `image` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
-  `filename` varchar(255) NOT NULL,
-  `mimetype` varchar(100) DEFAULT NULL,
-  `data` longblob,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `fileDataSrc` mediumtext NOT NULL,
+  `fileDataTitle` text NOT NULL,
+  `imageTarget` varchar(255) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_image_userId_imageTarget` (`userId`, `imageTarget`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
@@ -895,18 +902,19 @@ DROP TABLE IF EXISTS `payment_track`;
 CREATE TABLE `payment_track` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `studentNumberLimit` int DEFAULT NULL,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `description` longtext NOT NULL,
+  `monthlyPrice` int NOT NULL,
+  `annualPrice` int NOT NULL,
+  `studentNumberLimit` int NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `payment_track` (`id`, `name`, `price`, `studentNumberLimit`) VALUES
-(1, 'Basic Plan', 99.00, 50),
-(2, 'Standard Plan', 199.00, 150),
-(3, 'Premium Plan', 299.00, 500);
+INSERT INTO `payment_track` (`id`, `name`, `description`, `monthlyPrice`, `annualPrice`, `studentNumberLimit`) VALUES
+(1, 'Basic Plan', 'Basic features', 100, 1000, 50),
+(2, 'Standard Plan', 'Standard features', 200, 2000, 150),
+(3, 'Premium Plan', 'All features', 300, 3000, 500);
 
 -- ============================================================
 -- Table: import_file
