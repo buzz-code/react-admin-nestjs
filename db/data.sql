@@ -1029,41 +1029,41 @@ FROM grades;
 
 -- View: student_global_report
 CREATE OR REPLACE VIEW `student_global_report` AS
-SELECT \`atag\`.\`year\` AS \`year\`,
-    \`atag\`.\`teacherReferenceId\` AS \`teacherReferenceId\`,
+SELECT `atag`.`year` AS `year`,
+    `atag`.`teacherReferenceId` AS `teacherReferenceId`,
     CONCAT(
         COALESCE(studentReferenceId, "null"),
         "_",
-        COALESCE(\`atag\`.\`teacherReferenceId\`, "null"),
+        COALESCE(`atag`.`teacherReferenceId`, "null"),
         "_",
         COALESCE(klassReferenceId, "null"),
         "_",
         COALESCE(lessonReferenceId, "null"),
         "_",
-        COALESCE(\`atag\`.\`user_id\`, "null"),
+        COALESCE(`atag`.`user_id`, "null"),
         "_",
-        COALESCE(\`atag\`.\`year\`, "null")
-    ) AS \`id\`,
-    \`atag\`.\`user_id\` AS \`user_id\`,
+        COALESCE(`atag`.`year`, "null")
+    ) AS `id`,
+    `atag`.`user_id` AS `user_id`,
     studentReferenceId,
     klassReferenceId,
     lessonReferenceId,
     CASE
-        WHEN \`klass_types\`.\`klassTypeEnum\` = "כיתת אם" THEN 1
+        WHEN `klass_types`.`klassTypeEnum` = "כיתת אם" THEN 1
         ELSE 0
-    END AS \`isBaseKlass\`,
-    SUM(how_many_lessons) AS \`lessons_count\`,
-    SUM(abs_count) AS \`abs_count\`,
-    AVG(grade) AS \`grade_avg\`
-FROM \`att_report_and_grade\` \`atag\`
-    LEFT JOIN \`klasses\` \`klasses\` ON \`klasses\`.\`id\` = \`atag\`.\`klassReferenceId\`
-    LEFT JOIN \`klass_types\` \`klass_types\` ON \`klass_types\`.\`id\` = \`klasses\`.\`klassTypeReferenceId\`
+    END AS `isBaseKlass`,
+    SUM(how_many_lessons) AS `lessons_count`,
+    SUM(abs_count) AS `abs_count`,
+    AVG(grade) AS `grade_avg`
+FROM `att_report_and_grade` `atag`
+    LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `atag`.`klassReferenceId`
+    LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`
 GROUP BY studentReferenceId,
-    \`atag\`.\`teacherReferenceId\`,
+    `atag`.`teacherReferenceId`,
     klassReferenceId,
     lessonReferenceId,
-    \`atag\`.\`user_id\`,
-    \`atag\`.\`year\`;
+    `atag`.`user_id`,
+    `atag`.`year`;
 
 -- View: student_speciality
 CREATE OR REPLACE VIEW `student_speciality` AS
@@ -1094,76 +1094,76 @@ LEFT JOIN klasses ON klasses.id = student_klasses.klassReferenceId
 GROUP BY students.id;
 
 -- View: student_klasses_report
-CREATE OR REPLACE VIEW `student_klasses_report` AS
-SELECT \`student_klasses\`.\`year\` AS \`year\`,
-    \`students\`.\`id\` AS \`id\`,
-    \`students\`.\`id\` AS \`student_reference_id\`,
-    \`students\`.\`tz\` AS \`student_tz\`,
-    \`students\`.\`name\` AS \`student_name\`,
-    \`student_klasses\`.\`user_id\` AS \`user_id\`,
+CREATE OR REPLACE VIEW student_klasses_report AS
+SELECT student_klasses.year AS year,
+    students.id AS id,
+    students.id AS student_reference_id,
+    students.tz AS student_tz,
+    students.name AS student_name,
+    student_klasses.user_id AS user_id,
     GROUP_CONCAT(
-        if(
-            \`klass_types\`.\`klassTypeEnum\` = 'כיתת אם',
-            \`student_klasses\`.\`klassReferenceId\`,
-            null
+        IF(
+            klass_types.klassTypeEnum = 'כיתת אם',
+            student_klasses.klassReferenceId,
+            NULL
         ) SEPARATOR ','
-    ) AS \`klassReferenceId_1\`,
+    ) AS klassReferenceId_1,
     GROUP_CONCAT(
-        if(
-            \`klass_types\`.\`klassTypeEnum\` = 'מסלול',
-            \`student_klasses\`.\`klassReferenceId\`,
-            null
+        IF(
+            klass_types.klassTypeEnum = 'מסלול',
+            student_klasses.klassReferenceId,
+            NULL
         ) SEPARATOR ','
-    ) AS \`klassReferenceId_2\`,
+    ) AS klassReferenceId_2,
     GROUP_CONCAT(
-        if(
-            \`klass_types\`.\`klassTypeEnum\` = 'התמחות',
-            \`student_klasses\`.\`klassReferenceId\`,
-            null
+        IF(
+            klass_types.klassTypeEnum = 'התמחות',
+            student_klasses.klassReferenceId,
+            NULL
         ) SEPARATOR ','
-    ) AS \`klassReferenceId_3\`,
+    ) AS klassReferenceId_3,
     GROUP_CONCAT(
-        if(
-            \`klass_types\`.\`klassTypeEnum\` = 'אחר' || \`klass_types\`.\`klassTypeEnum\` is null,
-            \`student_klasses\`.\`klassReferenceId\`,
-            null
+        IF(
+            klass_types.klassTypeEnum = 'אחר' OR klass_types.klassTypeEnum IS NULL,
+            student_klasses.klassReferenceId,
+            NULL
         ) SEPARATOR ','
-    ) AS \`klassReferenceId_null\`,
+    ) AS klassReferenceId_null,
     GROUP_CONCAT(
-        if(
-            \`klass_types\`.\`klassTypeEnum\` = 'כיתת אם',
-            \`klasses\`.\`name\`,
-            null
+        IF(
+            klass_types.klassTypeEnum = 'כיתת אם',
+            klasses.name,
+            NULL
         ) SEPARATOR ', '
-    ) AS \`klass_name_1\`,
+    ) AS klass_name_1,
     GROUP_CONCAT(
-        if(
-            \`klass_types\`.\`klassTypeEnum\` = 'מסלול',
-            \`klasses\`.\`name\`,
-            null
+        IF(
+            klass_types.klassTypeEnum = 'מסלול',
+            klasses.name,
+            NULL
         ) SEPARATOR ', '
-    ) AS \`klass_name_2\`,
+    ) AS klass_name_2,
     GROUP_CONCAT(
-        if(
-            \`klass_types\`.\`klassTypeEnum\` = 'התמחות',
-            \`klasses\`.\`name\`,
-            null
+        IF(
+            klass_types.klassTypeEnum = 'התמחות',
+            klasses.name,
+            NULL
         ) SEPARATOR ', '
-    ) AS \`klass_name_3\`,
+    ) AS klass_name_3,
     GROUP_CONCAT(
-        if(
-            \`klass_types\`.\`klassTypeEnum\` = 'אחר' || \`klass_types\`.\`klassTypeEnum\` is null,
-            \`klasses\`.\`name\`,
-            null
+        IF(
+            klass_types.klassTypeEnum = 'אחר' OR klass_types.klassTypeEnum IS NULL,
+            klasses.name,
+            NULL
         ) SEPARATOR ', '
-    ) AS \`klass_name_null\`
-FROM \`student_klasses\` \`student_klasses\`
-    LEFT JOIN \`klasses\` \`klasses\` ON \`klasses\`.\`id\` = \`student_klasses\`.\`klassReferenceId\`
-    LEFT JOIN \`klass_types\` \`klass_types\` ON \`klass_types\`.\`id\` = \`klasses\`.\`klassTypeReferenceId\`
-    LEFT JOIN \`students\` \`students\` ON \`students\`.\`id\` = \`student_klasses\`.\`studentReferenceId\`
-GROUP BY \`students\`.\`id\`,
-    \`student_klasses\`.\`user_id\`,
-    \`student_klasses\`.\`year\`;
+    ) AS klass_name_null
+FROM student_klasses
+    LEFT JOIN klasses ON klasses.id = student_klasses.klassReferenceId
+    LEFT JOIN klass_types ON klass_types.id = klasses.klassTypeReferenceId
+    LEFT JOIN students ON students.id = student_klasses.studentReferenceId
+GROUP BY students.id,
+    student_klasses.user_id,
+    student_klasses.year;
 
 -- View: student_percent_report
 CREATE OR REPLACE VIEW `student_percent_report` AS
@@ -1185,47 +1185,47 @@ FROM `student_global_report` `sgr`;
 
 -- View: text_by_user
 CREATE OR REPLACE VIEW `text_by_user` AS
-SELECT \`t_base\`.\`name\` AS \`name\`,
-    \`t_base\`.\`description\` AS \`description\`,
-    \`users\`.\`id\` AS \`userId\`,
-    \`t_user\`.\`id\` AS \`overrideTextId\`,
-    CONCAT(\`users\`.\`id\`, "_", \`t_base\`.\`id\`) AS \`id\`,
-    COALESCE(\`t_user\`.\`value\`, \`t_base\`.\`value\`) AS \`value\`,
-    COALESCE(\`t_user\`.\`filepath\`, \`t_base\`.\`filepath\`) AS \`filepath\`
-FROM \`texts\` \`t_base\`
-    LEFT JOIN \`users\` \`users\` ON \`users\`.\`effective_id\` is null
-    LEFT JOIN \`texts\` \`t_user\` ON \`t_user\`.\`name\` = \`t_base\`.\`name\`
-    AND \`t_user\`.\`user_id\` = \`users\`.\`id\`
-WHERE \`t_base\`.\`user_id\` = 0
-ORDER BY \`users\`.\`id\` ASC,
-    \`t_base\`.\`id\` ASC;
+SELECT `t_base`.`name` AS `name`,
+    `t_base`.`description` AS `description`,
+    `users`.`id` AS `userId`,
+    `t_user`.`id` AS `overrideTextId`,
+    CONCAT(`users`.`id`, "_", `t_base`.`id`) AS `id`,
+    COALESCE(`t_user`.`value`, `t_base`.`value`) AS `value`,
+    COALESCE(`t_user`.`filepath`, `t_base`.`filepath`) AS `filepath`
+FROM `texts` `t_base`
+    LEFT JOIN `users` `users` ON `users`.`effective_id` is null
+    LEFT JOIN `texts` `t_user` ON `t_user`.`name` = `t_base`.`name`
+    AND `t_user`.`user_id` = `users`.`id`
+WHERE `t_base`.`user_id` = 0
+ORDER BY `users`.`id` ASC,
+    `t_base`.`id` ASC;
 
 -- View: att_report_with_report_month
-CREATE OR REPLACE VIEW `att_report_with_report_month` AS
-SELECT \`report_months\`.\`id\` AS \`reportMonthReferenceId\`,
+CREATE OR REPLACE VIEW att_report_with_report_month AS
+SELECT report_months.id AS reportMonthReferenceId,
     att_reports.*
-FROM \`att_reports\` \`att_reports\`
-    LEFT JOIN \`report_month\` \`report_months\` ON \`att_reports\`.\`user_id\` = \`report_months\`.\`userId\`
-    AND \`att_reports\`.\`report_date\` <= \`report_months\`.\`endDate\`
-    AND \`att_reports\`.\`report_date\` >= \`report_months\`.\`startDate\`;
+FROM att_reports
+    LEFT JOIN report_month report_months ON att_reports.user_id = report_months.userId
+    AND att_reports.report_date <= report_months.endDate
+    AND att_reports.report_date >= report_months.startDate;
 
 -- View: grade_with_report_month
 CREATE OR REPLACE VIEW `grade_with_report_month` AS
-SELECT \`report_months\`.\`id\` AS \`reportMonthReferenceId\`,
+SELECT `report_months`.`id` AS `reportMonthReferenceId`,
     grades.*
-FROM \`grades\` \`grades\`
-    LEFT JOIN \`report_month\` \`report_months\` ON \`grades\`.\`user_id\` = \`report_months\`.\`userId\`
-    AND \`grades\`.\`report_date\` <= \`report_months\`.\`endDate\`
-    AND \`grades\`.\`report_date\` >= \`report_months\`.\`startDate\`;
+FROM `grades` `grades`
+    LEFT JOIN `report_month` `report_months` ON `grades`.`user_id` = `report_months`.`userId`
+    AND `grades`.`report_date` <= `report_months`.`endDate`
+    AND `grades`.`report_date` >= `report_months`.`startDate`;
 
 -- View: known_absence_with_report_month
-CREATE OR REPLACE VIEW `known_absence_with_report_month` AS
-SELECT \`report_months\`.\`id\` AS \`reportMonthReferenceId\`,
+CREATE OR REPLACE VIEW known_absence_with_report_month AS
+SELECT report_months.id AS reportMonthReferenceId,
     known_absences.*
-FROM \`known_absences\` \`known_absences\`
-    LEFT JOIN \`report_month\` \`report_months\` ON \`known_absences\`.\`user_id\` = \`report_months\`.\`userId\`
-    AND \`known_absences\`.\`report_date\` <= \`report_months\`.\`endDate\`
-    AND \`known_absences\`.\`report_date\` >= \`report_months\`.\`startDate\`;
+FROM known_absences
+    LEFT JOIN report_month report_months ON known_absences.user_id = report_months.userId
+    AND known_absences.report_date <= report_months.endDate
+    AND known_absences.report_date >= report_months.startDate;
 
 -- View: grade_effect_by_user
 CREATE OR REPLACE VIEW `grade_effect_by_user` AS
@@ -1324,11 +1324,11 @@ GROUP BY `teachers`.`id`,
 ORDER BY `report_months`.`id` ASC;
 
 -- View: teacher_report_status
-CREATE OR REPLACE VIEW `teacher_report_status` AS
+CREATE OR REPLACE VIEW teacher_report_status AS
 SELECT 
-  CONCAT(COALESCE(tlrs.user_id, 'null'), '_', COALESCE(tlrs.teacherId, 'null'), '_',
+  CONCAT(COALESCE(tlrs.userId, 'null'), '_', COALESCE(tlrs.teacherId, 'null'), '_',
          COALESCE(tlrs.reportMonthId, 'null'), '_', COALESCE(tlrs.year, 'null')) AS id,
-  tlrs.user_id,
+  tlrs.userId,
   tlrs.teacherId,
   t.name AS teacherName,
   t.comment AS teacherComment,
@@ -1342,46 +1342,46 @@ SELECT
 FROM teacher_lesson_report_status tlrs
 LEFT JOIN teachers t ON tlrs.teacherId = t.id
 LEFT JOIN report_month rm ON tlrs.reportMonthId = rm.id
-GROUP BY tlrs.user_id, tlrs.teacherId, tlrs.reportMonthId, tlrs.year
+GROUP BY tlrs.userId, tlrs.teacherId, tlrs.reportMonthId, tlrs.year
 ORDER BY tlrs.reportMonthId, tlrs.teacherId;
 
 -- View: teacher_lesson_grade_report_status
 CREATE OR REPLACE VIEW `teacher_lesson_grade_report_status` AS
-SELECT \`teachers\`.\`id\` AS \`teacherId\`,
-    \`lessons\`.\`id\` AS \`lessonId\`,
-    \`lessons\`.\`year\` AS \`year\`,
-    \`lessons\`.\`name\` AS \`lessonName\`,
-    \`report_months\`.\`id\` AS \`reportMonthId\`,
-    \`teachers\`.\`user_id\` AS \`userId\`,
+SELECT `teachers`.`id` AS `teacherId`,
+    `lessons`.`id` AS `lessonId`,
+    `lessons`.`year` AS `year`,
+    `lessons`.`name` AS `lessonName`,
+    `report_months`.`id` AS `reportMonthId`,
+    `teachers`.`user_id` AS `userId`,
     CASE
-        WHEN COUNT(\`grades\`.\`id\`) > 0 THEN 1
+        WHEN COUNT(`grades`.`id`) > 0 THEN 1
         ELSE 0
-    END AS \`isReported\`
-FROM \`teachers\` \`teachers\`
-    INNER JOIN \`lessons\` \`lessons\` ON \`lessons\`.\`teacherReferenceId\` = \`teachers\`.\`id\`
-    LEFT JOIN \`report_month\` \`report_months\` ON \`report_months\`.\`userId\` = \`teachers\`.\`user_id\`
-    LEFT JOIN \`grade_with_report_month\` \`grades\` ON \`grades\`.\`teacherReferenceId\` = \`teachers\`.\`id\`
-    AND \`grades\`.\`lessonReferenceId\` = \`lessons\`.\`id\`
-    AND \`grades\`.\`reportMonthReferenceId\` = \`report_months\`.\`id\`
+    END AS `isReported`
+FROM `teachers` `teachers`
+    INNER JOIN `lessons` `lessons` ON `lessons`.`teacherReferenceId` = `teachers`.`id`
+    LEFT JOIN `report_month` `report_months` ON `report_months`.`userId` = `teachers`.`user_id`
+    LEFT JOIN `grade_with_report_month` `grades` ON `grades`.`teacherReferenceId` = `teachers`.`id`
+    AND `grades`.`lessonReferenceId` = `lessons`.`id`
+    AND `grades`.`reportMonthReferenceId` = `report_months`.`id`
 WHERE COALESCE(
-        \`lessons\`.\`start_date\`,
-        \`report_months\`.\`endDate\`
-    ) <= \`report_months\`.\`endDate\`
+        `lessons`.`start_date`,
+        `report_months`.`endDate`
+    ) <= `report_months`.`endDate`
     AND COALESCE(
-        \`lessons\`.\`end_date\`,
-        \`report_months\`.\`startDate\`
-    ) >= \`report_months\`.\`startDate\`
-GROUP BY \`teachers\`.\`id\`,
-    \`lessons\`.\`id\`,
-    \`report_months\`.\`id\`
-ORDER BY \`report_months\`.\`id\` ASC;
+        `lessons`.`end_date`,
+        `report_months`.`startDate`
+    ) >= `report_months`.`startDate`
+GROUP BY `teachers`.`id`,
+    `lessons`.`id`,
+    `report_months`.`id`
+ORDER BY `report_months`.`id` ASC;
 
 -- View: teacher_grade_report_status
-CREATE OR REPLACE VIEW `teacher_grade_report_status` AS
+CREATE OR REPLACE VIEW teacher_grade_report_status AS
 SELECT 
-  CONCAT(COALESCE(tlgrs.user_id, 'null'), '_', COALESCE(tlgrs.teacherId, 'null'), '_',
+  CONCAT(COALESCE(tlgrs.userId, 'null'), '_', COALESCE(tlgrs.teacherId, 'null'), '_',
          COALESCE(tlgrs.reportMonthId, 'null'), '_', COALESCE(tlgrs.year, 'null')) AS id,
-  tlgrs.user_id,
+  tlgrs.userId,
   tlgrs.teacherId,
   t.name AS teacherName,
   t.comment AS teacherComment,
@@ -1395,7 +1395,7 @@ SELECT
 FROM teacher_lesson_grade_report_status tlgrs
 LEFT JOIN teachers t ON tlgrs.teacherId = t.id
 LEFT JOIN report_month rm ON tlgrs.reportMonthId = rm.id
-GROUP BY tlgrs.user_id, tlgrs.teacherId, tlgrs.reportMonthId, tlgrs.year
+GROUP BY tlgrs.userId, tlgrs.teacherId, tlgrs.reportMonthId, tlgrs.year
 ORDER BY tlgrs.reportMonthId, tlgrs.teacherId;
 
 -- View: teacher_salary_report  
