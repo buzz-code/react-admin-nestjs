@@ -26,7 +26,7 @@ import attReport from "src/entities/att-report";
 import attReportWithReportMonth from './entities/att-report-with-report-month';
 import teacherAttReportList from 'src/components/TeacherView/taecher-att-report-list';
 import TeacherPercentReportWithDatesList from 'src/components/TeacherView/percent-report-with-dates-list';
-import TeacherStudentAttendanceList from 'src/components/TeacherView/student-att-endance-list';
+import TeacherStudentAttendanceList from 'src/components/TeacherView/student-attendance-list';
 import grade from "src/entities/grade";
 import klass from "src/entities/klass";
 import klassType from "src/entities/klass-type";
@@ -139,7 +139,7 @@ const App = () => (
                   <Route path="/in-lesson-report-att/*" element={<TeacherGuard> <InLessonReport /> </TeacherGuard>} />
                   <Route path="/in-lesson-report-grade/*" element={<TeacherGuard> <InLessonReport gradeMode /> </TeacherGuard>} />
                   <Route path="/percent-report-with-dates" element={<TeacherPercentReportWithDatesList />} />
-                  <Route path="student/student-attendance" element={<TeacherStudentAttendanceList />} />
+                  <Route path="/student/student-attendance" element={<TeacherStudentAttendanceList />} />
                 </CustomRoutes>
               </>
             );
