@@ -1,10 +1,8 @@
-import attReport from "../../entities/att-report-with-report-month.jsx";
+import PercentReportWithDatesList from "src/pivots/PercentReportWithDatesList";
 import { TeacherGuard } from "src/components/TeacherView/TeacherAccess.jsx";
 import { useObjectStore } from "src/utils/storeUtil";
 
-const BaseList = attReport.list;
-
-const teacherAttReportList = (props) => {
+const TeacherPercentReportWithDatesList = (props) => {
   const { value: teacher } = useObjectStore("teacher");
   const teacherFilter = {
     teacherReferenceId: teacher?.id,
@@ -12,8 +10,8 @@ const teacherAttReportList = (props) => {
 
   return (
     <TeacherGuard>
-      <BaseList {...props} filter={teacherFilter} />
+      <PercentReportWithDatesList {...props} filter={teacherFilter} />
     </TeacherGuard>
   );
 };
-export default { list: teacherAttReportList };
+export default TeacherPercentReportWithDatesList;

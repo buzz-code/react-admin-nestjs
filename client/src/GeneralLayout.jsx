@@ -45,8 +45,8 @@ const menuGroups = [
             <MenuItemLink key="approved-absences-upload" to="/approved-absences-upload" primaryText="העלאת חיסורים מאושרים" leftIcon={<FileUploadIcon />} />
         ]
     }),
-    ({ permissions }) => (isStandardView(permissions)) && ({
-        name: 'report', icon: <AnalyticsIcon />, routes: [
+        ({ permissions }) => !isOnlyInLessonReport(permissions) && ({
+           name: 'report', icon: <AnalyticsIcon />, routes: [
             <MenuItemLink key="student-attendance" to="/student/student-attendance" primaryText="דוח נוכחות (פיבוט)" leftIcon={<SummarizeIcon />} />,
             <MenuItemLink key="percent-report-with-dates" to="/percent-report-with-dates" primaryText="דוח אחוזים לתלמידה" leftIcon={<PercentIcon />} />,
         ]
