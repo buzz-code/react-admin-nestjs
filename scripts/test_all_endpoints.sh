@@ -4,11 +4,18 @@
 # This script tests GET requests to all registered entities in entities.module.ts
 
 # Backend URL
-BACKEND_URL="http://backend:3000"
+BACKEND_URL="${BACKEND_URL:-http://backend:3000}"
 
-# Admin credentials
-USERNAME="admin_user"
-PASSWORD="admin_password"
+# Admin credentials (should be provided via environment variables)
+# Default values are for the template .env.template file
+USERNAME="${ADMIN_USER%%:*}"
+PASSWORD="${ADMIN_USER#*:}"
+
+# Fallback to defaults if ADMIN_USER is not set (for backward compatibility)
+if [ -z "$USERNAME" ]; then
+  USERNAME="${USERNAME:-admin_user}"
+  PASSWORD="${PASSWORD:-admin_password}"
+fi
 
 echo "============================================"
 echo "API Endpoints Test - $(date)"
