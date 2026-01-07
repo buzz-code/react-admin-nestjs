@@ -46,10 +46,10 @@ INSERT INTO `texts` (`id`, `user_id`, `name`, `description`, `value`) VALUES
 -- After (includes base texts with user_id=0):
 INSERT INTO `texts` (`id`, `user_id`, `name`, `description`, `value`) VALUES
 (1, 0, 'welcome_message', ...),  -- Base text
-(2, 0, 'footer_text', ...),      -- Base text
-(3, 0, 'announcement', ...),      -- Base text
-(4, 1, 'welcome_message', ...),  -- User override
-(5, 2, 'announcement', ...);      -- User override
+(2, 0, 'footer_text', ...),       -- Base text
+(3, 0, 'announcement', ...),       -- Base text
+(4, 1, 'welcome_message', ...),   -- User override
+(5, 2, 'announcement', ...);       -- User override
 ```
 
 ### 3. **Missing .env File**
@@ -85,8 +85,8 @@ docker network create elknet
 If you experience 500 errors after `docker compose down -v`, follow these steps:
 
 ```bash
-# 1. Pull latest changes
-git pull origin main
+# 1. Pull latest changes (use rebase to avoid merge commits)
+git pull --rebase origin main
 
 # 2. Initialize git submodules (CRITICAL)
 git submodule update --init --recursive
@@ -116,6 +116,10 @@ sleep 30
 
 # 8. Test all endpoints
 export ADMIN_USER=$(grep ADMIN_USER .env | cut -d '=' -f2)
+if [ -z "$ADMIN_USER" ]; then
+    echo "Error: ADMIN_USER not found in .env file"
+    exit 1
+fi
 ./scripts/test_all_endpoints.sh
 ```
 
@@ -159,7 +163,12 @@ Look for:
 
 ### Check Database Initialization
 ```bash
-docker exec mysql mysql -umysql_user -pmysql_password mysql_database -e "SHOW TABLES;"
+# Use credentials from .env file
+MYSQL_USER=$(grep MYSQL_USER .env | cut -d '=' -f2)
+MYSQL_PASSWORD=$(grep MYSQL_PASSWORD .env | cut -d '=' -f2)
+MYSQL_DATABASE=$(grep MYSQL_DATABASE .env | cut -d '=' -f2)
+
+docker exec mysql mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e "SHOW TABLES;"
 ```
 
 Should show all tables and views including:
@@ -171,15 +180,25 @@ Should show all tables and views including:
 
 ### Verify Views Are Created
 ```bash
-docker exec mysql mysql -umysql_user -pmysql_password mysql_database -e "SHOW FULL TABLES WHERE Table_type = 'VIEW';"
+# Use credentials from .env file
+MYSQL_USER=$(grep MYSQL_USER .env | cut -d '=' -f2)
+MYSQL_PASSWORD=$(grep MYSQL_PASSWORD .env | cut -d '=' -f2)
+MYSQL_DATABASE=$(grep MYSQL_DATABASE .env | cut -d '=' -f2)
+
+docker exec mysql mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e "SHOW FULL TABLES WHERE Table_type = 'VIEW';"
 ```
 
 Should show approximately 19 views.
 
 ### Check Specific View
 ```bash
+# Use credentials from .env file
+MYSQL_USER=$(grep MYSQL_USER .env | cut -d '=' -f2)
+MYSQL_PASSWORD=$(grep MYSQL_PASSWORD .env | cut -d '=' -f2)
+MYSQL_DATABASE=$(grep MYSQL_DATABASE .env | cut -d '=' -f2)
+
 # Example: Check text_by_user view
-docker exec mysql mysql -umysql_user -pmysql_password mysql_database -e "SELECT COUNT(*) FROM text_by_user;"
+docker exec mysql mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e "SELECT COUNT(*) FROM text_by_user;"
 ```
 
 Should return a count > 0.
