@@ -40,6 +40,7 @@ echo "Testing entity endpoints..."
 echo ""
 
 # List of all entity endpoints (convert camelCase to snake_case)
+# Note: "recieved_mail" spelling is intentional - matches entity name in codebase
 ENDPOINTS="user att_report att_report_with_report_month grade klass klass_type known_absence lesson student_klass student teacher text student_klass_report student_base_klass student_speciality audit_log import_file report_group report_group_session yemot_call mail_address recieved_mail page report_month teacher_report_status teacher_grade_report_status text_by_user student_percent_report att_report_and_grade student_global_report image student_by_year payment_track teacher_salary_report known_absence_with_report_month grade_name attendance_name att_grade_effect grade_effect_by_user abs_count_effect_by_user lesson_klass_name"
 
 # Track results

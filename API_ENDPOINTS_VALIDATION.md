@@ -43,6 +43,7 @@ All 41 registered entity endpoints were tested and **all passed** with HTTP 200 
 | yemot_call | ✓ OK | 200 |
 | mail_address | ✓ OK | 200 |
 | recieved_mail | ✓ OK | 200 |
+<!-- Note: "recieved" spelling is intentional - matches entity name in codebase -->
 | page | ✓ OK | 200 |
 | report_month | ✓ OK | 200 |
 | teacher_report_status | ✓ OK | 200 |
