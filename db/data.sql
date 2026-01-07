@@ -9,15 +9,15 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table: migrations
 -- Stores migration history
 -- ============================================================
-DROP TABLE IF EXISTS migrations;
-CREATE TABLE migrations (
-  id int NOT NULL AUTO_INCREMENT,
-  timestamp bigint NOT NULL,
-  name varchar(255) NOT NULL,
-  PRIMARY KEY (id)
+DROP TABLE IF EXISTS `migrations`;
+CREATE TABLE `migrations` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `timestamp` bigint NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO migrations (timestamp, name) VALUES
+INSERT INTO `migrations` (`timestamp`, `name`) VALUES
 (1675356165986, 'KlassAddReferenceId1675356165986'),
 (1675366584689, 'KlassAddKlassTypeReferenceId1675366584689'),
 (1676234639701, 'addManyReferenceId1676234639701'),
@@ -152,32 +152,32 @@ INSERT INTO migrations (timestamp, name) VALUES
 -- Table: users
 -- Main users table
 -- ============================================================
-DROP TABLE IF EXISTS users;
-CREATE TABLE users (
-  id int NOT NULL AUTO_INCREMENT,
-  name varchar(500) NOT NULL,
-  email varchar(500) DEFAULT NULL,
-  password varchar(500) DEFAULT NULL,
-  phone_number varchar(11) DEFAULT NULL,
-  active tinyint DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  effective_id int DEFAULT NULL,
-  permissions json DEFAULT NULL,
-  additionalData json DEFAULT NULL,
-  userInfo json DEFAULT NULL,
-  isPaid tinyint(1) NOT NULL DEFAULT '0',
-  paymentMethod varchar(255) DEFAULT NULL,
-  mailAddressAlias varchar(255) DEFAULT NULL,
-  mailAddressTitle varchar(255) DEFAULT NULL,
-  paymentTrackId int DEFAULT NULL,
-  bccAddress varchar(255) DEFAULT NULL,
-  PRIMARY KEY (id),
-  KEY user_phone_number_idx (phone_number)
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(500) NOT NULL,
+  `email` varchar(500) DEFAULT NULL,
+  `password` varchar(500) DEFAULT NULL,
+  `phone_number` varchar(11) DEFAULT NULL,
+  `active` tinyint DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `effective_id` int DEFAULT NULL,
+  `permissions` json DEFAULT NULL,
+  `additionalData` json DEFAULT NULL,
+  `userInfo` json DEFAULT NULL,
+  `isPaid` tinyint(1) NOT NULL DEFAULT '0',
+  `paymentMethod` varchar(255) DEFAULT NULL,
+  `mailAddressAlias` varchar(255) DEFAULT NULL,
+  `mailAddressTitle` varchar(255) DEFAULT NULL,
+  `paymentTrackId` int DEFAULT NULL,
+  `bccAddress` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_phone_number_idx` (`phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Password: admin123 (hashed with bcrypt)
-INSERT INTO users (id, name, email, password, phone_number, active, isPaid) VALUES
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `phone_number`, `active`, `isPaid`) VALUES
 (1, 'Admin User', 'admin@example.com', '$2b$10$rZJ5Z5Z5Z5Z5Z5Z5Z5Z5Z.Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5', '0501234567', 1, 1),
 (2, 'School Manager', 'manager@school.com', '$2b$10$rZJ5Z5Z5Z5Z5Z5Z5Z5Z5Z.Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5', '0507654321', 1, 1),
 (3, 'Test Teacher User', 'teacher@school.com', '$2b$10$rZJ5Z5Z5Z5Z5Z5Z5Z5Z5Z.Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5', '0509876543', 1, 0),
@@ -188,28 +188,28 @@ INSERT INTO users (id, name, email, password, phone_number, active, isPaid) VALU
 -- Table: teachers
 -- Teachers information
 -- ============================================================
-DROP TABLE IF EXISTS teachers;
-CREATE TABLE teachers (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  year int DEFAULT NULL,
-  tz varchar(10) NOT NULL,
-  name varchar(500) NOT NULL,
-  phone varchar(10) DEFAULT NULL,
-  phone2 varchar(10) DEFAULT NULL,
-  email varchar(500) DEFAULT NULL,
-  comment varchar(1000) DEFAULT NULL,
-  displayName varchar(500) DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY IDX_teachers_user_tz_year (user_id, tz, year),
-  KEY teachers_users_idx (user_id),
-  KEY teachers_user_id_phone_idx (user_id, phone),
-  KEY teachers_user_id_phone2_idx (user_id, phone2)
+DROP TABLE IF EXISTS `teachers`;
+CREATE TABLE `teachers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `year` int DEFAULT NULL,
+  `tz` varchar(10) NOT NULL,
+  `name` varchar(500) NOT NULL,
+  `phone` varchar(10) DEFAULT NULL,
+  `phone2` varchar(10) DEFAULT NULL,
+  `email` varchar(500) DEFAULT NULL,
+  `comment` varchar(1000) DEFAULT NULL,
+  `displayName` varchar(500) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_teachers_user_tz_year` (`user_id`, `tz`, `year`),
+  KEY `teachers_users_idx` (`user_id`),
+  KEY `teachers_user_id_phone_idx` (`user_id`, `phone`),
+  KEY `teachers_user_id_phone2_idx` (`user_id`, `phone2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO teachers (id, user_id, year, tz, name, phone, phone2, email, displayName) VALUES
+INSERT INTO `teachers` (`id`, `user_id`, `year`, `tz`, `name`, `phone`, `phone2`, `email`, `displayName`) VALUES
 (1, 1, 5786, '123456789', 'Sarah Cohen', '0501111111', '0502222222', 'sarah@school.com', 'Ms. Cohen'),
 (2, 1, 5786, '234567890', 'Rachel Levi', '0503333333', NULL, 'rachel@school.com', 'Ms. Levi'),
 (3, 1, 5786, '345678901', 'Miriam Goldberg', '0504444444', '0505555555', 'miriam@school.com', 'Ms. Goldberg'),
@@ -225,25 +225,25 @@ INSERT INTO teachers (id, user_id, year, tz, name, phone, phone2, email, display
 -- Table: students
 -- Students information
 -- ============================================================
-DROP TABLE IF EXISTS students;
-CREATE TABLE students (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  year int DEFAULT NULL,
-  tz varchar(10) NOT NULL,
-  name varchar(500) NOT NULL,
-  comment varchar(1000) DEFAULT NULL,
-  phone varchar(1000) DEFAULT NULL,
-  address varchar(1000) DEFAULT NULL,
-  is_active tinyint(1) NOT NULL DEFAULT '1',
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY IDX_students_user_tz_year (user_id, tz, year),
-  KEY students_users_idx (user_id)
+DROP TABLE IF EXISTS `students`;
+CREATE TABLE `students` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `year` int DEFAULT NULL,
+  `tz` varchar(10) NOT NULL,
+  `name` varchar(500) NOT NULL,
+  `comment` varchar(1000) DEFAULT NULL,
+  `phone` varchar(1000) DEFAULT NULL,
+  `address` varchar(1000) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_students_user_tz_year` (`user_id`, `tz`, `year`),
+  KEY `students_users_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO students (id, user_id, year, tz, name, phone, address, is_active) VALUES
+INSERT INTO `students` (`id`, `user_id`, `year`, `tz`, `name`, `phone`, `address`, `is_active`) VALUES
 (1, 1, 5786, '111111111', 'Avigail Abramson', '0521111111', '123 Main St, Jerusalem', 1),
 (2, 1, 5786, '222222222', 'Bracha Ben-David', '0522222222', '456 Oak Ave, Tel Aviv', 1),
 (3, 1, 5786, '333333333', 'Chaya Cohen', '0523333333', '789 Pine Rd, Haifa', 1),
@@ -264,23 +264,23 @@ INSERT INTO students (id, user_id, year, tz, name, phone, address, is_active) VA
 -- Table: klass_types
 -- Class types (base class, track, speciality, other)
 -- ============================================================
-DROP TABLE IF EXISTS klass_types;
-CREATE TABLE klass_types (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  key int NOT NULL,
-  name varchar(500) NOT NULL,
-  klassTypeEnum varchar(255) NOT NULL DEFAULT 'אחר',
-  teacher_id varchar(10) DEFAULT NULL,
-  teacherReferenceId int DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY klass_types_users_idx (user_id),
-  KEY klass_types_klassTypeEnum_idx (klassTypeEnum)
+DROP TABLE IF EXISTS `klass_types`;
+CREATE TABLE `klass_types` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `key` int NOT NULL,
+  `name` varchar(500) NOT NULL,
+  `klassTypeEnum` varchar(255) NOT NULL DEFAULT 'אחר',
+  `teacher_id` varchar(10) DEFAULT NULL,
+  `teacherReferenceId` int DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `klass_types_users_idx` (`user_id`),
+  KEY `klass_types_klassTypeEnum_idx` (`klassTypeEnum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO klass_types (id, user_id, key, name, klassTypeEnum, teacher_id, teacherReferenceId) VALUES
+INSERT INTO `klass_types` (`id`, `user_id`, `key`, `name`, `klassTypeEnum`, `teacher_id`, `teacherReferenceId`) VALUES
 (1, 1, 1, 'Aleph Class', 'כיתת אם', '123456789', 1),
 (2, 1, 2, 'Bet Class', 'כיתת אם', '234567890', 2),
 (3, 1, 3, 'Gimel Class', 'כיתת אם', '345678901', 3),
@@ -296,29 +296,29 @@ INSERT INTO klass_types (id, user_id, key, name, klassTypeEnum, teacher_id, teac
 -- Table: klasses
 -- Classes/Groups
 -- ============================================================
-DROP TABLE IF EXISTS klasses;
-CREATE TABLE klasses (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  year int DEFAULT NULL,
-  key int NOT NULL,
-  name varchar(500) NOT NULL,
-  display_name varchar(500) DEFAULT NULL,
-  klass_type_id int DEFAULT NULL,
-  klassTypeReferenceId int DEFAULT NULL,
-  teacher_id varchar(10) DEFAULT NULL,
-  teacherReferenceId int DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY IDX_klasses_user_key_year (user_id, key, year),
-  KEY klasses_users_idx (user_id),
-  KEY klasses_user_id_key_idx (user_id, key),
-  KEY klasses_klass_type_reference_id_idx (klassTypeReferenceId),
-  KEY klasses_teacher_reference_id_idx (teacherReferenceId)
+DROP TABLE IF EXISTS `klasses`;
+CREATE TABLE `klasses` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `year` int DEFAULT NULL,
+  `key` int NOT NULL,
+  `name` varchar(500) NOT NULL,
+  `display_name` varchar(500) DEFAULT NULL,
+  `klass_type_id` int DEFAULT NULL,
+  `klassTypeReferenceId` int DEFAULT NULL,
+  `teacher_id` varchar(10) DEFAULT NULL,
+  `teacherReferenceId` int DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_klasses_user_key_year` (`user_id`, `key`, `year`),
+  KEY `klasses_users_idx` (`user_id`),
+  KEY `klasses_user_id_key_idx` (`user_id`, `key`),
+  KEY `klasses_klass_type_reference_id_idx` (`klassTypeReferenceId`),
+  KEY `klasses_teacher_reference_id_idx` (`teacherReferenceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO klasses (id, user_id, year, key, name, display_name, klass_type_id, klassTypeReferenceId, teacher_id, teacherReferenceId) VALUES
+INSERT INTO `klasses` (`id`, `user_id`, `year`, `key`, `name`, `display_name`, `klass_type_id`, `klassTypeReferenceId`, `teacher_id`, `teacherReferenceId`) VALUES
 (1, 1, 5786, 1, 'Class Aleph-1', 'א-1', 1, 1, '123456789', 1),
 (2, 1, 5786, 2, 'Class Aleph-2', 'א-2', 1, 1, '234567890', 2),
 (3, 1, 5786, 3, 'Class Bet-1', 'ב-1', 2, 2, '345678901', 3),
@@ -334,34 +334,34 @@ INSERT INTO klasses (id, user_id, year, key, name, display_name, klass_type_id, 
 -- Table: lessons
 -- Lessons/Courses
 -- ============================================================
-DROP TABLE IF EXISTS lessons;
-CREATE TABLE lessons (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  year int DEFAULT NULL,
-  key int NOT NULL,
-  name varchar(500) NOT NULL,
-  display_name varchar(500) DEFAULT NULL,
-  klasses varchar(450) DEFAULT NULL,
-  klassReferenceIds text,
-  klass_reference_ids_json json GENERATED ALWAYS AS (cast(concat('[',coalesce(klassReferenceIds,''),']') as json)) STORED,
-  teacher_id varchar(10) DEFAULT NULL,
-  teacherReferenceId int DEFAULT NULL,
-  start_date date DEFAULT NULL,
-  end_date date DEFAULT NULL,
-  comment varchar(1000) DEFAULT NULL,
-  how_many_lessons float DEFAULT NULL,
-  order int DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY IDX_lessons_user_key_year (user_id, key, year),
-  KEY lessons_users_idx (user_id),
-  KEY lessons_user_id_key_idx (user_id, key),
-  KEY lessons_teacher_reference_id_idx (teacherReferenceId)
+DROP TABLE IF EXISTS `lessons`;
+CREATE TABLE `lessons` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `year` int DEFAULT NULL,
+  `key` int NOT NULL,
+  `name` varchar(500) NOT NULL,
+  `display_name` varchar(500) DEFAULT NULL,
+  `klasses` varchar(450) DEFAULT NULL,
+  `klassReferenceIds` text,
+  `klass_reference_ids_json` json GENERATED ALWAYS AS (cast(concat('[',coalesce(`klassReferenceIds`,''),']') as json)) STORED,
+  `teacher_id` varchar(10) DEFAULT NULL,
+  `teacherReferenceId` int DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `comment` varchar(1000) DEFAULT NULL,
+  `how_many_lessons` float DEFAULT NULL,
+  `order` int DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_lessons_user_key_year` (`user_id`, `key`, `year`),
+  KEY `lessons_users_idx` (`user_id`),
+  KEY `lessons_user_id_key_idx` (`user_id`, `key`),
+  KEY `lessons_teacher_reference_id_idx` (`teacherReferenceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO lessons (id, user_id, year, key, name, display_name, klasses, klassReferenceIds, teacher_id, teacherReferenceId, start_date, end_date, how_many_lessons, order) VALUES
+INSERT INTO `lessons` (`id`, `user_id`, `year`, `key`, `name`, `display_name`, `klasses`, `klassReferenceIds`, `teacher_id`, `teacherReferenceId`, `start_date`, `end_date`, `how_many_lessons`, `order`) VALUES
 (1, 1, 5786, 1, 'Mathematics', 'Math', '1,2', '1,2', '123456789', 1, '2025-09-01', '2025-12-31', 40, 1),
 (2, 1, 5786, 2, 'Hebrew', 'Hebrew', '1,2,3', '1,2,3', '234567890', 2, '2025-09-01', '2025-12-31', 45, 2),
 (3, 1, 5786, 3, 'English', 'English', '3,4', '3,4', '345678901', 3, '2025-09-01', '2025-12-31', 38, 3),
@@ -377,27 +377,27 @@ INSERT INTO lessons (id, user_id, year, key, name, display_name, klasses, klassR
 -- Table: student_klasses
 -- Student-Class assignments
 -- ============================================================
-DROP TABLE IF EXISTS student_klasses;
-CREATE TABLE student_klasses (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  year int DEFAULT NULL,
-  student_tz varchar(10) DEFAULT NULL,
-  studentReferenceId int DEFAULT NULL,
-  klass_id int DEFAULT NULL,
-  klassReferenceId int DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY student_klasses_users_idx (user_id),
-  KEY student_klasses_user_year_idx (user_id, year),
-  KEY student_klasses_student_reference_id_year_idx (studentReferenceId, year),
-  KEY student_klasses_user_klass_year_idx (user_id, klassReferenceId, year),
-  KEY student_klasses_user_student_klass_year_idx (user_id, studentReferenceId, klassReferenceId, year),
-  KEY IDX_student_klasses_studentReferenceId_year (studentReferenceId, year)
+DROP TABLE IF EXISTS `student_klasses`;
+CREATE TABLE `student_klasses` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `year` int DEFAULT NULL,
+  `student_tz` varchar(10) DEFAULT NULL,
+  `studentReferenceId` int DEFAULT NULL,
+  `klass_id` int DEFAULT NULL,
+  `klassReferenceId` int DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `student_klasses_users_idx` (`user_id`),
+  KEY `student_klasses_user_year_idx` (`user_id`, `year`),
+  KEY `student_klasses_student_reference_id_year_idx` (`studentReferenceId`, `year`),
+  KEY `student_klasses_user_klass_year_idx` (`user_id`, `klassReferenceId`, `year`),
+  KEY `student_klasses_user_student_klass_year_idx` (`user_id`, `studentReferenceId`, `klassReferenceId`, `year`),
+  KEY `IDX_student_klasses_studentReferenceId_year` (`studentReferenceId`, `year`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO student_klasses (id, user_id, year, student_tz, studentReferenceId, klass_id, klassReferenceId) VALUES
+INSERT INTO `student_klasses` (`id`, `user_id`, `year`, `student_tz`, `studentReferenceId`, `klass_id`, `klassReferenceId`) VALUES
 (1, 1, 5786, '111111111', 1, 1, 1),
 (2, 1, 5786, '222222222', 2, 1, 1),
 (3, 1, 5786, '333333333', 3, 2, 2),
@@ -418,44 +418,44 @@ INSERT INTO student_klasses (id, user_id, year, student_tz, studentReferenceId, 
 -- Table: att_reports
 -- Attendance reports
 -- ============================================================
-DROP TABLE IF EXISTS att_reports;
-CREATE TABLE att_reports (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  year int DEFAULT NULL,
-  student_tz varchar(10) DEFAULT NULL,
-  studentReferenceId int DEFAULT NULL,
-  teacher_id varchar(10) DEFAULT NULL,
-  teacherReferenceId int DEFAULT NULL,
-  klass_id int DEFAULT NULL,
-  klassReferenceId int DEFAULT NULL,
-  lesson_id int DEFAULT NULL,
-  lessonReferenceId int DEFAULT NULL,
-  report_date date NOT NULL,
-  how_many_lessons float DEFAULT NULL,
-  abs_count float NOT NULL DEFAULT '0',
-  approved_abs_count float NOT NULL DEFAULT '0',
-  comments varchar(500) DEFAULT NULL,
-  sheet_name varchar(100) DEFAULT NULL,
-  reportGroupSessionId int DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY att_users_idx (user_id),
-  KEY att_user_sheet_name_lession_klass_year_idx (user_id, sheet_name, lessonReferenceId, klassReferenceId, year),
-  KEY att_user_year_idx (user_id, year),
-  KEY att_user_year_student_reference_id_idx (user_id, studentReferenceId, year),
-  KEY att_user_year_teacher_reference_id_idx (user_id, teacherReferenceId, year),
-  KEY att_user_year_lesson_reference_id_idx (user_id, lessonReferenceId, year),
-  KEY att_reports_student_reference_id_idx (studentReferenceId),
-  KEY att_reports_teacher_reference_id_idx (teacherReferenceId),
-  KEY att_reports_klass_reference_id_idx (klassReferenceId),
-  KEY att_reports_lesson_reference_id_idx (lessonReferenceId),
-  KEY att_reports_report_date_idx (report_date),
-  KEY att_reports_report_group_session_id_idx (reportGroupSessionId)
+DROP TABLE IF EXISTS `att_reports`;
+CREATE TABLE `att_reports` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `year` int DEFAULT NULL,
+  `student_tz` varchar(10) DEFAULT NULL,
+  `studentReferenceId` int DEFAULT NULL,
+  `teacher_id` varchar(10) DEFAULT NULL,
+  `teacherReferenceId` int DEFAULT NULL,
+  `klass_id` int DEFAULT NULL,
+  `klassReferenceId` int DEFAULT NULL,
+  `lesson_id` int DEFAULT NULL,
+  `lessonReferenceId` int DEFAULT NULL,
+  `report_date` date NOT NULL,
+  `how_many_lessons` float DEFAULT NULL,
+  `abs_count` float NOT NULL DEFAULT '0',
+  `approved_abs_count` float NOT NULL DEFAULT '0',
+  `comments` varchar(500) DEFAULT NULL,
+  `sheet_name` varchar(100) DEFAULT NULL,
+  `reportGroupSessionId` int DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `att_users_idx` (`user_id`),
+  KEY `att_user_sheet_name_lession_klass_year_idx` (`user_id`, `sheet_name`, `lessonReferenceId`, `klassReferenceId`, `year`),
+  KEY `att_user_year_idx` (`user_id`, `year`),
+  KEY `att_user_year_student_reference_id_idx` (`user_id`, `studentReferenceId`, `year`),
+  KEY `att_user_year_teacher_reference_id_idx` (`user_id`, `teacherReferenceId`, `year`),
+  KEY `att_user_year_lesson_reference_id_idx` (`user_id`, `lessonReferenceId`, `year`),
+  KEY `att_reports_student_reference_id_idx` (`studentReferenceId`),
+  KEY `att_reports_teacher_reference_id_idx` (`teacherReferenceId`),
+  KEY `att_reports_klass_reference_id_idx` (`klassReferenceId`),
+  KEY `att_reports_lesson_reference_id_idx` (`lessonReferenceId`),
+  KEY `att_reports_report_date_idx` (`report_date`),
+  KEY `att_reports_report_group_session_id_idx` (`reportGroupSessionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO att_reports (id, user_id, year, student_tz, studentReferenceId, teacher_id, teacherReferenceId, klass_id, klassReferenceId, lesson_id, lessonReferenceId, report_date, how_many_lessons, abs_count, approved_abs_count) VALUES
+INSERT INTO `att_reports` (`id`, `user_id`, `year`, `student_tz`, `studentReferenceId`, `teacher_id`, `teacherReferenceId`, `klass_id`, `klassReferenceId`, `lesson_id`, `lessonReferenceId`, `report_date`, `how_many_lessons`, `abs_count`, `approved_abs_count`) VALUES
 (1, 1, 5786, '111111111', 1, '123456789', 1, 1, 1, 1, 1, '2025-10-01', 2, 0, 0),
 (2, 1, 5786, '222222222', 2, '123456789', 1, 1, 1, 1, 1, '2025-10-01', 2, 1, 0),
 (3, 1, 5786, '333333333', 3, '234567890', 2, 2, 2, 2, 2, '2025-10-01', 2, 0, 0),
@@ -476,39 +476,39 @@ INSERT INTO att_reports (id, user_id, year, student_tz, studentReferenceId, teac
 -- Table: grades
 -- Grades/Marks
 -- ============================================================
-DROP TABLE IF EXISTS grades;
-CREATE TABLE grades (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  year int DEFAULT NULL,
-  student_tz varchar(10) DEFAULT NULL,
-  studentReferenceId int DEFAULT NULL,
-  teacher_id varchar(10) DEFAULT NULL,
-  teacherReferenceId int DEFAULT NULL,
-  klass_id int DEFAULT NULL,
-  klassReferenceId int DEFAULT NULL,
-  lesson_id int DEFAULT NULL,
-  lessonReferenceId int DEFAULT NULL,
-  report_date date NOT NULL,
-  how_many_lessons float DEFAULT NULL,
-  grade float NOT NULL DEFAULT '0',
-  estimation varchar(500) DEFAULT NULL,
-  comments varchar(500) DEFAULT NULL,
-  reportGroupSessionId int DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY grades_users_idx (user_id),
-  KEY grades_user_lesson_klass_year_idx (user_id, lessonReferenceId, klassReferenceId, year),
-  KEY grades_student_reference_id_idx (studentReferenceId),
-  KEY grades_teacher_reference_id_idx (teacherReferenceId),
-  KEY grades_klass_reference_id_idx (klassReferenceId),
-  KEY grades_lesson_reference_id_idx (lessonReferenceId),
-  KEY grades_report_date_idx (report_date),
-  KEY grades_report_group_session_id_idx (reportGroupSessionId)
+DROP TABLE IF EXISTS `grades`;
+CREATE TABLE `grades` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `year` int DEFAULT NULL,
+  `student_tz` varchar(10) DEFAULT NULL,
+  `studentReferenceId` int DEFAULT NULL,
+  `teacher_id` varchar(10) DEFAULT NULL,
+  `teacherReferenceId` int DEFAULT NULL,
+  `klass_id` int DEFAULT NULL,
+  `klassReferenceId` int DEFAULT NULL,
+  `lesson_id` int DEFAULT NULL,
+  `lessonReferenceId` int DEFAULT NULL,
+  `report_date` date NOT NULL,
+  `how_many_lessons` float DEFAULT NULL,
+  `grade` float NOT NULL DEFAULT '0',
+  `estimation` varchar(500) DEFAULT NULL,
+  `comments` varchar(500) DEFAULT NULL,
+  `reportGroupSessionId` int DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `grades_users_idx` (`user_id`),
+  KEY `grades_user_lesson_klass_year_idx` (`user_id`, `lessonReferenceId`, `klassReferenceId`, `year`),
+  KEY `grades_student_reference_id_idx` (`studentReferenceId`),
+  KEY `grades_teacher_reference_id_idx` (`teacherReferenceId`),
+  KEY `grades_klass_reference_id_idx` (`klassReferenceId`),
+  KEY `grades_lesson_reference_id_idx` (`lessonReferenceId`),
+  KEY `grades_report_date_idx` (`report_date`),
+  KEY `grades_report_group_session_id_idx` (`reportGroupSessionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO grades (id, user_id, year, student_tz, studentReferenceId, teacher_id, teacherReferenceId, klass_id, klassReferenceId, lesson_id, lessonReferenceId, report_date, how_many_lessons, grade, estimation) VALUES
+INSERT INTO `grades` (`id`, `user_id`, `year`, `student_tz`, `studentReferenceId`, `teacher_id`, `teacherReferenceId`, `klass_id`, `klassReferenceId`, `lesson_id`, `lessonReferenceId`, `report_date`, `how_many_lessons`, `grade`, `estimation`) VALUES
 (1, 1, 5786, '111111111', 1, '123456789', 1, 1, 1, 1, 1, '2025-10-15', 10, 95.5, 'Excellent'),
 (2, 1, 5786, '222222222', 2, '123456789', 1, 1, 1, 1, 1, '2025-10-15', 10, 88.0, 'Very Good'),
 (3, 1, 5786, '333333333', 3, '234567890', 2, 2, 2, 2, 2, '2025-10-15', 12, 92.5, 'Excellent'),
@@ -529,33 +529,33 @@ INSERT INTO grades (id, user_id, year, student_tz, studentReferenceId, teacher_i
 -- Table: known_absences
 -- Known/Approved absences
 -- ============================================================
-DROP TABLE IF EXISTS known_absences;
-CREATE TABLE known_absences (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  year int DEFAULT NULL,
-  student_tz varchar(10) DEFAULT NULL,
-  studentReferenceId int DEFAULT NULL,
-  klass_id int DEFAULT NULL,
-  klassReferenceId int DEFAULT NULL,
-  lesson_id int DEFAULT NULL,
-  lessonReferenceId int DEFAULT NULL,
-  report_date date NOT NULL,
-  absnce_count int DEFAULT NULL,
-  absnce_code int DEFAULT NULL,
-  sender_name varchar(100) DEFAULT NULL,
-  reason varchar(500) DEFAULT NULL,
-  comment varchar(500) DEFAULT NULL,
-  isApproved tinyint(1) NOT NULL DEFAULT '1',
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY known_users_idx (user_id),
-  KEY IDX_known_absences_studentReferenceId_year (studentReferenceId, year),
-  KEY known_absences_student_reference_id_idx (studentReferenceId)
+DROP TABLE IF EXISTS `known_absences`;
+CREATE TABLE `known_absences` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `year` int DEFAULT NULL,
+  `student_tz` varchar(10) DEFAULT NULL,
+  `studentReferenceId` int DEFAULT NULL,
+  `klass_id` int DEFAULT NULL,
+  `klassReferenceId` int DEFAULT NULL,
+  `lesson_id` int DEFAULT NULL,
+  `lessonReferenceId` int DEFAULT NULL,
+  `report_date` date NOT NULL,
+  `absnce_count` int DEFAULT NULL,
+  `absnce_code` int DEFAULT NULL,
+  `sender_name` varchar(100) DEFAULT NULL,
+  `reason` varchar(500) DEFAULT NULL,
+  `comment` varchar(500) DEFAULT NULL,
+  `isApproved` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `known_users_idx` (`user_id`),
+  KEY `IDX_known_absences_studentReferenceId_year` (`studentReferenceId`, `year`),
+  KEY `known_absences_student_reference_id_idx` (`studentReferenceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO known_absences (id, user_id, year, student_tz, studentReferenceId, klass_id, klassReferenceId, lesson_id, lessonReferenceId, report_date, absnce_count, absnce_code, sender_name, reason, isApproved) VALUES
+INSERT INTO `known_absences` (`id`, `user_id`, `year`, `student_tz`, `studentReferenceId`, `klass_id`, `klassReferenceId`, `lesson_id`, `lessonReferenceId`, `report_date`, `absnce_count`, `absnce_code`, `sender_name`, `reason`, `isApproved`) VALUES
 (1, 1, 5786, '222222222', 2, 1, 1, 1, 1, '2025-10-01', 1, 1, 'Parent', 'Medical appointment', 1),
 (2, 1, 5786, '444444444', 4, 2, 2, 2, 2, '2025-10-01', 1, 2, 'Parent', 'Family event', 1),
 (3, 2, 5786, '666666666', 6, 4, 4, 4, 4, '2025-10-02', 2, 1, 'Doctor', 'Sick', 1),
@@ -571,28 +571,28 @@ INSERT INTO known_absences (id, user_id, year, student_tz, studentReferenceId, k
 -- Table: report_month
 -- Report month periods
 -- ============================================================
-DROP TABLE IF EXISTS report_month;
-CREATE TABLE report_month (
-  id int NOT NULL AUTO_INCREMENT,
-  userId int NOT NULL,
-  name varchar(255) NOT NULL,
-  startDate date NOT NULL,
-  endDate date NOT NULL,
-  semester varchar(255) NOT NULL DEFAULT 'שנתי',
-  year int DEFAULT NULL,
+DROP TABLE IF EXISTS `report_month`;
+CREATE TABLE `report_month` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `startDate` date NOT NULL,
+  `endDate` date NOT NULL,
+  `semester` varchar(255) NOT NULL DEFAULT 'שנתי',
+  `year` int DEFAULT NULL,
   
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY report_month_user_id_idx (userId),
-  KEY report_month_user_id_start_date_end_date_idx (userId, startDate, endDate),
-  KEY report_month_user_id_year_idx (userId, year),
-  KEY report_month_user_id_start_date_end_date_year_idx (userId, startDate, endDate, year),
-  KEY report_month_start_date_idx (startDate),
-  KEY report_month_end_date_idx (endDate)
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `report_month_user_id_idx` (`userId`),
+  KEY `report_month_user_id_start_date_end_date_idx` (`userId`, `startDate`, `endDate`),
+  KEY `report_month_user_id_year_idx` (`userId`, `year`),
+  KEY `report_month_user_id_start_date_end_date_year_idx` (`userId`, `startDate`, `endDate`, `year`),
+  KEY `report_month_start_date_idx` (`startDate`),
+  KEY `report_month_end_date_idx` (`endDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO report_month (id, userId, name, startDate, endDate, semester, year) VALUES
+INSERT INTO `report_month` (`id`, `userId`, `name`, `startDate`, `endDate`, `semester`, `year`) VALUES
 (1, 1, 'September 2025', '2025-09-01', '2025-09-30', 'א', 5786),
 (2, 1, 'October 2025', '2025-10-01', '2025-10-31', 'א', 5786),
 (3, 1, 'November 2025', '2025-11-01', '2025-11-30', 'א', 5786),
@@ -606,19 +606,19 @@ INSERT INTO report_month (id, userId, name, startDate, endDate, semester, year) 
 -- Table: grade_names
 -- Custom grade name mappings
 -- ============================================================
-DROP TABLE IF EXISTS grade_names;
-CREATE TABLE grade_names (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  key int NOT NULL,
-  name varchar(500) DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY grade_names_user_id_idx (user_id)
+DROP TABLE IF EXISTS `grade_names`;
+CREATE TABLE `grade_names` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `key` int NOT NULL,
+  `name` varchar(500) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `grade_names_user_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO grade_names (id, user_id, key, name) VALUES
+INSERT INTO `grade_names` (`id`, `user_id`, `key`, `name`) VALUES
 (1, 1, 100, 'Outstanding'),
 (2, 1, 95, 'Excellent'),
 (3, 1, 90, 'Very Good'),
@@ -634,19 +634,19 @@ INSERT INTO grade_names (id, user_id, key, name) VALUES
 -- Table: attendance_names
 -- Custom attendance name mappings
 -- ============================================================
-DROP TABLE IF EXISTS attendance_names;
-CREATE TABLE attendance_names (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  key int NOT NULL,
-  name varchar(500) DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY attendance_names_user_id_idx (user_id)
+DROP TABLE IF EXISTS `attendance_names`;
+CREATE TABLE `attendance_names` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `key` int NOT NULL,
+  `name` varchar(500) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `attendance_names_user_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO attendance_names (id, user_id, key, name) VALUES
+INSERT INTO `attendance_names` (`id`, `user_id`, `key`, `name`) VALUES
 (1, 1, 1, 'Medical'),
 (2, 1, 2, 'Family Event'),
 (3, 1, 3, 'Religious Holiday'),
@@ -662,29 +662,29 @@ INSERT INTO attendance_names (id, user_id, key, name) VALUES
 -- Table: report_groups
 -- Report groups for batch reporting
 -- ============================================================
-DROP TABLE IF EXISTS report_groups;
-CREATE TABLE report_groups (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  name varchar(255) NOT NULL,
-  topic varchar(255) DEFAULT NULL,
-  signatureData longtext,
-  teacherReferenceId int DEFAULT NULL,
-  lessonReferenceId int DEFAULT NULL,
-  klassReferenceId int DEFAULT NULL,
-  year int DEFAULT NULL,
-  isReverted tinyint(1) NOT NULL DEFAULT '0',
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY report_groups_user_id_idx (user_id),
-  KEY report_groups_user_id_year_idx (user_id, year),
-  KEY report_groups_teacher_reference_id_idx (teacherReferenceId),
-  KEY report_groups_lesson_reference_id_idx (lessonReferenceId),
-  KEY report_groups_klass_reference_id_idx (klassReferenceId)
+DROP TABLE IF EXISTS `report_groups`;
+CREATE TABLE `report_groups` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `topic` varchar(255) DEFAULT NULL,
+  `signatureData` longtext,
+  `teacherReferenceId` int DEFAULT NULL,
+  `lessonReferenceId` int DEFAULT NULL,
+  `klassReferenceId` int DEFAULT NULL,
+  `year` int DEFAULT NULL,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `report_groups_user_id_idx` (`user_id`),
+  KEY `report_groups_user_id_year_idx` (`user_id`, `year`),
+  KEY `report_groups_teacher_reference_id_idx` (`teacherReferenceId`),
+  KEY `report_groups_lesson_reference_id_idx` (`lessonReferenceId`),
+  KEY `report_groups_klass_reference_id_idx` (`klassReferenceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO report_groups (id, user_id, name, topic, teacherReferenceId, lessonReferenceId, klassReferenceId, year) VALUES
+INSERT INTO `report_groups` (`id`, `user_id`, `name`, `topic`, `teacherReferenceId`, `lessonReferenceId`, `klassReferenceId`, `year`) VALUES
 (1, 1, 'Math Class A - October', 'Algebra basics', 1, 1, 1, 5786),
 (2, 1, 'Hebrew Class - October', 'Grammar and composition', 2, 2, 1, 5786),
 (3, 1, 'English Class - October', 'Reading comprehension', 3, 3, 3, 5786),
@@ -695,25 +695,25 @@ INSERT INTO report_groups (id, user_id, name, topic, teacherReferenceId, lessonR
 -- Table: report_group_sessions
 -- Individual sessions within report groups
 -- ============================================================
-DROP TABLE IF EXISTS report_group_sessions;
-CREATE TABLE report_group_sessions (
-  id int NOT NULL AUTO_INCREMENT,
-  userId int NOT NULL,
-  reportGroupId int NOT NULL,
-  sessionDate date NOT NULL,
-  startTime time DEFAULT NULL,
-  endTime time DEFAULT NULL,
-  topic varchar(255) DEFAULT NULL,
-  isReverted tinyint(1) NOT NULL DEFAULT '0',
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY report_group_sessions_user_id_idx (userId),
-  KEY report_group_sessions_report_group_id_idx (reportGroupId),
-  KEY report_group_sessions_session_date_idx (sessionDate),
-  CONSTRAINT FK_report_group_sessions_reportGroupId FOREIGN KEY (reportGroupId) REFERENCES report_groups (id) ON DELETE CASCADE
+DROP TABLE IF EXISTS `report_group_sessions`;
+CREATE TABLE `report_group_sessions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` int NOT NULL,
+  `reportGroupId` int NOT NULL,
+  `sessionDate` date NOT NULL,
+  `startTime` time DEFAULT NULL,
+  `endTime` time DEFAULT NULL,
+  `topic` varchar(255) DEFAULT NULL,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `report_group_sessions_user_id_idx` (`userId`),
+  KEY `report_group_sessions_report_group_id_idx` (`reportGroupId`),
+  KEY `report_group_sessions_session_date_idx` (`sessionDate`),
+  CONSTRAINT `FK_report_group_sessions_reportGroupId` FOREIGN KEY (`reportGroupId`) REFERENCES `report_groups` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO report_group_sessions (id, userId, reportGroupId, sessionDate, startTime, endTime, topic) VALUES
+INSERT INTO `report_group_sessions` (`id`, `userId`, `reportGroupId`, `sessionDate`, `startTime`, `endTime`, `topic`) VALUES
 (1, 1, 1, '2025-10-01', '08:00:00', '09:30:00', 'Introduction to Algebra'),
 (2, 1, 1, '2025-10-08', '08:00:00', '09:30:00', 'Linear equations'),
 (3, 1, 2, '2025-10-02', '10:00:00', '11:30:00', 'Grammar review'),
@@ -733,19 +733,19 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- ============================================================
 
 -- View: student_base_klass
-CREATE OR REPLACE VIEW student_base_klass AS
+CREATE OR REPLACE VIEW `student_base_klass` AS
 SELECT 
-  student_klasses.studentReferenceId AS id,
-  student_klasses.user_id AS user_id,
-  student_klasses.year AS year,
-  GROUP_CONCAT(DISTINCT IF(klass_types.klassTypeEnum = 'כיתת אם', klasses.name, NULL) SEPARATOR ', ') AS base_klass
-FROM student_klasses
-LEFT JOIN klasses ON klasses.id = student_klasses.klassReferenceId
-LEFT JOIN klass_types ON klass_types.id = klasses.klassTypeReferenceId
-GROUP BY studentReferenceId, user_id, year;
+  `student_klasses`.`studentReferenceId` AS `id`,
+  `student_klasses`.`user_id` AS `user_id`,
+  `student_klasses`.`year` AS `year`,
+  GROUP_CONCAT(DISTINCT IF(`klass_types`.`klassTypeEnum` = 'כיתת אם', `klasses`.`name`, NULL) SEPARATOR ', ') AS `base_klass`
+FROM `student_klasses`
+LEFT JOIN `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`
+LEFT JOIN `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`
+GROUP BY `studentReferenceId`, `user_id`, `year`;
 
 -- View: lesson_klass_name
-CREATE OR REPLACE VIEW lesson_klass_name AS
+CREATE OR REPLACE VIEW `lesson_klass_name` AS
 SELECT lessons.id AS id,
     lessons.user_id AS user_id,
     GROUP_CONCAT(DISTINCT klasses.name SEPARATOR ', ') AS name
@@ -763,23 +763,23 @@ GROUP BY lessons.id,
 -- Table: texts
 -- Text content management
 -- ============================================================
-DROP TABLE IF EXISTS texts;
-CREATE TABLE texts (
-  id int UNSIGNED NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  name varchar(100) NOT NULL,
-  description varchar(500) NOT NULL,
-  value varchar(10000) NOT NULL,
-  filepath varchar(255) DEFAULT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY texts_users_idx (user_id),
-  KEY texts_name_idx (name),
-  KEY texts_user_id_name_idx (user_id, name)
+DROP TABLE IF EXISTS `texts`;
+CREATE TABLE `texts` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` varchar(500) NOT NULL,
+  `value` varchar(10000) NOT NULL,
+  `filepath` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `texts_users_idx` (`user_id`),
+  KEY `texts_name_idx` (`name`),
+  KEY `texts_user_id_name_idx` (`user_id`, `name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO texts (id, user_id, name, description, value) VALUES
+INSERT INTO `texts` (`id`, `user_id`, `name`, `description`, `value`) VALUES
 (1, 1, 'welcome_message', 'Welcome message for homepage', 'Welcome to our school management system'),
 (2, 1, 'footer_text', 'Footer copyright text', '© 5786 School Management System'),
 (3, 2, 'announcement', 'School announcement', 'Important: School will be closed on holidays');
@@ -788,20 +788,20 @@ INSERT INTO texts (id, user_id, name, description, value) VALUES
 -- Table: audit_log
 -- Audit log for tracking changes
 -- ============================================================
-DROP TABLE IF EXISTS audit_log;
-CREATE TABLE audit_log (
-  id int NOT NULL AUTO_INCREMENT,
-  userId int NOT NULL,
-  entityId int NOT NULL,
-  entityName varchar(255) NOT NULL,
-  operation varchar(255) NOT NULL,
-  entityData text NOT NULL,
-  isReverted tinyint(1) NOT NULL DEFAULT '0',
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
+DROP TABLE IF EXISTS `audit_log`;
+CREATE TABLE `audit_log` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` int NOT NULL,
+  `entityId` int NOT NULL,
+  `entityName` varchar(255) NOT NULL,
+  `operation` varchar(255) NOT NULL,
+  `entityData` text NOT NULL,
+  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO audit_log (id, userId, entityId, entityName, operation, entityData) VALUES
+INSERT INTO `audit_log` (`id`, `userId`, `entityId`, `entityName`, `operation`, `entityData`) VALUES
 (1, 1, 1, 'Student', 'CREATE', '{"name": "Avigail Abramson", "tz": "111111111"}'),
 (2, 1, 1, 'Teacher', 'UPDATE', '{"id": 1, "phone": "0501111111"}');
 
@@ -809,109 +809,109 @@ INSERT INTO audit_log (id, userId, entityId, entityName, operation, entityData) 
 -- Table: yemot_call
 -- Phone system call tracking
 -- ============================================================
-DROP TABLE IF EXISTS yemot_call;
-CREATE TABLE yemot_call (
-  id int NOT NULL AUTO_INCREMENT,
-  userId int NOT NULL,
-  apiCallId varchar(255) NOT NULL,
-  phone varchar(255) NOT NULL,
-  history mediumtext NOT NULL,
-  currentStep varchar(255) NOT NULL,
-  data text DEFAULT NULL,
-  isOpen tinyint NOT NULL,
-  hasError tinyint NOT NULL DEFAULT 0,
-  errorMessage varchar(255) DEFAULT NULL,
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY yemot_call_api_call_id_idx (apiCallId)
+DROP TABLE IF EXISTS `yemot_call`;
+CREATE TABLE `yemot_call` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` int NOT NULL,
+  `apiCallId` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `history` mediumtext NOT NULL,
+  `currentStep` varchar(255) NOT NULL,
+  `data` text DEFAULT NULL,
+  `isOpen` tinyint NOT NULL,
+  `hasError` tinyint NOT NULL DEFAULT 0,
+  `errorMessage` varchar(255) DEFAULT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `yemot_call_api_call_id_idx` (`apiCallId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
 -- Table: mail_address
 -- Email address management
 -- ============================================================
-DROP TABLE IF EXISTS mail_address;
-CREATE TABLE mail_address (
-  id int NOT NULL AUTO_INCREMENT,
-  userId int NOT NULL,
-  alias varchar(255) NOT NULL,
-  entity varchar(255) NOT NULL,
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY IDX_mail_address_userId_entity (userId, entity)
+DROP TABLE IF EXISTS `mail_address`;
+CREATE TABLE `mail_address` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` int NOT NULL,
+  `alias` varchar(255) NOT NULL,
+  `entity` varchar(255) NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_mail_address_userId_entity` (`userId`, `entity`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
 -- Table: recieved_mail
 -- Received email tracking
 -- ============================================================
-DROP TABLE IF EXISTS recieved_mail;
-CREATE TABLE recieved_mail (
-  id int NOT NULL AUTO_INCREMENT,
-  userId int NOT NULL,
-  mailData text NOT NULL,
-  from varchar(255) NOT NULL,
-  to varchar(255) NOT NULL,
-  subject text DEFAULT NULL,
-  body text DEFAULT NULL,
-  entityName varchar(255) NOT NULL,
-  importFileIds text NOT NULL,
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
+DROP TABLE IF EXISTS `recieved_mail`;
+CREATE TABLE `recieved_mail` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` int NOT NULL,
+  `mailData` text NOT NULL,
+  `from` varchar(255) NOT NULL,
+  `to` varchar(255) NOT NULL,
+  `subject` text DEFAULT NULL,
+  `body` text DEFAULT NULL,
+  `entityName` varchar(255) NOT NULL,
+  `importFileIds` text NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
 -- Table: page
 -- CMS pages
 -- ============================================================
-DROP TABLE IF EXISTS page;
-CREATE TABLE page (
-  id int NOT NULL AUTO_INCREMENT,
-  description varchar(255) NOT NULL,
-  value longtext NOT NULL,
-  order int DEFAULT NULL,
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
+DROP TABLE IF EXISTS `page`;
+CREATE TABLE `page` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) NOT NULL,
+  `value` longtext NOT NULL,
+  `order` int DEFAULT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
 -- Table: image
 -- Image storage
 -- ============================================================
-DROP TABLE IF EXISTS image;
-CREATE TABLE image (
-  id int NOT NULL AUTO_INCREMENT,
-  userId int NOT NULL,
-  fileDataSrc mediumtext NOT NULL,
-  fileDataTitle text NOT NULL,
-  imageTarget varchar(255) NOT NULL,
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY IDX_image_userId_imageTarget (userId, imageTarget)
+DROP TABLE IF EXISTS `image`;
+CREATE TABLE `image` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` int NOT NULL,
+  `fileDataSrc` mediumtext NOT NULL,
+  `fileDataTitle` text NOT NULL,
+  `imageTarget` varchar(255) NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_image_userId_imageTarget` (`userId`, `imageTarget`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
 -- Table: payment_track
 -- Payment tracking information
 -- ============================================================
-DROP TABLE IF EXISTS payment_track;
-CREATE TABLE payment_track (
-  id int NOT NULL AUTO_INCREMENT,
-  name varchar(255) NOT NULL,
-  description longtext NOT NULL,
-  monthlyPrice int NOT NULL,
-  annualPrice int NOT NULL,
-  studentNumberLimit int NOT NULL,
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
+DROP TABLE IF EXISTS `payment_track`;
+CREATE TABLE `payment_track` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` longtext NOT NULL,
+  `monthlyPrice` int NOT NULL,
+  `annualPrice` int NOT NULL,
+  `studentNumberLimit` int NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO payment_track (id, name, description, monthlyPrice, annualPrice, studentNumberLimit) VALUES
+INSERT INTO `payment_track` (`id`, `name`, `description`, `monthlyPrice`, `annualPrice`, `studentNumberLimit`) VALUES
 (1, 'Basic Plan', 'Basic features', 100, 1000, 50),
 (2, 'Standard Plan', 'Standard features', 200, 2000, 150),
 (3, 'Premium Plan', 'All features', 300, 3000, 500);
@@ -920,39 +920,39 @@ INSERT INTO payment_track (id, name, description, monthlyPrice, annualPrice, stu
 -- Table: import_file
 -- File import tracking
 -- ============================================================
-DROP TABLE IF EXISTS import_file;
-CREATE TABLE import_file (
-  id int NOT NULL AUTO_INCREMENT,
-  userId int NOT NULL,
-  fileName varchar(255) NOT NULL,
-  fileSource varchar(255) NOT NULL,
-  entityIds text NOT NULL,
-  entityName varchar(255) NOT NULL,
-  fullSuccess tinyint(1) DEFAULT NULL,
-  response varchar(255) DEFAULT NULL,
-  metadata json DEFAULT NULL,
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
+DROP TABLE IF EXISTS `import_file`;
+CREATE TABLE `import_file` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` int NOT NULL,
+  `fileName` varchar(255) NOT NULL,
+  `fileSource` varchar(255) NOT NULL,
+  `entityIds` text NOT NULL,
+  `entityName` varchar(255) NOT NULL,
+  `fullSuccess` tinyint(1) DEFAULT NULL,
+  `response` varchar(255) DEFAULT NULL,
+  `metadata` json DEFAULT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
 -- Table: att_grade_effect
 -- Attendance and grade effect tracking
 -- ============================================================
-DROP TABLE IF EXISTS att_grade_effect;
-CREATE TABLE att_grade_effect (
-  id int NOT NULL AUTO_INCREMENT,
-  user_id int NOT NULL,
-  percents int DEFAULT NULL,
-  count int DEFAULT NULL,
-  effect int NOT NULL,
-  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY att_grade_effect_user_id_idx (user_id)
+DROP TABLE IF EXISTS `att_grade_effect`;
+CREATE TABLE `att_grade_effect` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `percents` int DEFAULT NULL,
+  `count` int DEFAULT NULL,
+  `effect` int NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `att_grade_effect_user_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO att_grade_effect (user_id, percents, count, effect) VALUES
+INSERT INTO `att_grade_effect` (`user_id`, `percents`, `count`, `effect`) VALUES
 (1, 90, 2, 5),
 (1, 80, 3, 0),
 (1, 70, 4, -5);
@@ -961,16 +961,16 @@ INSERT INTO att_grade_effect (user_id, percents, count, effect) VALUES
 -- Helper Table: numbers (Required for View logic)
 -- ============================================================
 
-DROP TABLE IF EXISTS numbers;
-CREATE TABLE numbers (
-  id int unsigned NOT NULL AUTO_INCREMENT,
-  number varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  created_at timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  updated_at timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-  PRIMARY KEY (id)
+DROP TABLE IF EXISTS `numbers`;
+CREATE TABLE `numbers` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO numbers (id, number) VALUES
+INSERT INTO `numbers` (`id`, `number`) VALUES
 (1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),(6, '6'),(7, '7'),(8, '8'),(9, '9'),(10, '10'),
 (11, '11'),(12, '12'),(13, '13'),(14, '14'),(15, '15'),(16, '16'),(17, '17'),(18, '18'),(19, '19'),(20, '20'),
 (21, '21'),(22, '22'),(23, '23'),(24, '24'),(25, '25'),(26, '26'),(27, '27'),(28, '28'),(29, '29'),(30, '30'),
@@ -988,12 +988,12 @@ INSERT INTO numbers (id, number) VALUES
 -- ============================================================
 
 -- View: att_report_and_grade
-CREATE OR REPLACE VIEW att_report_and_grade AS
+CREATE OR REPLACE VIEW `att_report_and_grade` AS
 SELECT
     CONCAT('a-', id) AS id,
-    'att' as type,
+    'att' as `type`,
     user_id,
-    year,
+    `year`,
     studentReferenceId,
     teacherReferenceId,
     lessonReferenceId,
@@ -1010,9 +1010,9 @@ FROM att_reports
 UNION
 SELECT
     CONCAT('g-', id) AS id,
-    'grade' as type,
+    'grade' as `type`,
     user_id,
-    year,
+    `year`,
     studentReferenceId,
     teacherReferenceId,
     lessonReferenceId,
@@ -1028,45 +1028,45 @@ SELECT
 FROM grades;
 
 -- View: student_global_report
-CREATE OR REPLACE VIEW student_global_report AS
-SELECT atag.year AS year,
-    atag.teacherReferenceId AS teacherReferenceId,
+CREATE OR REPLACE VIEW `student_global_report` AS
+SELECT `atag`.`year` AS `year`,
+    `atag`.`teacherReferenceId` AS `teacherReferenceId`,
     CONCAT(
         COALESCE(studentReferenceId, "null"),
         "_",
-        COALESCE(atag.teacherReferenceId, "null"),
+        COALESCE(`atag`.`teacherReferenceId`, "null"),
         "_",
         COALESCE(klassReferenceId, "null"),
         "_",
         COALESCE(lessonReferenceId, "null"),
         "_",
-        COALESCE(atag.user_id, "null"),
+        COALESCE(`atag`.`user_id`, "null"),
         "_",
-        COALESCE(atag.year, "null")
-    ) AS id,
-    atag.user_id AS user_id,
+        COALESCE(`atag`.`year`, "null")
+    ) AS `id`,
+    `atag`.`user_id` AS `user_id`,
     studentReferenceId,
     klassReferenceId,
     lessonReferenceId,
     CASE
-        WHEN klass_types.klassTypeEnum = "כיתת אם" THEN 1
+        WHEN `klass_types`.`klassTypeEnum` = "כיתת אם" THEN 1
         ELSE 0
-    END AS isBaseKlass,
-    SUM(how_many_lessons) AS lessons_count,
-    SUM(abs_count) AS abs_count,
-    AVG(grade) AS grade_avg
-FROM att_report_and_grade atag
-    LEFT JOIN klasses klasses ON klasses.id = atag.klassReferenceId
-    LEFT JOIN klass_types klass_types ON klass_types.id = klasses.klassTypeReferenceId
+    END AS `isBaseKlass`,
+    SUM(how_many_lessons) AS `lessons_count`,
+    SUM(abs_count) AS `abs_count`,
+    AVG(grade) AS `grade_avg`
+FROM `att_report_and_grade` `atag`
+    LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `atag`.`klassReferenceId`
+    LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`
 GROUP BY studentReferenceId,
-    atag.teacherReferenceId,
+    `atag`.`teacherReferenceId`,
     klassReferenceId,
     lessonReferenceId,
-    atag.user_id,
-    atag.year;
+    `atag`.`user_id`,
+    `atag`.`year`;
 
 -- View: student_speciality
-CREATE OR REPLACE VIEW student_speciality AS
+CREATE OR REPLACE VIEW `student_speciality` AS
 SELECT 
   student_klasses.studentReferenceId AS id,
   student_klasses.user_id,
@@ -1078,7 +1078,7 @@ LEFT JOIN klass_types ON klass_types.id = klasses.klassTypeReferenceId
 GROUP BY studentReferenceId, user_id, year;
 
 -- View: student_by_year
-CREATE OR REPLACE VIEW student_by_year AS
+CREATE OR REPLACE VIEW `student_by_year` AS
 SELECT 
   students.id,
   students.user_id,
@@ -1166,7 +1166,7 @@ GROUP BY students.id,
     student_klasses.year;
 
 -- View: student_percent_report
-CREATE OR REPLACE VIEW student_percent_report AS
+CREATE OR REPLACE VIEW `student_percent_report` AS
 SELECT id,
     user_id,
     year,
@@ -1176,29 +1176,29 @@ SELECT id,
     lessonReferenceId,
     lessons_count,
     abs_count,
-    COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1) AS abs_percents,
+    COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1) AS `abs_percents`,
     (
         1 - COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1)
-    ) AS att_percents,
-    grade_avg / 100 AS grade_avg
-FROM student_global_report sgr;
+    ) AS `att_percents`,
+    grade_avg / 100 AS `grade_avg`
+FROM `student_global_report` `sgr`;
 
 -- View: text_by_user
-CREATE OR REPLACE VIEW text_by_user AS
-SELECT t_base.name AS name,
-    t_base.description AS description,
-    users.id AS userId,
-    t_user.id AS overrideTextId,
-    CONCAT(users.id, "_", t_base.id) AS id,
-    COALESCE(t_user.value, t_base.value) AS value,
-    COALESCE(t_user.filepath, t_base.filepath) AS filepath
-FROM texts t_base
-    LEFT JOIN users users ON users.effective_id is null
-    LEFT JOIN texts t_user ON t_user.name = t_base.name
-    AND t_user.user_id = users.id
-WHERE t_base.user_id = 0
-ORDER BY users.id ASC,
-    t_base.id ASC;
+CREATE OR REPLACE VIEW `text_by_user` AS
+SELECT `t_base`.`name` AS `name`,
+    `t_base`.`description` AS `description`,
+    `users`.`id` AS `userId`,
+    `t_user`.`id` AS `overrideTextId`,
+    CONCAT(`users`.`id`, "_", `t_base`.`id`) AS `id`,
+    COALESCE(`t_user`.`value`, `t_base`.`value`) AS `value`,
+    COALESCE(`t_user`.`filepath`, `t_base`.`filepath`) AS `filepath`
+FROM `texts` `t_base`
+    LEFT JOIN `users` `users` ON `users`.`effective_id` is null
+    LEFT JOIN `texts` `t_user` ON `t_user`.`name` = `t_base`.`name`
+    AND `t_user`.`user_id` = `users`.`id`
+WHERE `t_base`.`user_id` = 0
+ORDER BY `users`.`id` ASC,
+    `t_base`.`id` ASC;
 
 -- View: att_report_with_report_month
 CREATE OR REPLACE VIEW att_report_with_report_month AS
@@ -1210,13 +1210,13 @@ FROM att_reports
     AND att_reports.report_date >= report_months.startDate;
 
 -- View: grade_with_report_month
-CREATE OR REPLACE VIEW grade_with_report_month AS
-SELECT report_months.id AS reportMonthReferenceId,
+CREATE OR REPLACE VIEW `grade_with_report_month` AS
+SELECT `report_months`.`id` AS `reportMonthReferenceId`,
     grades.*
-FROM grades grades
-    LEFT JOIN report_month report_months ON grades.user_id = report_months.userId
-    AND grades.report_date <= report_months.endDate
-    AND grades.report_date >= report_months.startDate;
+FROM `grades` `grades`
+    LEFT JOIN `report_month` `report_months` ON `grades`.`user_id` = `report_months`.`userId`
+    AND `grades`.`report_date` <= `report_months`.`endDate`
+    AND `grades`.`report_date` >= `report_months`.`startDate`;
 
 -- View: known_absence_with_report_month
 CREATE OR REPLACE VIEW known_absence_with_report_month AS
@@ -1228,19 +1228,19 @@ FROM known_absences
     AND known_absences.report_date >= report_months.startDate;
 
 -- View: grade_effect_by_user
-CREATE OR REPLACE VIEW grade_effect_by_user AS
-SELECT users.id AS userId,
-    CONCAT(users.id, "_", numbers.number) AS id,
-    numbers.number AS number,
+CREATE OR REPLACE VIEW `grade_effect_by_user` AS
+SELECT `users`.`id` AS `userId`,
+    CONCAT(`users`.`id`, "_", numbers.number) AS `id`,
+    numbers.number AS `number`,
     CAST(
         COALESCE(
             SUBSTRING_INDEX(
                 MAX(
                     CASE
-                        WHEN att_grade_effect.percents <= numbers.number THEN CONCAT(
-                            LPAD(att_grade_effect.percents, 10, '0'),
+                        WHEN `att_grade_effect`.`percents` <= numbers.number THEN CONCAT(
+                            LPAD(`att_grade_effect`.`percents`, 10, '0'),
                             '|',
-                            att_grade_effect.effect
+                            `att_grade_effect`.`effect`
                         )
                         ELSE NULL
                     END
@@ -1250,29 +1250,29 @@ SELECT users.id AS userId,
             ),
             '0'
         ) AS SIGNED
-    ) + 0 AS effect
-FROM numbers numbers
-    LEFT JOIN users users ON 1 = 1
-    LEFT JOIN att_grade_effect att_grade_effect ON att_grade_effect.user_id = users.id
-GROUP BY users.id,
+    ) + 0 AS `effect`
+FROM `numbers` `numbers`
+    LEFT JOIN `users` `users` ON 1 = 1
+    LEFT JOIN `att_grade_effect` `att_grade_effect` ON `att_grade_effect`.`user_id` = `users`.`id`
+GROUP BY `users`.`id`,
     numbers.number
-ORDER BY users.id ASC,
+ORDER BY `users`.`id` ASC,
     numbers.number ASC;
 
 -- View: abs_count_effect_by_user
-CREATE OR REPLACE VIEW abs_count_effect_by_user AS
-SELECT users.id AS userId,
-    CONCAT(users.id, "_", numbers.number) AS id,
-    numbers.number AS number,
+CREATE OR REPLACE VIEW `abs_count_effect_by_user` AS
+SELECT `users`.`id` AS `userId`,
+    CONCAT(`users`.`id`, "_", numbers.number) AS `id`,
+    numbers.number AS `number`,
     CAST(
         COALESCE(
             SUBSTRING_INDEX(
                 MAX(
                     CASE
-                        WHEN att_grade_effect.count <= numbers.number THEN CONCAT(
-                            LPAD(att_grade_effect.count, 10, '0'),
+                        WHEN `att_grade_effect`.`count` <= numbers.number THEN CONCAT(
+                            LPAD(`att_grade_effect`.`count`, 10, '0'),
                             '|',
-                            att_grade_effect.effect
+                            `att_grade_effect`.`effect`
                         )
                         ELSE NULL
                     END
@@ -1282,46 +1282,46 @@ SELECT users.id AS userId,
             ),
             '0'
         ) AS SIGNED
-    ) + 0 AS effect
-FROM numbers numbers
-    LEFT JOIN users users ON 1 = 1
-    LEFT JOIN att_grade_effect att_grade_effect ON att_grade_effect.user_id = users.id
-GROUP BY users.id,
+    ) + 0 AS `effect`
+FROM `numbers` `numbers`
+    LEFT JOIN `users` `users` ON 1 = 1
+    LEFT JOIN `att_grade_effect` `att_grade_effect` ON `att_grade_effect`.`user_id` = `users`.`id`
+GROUP BY `users`.`id`,
     numbers.number
-ORDER BY users.id ASC,
+ORDER BY `users`.`id` ASC,
     numbers.number ASC;
 
 -- View: teacher_lesson_report_status
-CREATE OR REPLACE VIEW teacher_lesson_report_status AS
-SELECT teachers.id AS teacherId,
-    lessons.id AS lessonId,
-    lessons.year AS year,
-    lessons.name AS lessonName,
-    report_months.id AS reportMonthId,
-    teachers.user_id AS userId,
+CREATE OR REPLACE VIEW `teacher_lesson_report_status` AS
+SELECT `teachers`.`id` AS `teacherId`,
+    `lessons`.`id` AS `lessonId`,
+    `lessons`.`year` AS `year`,
+    `lessons`.`name` AS `lessonName`,
+    `report_months`.`id` AS `reportMonthId`,
+    `teachers`.`user_id` AS `userId`,
     CASE
-        WHEN COUNT(att_reports.id) > 0 THEN 1
+        WHEN COUNT(`att_reports`.`id`) > 0 THEN 1
         ELSE 0
-    END AS isReported
-FROM teachers teachers
-    INNER JOIN lessons lessons ON lessons.teacherReferenceId = teachers.id
-    LEFT JOIN report_month report_months ON report_months.userId = teachers.user_id
-    AND report_months.year = lessons.year
-    LEFT JOIN att_report_with_report_month att_reports ON att_reports.teacherReferenceId = teachers.id
-    AND att_reports.lessonReferenceId = lessons.id
-    AND att_reports.reportMonthReferenceId = report_months.id
+    END AS `isReported`
+FROM `teachers` `teachers`
+    INNER JOIN `lessons` `lessons` ON `lessons`.`teacherReferenceId` = `teachers`.`id`
+    LEFT JOIN `report_month` `report_months` ON `report_months`.`userId` = `teachers`.`user_id`
+    AND `report_months`.`year` = `lessons`.`year`
+    LEFT JOIN `att_report_with_report_month` `att_reports` ON `att_reports`.`teacherReferenceId` = `teachers`.`id`
+    AND `att_reports`.`lessonReferenceId` = `lessons`.`id`
+    AND `att_reports`.`reportMonthReferenceId` = `report_months`.`id`
 WHERE COALESCE(
-        lessons.start_date,
-        report_months.endDate
-    ) <= report_months.endDate
+        `lessons`.`start_date`,
+        `report_months`.`endDate`
+    ) <= `report_months`.`endDate`
     AND COALESCE(
-        lessons.end_date,
-        report_months.startDate
-    ) >= report_months.startDate
-GROUP BY teachers.id,
-    lessons.id,
-    report_months.id
-ORDER BY report_months.id ASC;
+        `lessons`.`end_date`,
+        `report_months`.`startDate`
+    ) >= `report_months`.`startDate`
+GROUP BY `teachers`.`id`,
+    `lessons`.`id`,
+    `report_months`.`id`
+ORDER BY `report_months`.`id` ASC;
 
 -- View: teacher_report_status
 CREATE OR REPLACE VIEW teacher_report_status AS
@@ -1346,35 +1346,35 @@ GROUP BY tlrs.userId, tlrs.teacherId, tlrs.reportMonthId, tlrs.year
 ORDER BY tlrs.reportMonthId, tlrs.teacherId;
 
 -- View: teacher_lesson_grade_report_status
-CREATE OR REPLACE VIEW teacher_lesson_grade_report_status AS
-SELECT teachers.id AS teacherId,
-    lessons.id AS lessonId,
-    lessons.year AS year,
-    lessons.name AS lessonName,
-    report_months.id AS reportMonthId,
-    teachers.user_id AS userId,
+CREATE OR REPLACE VIEW `teacher_lesson_grade_report_status` AS
+SELECT `teachers`.`id` AS `teacherId`,
+    `lessons`.`id` AS `lessonId`,
+    `lessons`.`year` AS `year`,
+    `lessons`.`name` AS `lessonName`,
+    `report_months`.`id` AS `reportMonthId`,
+    `teachers`.`user_id` AS `userId`,
     CASE
-        WHEN COUNT(grades.id) > 0 THEN 1
+        WHEN COUNT(`grades`.`id`) > 0 THEN 1
         ELSE 0
-    END AS isReported
-FROM teachers teachers
-    INNER JOIN lessons lessons ON lessons.teacherReferenceId = teachers.id
-    LEFT JOIN report_month report_months ON report_months.userId = teachers.user_id
-    LEFT JOIN grade_with_report_month grades ON grades.teacherReferenceId = teachers.id
-    AND grades.lessonReferenceId = lessons.id
-    AND grades.reportMonthReferenceId = report_months.id
+    END AS `isReported`
+FROM `teachers` `teachers`
+    INNER JOIN `lessons` `lessons` ON `lessons`.`teacherReferenceId` = `teachers`.`id`
+    LEFT JOIN `report_month` `report_months` ON `report_months`.`userId` = `teachers`.`user_id`
+    LEFT JOIN `grade_with_report_month` `grades` ON `grades`.`teacherReferenceId` = `teachers`.`id`
+    AND `grades`.`lessonReferenceId` = `lessons`.`id`
+    AND `grades`.`reportMonthReferenceId` = `report_months`.`id`
 WHERE COALESCE(
-        lessons.start_date,
-        report_months.endDate
-    ) <= report_months.endDate
+        `lessons`.`start_date`,
+        `report_months`.`endDate`
+    ) <= `report_months`.`endDate`
     AND COALESCE(
-        lessons.end_date,
-        report_months.startDate
-    ) >= report_months.startDate
-GROUP BY teachers.id,
-    lessons.id,
-    report_months.id
-ORDER BY report_months.id ASC;
+        `lessons`.`end_date`,
+        `report_months`.`startDate`
+    ) >= `report_months`.`startDate`
+GROUP BY `teachers`.`id`,
+    `lessons`.`id`,
+    `report_months`.`id`
+ORDER BY `report_months`.`id` ASC;
 
 -- View: teacher_grade_report_status
 CREATE OR REPLACE VIEW teacher_grade_report_status AS
@@ -1399,27 +1399,27 @@ GROUP BY tlgrs.userId, tlgrs.teacherId, tlgrs.reportMonthId, tlgrs.year
 ORDER BY tlgrs.reportMonthId, tlgrs.teacherId;
 
 -- View: teacher_salary_report  
-CREATE OR REPLACE VIEW teacher_salary_report AS
-SELECT DISTINCT att_reports.year AS year,
-    att_reports.teacherReferenceId AS teacherReferenceId,
-    att_reports.klassReferenceId AS klassReferenceId,
-    att_reports.lessonReferenceId AS lessonReferenceId,
-    att_reports.reportMonthReferenceId AS reportMonthReferenceId,
+CREATE OR REPLACE VIEW `teacher_salary_report` AS
+SELECT DISTINCT `att_reports`.`year` AS `year`,
+    `att_reports`.`teacherReferenceId` AS `teacherReferenceId`,
+    `att_reports`.`klassReferenceId` AS `klassReferenceId`,
+    `att_reports`.`lessonReferenceId` AS `lessonReferenceId`,
+    `att_reports`.`reportMonthReferenceId` AS `reportMonthReferenceId`,
     CONCAT(
-        COALESCE(att_reports.user_id, "null"),
+        COALESCE(`att_reports`.`user_id`, "null"),
         "_",
-        COALESCE(att_reports.teacherReferenceId, "null"),
+        COALESCE(`att_reports`.`teacherReferenceId`, "null"),
         "_",
-        COALESCE(att_reports.lessonReferenceId, "null"),
+        COALESCE(`att_reports`.`lessonReferenceId`, "null"),
         "_",
-        COALESCE(att_reports.klassReferenceId, "null"),
+        COALESCE(`att_reports`.`klassReferenceId`, "null"),
         "_",
-        COALESCE(att_reports.how_many_lessons, "null"),
+        COALESCE(`att_reports`.`how_many_lessons`, "null"),
         "_",
-        COALESCE(att_reports.year, "null"),
+        COALESCE(`att_reports`.`year`, "null"),
         "_",
-        COALESCE(att_reports.reportMonthReferenceId, "null")
-    ) AS id,
-    att_reports.user_id AS userId,
-    att_reports.how_many_lessons AS how_many_lessons
-FROM att_report_with_report_month att_reports;
+        COALESCE(`att_reports`.`reportMonthReferenceId`, "null")
+    ) AS `id`,
+    `att_reports`.`user_id` AS `userId`,
+    `att_reports`.`how_many_lessons` AS `how_many_lessons`
+FROM `att_report_with_report_month` `att_reports`;
