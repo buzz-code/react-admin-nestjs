@@ -1,5 +1,5 @@
-import { CrudRequest } from "@dataui/crud";
-import { In } from "typeorm";
+import { CrudRequest, Override } from "@dataui/crud";
+import { In, DeepPartial } from "typeorm";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
 import { AttReportWithReportMonth } from "src/db/view-entities/AttReportWithReportMonth.entity";
@@ -70,6 +70,19 @@ function getConfig(): BaseEntityModuleOptions {
 
 
 class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMonth> extends BaseEntityService<T> {
+    @Override()
+    async updateOne(req: CrudRequest<any>, dto: DeepPartial<T>): Promise<T> {
+        const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
+        await attReportService.updateOne(req, dto);
+        return this.getOne(req);
+    }
+
+    @Override()
+    async deleteOne(req: CrudRequest<any>): Promise<void | T> {
+        const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
+        return attReportService.deleteOne(req) as Promise<void | T>;
+    }
+
     async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
         switch (req.parsed.extra.action) {
             case 'bulkKnownAbsences': {

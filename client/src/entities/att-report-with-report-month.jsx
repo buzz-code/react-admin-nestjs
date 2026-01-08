@@ -87,8 +87,6 @@ const entity = {
     Inputs,
     filters,
     filterDefaultValues,
-    editResource: 'att_report',
-    deleteResource: 'att_report',
 };
 
 export default getResourceComponents(entity);
