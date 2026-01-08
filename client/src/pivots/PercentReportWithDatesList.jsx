@@ -9,6 +9,12 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 import { isTeacherView } from 'src/utils/appPermissions';
 
+const lessonFilter = {
+    ...filterByUserIdAndYear,
+    teacherReferenceId: 'teacherReferenceId',
+    'klassReferenceIds:$cont': 'klassReferenceId',
+};
+
 const filters = [
     adminUserFilter,
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
@@ -20,7 +26,8 @@ const filters = [
     ({ permissions }) => !isTeacherView(permissions) && (<CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />),
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonReferenceInputFilter source="klass.klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
-    <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ ...filterByUserIdAndYear, teacherReferenceId: 'teacherReferenceId', 'klassReferenceIds:$cont': 'klassReferenceId' }} />,
+    <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={lessonFilter} />,
+    <CommonReferenceInputFilter source="lessonReferenceId:$ne" reference="lesson" label="חוץ משיעור" dynamicFilter={lessonFilter} />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
