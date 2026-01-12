@@ -576,8 +576,8 @@ CREATE TABLE `report_month` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
   `name` varchar(255) NOT NULL,
-  `startDate` date NOT NULL,
-  `endDate` date NOT NULL,
+  `startDate` datetime NOT NULL,
+  `endDate` datetime NOT NULL,
   `semester` varchar(255) NOT NULL DEFAULT 'שנתי',
   `year` int DEFAULT NULL,
   
