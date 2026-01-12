@@ -166,7 +166,7 @@ CREATE TABLE `users` (
   `permissions` json DEFAULT NULL,
   `additionalData` json DEFAULT NULL,
   `userInfo` json DEFAULT NULL,
-  `isPaid` tinyint(1) NOT NULL DEFAULT '0',
+  `isPaid` tinyint NOT NULL DEFAULT 0,
   `paymentMethod` varchar(255) DEFAULT NULL,
   `mailAddressAlias` varchar(255) DEFAULT NULL,
   `mailAddressTitle` varchar(255) DEFAULT NULL,
@@ -200,10 +200,10 @@ CREATE TABLE `teachers` (
   `email` varchar(500) DEFAULT NULL,
   `comment` varchar(1000) DEFAULT NULL,
   `displayName` varchar(500) DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_teachers_user_tz_year` (`user_id`, `tz`, `year`),
+  UNIQUE KEY `IDX_284ec0d1b23c78061dd15e5be1` (`user_id`, `tz`, `year`),
   KEY `teachers_users_idx` (`user_id`),
   KEY `teachers_user_id_phone_idx` (`user_id`, `phone`),
   KEY `teachers_user_id_phone2_idx` (`user_id`, `phone2`)
@@ -235,11 +235,11 @@ CREATE TABLE `students` (
   `comment` varchar(1000) DEFAULT NULL,
   `phone` varchar(1000) DEFAULT NULL,
   `address` varchar(1000) DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `is_active` tinyint NOT NULL DEFAULT 1,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_students_user_tz_year` (`user_id`, `tz`, `year`),
+  UNIQUE KEY `IDX_53f436b35b00a4bcb00bfa08ce` (`user_id`, `tz`, `year`),
   KEY `students_users_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -273,8 +273,8 @@ CREATE TABLE `klass_types` (
   `klassTypeEnum` varchar(255) NOT NULL DEFAULT 'אחר',
   `teacher_id` varchar(10) DEFAULT NULL,
   `teacherReferenceId` int DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `klass_types_users_idx` (`user_id`),
   KEY `klass_types_klassTypeEnum_idx` (`klassTypeEnum`)
@@ -308,10 +308,10 @@ CREATE TABLE `klasses` (
   `klassTypeReferenceId` int DEFAULT NULL,
   `teacher_id` varchar(10) DEFAULT NULL,
   `teacherReferenceId` int DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_klasses_user_key_year` (`user_id`, `key`, `year`),
+  UNIQUE KEY `IDX_b79f5a3d6f4c83df7d03fcf1a3` (`user_id`, `key`, `year`),
   KEY `klasses_users_idx` (`user_id`),
   KEY `klasses_user_id_key_idx` (`user_id`, `key`),
   KEY `klasses_klass_type_reference_id_idx` (`klassTypeReferenceId`),
@@ -352,10 +352,10 @@ CREATE TABLE `lessons` (
   `comment` varchar(1000) DEFAULT NULL,
   `how_many_lessons` float DEFAULT NULL,
   `order` int DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_lessons_user_key_year` (`user_id`, `key`, `year`),
+  UNIQUE KEY `IDX_95dda12bd0a76cf4a439da99fe` (`user_id`, `key`, `year`),
   KEY `lessons_users_idx` (`user_id`),
   KEY `lessons_user_id_key_idx` (`user_id`, `key`),
   KEY `lessons_teacher_reference_id_idx` (`teacherReferenceId`)
@@ -386,15 +386,15 @@ CREATE TABLE `student_klasses` (
   `studentReferenceId` int DEFAULT NULL,
   `klass_id` int DEFAULT NULL,
   `klassReferenceId` int DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `student_klasses_users_idx` (`user_id`),
   KEY `student_klasses_user_year_idx` (`user_id`, `year`),
   KEY `student_klasses_student_reference_id_year_idx` (`studentReferenceId`, `year`),
   KEY `student_klasses_user_klass_year_idx` (`user_id`, `klassReferenceId`, `year`),
   KEY `student_klasses_user_student_klass_year_idx` (`user_id`, `studentReferenceId`, `klassReferenceId`, `year`),
-  KEY `IDX_student_klasses_studentReferenceId_year` (`studentReferenceId`, `year`)
+  KEY `IDX_a7a9761c4d14939ffa38598ee8` (`studentReferenceId`, `year`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `student_klasses` (`id`, `user_id`, `year`, `student_tz`, `studentReferenceId`, `klass_id`, `klassReferenceId`) VALUES
@@ -438,8 +438,8 @@ CREATE TABLE `att_reports` (
   `comments` varchar(500) DEFAULT NULL,
   `sheet_name` varchar(100) DEFAULT NULL,
   `reportGroupSessionId` int DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `att_users_idx` (`user_id`),
   KEY `att_user_sheet_name_lession_klass_year_idx` (`user_id`, `sheet_name`, `lessonReferenceId`, `klassReferenceId`, `year`),
@@ -495,8 +495,8 @@ CREATE TABLE `grades` (
   `estimation` varchar(500) DEFAULT NULL,
   `comments` varchar(500) DEFAULT NULL,
   `reportGroupSessionId` int DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `grades_users_idx` (`user_id`),
   KEY `grades_user_lesson_klass_year_idx` (`user_id`, `lessonReferenceId`, `klassReferenceId`, `year`),
@@ -546,12 +546,12 @@ CREATE TABLE `known_absences` (
   `sender_name` varchar(100) DEFAULT NULL,
   `reason` varchar(500) DEFAULT NULL,
   `comment` varchar(500) DEFAULT NULL,
-  `isApproved` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `isApproved` tinyint NOT NULL DEFAULT 1,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `known_users_idx` (`user_id`),
-  KEY `IDX_known_absences_studentReferenceId_year` (`studentReferenceId`, `year`),
+  KEY `IDX_f2e0b7295d97b24618d46079c1` (`studentReferenceId`, `year`),
   KEY `known_absences_student_reference_id_idx` (`studentReferenceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -612,8 +612,8 @@ CREATE TABLE `grade_names` (
   `user_id` int NOT NULL,
   `key` int NOT NULL,
   `name` varchar(500) DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `grade_names_user_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -640,8 +640,8 @@ CREATE TABLE `attendance_names` (
   `user_id` int NOT NULL,
   `key` int NOT NULL,
   `name` varchar(500) DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `attendance_names_user_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -810,7 +810,7 @@ CREATE TABLE `audit_log` (
   `entityName` varchar(255) NOT NULL,
   `operation` varchar(255) NOT NULL,
   `entityData` text NOT NULL,
-  `isReverted` tinyint(1) NOT NULL DEFAULT '0',
+  `isReverted` tinyint NOT NULL DEFAULT 0,
   `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -854,7 +854,7 @@ CREATE TABLE `mail_address` (
   `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_mail_address_userId_entity` (`userId`, `entity`)
+  UNIQUE KEY `IDX_10d2242b0e45f6add0b4269cbf` (`userId`, `entity`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
@@ -905,7 +905,7 @@ CREATE TABLE `image` (
   `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IDX_image_userId_imageTarget` (`userId`, `imageTarget`)
+  UNIQUE KEY `IDX_35596848f8bb8f7b5ec5fcf9e0` (`userId`, `imageTarget`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
@@ -943,7 +943,7 @@ CREATE TABLE `import_file` (
   `entityIds` text NOT NULL,
   `entityName` varchar(255) NOT NULL,
   `fullSuccess` tinyint(1) DEFAULT NULL,
-  `response` varchar(255) DEFAULT NULL,
+  `response` varchar(255) NOT NULL,
   `metadata` json DEFAULT NULL,
   `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`)
@@ -960,8 +960,8 @@ CREATE TABLE `att_grade_effect` (
   `percents` int DEFAULT NULL,
   `count` int DEFAULT NULL,
   `effect` int NOT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `att_grade_effect_user_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
