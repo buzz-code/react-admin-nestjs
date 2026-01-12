@@ -521,9 +521,9 @@ INSERT INTO `grades` (`id`, `user_id`, `year`, `student_tz`, `studentReferenceId
 (10, 3, 5786, '101010101', 10, '890123456', 8, 8, 8, 8, 8, '2025-10-17', 10, 94.0, 'Excellent'),
 (11, 1, 5786, '111111111', 1, '234567890', 2, 1, 1, 2, 2, '2025-10-20', 12, 89.5, 'Very Good'),
 (12, 1, 5786, '333333333', 3, '345678901', 3, 2, 2, 3, 3, '2025-10-20', 10, 96.0, 'Outstanding'),
-(13, 2, 5786, '666666666', 6, '567890123', 5, 4, 4, 5, 5, '5786-10-21', 9, 86.0, 'Good'),
-(14, 1, 5786, '555555555', 5, '567890123', 5, 3, 3, 5, 5, '5786-10-22', 9, 91.5, 'Excellent'),
-(15, 2, 5786, '888888888', 8, '789012345', 7, 7, 7, 7, 7, '5786-10-23', 12, 88.5, 'Very Good');
+(13, 2, 5786, '666666666', 6, '567890123', 5, 4, 4, 5, 5, '2025-10-21', 9, 86.0, 'Good'),
+(14, 1, 5786, '555555555', 5, '567890123', 5, 3, 3, 5, 5, '2025-10-22', 9, 91.5, 'Excellent'),
+(15, 2, 5786, '888888888', 8, '789012345', 7, 7, 7, 7, 7, '2025-10-23', 12, 88.5, 'Very Good');
 
 -- ============================================================
 -- Table: known_absences
@@ -724,6 +724,22 @@ INSERT INTO `report_group_sessions` (`id`, `userId`, `reportGroupId`, `sessionDa
 (8, 1, 2, '2025-10-16', '10:00:00', '11:30:00', 'Essay writing'),
 (9, 2, 4, '2025-10-18', '09:00:00', '10:30:00', 'Photosynthesis'),
 (10, 2, 5, '2025-10-19', '11:00:00', '12:30:00', 'Control structures');
+
+-- ============================================================
+-- Table: typeorm_metadata
+-- TypeORM metadata for generated columns and other metadata
+-- ============================================================
+DROP TABLE IF EXISTS `typeorm_metadata`;
+CREATE TABLE `typeorm_metadata` (
+  `type` varchar(255) NOT NULL,
+  `schema` varchar(255) DEFAULT NULL,
+  `table` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `value` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `typeorm_metadata` (`type`, `schema`, `table`, `name`, `value`) VALUES
+('GENERATED_COLUMN', 'mysql_database', 'lessons', 'klass_reference_ids_json', 'CAST(CONCAT(''['', COALESCE(klassReferenceIds, ''''), '']'') AS JSON)');
 
 SET FOREIGN_KEY_CHECKS = 1;
 
