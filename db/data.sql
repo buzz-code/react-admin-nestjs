@@ -149,6 +149,20 @@ INSERT INTO `migrations` (`timestamp`, `name`) VALUES
 (1767647800000, 'FixSchemaMisalignments1767647800000');
 
 -- ============================================================
+-- Table: typeorm_metadata
+-- TypeORM metadata for generated columns and other metadata
+-- ============================================================
+DROP TABLE IF EXISTS `typeorm_metadata`;
+CREATE TABLE `typeorm_metadata` (
+  `database` varchar(255) DEFAULT NULL,
+  `type` varchar(255) NOT NULL,
+  `schema` varchar(255) DEFAULT NULL,
+  `table` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `value` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
 -- Table: users
 -- Main users table
 -- ============================================================
@@ -347,7 +361,7 @@ CREATE TABLE `lessons` (
   `display_name` varchar(500) DEFAULT NULL,
   `klasses` varchar(450) DEFAULT NULL,
   `klassReferenceIds` text,
-  `klass_reference_ids_json` json GENERATED ALWAYS AS (cast(concat('[',coalesce(`klassReferenceIds`,''),']') as json)) STORED,
+  `klass_reference_ids_json` json GENERATED ALWAYS AS (cast(concat('[',coalesce(`klassReferenceIds`,''),']') as json)) STORED NULL,
   `teacher_id` varchar(10) DEFAULT NULL,
   `teacherReferenceId` int DEFAULT NULL,
   `start_date` date DEFAULT NULL,
@@ -363,6 +377,14 @@ CREATE TABLE `lessons` (
   KEY `lessons_user_id_key_idx` (`user_id`, `key`),
   KEY `lessons_teacher_reference_id_idx` (`teacherReferenceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `lessons` CHANGE `klass_reference_ids_json` `klass_reference_ids_json` json AS (
+    CAST(
+        CONCAT('[', COALESCE(klassReferenceIds, ''), ']') AS JSON
+    )
+) STORED NULL;
+INSERT INTO `typeorm_metadata` (`database`, `type`, `schema`, `table`, `name`, `value`) VALUES
+('mysql_database', 'GENERATED_COLUMN', 'mysql_database', 'lessons', 'klass_reference_ids_json', "CAST(CONCAT('[', COALESCE(klassReferenceIds, ''), ']') AS JSON)");
 
 INSERT INTO `lessons` (`id`, `user_id`, `year`, `key`, `name`, `display_name`, `klasses`, `klassReferenceIds`, `teacher_id`, `teacherReferenceId`, `start_date`, `end_date`, `how_many_lessons`, `order`) VALUES
 (1, 1, 5786, 1, 'Mathematics', 'Math', '1,2', '1,2', '123456789', 1, '2025-09-01', '2025-12-31', 40, 1),
@@ -734,21 +756,6 @@ INSERT INTO `report_group_sessions` (`id`, `userId`, `reportGroupId`, `sessionDa
 (10, 2, 5, '2025-10-19', '11:00:00', '12:30:00', 'Control structures');
 
 -- ============================================================
--- Table: typeorm_metadata
--- TypeORM metadata for generated columns and other metadata
--- ============================================================
-DROP TABLE IF EXISTS `typeorm_metadata`;
-CREATE TABLE `typeorm_metadata` (
-  `type` varchar(255) NOT NULL,
-  `schema` varchar(255) DEFAULT NULL,
-  `table` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `value` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
--- ============================================================
 -- Table: texts
 -- Text content management
 -- ============================================================
@@ -977,6 +984,7 @@ INSERT INTO `numbers` (`id`, `number`) VALUES
 -- Views
 -- Critical view entities required by the application
 -- ============================================================
+SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE VIEW `text_by_user` AS
 SELECT `t_base`.`name` AS `name`,
@@ -996,13 +1004,14 @@ ORDER BY `users`.`id` ASC,
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'text_by_user', 'SELECT `t_base`.`name` AS `name`, `t_base`.`description` AS `description`, `users`.`id` AS `userId`, `t_user`.`id` AS `overrideTextId`, CONCAT(`users`.`id`, \"_\", `t_base`.`id`) AS `id`, COALESCE(`t_user`.`value`, `t_base`.`value`) AS `value`, COALESCE(`t_user`.`filepath`, `t_base`.`filepath`) AS `filepath` FROM `texts` `t_base` LEFT JOIN `users` `users` ON `users`.`effective_id` is null  LEFT JOIN `texts` `t_user` ON `t_user`.`name` = `t_base`.`name` AND `t_user`.`user_id` = `users`.`id` WHERE `t_base`.`user_id` = 0 ORDER BY `users`.`id` ASC, `t_base`.`id` ASC');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'text_by_user', 'SELECT `t_base`.`name` AS `name`, `t_base`.`description` AS `description`, `users`.`id` AS `userId`, `t_user`.`id` AS `overrideTextId`, CONCAT(`users`.`id`, \"_\", `t_base`.`id`) AS `id`, COALESCE(`t_user`.`value`, `t_base`.`value`) AS `value`, COALESCE(`t_user`.`filepath`, `t_base`.`filepath`) AS `filepath` FROM `texts` `t_base` LEFT JOIN `users` `users` ON `users`.`effective_id` is null  LEFT JOIN `texts` `t_user` ON `t_user`.`name` = `t_base`.`name` AND `t_user`.`user_id` = `users`.`id` WHERE `t_base`.`user_id` = 0 ORDER BY `users`.`id` ASC, `t_base`.`id` ASC');
 
 
 CREATE VIEW `lesson_klass_name` AS
@@ -1020,13 +1029,14 @@ GROUP BY lessons.id,
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'lesson_klass_name', 'SELECT lessons.id AS id,\n           lessons.user_id AS user_id,\n           GROUP_CONCAT(DISTINCT klasses.name SEPARATOR \', \') AS name\n    FROM lessons\n    LEFT JOIN JSON_TABLE(\n      lessons.klass_reference_ids_json,\n      \"$[*]\" COLUMNS(klass_id INT PATH \"$\")\n    ) AS jt ON 1=1\n    LEFT JOIN klasses ON klasses.id = jt.klass_id\n    GROUP BY lessons.id, lessons.user_id');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'lesson_klass_name', 'SELECT lessons.id AS id,\n           lessons.user_id AS user_id,\n           GROUP_CONCAT(DISTINCT klasses.name SEPARATOR \', \') AS name\n    FROM lessons\n    LEFT JOIN JSON_TABLE(\n      lessons.klass_reference_ids_json,\n      \"$[*]\" COLUMNS(klass_id INT PATH \"$\")\n    ) AS jt ON 1=1\n    LEFT JOIN klasses ON klasses.id = jt.klass_id\n    GROUP BY lessons.id, lessons.user_id');
 
 
 CREATE VIEW `student_by_year` AS
@@ -1045,13 +1055,14 @@ GROUP BY `students`.`id`;
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'student_by_year', 'SELECT `students`.`id` AS `id`, `students`.`tz` AS `tz`, `students`.`name` AS `name`, `students`.`is_active` AS `isActive`, `students`.`user_id` AS `user_id`, GROUP_CONCAT(DISTINCT `student_klasses`.`year`) AS `year`, GROUP_CONCAT(DISTINCT `student_klasses`.`klassReferenceId`) AS `klassReferenceIds`, GROUP_CONCAT(DISTINCT `klasses`.`klassTypeReferenceId`) AS `klassTypeReferenceIds` FROM `student_klasses` `student_klasses` LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId`  LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId` GROUP BY `students`.`id`');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'student_by_year', 'SELECT `students`.`id` AS `id`, `students`.`tz` AS `tz`, `students`.`name` AS `name`, `students`.`is_active` AS `isActive`, `students`.`user_id` AS `user_id`, GROUP_CONCAT(DISTINCT `student_klasses`.`year`) AS `year`, GROUP_CONCAT(DISTINCT `student_klasses`.`klassReferenceId`) AS `klassReferenceIds`, GROUP_CONCAT(DISTINCT `klasses`.`klassTypeReferenceId`) AS `klassTypeReferenceIds` FROM `student_klasses` `student_klasses` LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId`  LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId` GROUP BY `students`.`id`');
 
 
 CREATE VIEW `student_base_klass` AS
@@ -1074,13 +1085,14 @@ GROUP BY studentReferenceId,
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'student_base_klass', 'SELECT `student_klasses`.`year` AS `year`, studentReferenceId AS `id`, `student_klasses`.`user_id` AS `user_id`, GROUP_CONCAT(DISTINCT if(`klass_types`.`klassTypeEnum` = \'כיתת אם\', `klasses`.`name`, null) SEPARATOR \', \') AS `base_klass` FROM `student_klasses` `student_klasses` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId` GROUP BY studentReferenceId, user_id, year');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'student_base_klass', 'SELECT `student_klasses`.`year` AS `year`, studentReferenceId AS `id`, `student_klasses`.`user_id` AS `user_id`, GROUP_CONCAT(DISTINCT if(`klass_types`.`klassTypeEnum` = \'כיתת אם\', `klasses`.`name`, null) SEPARATOR \', \') AS `base_klass` FROM `student_klasses` `student_klasses` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId` GROUP BY studentReferenceId, user_id, year');
 
 
 CREATE VIEW `abs_count_effect_by_user` AS
@@ -1116,13 +1128,14 @@ ORDER BY `users`.`id` ASC,
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'abs_count_effect_by_user', 'SELECT `users`.`id` AS `userId`, CONCAT(`users`.`id`, \"_\", numbers.number) AS `id`, numbers.number AS `number`, \n    CAST(\n      COALESCE(\n        SUBSTRING_INDEX(\n          MAX(\n            CASE WHEN `att_grade_effect`.`count` <= numbers.number \n            THEN CONCAT(LPAD(`att_grade_effect`.`count`, 10, \'0\'), \'|\', `att_grade_effect`.`effect`)\n            ELSE NULL END\n          ), \n          \'|\', -1\n        ),\n        \'0\'\n      ) AS SIGNED\n    ) + 0\n   AS `effect` FROM `numbers` `numbers` LEFT JOIN `users` `users` ON 1 = 1  LEFT JOIN `att_grade_effect` `att_grade_effect` ON `att_grade_effect`.`user_id` = `users`.`id` GROUP BY `users`.`id`, numbers.number ORDER BY `users`.`id` ASC, numbers.number ASC');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'abs_count_effect_by_user', 'SELECT `users`.`id` AS `userId`, CONCAT(`users`.`id`, \"_\", numbers.number) AS `id`, numbers.number AS `number`, \n    CAST(\n      COALESCE(\n        SUBSTRING_INDEX(\n          MAX(\n            CASE WHEN `att_grade_effect`.`count` <= numbers.number \n            THEN CONCAT(LPAD(`att_grade_effect`.`count`, 10, \'0\'), \'|\', `att_grade_effect`.`effect`)\n            ELSE NULL END\n          ), \n          \'|\', -1\n        ),\n        \'0\'\n      ) AS SIGNED\n    ) + 0\n   AS `effect` FROM `numbers` `numbers` LEFT JOIN `users` `users` ON 1 = 1  LEFT JOIN `att_grade_effect` `att_grade_effect` ON `att_grade_effect`.`user_id` = `users`.`id` GROUP BY `users`.`id`, numbers.number ORDER BY `users`.`id` ASC, numbers.number ASC');
 
 
 CREATE VIEW `att_report_and_grade` AS
@@ -1164,13 +1177,14 @@ FROM grades;
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'att_report_and_grade', 'SELECT\n      CONCAT(\'a-\', id) AS id,\n      \'att\' as \'type\',\n      user_id,\n      `year`,\n      studentReferenceId,\n      teacherReferenceId,\n      lessonReferenceId,\n      klassReferenceId,\n      report_date,\n      how_many_lessons,\n      abs_count,\n      approved_abs_count,\n      NULL AS \'grade\',\n      NULL AS \'estimation\',\n      comments,\n      sheet_name\n  FROM\n      att_reports\n  UNION\n  SELECT\n      CONCAT(\'g-\', id) AS id,\n      \'grade\' as \'type\',\n      user_id,\n      `year`,\n      studentReferenceId,\n      teacherReferenceId,\n      lessonReferenceId,\n      klassReferenceId,\n      report_date,\n      how_many_lessons,\n      NULL AS \'abs_count\',\n      NULL AS \'approved_abs_count\',\n      grade,\n      estimation,\n      comments,\n      NULL AS \'sheet_name\'\n  FROM\n      grades');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'att_report_and_grade', 'SELECT\n      CONCAT(\'a-\', id) AS id,\n      \'att\' as \'type\',\n      user_id,\n      `year`,\n      studentReferenceId,\n      teacherReferenceId,\n      lessonReferenceId,\n      klassReferenceId,\n      report_date,\n      how_many_lessons,\n      abs_count,\n      approved_abs_count,\n      NULL AS \'grade\',\n      NULL AS \'estimation\',\n      comments,\n      sheet_name\n  FROM\n      att_reports\n  UNION\n  SELECT\n      CONCAT(\'g-\', id) AS id,\n      \'grade\' as \'type\',\n      user_id,\n      `year`,\n      studentReferenceId,\n      teacherReferenceId,\n      lessonReferenceId,\n      klassReferenceId,\n      report_date,\n      how_many_lessons,\n      NULL AS \'abs_count\',\n      NULL AS \'approved_abs_count\',\n      grade,\n      estimation,\n      comments,\n      NULL AS \'sheet_name\'\n  FROM\n      grades');
 
 
 CREATE VIEW `att_report_with_report_month` AS
@@ -1183,13 +1197,14 @@ FROM `att_reports` `ar`
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'att_report_with_report_month', 'SELECT `report_months`.`id` AS `reportMonthReferenceId`, ar.* FROM `att_reports` `ar` LEFT JOIN `report_month` `report_months` ON `ar`.`user_id` = `report_months`.`userId` AND `ar`.`report_date` <= `report_months`.`endDate` AND `ar`.`report_date` >= `report_months`.`startDate`');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'att_report_with_report_month', 'SELECT `report_months`.`id` AS `reportMonthReferenceId`, ar.* FROM `att_reports` `ar` LEFT JOIN `report_month` `report_months` ON `ar`.`user_id` = `report_months`.`userId` AND `ar`.`report_date` <= `report_months`.`endDate` AND `ar`.`report_date` >= `report_months`.`startDate`');
 
 
 CREATE VIEW `grade_effect_by_user` AS
@@ -1225,13 +1240,14 @@ ORDER BY `users`.`id` ASC,
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'grade_effect_by_user', 'SELECT `users`.`id` AS `userId`, CONCAT(`users`.`id`, \"_\", numbers.number) AS `id`, numbers.number AS `number`, \n    CAST(\n      COALESCE(\n        SUBSTRING_INDEX(\n          MAX(\n            CASE WHEN `att_grade_effect`.`percents` <= numbers.number \n            THEN CONCAT(LPAD(`att_grade_effect`.`percents`, 10, \'0\'), \'|\', `att_grade_effect`.`effect`)\n            ELSE NULL END\n          ), \n          \'|\', -1\n        ),\n        \'0\'\n      ) AS SIGNED\n    ) + 0\n   AS `effect` FROM `numbers` `numbers` LEFT JOIN `users` `users` ON 1 = 1  LEFT JOIN `att_grade_effect` `att_grade_effect` ON `att_grade_effect`.`user_id` = `users`.`id` GROUP BY `users`.`id`, numbers.number ORDER BY `users`.`id` ASC, numbers.number ASC');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'grade_effect_by_user', 'SELECT `users`.`id` AS `userId`, CONCAT(`users`.`id`, \"_\", numbers.number) AS `id`, numbers.number AS `number`, \n    CAST(\n      COALESCE(\n        SUBSTRING_INDEX(\n          MAX(\n            CASE WHEN `att_grade_effect`.`percents` <= numbers.number \n            THEN CONCAT(LPAD(`att_grade_effect`.`percents`, 10, \'0\'), \'|\', `att_grade_effect`.`effect`)\n            ELSE NULL END\n          ), \n          \'|\', -1\n        ),\n        \'0\'\n      ) AS SIGNED\n    ) + 0\n   AS `effect` FROM `numbers` `numbers` LEFT JOIN `users` `users` ON 1 = 1  LEFT JOIN `att_grade_effect` `att_grade_effect` ON `att_grade_effect`.`user_id` = `users`.`id` GROUP BY `users`.`id`, numbers.number ORDER BY `users`.`id` ASC, numbers.number ASC');
 
 
 CREATE VIEW `grade_with_report_month` AS
@@ -1244,13 +1260,14 @@ FROM `grades` `grades`
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'grade_with_report_month', 'SELECT `report_months`.`id` AS `reportMonthReferenceId`, grades.* FROM `grades` `grades` LEFT JOIN `report_month` `report_months` ON `grades`.`user_id` = `report_months`.`userId` AND `grades`.`report_date` <= `report_months`.`endDate` AND `grades`.`report_date` >= `report_months`.`startDate`');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'grade_with_report_month', 'SELECT `report_months`.`id` AS `reportMonthReferenceId`, grades.* FROM `grades` `grades` LEFT JOIN `report_month` `report_months` ON `grades`.`user_id` = `report_months`.`userId` AND `grades`.`report_date` <= `report_months`.`endDate` AND `grades`.`report_date` >= `report_months`.`startDate`');
 
 
 CREATE VIEW `known_absence_with_report_month` AS
@@ -1263,13 +1280,14 @@ FROM `known_absences` `known_absences`
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'known_absence_with_report_month', 'SELECT `report_months`.`id` AS `reportMonthReferenceId`, known_absences.* FROM `known_absences` `known_absences` LEFT JOIN `report_month` `report_months` ON `known_absences`.`user_id` = `report_months`.`userId` AND `known_absences`.`report_date` <= `report_months`.`endDate` AND `known_absences`.`report_date` >= `report_months`.`startDate`');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'known_absence_with_report_month', 'SELECT `report_months`.`id` AS `reportMonthReferenceId`, known_absences.* FROM `known_absences` `known_absences` LEFT JOIN `report_month` `report_months` ON `known_absences`.`user_id` = `report_months`.`userId` AND `known_absences`.`report_date` <= `report_months`.`endDate` AND `known_absences`.`report_date` >= `report_months`.`startDate`');
 
 
 CREATE VIEW `student_global_report` AS
@@ -1311,13 +1329,14 @@ GROUP BY studentReferenceId,
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'student_global_report', 'SELECT `atag`.`year` AS `year`, `atag`.`teacherReferenceId` AS `teacherReferenceId`, CONCAT(COALESCE(studentReferenceId, \"null\"), \"_\", COALESCE(`atag`.`teacherReferenceId`, \"null\"), \"_\", COALESCE(klassReferenceId, \"null\"), \"_\", COALESCE(lessonReferenceId, \"null\"), \"_\", COALESCE(`atag`.`user_id`, \"null\"), \"_\", COALESCE(`atag`.`year`, \"null\")) AS `id`, `atag`.`user_id` AS `user_id`, studentReferenceId, klassReferenceId, lessonReferenceId, CASE WHEN `klass_types`.`klassTypeEnum` = \"כיתת אם\" THEN 1 ELSE 0 END AS `isBaseKlass`, SUM(how_many_lessons) AS `lessons_count`, SUM(abs_count) AS `abs_count`, AVG(grade) AS `grade_avg` FROM `att_report_and_grade` `atag` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `atag`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId` GROUP BY studentReferenceId, `atag`.`teacherReferenceId`, klassReferenceId, lessonReferenceId, `atag`.`user_id`, `atag`.`year`');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'student_global_report', 'SELECT `atag`.`year` AS `year`, `atag`.`teacherReferenceId` AS `teacherReferenceId`, CONCAT(COALESCE(studentReferenceId, \"null\"), \"_\", COALESCE(`atag`.`teacherReferenceId`, \"null\"), \"_\", COALESCE(klassReferenceId, \"null\"), \"_\", COALESCE(lessonReferenceId, \"null\"), \"_\", COALESCE(`atag`.`user_id`, \"null\"), \"_\", COALESCE(`atag`.`year`, \"null\")) AS `id`, `atag`.`user_id` AS `user_id`, studentReferenceId, klassReferenceId, lessonReferenceId, CASE WHEN `klass_types`.`klassTypeEnum` = \"כיתת אם\" THEN 1 ELSE 0 END AS `isBaseKlass`, SUM(how_many_lessons) AS `lessons_count`, SUM(abs_count) AS `abs_count`, AVG(grade) AS `grade_avg` FROM `att_report_and_grade` `atag` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `atag`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId` GROUP BY studentReferenceId, `atag`.`teacherReferenceId`, klassReferenceId, lessonReferenceId, `atag`.`user_id`, `atag`.`year`');
 
 
 CREATE VIEW `student_klasses_report` AS
@@ -1393,13 +1412,14 @@ GROUP BY `students`.`id`,
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'student_klasses_report', 'SELECT `student_klasses`.`year` AS `year`, `students`.`id` AS `id`, `students`.`id` AS `student_reference_id`, `students`.`tz` AS `student_tz`, `students`.`name` AS `student_name`, `student_klasses`.`user_id` AS `user_id`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'כיתת אם\', `student_klasses`.`klassReferenceId`, null) SEPARATOR \',\') AS `klassReferenceId_1`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'מסלול\', `student_klasses`.`klassReferenceId`, null) SEPARATOR \',\') AS `klassReferenceId_2`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'התמחות\', `student_klasses`.`klassReferenceId`, null) SEPARATOR \',\') AS `klassReferenceId_3`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'אחר\' || `klass_types`.`klassTypeEnum` is null, `student_klasses`.`klassReferenceId`, null) SEPARATOR \',\') AS `klassReferenceId_null`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'כיתת אם\', `klasses`.`name`, null) SEPARATOR \', \') AS `klass_name_1`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'מסלול\', `klasses`.`name`, null) SEPARATOR \', \') AS `klass_name_2`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'התמחות\', `klasses`.`name`, null) SEPARATOR \', \') AS `klass_name_3`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'אחר\' || `klass_types`.`klassTypeEnum` is null, `klasses`.`name`, null) SEPARATOR \', \') AS `klass_name_null` FROM `student_klasses` `student_klasses` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`  LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId` GROUP BY `students`.`id`, `student_klasses`.`user_id`, `student_klasses`.`year`');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'student_klasses_report', 'SELECT `student_klasses`.`year` AS `year`, `students`.`id` AS `id`, `students`.`id` AS `student_reference_id`, `students`.`tz` AS `student_tz`, `students`.`name` AS `student_name`, `student_klasses`.`user_id` AS `user_id`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'כיתת אם\', `student_klasses`.`klassReferenceId`, null) SEPARATOR \',\') AS `klassReferenceId_1`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'מסלול\', `student_klasses`.`klassReferenceId`, null) SEPARATOR \',\') AS `klassReferenceId_2`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'התמחות\', `student_klasses`.`klassReferenceId`, null) SEPARATOR \',\') AS `klassReferenceId_3`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'אחר\' || `klass_types`.`klassTypeEnum` is null, `student_klasses`.`klassReferenceId`, null) SEPARATOR \',\') AS `klassReferenceId_null`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'כיתת אם\', `klasses`.`name`, null) SEPARATOR \', \') AS `klass_name_1`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'מסלול\', `klasses`.`name`, null) SEPARATOR \', \') AS `klass_name_2`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'התמחות\', `klasses`.`name`, null) SEPARATOR \', \') AS `klass_name_3`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = \'אחר\' || `klass_types`.`klassTypeEnum` is null, `klasses`.`name`, null) SEPARATOR \', \') AS `klass_name_null` FROM `student_klasses` `student_klasses` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`  LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId` GROUP BY `students`.`id`, `student_klasses`.`user_id`, `student_klasses`.`year`');
 
 
 CREATE VIEW `student_percent_report` AS
@@ -1421,13 +1441,14 @@ FROM `student_global_report` `sgr`;
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'student_percent_report', 'SELECT id, user_id, year, studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId, lessons_count, abs_count, COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1) AS `abs_percents`, (1 - COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1)) AS `att_percents`, grade_avg / 100 AS `grade_avg` FROM `student_global_report` `sgr`');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'student_percent_report', 'SELECT id, user_id, year, studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId, lessons_count, abs_count, COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1) AS `abs_percents`, (1 - COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1)) AS `att_percents`, grade_avg / 100 AS `grade_avg` FROM `student_global_report` `sgr`');
 
 
 CREATE VIEW `student_speciality` AS
@@ -1450,13 +1471,14 @@ GROUP BY studentReferenceId,
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'student_speciality', 'SELECT `student_klasses`.`year` AS `year`, studentReferenceId AS `id`, `student_klasses`.`user_id` AS `user_id`, GROUP_CONCAT(DISTINCT if(`klass_types`.`klassTypeEnum` = \'התמחות\', `klasses`.`name`, null) SEPARATOR \', \') AS `base_klass` FROM `student_klasses` `student_klasses` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId` GROUP BY studentReferenceId, user_id, year');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'student_speciality', 'SELECT `student_klasses`.`year` AS `year`, studentReferenceId AS `id`, `student_klasses`.`user_id` AS `user_id`, GROUP_CONCAT(DISTINCT if(`klass_types`.`klassTypeEnum` = \'התמחות\', `klasses`.`name`, null) SEPARATOR \', \') AS `base_klass` FROM `student_klasses` `student_klasses` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId` GROUP BY studentReferenceId, user_id, year');
 
 
 CREATE VIEW `teacher_lesson_grade_report_status` AS
@@ -1491,13 +1513,14 @@ ORDER BY `report_months`.`id` ASC;
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'teacher_lesson_grade_report_status', 'SELECT `teachers`.`id` AS `teacherId`, `lessons`.`id` AS `lessonId`, `lessons`.`year` AS `year`, `lessons`.`name` AS `lessonName`, `report_months`.`id` AS `reportMonthId`, `teachers`.`user_id` AS `userId`, CASE WHEN COUNT(`grades`.`id`) > 0 THEN 1 ELSE 0 END AS `isReported` FROM `teachers` `teachers` INNER JOIN `lessons` `lessons` ON `lessons`.`teacherReferenceId` = `teachers`.`id`  LEFT JOIN `report_month` `report_months` ON `report_months`.`userId` = `teachers`.`user_id`  LEFT JOIN `grade_with_report_month` `grades` ON `grades`.`teacherReferenceId` = `teachers`.`id` AND `grades`.`lessonReferenceId` = `lessons`.`id` AND `grades`.`reportMonthReferenceId` = `report_months`.`id` WHERE COALESCE(`lessons`.`start_date`, `report_months`.`endDate`) <= `report_months`.`endDate` AND COALESCE(`lessons`.`end_date`, `report_months`.`startDate`) >= `report_months`.`startDate` GROUP BY `teachers`.`id`, `lessons`.`id`, `report_months`.`id` ORDER BY `report_months`.`id` ASC');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'teacher_lesson_grade_report_status', 'SELECT `teachers`.`id` AS `teacherId`, `lessons`.`id` AS `lessonId`, `lessons`.`year` AS `year`, `lessons`.`name` AS `lessonName`, `report_months`.`id` AS `reportMonthId`, `teachers`.`user_id` AS `userId`, CASE WHEN COUNT(`grades`.`id`) > 0 THEN 1 ELSE 0 END AS `isReported` FROM `teachers` `teachers` INNER JOIN `lessons` `lessons` ON `lessons`.`teacherReferenceId` = `teachers`.`id`  LEFT JOIN `report_month` `report_months` ON `report_months`.`userId` = `teachers`.`user_id`  LEFT JOIN `grade_with_report_month` `grades` ON `grades`.`teacherReferenceId` = `teachers`.`id` AND `grades`.`lessonReferenceId` = `lessons`.`id` AND `grades`.`reportMonthReferenceId` = `report_months`.`id` WHERE COALESCE(`lessons`.`start_date`, `report_months`.`endDate`) <= `report_months`.`endDate` AND COALESCE(`lessons`.`end_date`, `report_months`.`startDate`) >= `report_months`.`startDate` GROUP BY `teachers`.`id`, `lessons`.`id`, `report_months`.`id` ORDER BY `report_months`.`id` ASC');
 
 
 CREATE VIEW `teacher_grade_report_status` AS
@@ -1553,13 +1576,14 @@ ORDER BY `tlrs`.`reportMonthId` ASC,
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'teacher_grade_report_status', 'SELECT `tlrs`.`userId` AS `userId`, `tlrs`.`year` AS `year`, `tlrs`.`teacherId` AS `teacherId`, `tlrs`.`reportMonthId` AS `reportMonthId`, `teacher`.`name` AS `teacherName`, `teacher`.`comment` AS `teacherComment`, `rm`.`name` AS `reportMonthName`, CONCAT(COALESCE(`tlrs`.`userId`, \"null\"), \"_\", COALESCE(`tlrs`.`teacherId`, \"null\"), \"_\", COALESCE(`tlrs`.`reportMonthId`, \"null\"), \"_\", COALESCE(`tlrs`.`year`, \"null\")) AS `id`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 1 THEN `tlrs`.`lessonId` END ORDER BY `tlrs`.`lessonName`) AS `reportedLessons`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 0 THEN `tlrs`.`lessonId` END ORDER BY `tlrs`.`lessonName`) AS `notReportedLessons`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 1 THEN `tlrs`.`lessonName` END ORDER BY `tlrs`.`lessonName` SEPARATOR \", \") AS `reportedLessonNames`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 0 THEN `tlrs`.`lessonName` END ORDER BY `tlrs`.`lessonName` SEPARATOR \", \") AS `notReportedLessonNames` FROM `teacher_lesson_grade_report_status` `tlrs` LEFT JOIN `teachers` `teacher` ON `tlrs`.`teacherId` = `teacher`.`id`  LEFT JOIN `report_month` `rm` ON `tlrs`.`reportMonthId` = `rm`.`id` GROUP BY `tlrs`.`userId`, `tlrs`.`teacherId`, `tlrs`.`reportMonthId`, `tlrs`.`year` ORDER BY `tlrs`.`reportMonthId` ASC, `tlrs`.`teacherId` ASC');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'teacher_grade_report_status', 'SELECT `tlrs`.`userId` AS `userId`, `tlrs`.`year` AS `year`, `tlrs`.`teacherId` AS `teacherId`, `tlrs`.`reportMonthId` AS `reportMonthId`, `teacher`.`name` AS `teacherName`, `teacher`.`comment` AS `teacherComment`, `rm`.`name` AS `reportMonthName`, CONCAT(COALESCE(`tlrs`.`userId`, \"null\"), \"_\", COALESCE(`tlrs`.`teacherId`, \"null\"), \"_\", COALESCE(`tlrs`.`reportMonthId`, \"null\"), \"_\", COALESCE(`tlrs`.`year`, \"null\")) AS `id`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 1 THEN `tlrs`.`lessonId` END ORDER BY `tlrs`.`lessonName`) AS `reportedLessons`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 0 THEN `tlrs`.`lessonId` END ORDER BY `tlrs`.`lessonName`) AS `notReportedLessons`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 1 THEN `tlrs`.`lessonName` END ORDER BY `tlrs`.`lessonName` SEPARATOR \", \") AS `reportedLessonNames`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 0 THEN `tlrs`.`lessonName` END ORDER BY `tlrs`.`lessonName` SEPARATOR \", \") AS `notReportedLessonNames` FROM `teacher_lesson_grade_report_status` `tlrs` LEFT JOIN `teachers` `teacher` ON `tlrs`.`teacherId` = `teacher`.`id`  LEFT JOIN `report_month` `rm` ON `tlrs`.`reportMonthId` = `rm`.`id` GROUP BY `tlrs`.`userId`, `tlrs`.`teacherId`, `tlrs`.`reportMonthId`, `tlrs`.`year` ORDER BY `tlrs`.`reportMonthId` ASC, `tlrs`.`teacherId` ASC');
 
 
 CREATE VIEW `teacher_salary_report` AS
@@ -1589,13 +1613,14 @@ FROM `att_report_with_report_month` `att_reports`;
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'teacher_salary_report', 'SELECT DISTINCT `att_reports`.`year` AS `year`, `att_reports`.`teacherReferenceId` AS `teacherReferenceId`, `att_reports`.`klassReferenceId` AS `klassReferenceId`, `att_reports`.`lessonReferenceId` AS `lessonReferenceId`, `att_reports`.`reportMonthReferenceId` AS `reportMonthReferenceId`, CONCAT(COALESCE(`att_reports`.`user_id`, \"null\"), \"_\", COALESCE(`att_reports`.`teacherReferenceId`, \"null\"), \"_\", COALESCE(`att_reports`.`lessonReferenceId`, \"null\"), \"_\", COALESCE(`att_reports`.`klassReferenceId`, \"null\"), \"_\", COALESCE(`att_reports`.`how_many_lessons`, \"null\"), \"_\", COALESCE(`att_reports`.`year`, \"null\"), \"_\", COALESCE(`att_reports`.`reportMonthReferenceId`, \"null\")) AS `id`, `att_reports`.`user_id` AS `userId`, `att_reports`.`how_many_lessons` AS `how_many_lessons` FROM `att_report_with_report_month` `att_reports`');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'teacher_salary_report', 'SELECT DISTINCT `att_reports`.`year` AS `year`, `att_reports`.`teacherReferenceId` AS `teacherReferenceId`, `att_reports`.`klassReferenceId` AS `klassReferenceId`, `att_reports`.`lessonReferenceId` AS `lessonReferenceId`, `att_reports`.`reportMonthReferenceId` AS `reportMonthReferenceId`, CONCAT(COALESCE(`att_reports`.`user_id`, \"null\"), \"_\", COALESCE(`att_reports`.`teacherReferenceId`, \"null\"), \"_\", COALESCE(`att_reports`.`lessonReferenceId`, \"null\"), \"_\", COALESCE(`att_reports`.`klassReferenceId`, \"null\"), \"_\", COALESCE(`att_reports`.`how_many_lessons`, \"null\"), \"_\", COALESCE(`att_reports`.`year`, \"null\"), \"_\", COALESCE(`att_reports`.`reportMonthReferenceId`, \"null\")) AS `id`, `att_reports`.`user_id` AS `userId`, `att_reports`.`how_many_lessons` AS `how_many_lessons` FROM `att_report_with_report_month` `att_reports`');
 
 
 CREATE VIEW `teacher_lesson_report_status` AS
@@ -1631,13 +1656,14 @@ ORDER BY `report_months`.`id` ASC;
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'teacher_lesson_report_status', 'SELECT `teachers`.`id` AS `teacherId`, `lessons`.`id` AS `lessonId`, `lessons`.`year` AS `year`, `lessons`.`name` AS `lessonName`, `report_months`.`id` AS `reportMonthId`, `teachers`.`user_id` AS `userId`, CASE WHEN COUNT(`att_reports`.`id`) > 0 THEN 1 ELSE 0 END AS `isReported` FROM `teachers` `teachers` INNER JOIN `lessons` `lessons` ON `lessons`.`teacherReferenceId` = `teachers`.`id`  LEFT JOIN `report_month` `report_months` ON `report_months`.`userId` = `teachers`.`user_id` AND `report_months`.`year` = `lessons`.`year`  LEFT JOIN `att_report_with_report_month` `att_reports` ON `att_reports`.`teacherReferenceId` = `teachers`.`id` AND `att_reports`.`lessonReferenceId` = `lessons`.`id` AND `att_reports`.`reportMonthReferenceId` = `report_months`.`id` WHERE COALESCE(`lessons`.`start_date`, `report_months`.`endDate`) <= `report_months`.`endDate` AND COALESCE(`lessons`.`end_date`, `report_months`.`startDate`) >= `report_months`.`startDate` GROUP BY `teachers`.`id`, `lessons`.`id`, `report_months`.`id` ORDER BY `report_months`.`id` ASC');
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'teacher_lesson_report_status', 'SELECT `teachers`.`id` AS `teacherId`, `lessons`.`id` AS `lessonId`, `lessons`.`year` AS `year`, `lessons`.`name` AS `lessonName`, `report_months`.`id` AS `reportMonthId`, `teachers`.`user_id` AS `userId`, CASE WHEN COUNT(`att_reports`.`id`) > 0 THEN 1 ELSE 0 END AS `isReported` FROM `teachers` `teachers` INNER JOIN `lessons` `lessons` ON `lessons`.`teacherReferenceId` = `teachers`.`id`  LEFT JOIN `report_month` `report_months` ON `report_months`.`userId` = `teachers`.`user_id` AND `report_months`.`year` = `lessons`.`year`  LEFT JOIN `att_report_with_report_month` `att_reports` ON `att_reports`.`teacherReferenceId` = `teachers`.`id` AND `att_reports`.`lessonReferenceId` = `lessons`.`id` AND `att_reports`.`reportMonthReferenceId` = `report_months`.`id` WHERE COALESCE(`lessons`.`start_date`, `report_months`.`endDate`) <= `report_months`.`endDate` AND COALESCE(`lessons`.`end_date`, `report_months`.`startDate`) >= `report_months`.`startDate` GROUP BY `teachers`.`id`, `lessons`.`id`, `report_months`.`id` ORDER BY `report_months`.`id` ASC');
 
 
 CREATE VIEW `teacher_report_status` AS
@@ -1693,10 +1719,11 @@ ORDER BY `tlrs`.`reportMonthId` ASC,
 
 
 INSERT INTO `typeorm_metadata`(
+        `database`,
         `schema`,
         `table`,
         `type`,
         `name`,
         `value`
     )
-VALUES (DEFAULT, DEFAULT, 'VIEW', 'teacher_report_status', 'SELECT `tlrs`.`userId` AS `userId`, `tlrs`.`year` AS `year`, `tlrs`.`teacherId` AS `teacherId`, `tlrs`.`reportMonthId` AS `reportMonthId`, `teacher`.`name` AS `teacherName`, `teacher`.`comment` AS `teacherComment`, `rm`.`name` AS `reportMonthName`, CONCAT(COALESCE(`tlrs`.`userId`, \"null\"), \"_\", COALESCE(`tlrs`.`teacherId`, \"null\"), \"_\", COALESCE(`tlrs`.`reportMonthId`, \"null\"), \"_\", COALESCE(`tlrs`.`year`, \"null\")) AS `id`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 1 THEN `tlrs`.`lessonId` END ORDER BY `tlrs`.`lessonName`) AS `reportedLessons`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 0 THEN `tlrs`.`lessonId` END ORDER BY `tlrs`.`lessonName`) AS `notReportedLessons`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 1 THEN `tlrs`.`lessonName` END ORDER BY `tlrs`.`lessonName` SEPARATOR \", \") AS `reportedLessonNames`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 0 THEN `tlrs`.`lessonName` END ORDER BY `tlrs`.`lessonName` SEPARATOR \", \") AS `notReportedLessonNames` FROM `teacher_lesson_report_status` `tlrs` LEFT JOIN `teachers` `teacher` ON `tlrs`.`teacherId` = `teacher`.`id`  LEFT JOIN `report_month` `rm` ON `tlrs`.`reportMonthId` = `rm`.`id` GROUP BY `tlrs`.`userId`, `tlrs`.`teacherId`, `tlrs`.`reportMonthId`, `tlrs`.`year` ORDER BY `tlrs`.`reportMonthId` ASC, `tlrs`.`teacherId` ASC')
+VALUES (DEFAULT, 'mysql_database', DEFAULT, 'VIEW', 'teacher_report_status', 'SELECT `tlrs`.`userId` AS `userId`, `tlrs`.`year` AS `year`, `tlrs`.`teacherId` AS `teacherId`, `tlrs`.`reportMonthId` AS `reportMonthId`, `teacher`.`name` AS `teacherName`, `teacher`.`comment` AS `teacherComment`, `rm`.`name` AS `reportMonthName`, CONCAT(COALESCE(`tlrs`.`userId`, \"null\"), \"_\", COALESCE(`tlrs`.`teacherId`, \"null\"), \"_\", COALESCE(`tlrs`.`reportMonthId`, \"null\"), \"_\", COALESCE(`tlrs`.`year`, \"null\")) AS `id`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 1 THEN `tlrs`.`lessonId` END ORDER BY `tlrs`.`lessonName`) AS `reportedLessons`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 0 THEN `tlrs`.`lessonId` END ORDER BY `tlrs`.`lessonName`) AS `notReportedLessons`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 1 THEN `tlrs`.`lessonName` END ORDER BY `tlrs`.`lessonName` SEPARATOR \", \") AS `reportedLessonNames`, GROUP_CONCAT(DISTINCT CASE WHEN `tlrs`.`isReported` = 0 THEN `tlrs`.`lessonName` END ORDER BY `tlrs`.`lessonName` SEPARATOR \", \") AS `notReportedLessonNames` FROM `teacher_lesson_report_status` `tlrs` LEFT JOIN `teachers` `teacher` ON `tlrs`.`teacherId` = `teacher`.`id`  LEFT JOIN `report_month` `rm` ON `tlrs`.`reportMonthId` = `rm`.`id` GROUP BY `tlrs`.`userId`, `tlrs`.`teacherId`, `tlrs`.`reportMonthId`, `tlrs`.`year` ORDER BY `tlrs`.`reportMonthId` ASC, `tlrs`.`teacherId` ASC')
