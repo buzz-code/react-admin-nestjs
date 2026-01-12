@@ -160,8 +160,8 @@ CREATE TABLE `users` (
   `password` varchar(500) DEFAULT NULL,
   `phone_number` varchar(11) DEFAULT NULL,
   `active` tinyint DEFAULT NULL,
-  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `effective_id` int DEFAULT NULL,
   `permissions` text DEFAULT NULL,
   `additionalData` text DEFAULT NULL,
@@ -206,7 +206,8 @@ CREATE TABLE `teachers` (
   UNIQUE KEY `IDX_284ec0d1b23c78061dd15e5be1` (`user_id`, `tz`, `year`),
   KEY `teachers_users_idx` (`user_id`),
   KEY `teachers_user_id_phone_idx` (`user_id`, `phone`),
-  KEY `teachers_user_id_phone2_idx` (`user_id`, `phone2`)
+  KEY `teachers_user_id_phone2_idx` (`user_id`, `phone2`),
+  CONSTRAINT `FK_4668d4752e6766682d1be0b346f` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `teachers` (`id`, `user_id`, `year`, `tz`, `name`, `phone`, `phone2`, `email`, `displayName`) VALUES
@@ -240,7 +241,8 @@ CREATE TABLE `students` (
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_53f436b35b00a4bcb00bfa08ce` (`user_id`, `tz`, `year`),
-  KEY `students_users_idx` (`user_id`)
+  KEY `students_users_idx` (`user_id`),
+  CONSTRAINT `FK_fb3eff90b11bddf7285f9b4e281` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `students` (`id`, `user_id`, `year`, `tz`, `name`, `phone`, `address`, `is_active`) VALUES
@@ -277,7 +279,8 @@ CREATE TABLE `klass_types` (
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
   KEY `klass_types_users_idx` (`user_id`),
-  KEY `klass_types_klassTypeEnum_idx` (`klassTypeEnum`)
+  KEY `klass_types_klassTypeEnum_idx` (`klassTypeEnum`),
+  CONSTRAINT `FK_27aa97c80688bcf930b80450441` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `klass_types` (`id`, `user_id`, `key`, `name`, `klassTypeEnum`, `teacher_id`, `teacherReferenceId`) VALUES
@@ -452,7 +455,8 @@ CREATE TABLE `att_reports` (
   KEY `att_reports_klass_reference_id_idx` (`klassReferenceId`),
   KEY `att_reports_lesson_reference_id_idx` (`lessonReferenceId`),
   KEY `att_reports_report_date_idx` (`report_date`),
-  KEY `att_reports_report_group_session_id_idx` (`reportGroupSessionId`)
+  KEY `att_reports_report_group_session_id_idx` (`reportGroupSessionId`),
+  CONSTRAINT `FK_88c1147de5df0c80cce823ebdb8` FOREIGN KEY (`reportGroupSessionId`) REFERENCES `report_group_sessions`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `att_reports` (`id`, `user_id`, `year`, `student_tz`, `studentReferenceId`, `teacher_id`, `teacherReferenceId`, `klass_id`, `klassReferenceId`, `lesson_id`, `lessonReferenceId`, `report_date`, `how_many_lessons`, `abs_count`, `approved_abs_count`) VALUES
@@ -505,7 +509,9 @@ CREATE TABLE `grades` (
   KEY `grades_klass_reference_id_idx` (`klassReferenceId`),
   KEY `grades_lesson_reference_id_idx` (`lessonReferenceId`),
   KEY `grades_report_date_idx` (`report_date`),
-  KEY `grades_report_group_session_id_idx` (`reportGroupSessionId`)
+  KEY `grades_report_group_session_id_idx` (`reportGroupSessionId`),
+  CONSTRAINT `FK_da6dfe11ce2f692024f0c3d94ef` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_5c91c58f91111e08ec84f6eab68` FOREIGN KEY (`reportGroupSessionId`) REFERENCES `report_group_sessions`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `grades` (`id`, `user_id`, `year`, `student_tz`, `studentReferenceId`, `teacher_id`, `teacherReferenceId`, `klass_id`, `klassReferenceId`, `lesson_id`, `lessonReferenceId`, `report_date`, `how_many_lessons`, `grade`, `estimation`) VALUES
@@ -552,7 +558,8 @@ CREATE TABLE `known_absences` (
   PRIMARY KEY (`id`),
   KEY `known_users_idx` (`user_id`),
   KEY `IDX_f2e0b7295d97b24618d46079c1` (`studentReferenceId`, `year`),
-  KEY `known_absences_student_reference_id_idx` (`studentReferenceId`)
+  KEY `known_absences_student_reference_id_idx` (`studentReferenceId`),
+  CONSTRAINT `FK_8e796d3aaf500d345e13654d08b` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `known_absences` (`id`, `user_id`, `year`, `student_tz`, `studentReferenceId`, `klass_id`, `klassReferenceId`, `lesson_id`, `lessonReferenceId`, `report_date`, `absnce_count`, `absnce_code`, `sender_name`, `reason`, `isApproved`) VALUES
@@ -680,7 +687,10 @@ CREATE TABLE `report_groups` (
   KEY `report_groups_user_id_year_idx` (`user_id`, `year`),
   KEY `report_groups_teacher_reference_id_idx` (`teacherReferenceId`),
   KEY `report_groups_lesson_reference_id_idx` (`lessonReferenceId`),
-  KEY `report_groups_klass_reference_id_idx` (`klassReferenceId`)
+  KEY `report_groups_klass_reference_id_idx` (`klassReferenceId`),
+  CONSTRAINT `FK_579303ddfd4db8a8ef18c204a7d` FOREIGN KEY (`teacherReferenceId`) REFERENCES `teachers`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_bab150da3f43312d8f5c79c969f` FOREIGN KEY (`lessonReferenceId`) REFERENCES `lessons`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_772594ba35c0745b0c5a84650a4` FOREIGN KEY (`klassReferenceId`) REFERENCES `klasses`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `report_groups` (`id`, `user_id`, `name`, `topic`, `teacherReferenceId`, `lessonReferenceId`, `klassReferenceId`, `year`) VALUES
@@ -708,7 +718,7 @@ CREATE TABLE `report_group_sessions` (
   KEY `report_group_sessions_user_id_idx` (`userId`),
   KEY `report_group_sessions_report_group_id_idx` (`reportGroupId`),
   KEY `report_group_sessions_session_date_idx` (`sessionDate`),
-  CONSTRAINT `FK_report_group_sessions_reportGroupId` FOREIGN KEY (`reportGroupId`) REFERENCES `report_groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `FK_54fa521a3b90bf74266907b95f1` FOREIGN KEY (`reportGroupId`) REFERENCES `report_groups`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `report_group_sessions` (`id`, `userId`, `reportGroupId`, `sessionDate`, `startTime`, `endTime`, `topic`) VALUES
@@ -838,7 +848,8 @@ CREATE TABLE `yemot_call` (
   `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`),
-  KEY `yemot_call_api_call_id_idx` (`apiCallId`)
+  KEY `yemot_call_api_call_id_idx` (`apiCallId`),
+  CONSTRAINT `FK_2f2c39a9491ac1a6e2d7827bb53` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
@@ -942,7 +953,7 @@ CREATE TABLE `import_file` (
   `fileSource` varchar(255) NOT NULL,
   `entityIds` text NOT NULL,
   `entityName` varchar(255) NOT NULL,
-  `fullSuccess` tinyint(1) DEFAULT NULL,
+  `fullSuccess` tinyint NULL,
   `response` varchar(255) NOT NULL,
   `metadata` json DEFAULT NULL,
   `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
