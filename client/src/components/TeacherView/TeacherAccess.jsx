@@ -1,20 +1,26 @@
-import React from 'react';
-import { useDataProvider, SimpleForm, TextInput, useNotify, Toolbar, SaveButton } from 'react-admin';
-import { useObjectStore } from 'src/utils/storeUtil';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import LogoutIcon from '@mui/icons-material/Logout';
-import Paper from '@mui/material/Paper';
+import React from "react";
+import { useDataProvider, SimpleForm, TextInput, useNotify, Toolbar, SaveButton, useResetStore } from "react-admin";
+import { useObjectStore } from "src/utils/storeUtil";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Paper from "@mui/material/Paper";
 
 export const TeacherGuard = ({ children }) => {
   const dataProvider = useDataProvider();
   const notify = useNotify();
-  const { value: teacher, set: setTeacher, clear } = useObjectStore('teacher');
+  const reset = useResetStore();
+  const { value: teacher, set: setTeacher, clear } = useObjectStore("teacher");
+
+  const handleLogout = () => {
+    clear();
+    reset();
+  };
 
   if (teacher) {
     return (
@@ -24,9 +30,9 @@ export const TeacherGuard = ({ children }) => {
           sx={{
             p: 2,
             mb: 2,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
           <Typography variant="h6" component="div">
@@ -35,32 +41,29 @@ export const TeacherGuard = ({ children }) => {
           <Button
             variant="outlined"
             color="secondary"
-            onClick={clear}
+            onClick={handleLogout}
             startIcon={<LogoutIcon />}
           >
             התנתק
           </Button>
         </Paper>
-        <Box flexGrow={1}>
-          {children}
-        </Box>
+        <Box flexGrow={1}>{children}</Box>
       </Box>
     );
   }
 
   const handleSubmit = async (values) => {
     const { tz } = values;
-    const result = await dataProvider.getList('teacher', {
+    const result = await dataProvider.getList("teacher", {
       pagination: { page: 1, perPage: 1 },
-      filter: { tz }
+      filter: { tz },
     });
     const teacher = result.data[0] || null;
 
     if (teacher) {
       setTeacher(teacher);
-    }
-    else {
-      notify('Teacher not found', { type: 'warning' });
+    } else {
+      notify("Teacher not found", { type: "warning" });
     }
   };
 
@@ -75,7 +78,7 @@ export const TeacherGuard = ({ children }) => {
     >
       <Card sx={{ minWidth: 300, maxWidth: 400, p: 2, boxShadow: 3 }}>
         <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -87,9 +90,24 @@ export const TeacherGuard = ({ children }) => {
             key="view-search-form"
             onSubmit={handleSubmit}
             resource="teacher"
-            toolbar={<Toolbar sx={{ display: 'flex', justifyContent: 'center', width: '100%', bgcolor: 'transparent', p: 0 }}>
-              <SaveButton label="כניסה" variant="contained" fullWidth color="secondary" />
-            </Toolbar>}
+            toolbar={
+              <Toolbar
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                  bgcolor: "transparent",
+                  p: 0,
+                }}
+              >
+                <SaveButton
+                  label="כניסה"
+                  variant="contained"
+                  fullWidth
+                  color="secondary"
+                />
+              </Toolbar>
+            }
           >
             <TextInput source="tz" label="ת.ז" fullWidth variant="outlined" />
           </SimpleForm>
@@ -97,4 +115,4 @@ export const TeacherGuard = ({ children }) => {
       </Card>
     </Box>
   );
-}
+};
