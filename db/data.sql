@@ -163,9 +163,9 @@ CREATE TABLE `users` (
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `effective_id` int DEFAULT NULL,
-  `permissions` json DEFAULT NULL,
-  `additionalData` json DEFAULT NULL,
-  `userInfo` json DEFAULT NULL,
+  `permissions` text DEFAULT NULL,
+  `additionalData` text DEFAULT NULL,
+  `userInfo` text DEFAULT NULL,
   `isPaid` tinyint NOT NULL DEFAULT 0,
   `paymentMethod` varchar(255) DEFAULT NULL,
   `mailAddressAlias` varchar(255) DEFAULT NULL,
@@ -708,7 +708,7 @@ CREATE TABLE `report_group_sessions` (
   KEY `report_group_sessions_user_id_idx` (`userId`),
   KEY `report_group_sessions_report_group_id_idx` (`reportGroupId`),
   KEY `report_group_sessions_session_date_idx` (`sessionDate`),
-  CONSTRAINT `FK_report_group_sessions_reportGroupId` FOREIGN KEY (`reportGroupId`) REFERENCES `report_groups` (`id`) ON DELETE CASCADE
+  CONSTRAINT `FK_report_group_sessions_reportGroupId` FOREIGN KEY (`reportGroupId`) REFERENCES `report_groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `report_group_sessions` (`id`, `userId`, `reportGroupId`, `sessionDate`, `startTime`, `endTime`, `topic`) VALUES
