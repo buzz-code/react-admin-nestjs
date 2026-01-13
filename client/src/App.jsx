@@ -158,12 +158,7 @@ const App = () => (
                 <Route path="student-attendance" element={<StudentAttendanceList />} />
               </Resource>
               <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={WorkspacesIcon} />
-
-              {isTransportation(permissions) && !!isAdmin(permissions)&&
-               <>
-               <Resource name="transportation" {...transportation} options={{ menuGroup: 'data' }} icon={DirectionsBusIcon} />
-               </>}
-
+              {(isTransportation(permissions) || isAdmin(permissions)) && <Resource name="transportation" {...transportation} options={{ menuGroup: 'data' }} icon={DirectionsBusIcon} />}
               <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
               <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
               <Resource name="known_absence" {...knownAbsence} options={{ menuGroup: 'data' }} icon={PlaylistRemoveIcon} />

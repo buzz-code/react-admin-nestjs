@@ -4,9 +4,10 @@ import {
   Entity,
   Index,
   JoinColumn,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
 import { User } from 'src/db/entities/User.entity';
@@ -20,6 +21,8 @@ import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 @Index(['userId', 'key', 'year'], { unique: true })
 @Entity('transportations')
 export class Transportation implements IHasUserId {
+  @BeforeInsert()
+  @BeforeUpdate()
   async fillFields() {
     fillDefaultYearValue(this);
   }
