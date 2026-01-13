@@ -199,6 +199,15 @@ export default {
                 displayName: 'שם לתעודה'
             }
         },
+        transportation: {
+            name: 'הסעה |||| הסעות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                key: 'שילוט',
+                departureTime: 'שעת יציאה',
+                description: 'תיאור נסיעה',
+            }
+        },
         text: {
             name: 'הודעה |||| הודעות - טבלת אדמין',
             fields: {

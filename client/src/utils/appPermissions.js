@@ -10,6 +10,7 @@ export const appPermissions = {
   lessonSignature: 'lessonSignature',
   approvedAbsencesBulk: 'approvedAbsencesBulk',
   teacherView: 'teacherView',
+  transportation: 'transportation',
 };
 
 export const isScannerUpload = (permissions) => hasPermissionLogic(permissions, appPermissions.scannerUpload);
@@ -38,4 +39,7 @@ export const useIsApprovedAbsencesBulk = () => useHasPermission(appPermissions.a
 
 export const isTeacherView = (permissions) => hasPermissionLogic(permissions, appPermissions.teacherView);
 export const useIsTeacherView = () => useHasPermission(appPermissions.teacherView);
+
+export const isTransportation = (permissions) => hasPermissionLogic(permissions, appPermissions.transportation);
+export const useIsTransportation = () => useHasPermission(appPermissions.transportation);
 
