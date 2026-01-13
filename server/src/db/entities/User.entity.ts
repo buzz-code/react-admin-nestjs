@@ -8,21 +8,25 @@ import { Lesson } from "src/db/entities/Lesson.entity";
 import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { Student } from "src/db/entities/Student.entity";
 import { Teacher } from "src/db/entities/Teacher.entity";
+import { Transportation } from "src/db/entities/Transportation.entity";
 
 @Entity("users")
 export class User extends BaseUser {
     // @OneToMany(() => Grade, (grades) => grades.user)
     grades: Grade[];
-  
+    
     // @OneToMany(() => KlassType, (klassTypes) => klassTypes.user)
     klassTypes: KlassType[];
-  
+
     // @OneToMany(() => KnownAbsence, (knownAbsences) => knownAbsences.user)
     knownAbsences: KnownAbsence[];
-  
+
     // @OneToMany(() => Student, (students) => students.user)
     students: Student[];
-  
+
     // @OneToMany(() => Teacher, (teachers) => teachers.user)
     teachers: Teacher[];
+
+    // @OneToMany(() => Transportation, (transportation) => transportation.user)
+    transportations: Transportation[];
 }

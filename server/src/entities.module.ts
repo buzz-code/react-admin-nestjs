@@ -42,6 +42,7 @@ import { StudentSpeciality } from "./db/view-entities/StudentSpeciality.entity";
 import { AttendanceName } from "./db/entities/AttendanceName.entity";
 import reportGroupConfig from "./entity-modules/report-group.config";
 import reportGroupSessionConfig from "./entity-modules/report-group-session.config";
+import transportationConfig from './entity-modules/transportation.config'; 
 
 @Module({
     imports: [
@@ -86,6 +87,7 @@ import reportGroupSessionConfig from "./entity-modules/report-group-session.conf
         BaseEntityModule.register({ entity: GradeEffectByUser }),
         BaseEntityModule.register({ entity: AbsCountEffectByUser }),
         BaseEntityModule.register({ entity: LessonKlassName }),
+        BaseEntityModule.register(transportationConfig),
     ]
 })
 export class EntitiesModule { }
