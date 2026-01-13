@@ -27,6 +27,10 @@ const filters = [
   <TextInput source="description:$cont" label="תיאור" />,
 ];
 
+const filterDefaultValues = {
+  year: defaultYearFilter.year,
+};
+
 const Datagrid = ({ isAdmin, children, ...props }) => {
   return (
     <CommonDatagrid {...props}>
@@ -95,9 +99,7 @@ const entity = {
   Inputs,
   Representation,
   filters,
-  filterDefaultValues: {
-    year: defaultYearFilter.year,
-  },
+  filterDefaultValues,
   importer,
 };
 

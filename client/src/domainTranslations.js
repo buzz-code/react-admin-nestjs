@@ -204,7 +204,6 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 key: 'שילוט',
-                year: 'שנה',
                 departureTime: 'שעת יציאה',
                 description: 'תיאור נסיעה',
             }

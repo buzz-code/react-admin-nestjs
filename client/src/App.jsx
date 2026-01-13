@@ -119,7 +119,6 @@ const App = () => (
         {permissions => {
           const onlyInLesson = isOnlyInLessonReport(permissions) && !isAdmin(permissions);
           const teacherView = isTeacherView(permissions) && !isAdmin(permissions);
-          const transportationOnly = isTransportation(permissions) && !isAdmin(permissions);
           if (onlyInLesson) {
             return (
               <>
@@ -159,10 +158,16 @@ const App = () => (
                 <Route path="student-attendance" element={<StudentAttendanceList />} />
               </Resource>
               <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={WorkspacesIcon} />
-              {transportationOnly && <Resource name="transportation" {...transportation} options={{ menuGroup: 'data' }} icon={DirectionsBusIcon} />}
+
+              {isTransportation(permissions) && !!isAdmin(permissions)&&
+               <>
+               <Resource name="transportation" {...transportation} options={{ menuGroup: 'data' }} icon={DirectionsBusIcon} />
+               </>}
+
               <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
               <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
               <Resource name="known_absence" {...knownAbsence} options={{ menuGroup: 'data' }} icon={PlaylistRemoveIcon} />
+
               <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
               <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
               <Resource name="teacher_grade_report_status" {...teacherGradeReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />

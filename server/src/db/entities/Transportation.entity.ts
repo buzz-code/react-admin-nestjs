@@ -14,11 +14,16 @@ import { IsOptional } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
 import { IsNotEmpty, IsUniqueCombination, MaxLength, IsNumber } from '@shared/utils/validation/class-validator-he';
 import { StringType, NumberType } from '@shared/utils/entity/class-transformer';
+import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 
 @Index('transportations_users_idx', ['userId'], {})
 @Index(['userId', 'key', 'year'], { unique: true })
 @Entity('transportations')
 export class Transportation implements IHasUserId {
+  async fillFields() {
+    fillDefaultYearValue(this);
+  }
+
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
@@ -60,10 +65,6 @@ export class Transportation implements IHasUserId {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.transportations, {
-    onDelete: 'NO ACTION',
-    onUpdate: 'NO ACTION',
-  })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 }
