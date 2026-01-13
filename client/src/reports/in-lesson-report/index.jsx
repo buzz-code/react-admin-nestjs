@@ -45,7 +45,9 @@ export const InLessonReport = ({
     }, [setSelectedTeacher]);
 
     const handleLessonFound = useCallback(({ lesson, students }) => {
-        setLessonContext({ lesson, students });
+        setTimeout(() => {
+            setLessonContext({ lesson, students });
+        }, 0);
     }, [setLessonContext]);
 
     const clearData = useCallback(() => {
@@ -132,15 +134,16 @@ export const InLessonReport = ({
                 <Stack>
                     {!lesson ? (
                         isStartWithTeacher && !selectedTeacher ? (
-                            <TeacherSelector onTeacherSelected={handleTeacherSelect} />
+                            <TeacherSelector key="teacher-selector" onTeacherSelected={handleTeacherSelect} />
                         ) : (
                             <LessonSelector
+                                key="lesson-selector"
                                 onLessonFound={handleLessonFound}
                                 selectedTeacher={selectedTeacher}
                             />
                         )
                     ) : (
-                        <ReportContext.Provider value={contextValue}>
+                        <ReportContext.Provider key="main-report" value={contextValue}>
                             <MainReport gradeMode={gradeMode} handleSave={handleSave} storePrefix={storePrefix} />
                         </ReportContext.Provider>
                     )}
