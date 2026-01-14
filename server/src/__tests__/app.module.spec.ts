@@ -8,7 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RequestContextModule } from 'nestjs-request-context';
 import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from '@shared/auth/auth.module';
-import { YemotModule } from '@shared/utils/yemot/yemot.module';
+import { YemotModule } from '@shared/utils/yemot/v2/yemot.module';
 import { MailSendModule } from '@shared/utils/mail/mail-send.module';
 import { EntitiesModule } from '../entities.module';
 import { getPinoConfig } from '@shared/config/pino.config';
