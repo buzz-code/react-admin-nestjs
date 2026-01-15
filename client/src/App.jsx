@@ -25,7 +25,7 @@ import { resourceEntityGuesser } from '@shared/components/crudContainers/EntityG
 import attReport from "src/entities/att-report";
 import attReportWithReportMonth from './entities/att-report-with-report-month';
 import teacherAttReport from 'src/components/TeacherView/taecher-att-report-list';
-import LeadTeacherAttReportList from './components/TeacherView/lead-taecher-att-report-list';
+import LeadTeacherAttReportList from './components/TeacherView/lead-teacher-att-report-list';
 import TeacherPercentReportWithDatesList from 'src/components/TeacherView/percent-report-with-dates-list';
 import TeacherStudentAttendanceList from 'src/components/TeacherView/student-attendance-list';
 import grade from "src/entities/grade";
