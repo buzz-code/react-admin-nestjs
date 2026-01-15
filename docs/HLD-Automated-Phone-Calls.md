@@ -4,25 +4,28 @@
 
 This HLD describes a new feature for sending automated phone calls to students, parents, or other stakeholders using the Yemot phone system API. The feature will allow users to create reusable phone message templates and trigger them via bulk actions in the admin interface.
 
-**Key Terminology:** We will use the term **"Phone Message Template"** or **"Phone Template"** to refer to configurable phone message definitions.
+**Key Terminology:** 
+- **English**: "Phone Template" for template, "Campaign" for execution
+- **Hebrew**: "תבנית שיחה" (Tavnit Sicha) for template, "מסע פרסום" (Masa Parsum) or "משלוח שיחות" (Mishloach Sichot) for campaign
 
 ## 2. Feature Overview
 
 ### 2.1 Core Capabilities
-1. **Template Management**: Create, configure, and manage reusable phone message templates
-2. **Message Configuration**: Define message content as text (TTS) or recorded audio files
-3. **Bulk Actions**: Trigger phone campaigns from entity lists (e.g., student classes)
-4. **Campaign Tracking**: Monitor and track phone call campaigns
-5. **Integration**: Seamless integration with existing Yemot system infrastructure
+1. **Template Management**: Each user creates and manages their own phone message templates
+2. **Message Configuration**: Define message content as text (TTS) in MVP, audio files in future phases
+3. **Bulk Actions**: Trigger phone campaigns from student attendance report (pivot table)
+4. **Campaign Tracking**: Monitor campaigns with user-triggered status refresh button
+5. **Integration**: Each user uses their own Yemot API KEY stored in user settings
 
 ### 2.2 User Workflow
-1. Admin creates a phone message template with configuration
-2. Admin uploads or configures message content (text or audio file)
-3. Admin navigates to an entity list (e.g., student classes report)
-4. Admin selects records using checkboxes
-5. Admin clicks bulk action button and selects a phone template
-6. System triggers Yemot campaign to selected phone numbers
-7. Admin can view campaign status and results
+1. User configures their Yemot API KEY in user settings
+2. User creates a phone message template with TTS text
+3. User navigates to student attendance report (pivot table)
+4. User selects records using checkboxes
+5. User clicks bulk action button and selects a phone template
+6. Backend extracts phone numbers and triggers Yemot campaign using user's API KEY
+7. User can refresh campaign status manually using a button
+8. User views campaign results in campaign history
 
 ## 3. Architecture Components
 
@@ -52,14 +55,14 @@ export class PhoneTemplate {
   @Column({ nullable: true })
   yemotTemplateId: string;  // Yemot campaign template ID
 
-  @Column({ type: 'enum', enum: ['text', 'file'] })
-  messageType: 'text' | 'file';  // TTS text or audio file
+  @Column({ type: 'enum', enum: ['text'] })
+  messageType: 'text';  // TTS text only in MVP
 
-  @Column({ type: 'text', nullable: true })
-  messageText: string;  // TTS text content
+  @Column({ type: 'text' })
+  messageText: string;  // TTS text content (required in MVP)
 
   @Column({ length: 255, nullable: true })
-  messageFilePath: string;  // Path to audio file in Yemot system
+  messageFilePath: string;  // Reserved for future audio file support
 
   @Column({ default: false })
   isActive: boolean;  // Enable/disable template
@@ -152,44 +155,47 @@ interface PhoneEntry {
 New service to interact with Yemot REST API for campaigns/templates.
 
 **Key Methods:**
-- `createTemplate(userId, description)` - Create Yemot template
-- `uploadAudioFile(templateId, filePath, audioData)` - Upload audio file  
-- `updateTemplateSettings(templateId, settings)` - Update template configuration
-- `uploadPhoneList(templateId, phones)` - Upload phone numbers
-- `runCampaign(templateId, phones, options)` - Execute campaign
-- `getCampaignStatus(campaignId)` - Get campaign status
-- `downloadCampaignReport(campaignId)` - Get campaign results
+- `createTemplate(apiKey, description)` - Create Yemot template
+- `updateTemplateSettings(apiKey, templateId, settings)` - Update template configuration
+- `uploadPhoneList(apiKey, templateId, phones)` - Upload phone numbers
+- `runCampaign(apiKey, templateId, phones, options)` - Execute campaign with TTS mode
+- `getCampaignStatus(apiKey, campaignId)` - Get campaign status (user-triggered)
+- `downloadCampaignReport(apiKey, campaignId)` - Get campaign results
 
-**Authentication:** Uses API KEY token stored in environment variables per user.
+**Authentication:** Uses per-user API KEY from User.yemotApiKey field, passed in authorization header.
 
 
 #### 3.2.2 PhoneTemplateService
-**Location:** `/server/src/phone-template/phone-template.service.ts`
+**Location:** Extends `BaseEntityService<PhoneTemplate>`
 
-Business logic for managing phone templates.
+Business logic for managing phone templates, integrated with BaseEntityModule.
 
 **Key Methods:**
-- `createTemplate(data)` - Create template and Yemot template
-- `configureMessage(templateId, messageConfig)` - Set up message content
+- `createTemplate(data)` - Create local template and Yemot template via YemotApiService
 - `syncWithYemot(templateId)` - Sync local template with Yemot
 - `validateTemplate(templateId)` - Validate template is ready to use
 
+**Note:** Standard CRUD operations (list, get, update, delete) are handled by BaseEntityController.
+
 #### 3.2.3 PhoneCampaignService
-**Location:** `/server/src/phone-campaign/phone-campaign.service.ts`
+**Location:** Extends `BaseEntityService<PhoneCampaign>`
 
 Business logic for executing and tracking campaigns.
 
 **Key Methods:**
-- `executeCampaign(templateId, phoneNumbers, metadata)` - Start campaign
-- `trackCampaignStatus(campaignId)` - Update campaign status
-- `getCampaignResults(campaignId)` - Fetch results from Yemot
-- `cancelCampaign(campaignId)` - Cancel running campaign
+- `executeCampaign(req, body)` - Handles bulk action, extracts phone numbers from selected records, creates campaign, and executes via YemotApiService
+- `refreshCampaignStatus(campaignId)` - User-triggered status update from Yemot
+- `getCampaignResults(campaignId)` - Fetch detailed results from Yemot
+
+**Custom Endpoint:** 
+- `POST /phone-campaign/execute` - Bulk action endpoint (added to BaseEntityController via doAction method)
+- `POST /phone-campaign/:id/refresh-status` - Manual status refresh button
 
 #### 3.2.4 Entity Modules
-- `/server/src/entity-modules/phone-template.config.ts`
-- `/server/src/entity-modules/phone-campaign.config.ts`
+- `/server/src/entity-modules/phone-template.config.ts` - Uses BaseEntityModule.register()
+- `/server/src/entity-modules/phone-campaign.config.ts` - Uses BaseEntityModule.register()
 
-Standard CRUD configuration following existing patterns.
+Standard CRUD configuration following existing patterns, registered in entities.module.ts.
 
 ### 3.3 Frontend Components
 
@@ -199,11 +205,10 @@ Standard CRUD configuration following existing patterns.
 React-Admin resource for managing templates.
 
 **Features:**
-- List view with filters (name, messageType, isActive)
-- Create/Edit forms with message configuration
-- File upload for audio messages
-- Test campaign button
-- Sync with Yemot button
+- List view with filters (name, isActive)
+- Create/Edit forms with TTS message configuration
+- Test campaign button (single phone number)
+- Each user sees only their own templates
 
 #### 3.3.2 Phone Campaign Entity
 **Location:** `/client/src/entities/phone-campaign.jsx`
@@ -212,66 +217,68 @@ React-Admin resource for viewing campaign history.
 
 **Features:**
 - List view with filters (status, date range, template)
-- Show view with detailed results
-- Real-time status updates
-- Download report button
+- Show view with summary-level results (total, success, failed counts)
+- Manual "Refresh Status" button on each campaign row
+- Each user sees only their own campaigns
 
 #### 3.3.3 Bulk Action Button Component
 **Location:** `/client/src/components/PhoneTemplateBulkButton.jsx`
 
-Reusable bulk action button for triggering campaigns.
+Reusable bulk action button integrated with student attendance report pivot table.
 
 **Props:**
-- `entityType` - Type of entity being acted upon
-- `phoneNumberExtractor` - Function to extract phone numbers from records
-- `metadataExtractor` - Optional function to extract additional data
+- `phoneNumberExtractor` - Function to extract phone numbers from pivot records
 
 **Behavior:**
-1. Opens dialog showing available active phone templates
+1. Opens dialog showing user's active phone templates
 2. User selects template
 3. Confirms action with phone count
-4. Triggers API call to execute campaign
-5. Shows success/error notification
+4. Triggers POST to /phone-campaign/execute with selected IDs and templateId
+5. Backend extracts phone numbers and executes campaign
+6. Shows success/error notification
 
 #### 3.3.4 Integration Example
-**Location:** `/client/src/entities/student-klasses-report.jsx`
+**Location:** Student attendance report pivot table
 
-Add bulk button to existing entity:
+Add bulk button to attendance report:
 
 ```jsx
 import PhoneTemplateBulkButton from 'src/components/PhoneTemplateBulkButton';
 
+// In the pivot table component (StudentAttendanceList.jsx)
 const additionalBulkButtons = [
   <PhoneTemplateBulkButton 
     key='phoneTemplate'
-    phoneNumberExtractor={(record) => record.student?.phoneNumber}
-    metadataExtractor={(record) => ({
-      studentName: record.student?.name,
-      klassName: record.klass?.name
-    })}
+    phoneNumberExtractor={(record) => record.phoneNumber}  // Pivot records have phone numbers
   />
 ];
 ```
 
+**Note:** The pivot table format differs from standard entity lists, so phone number extraction will need to be tailored to the pivot data structure.
+
 ### 3.4 API Endpoints
 
-#### 3.4.1 Phone Templates
-- `GET /api/phone-template` - List templates
-- `POST /api/phone-template` - Create template
-- `GET /api/phone-template/:id` - Get template details
-- `PATCH /api/phone-template/:id` - Update template
-- `DELETE /api/phone-template/:id` - Delete template
-- `POST /api/phone-template/:id/upload-audio` - Upload audio file
-- `POST /api/phone-template/:id/sync` - Sync with Yemot
-- `POST /api/phone-template/:id/test` - Send test call
+**All endpoints use standard BaseEntityController endpoints with CrudAuth filtering.**
 
-#### 3.4.2 Phone Campaigns
-- `GET /api/phone-campaign` - List campaigns
-- `POST /api/phone-campaign/execute` - Execute new campaign
-- `GET /api/phone-campaign/:id` - Get campaign details
-- `POST /api/phone-campaign/:id/refresh-status` - Update from Yemot
-- `POST /api/phone-campaign/:id/cancel` - Cancel campaign
-- `GET /api/phone-campaign/:id/report` - Download report
+#### 3.4.1 Phone Templates (via BaseEntityModule)
+- `GET /api/phone_template` - List user's templates (auto-filtered by userId)
+- `POST /api/phone_template` - Create template
+- `GET /api/phone_template/:id` - Get template details
+- `PATCH /api/phone_template/:id` - Update template
+- `DELETE /api/phone_template/:id` - Delete template
+
+**Custom actions via POST /api/phone_template/action:**
+- `{ action: 'test', templateId, phoneNumber }` - Send test call to single number
+
+#### 3.4.2 Phone Campaigns (via BaseEntityModule)
+- `GET /api/phone_campaign` - List user's campaigns (auto-filtered by userId)
+- `GET /api/phone_campaign/:id` - Get campaign details
+- `GET /api/phone_campaign/export` - Export campaign list
+- `GET /api/phone_campaign/report` - Get campaign report data
+
+**Custom actions via POST /api/phone_campaign/action:**
+- `{ action: 'execute', templateId, selectedIds: [] }` - Execute new campaign (bulk action)
+- `{ action: 'refresh-status', campaignId }` - Manually refresh campaign status from Yemot
 
 ## 4. Yemot API Integration
 
@@ -310,44 +317,47 @@ const additionalBulkButtons = [
 
 ### 4.2 Authentication Strategy
 
-**Recommended Approach: API KEY (Static Token)**
-
-**Rationale:**
-- ✅ Persistent, never expires
-- ✅ No MFA requirements
-- ✅ Can restrict by IP, services, permissions
-- ✅ Suitable for server-to-server communication
-- ❌ Requires manual setup per user/organization
+**Approach: Per-User API KEY in User Settings**
 
 **Implementation:**
-1. Store API KEY in User entity or separate YemotConfig entity
-2. Use environment variable for default/system-level key
-3. Pass token in `authorization` header (recommended) or as `token` parameter
+1. Add `yemotApiKey` field to User entity (varchar, nullable, encrypted at rest)
+2. User configures their own Yemot API KEY in user settings/profile page
+3. Backend retrieves user's API KEY when executing Yemot API calls
+4. Pass API KEY in `authorization` header to Yemot API
+5. Each user pays for their own calls via their Yemot account
 
-**Alternative: Login Token (Dynamic)**
-- Only if per-user authentication is required
-- Requires MFA handling or IP whitelisting
-- Adds complexity with token expiration
+**Benefits:**
+- ✅ User manages their own Yemot account and billing
+- ✅ No shared system-level credentials
+- ✅ User-level quota and budget management (handled by Yemot)
+- ✅ Secure per-user isolation
+- ✅ Users can set different Yemot accounts if needed
+
+**Security:**
+- Store API KEY encrypted in database
+- Validate API KEY on first use (test API call)
+- Show masked API KEY in UI (e.g., `077***1234`)
+- Audit log for all Yemot API calls with userId
+
+**User Entity Addition:**
+```typescript
+@Column({ type: 'varchar', length: 255, nullable: true })
+yemotApiKey: string;  // Encrypted Yemot API KEY
+```
 
 ### 4.3 File Storage Strategy
 
-**Option A: Direct Yemot Storage (Recommended)**
+**MVP: TTS Only - No File Storage Needed**
+
+For MVP, only TTS (text-to-speech) messages are supported, so no audio file storage is required.
+
+**Future Enhancement (Audio Files):**
+When audio file support is added in Phase 2:
 - Upload audio files directly to Yemot using UploadFile API
-- Store only Yemot file path in PhoneTemplate entity
+- Store only Yemot file path in PhoneTemplate.messageFilePath
+- Use template naming convention: `tpl:${yemotTemplateId}`
 - Pros: No local storage needed, files managed by Yemot
 - Cons: Requires Yemot API for all file operations
-
-**Option B: Hybrid Storage**
-- Store files locally and sync to Yemot when template activated
-- Keep local backup for redundancy
-- Pros: Offline access, backup capability
-- Cons: Increased storage requirements, sync complexity
-
-**Option C: Reference Existing Text/Audio System**
-- Extend existing Text entity pattern with filepath field
-- Leverage TextByUser view for per-user overrides
-- Pros: Consistent with existing patterns, reusable infrastructure
-- Cons: May not fit all use cases
 
 
 ## 5. Design Questions and Alternatives
@@ -356,221 +366,151 @@ const additionalBulkButtons = [
 
 **Question:** When should the Yemot template be created?
 
-**Option A: On PhoneTemplate Creation (Recommended)**
+**Decision: On PhoneTemplate Creation (Immediate)**
 - Create Yemot template immediately when PhoneTemplate is saved
 - Store yemotTemplateId immediately
-- Pros: Simple, predictable, ready to use
-- Cons: Creates Yemot resources that may never be used
-
-**Option B: On First Use**
-- Create Yemot template lazily when first campaign is executed
-- Pros: Only creates resources when actually needed
-- Cons: Added complexity, potential failure point during campaign execution
-
-**Option C: Manual Activation**
-- Require explicit "Activate" action to create Yemot template
-- Pros: User control, clear activation status
-- Cons: Extra user step, potential confusion
-
-**Recommendation:** Option A for simplicity, with Option C as enhancement for advanced users.
+- Rationale: Simple, predictable, ready to use. User already has API KEY configured.
+- Consequence: May create Yemot resources that are never used, but user pays only for actual calls.
 
 ### 5.2 Message Content Management
 
 **Question:** How should message content (text/audio) be managed?
 
-**Option A: Embedded in PhoneTemplate (Recommended)**
-- Store messageText and messageFilePath directly in PhoneTemplate entity
-- Upload audio to Yemot using template naming convention
-- Pros: Self-contained, simple to implement
-- Cons: Less reusable across templates
-
-**Option B: Separate PhoneMessage Entity**
-- Create separate entity for message content
-- PhoneTemplate references PhoneMessage
-- Pros: Reusable messages, versioning capability
-- Cons: Added complexity, more entities to manage
-
-**Option C: Reuse Text Entity**
-- Extend existing Text entity pattern
-- Use TextByUser view for per-user overrides
-- Pros: Consistent with existing system, leverages existing infrastructure
-- Cons: Text entity may not fit all phone message needs
-
-**Option D: Hybrid Approach**
-- Allow both embedded content AND reference to Text entity
-- User chooses which to use
-- Pros: Maximum flexibility
-- Cons: Most complex, potential confusion
-
-**Recommendation:** Start with Option A for MVP, consider Option C for consistency if Text entity fits requirements well.
+**Decision: Embedded in PhoneTemplate (TTS only for MVP)**
+- Store messageText directly in PhoneTemplate entity
+- Simple, self-contained approach
+- Rationale: MVP focuses on TTS only, embedded content is simplest
+- Consequence: Each template has its own message text. Audio files reserved for future.
 
 ### 5.3 Phone Number Extraction
 
 **Question:** How should phone numbers be extracted from entity records?
 
-**Option A: Configuration-Based (Recommended)**
-- Define phone number field path in bulk button configuration
-- Use accessor function: `phoneNumberExtractor={(record) => record.student.phoneNumber}`
-- Pros: Flexible, works with any entity, explicit
-- Cons: Requires configuration per entity
+**Decision: Backend Extraction via doAction**
+- Frontend sends selected record IDs via bulk action
+- Backend receives IDs and PhoneTemplate ID
+- Backend queries the pivot table/entity to extract phone numbers
+- Rationale: Backend has direct database access and can handle complex pivot queries
+- Consequence: Frontend just passes IDs, backend handles all extraction logic
+  
+**Frontend:**
+```jsx
+// Bulk button just sends selected IDs
+<PhoneTemplateBulkButton selectedIds={selectedIds} />
+```
 
-**Option B: Convention-Based**
-- Follow naming convention (e.g., look for `phoneNumber`, `phone`, `mobile` fields)
-- Auto-detect phone numbers in records
-- Pros: Less configuration, automatic
-- Cons: May miss edge cases, less explicit
-
-**Option C: Entity-Specific Services**
-- Create service methods per entity type
-- E.g., `StudentKlassService.getPhoneNumbers(recordIds)`
-- Pros: Business logic encapsulation, type-safe
-- Cons: More code, harder to extend
-
-**Recommendation:** Option A for flexibility, with Option C as enhancement for complex cases.
+**Backend (PhoneCampaignService.executeCampaign):**
+```typescript
+async executeCampaign(req: CrudRequest, body: { templateId: number }) {
+  const selectedIds = body.selectedIds;  // From bulk selection
+  const phoneNumbers = await this.extractPhoneNumbersFromPivot(selectedIds);
+  // ... create campaign and execute
+}
+```
 
 ### 5.4 Campaign Execution Flow
 
 **Question:** Should campaigns be executed synchronously or asynchronously?
 
-**Option A: Asynchronous with Job Queue (Recommended)**
-- Create PhoneCampaign record immediately
-- Execute Yemot API call asynchronously
-- Poll for status updates
-- Pros: Non-blocking UI, handles failures gracefully
-- Cons: Requires job queue or background worker
+**Decision: Synchronous for MVP (Simple Approach)**
+- Frontend waits for backend to complete campaign execution
+- Backend creates campaign, calls Yemot API, saves yemotCampaignId, returns success
+- Status updates are user-triggered via "Refresh Status" button
+- Rationale: Simpler implementation for MVP, no background job queue needed
+- Consequence: User may wait a few seconds for large campaigns, but gets immediate feedback
 
-**Option B: Synchronous Execution**
-- Wait for Yemot API response before returning
-- Pros: Simple, immediate feedback
-- Cons: Slow UI, timeout risks, poor UX for large campaigns
-
-**Option C: Hybrid - Quick Validation Then Async**
-- Validate template and phones synchronously
-- Execute campaign asynchronously
-- Pros: Fast failure feedback, non-blocking execution
-- Cons: Medium complexity
-
-**Recommendation:** Option C for best UX, or Option A for production-grade implementation.
+**Flow:**
+1. User clicks bulk action → POST /phone-campaign/action { action: 'execute', templateId, selectedIds }
+2. Backend extracts phone numbers, creates PhoneCampaign record (status: pending)
+3. Backend calls Yemot RunCampaign API (waits for response)
+4. Backend updates PhoneCampaign with yemotCampaignId (status: running)
+5. User gets success message
+6. User manually clicks "Refresh Status" button later to get results
 
 ### 5.5 Result Tracking
 
 **Question:** How granular should campaign result tracking be?
 
-**Option A: Summary Only (Recommended for MVP)**
+**Decision: Summary Only (MVP Level)**
 - Track only aggregate statistics (total, success, failed)
 - Store in PhoneCampaign entity
-- Pros: Simple, low storage overhead
-- Cons: No per-call details
+- Rationale: Matches MVP requirement for "mvp level" detail
+- Consequence: No per-call details in MVP. Can enhance in future phases if needed.
 
-**Option B: Per-Call Tracking**
-- Create PhoneCampaignCall entity for each call
-- Store individual call results
-- Pros: Detailed insights, troubleshooting capability
-- Cons: High storage overhead, more complex
-
-**Option C: Summary + Error Details**
-- Store aggregate stats plus failed call details
-- Pros: Balance of simplicity and troubleshooting
-- Cons: Medium complexity
-
-**Recommendation:** Option A for MVP, enhance to Option C based on user needs.
+**PhoneCampaign Fields:**
+- totalPhones: number
+- successfulCalls: number  
+- failedCalls: number
+- status: 'pending' | 'running' | 'completed' | 'failed'
 
 ### 5.6 Template vs Campaign Naming
 
 **Question:** What terminology should we use in the UI?
 
-**Option A: "Phone Template" + "Campaign" (Recommended)**
-- Template = reusable configuration
-- Campaign = specific execution instance
-- Pros: Clear distinction, industry standard
-- Cons: More concepts to explain
-
-**Option B: "Phone Message" + "Broadcast"**
-- Message = content to send
-- Broadcast = sending action
-- Pros: Simpler language, user-friendly
-- Cons: Less technical precision
-
-**Option C: "Call Template" + "Call Job"**
-- Technical naming
-- Pros: Precise, developer-friendly
-- Cons: Less user-friendly
-
-**Recommendation:** Option A for clarity, use "Phone Message Template" in UI for user-friendliness.
+**Decision: "Phone Template" + "Campaign" with Hebrew translations**
+- English: "Phone Template" (template), "Campaign" (execution)
+- Hebrew: "תבנית שיחה" (template), "מסע פרסום" or "משלוח שיחות" (campaign)
+- Rationale: Clear, industry-standard terminology
+- Consequence: User-friendly labels in both languages
 
 ### 5.7 Multi-Tenancy Considerations
 
 **Question:** Should templates be global or per-user?
 
-**Option A: Per-User Templates (Recommended)**
-- Each user has their own templates
-- Managed via userId foreign key
-- Pros: Isolation, security, aligns with existing pattern
-- Cons: No template sharing
-
-**Option B: Global Templates with Permissions**
-- System-level templates (userId = 0)
-- User-level templates (userId > 0)
-- Pros: Template reuse, admin control
-- Cons: More complex permissions
-
-**Option C: Organization-Level Templates**
-- Templates scoped to organization
-- Requires organization entity
-- Pros: Team collaboration
-- Cons: Requires organization model
-
-**Recommendation:** Option A for MVP, enhance to Option B following Text entity pattern.
+**Decision: Per-User Templates and Campaigns**
+- Each user creates and manages their own templates
+- Each user sees only their own campaigns
+- Enforced via CrudAuth filter on userId
+- Rationale: Matches requirement "each user can create its own template, and its own campaign"
+- Consequence: No template sharing between users, strong isolation
 
 ### 5.8 Error Handling Strategy
 
 **Question:** How should Yemot API errors be handled?
 
-**Option A: Retry with Exponential Backoff**
-- Automatically retry failed API calls
-- Implement exponential backoff
-- Pros: Resilient to transient failures
-- Cons: Delayed error reporting
-
-**Option B: Fail Fast**
-- Report errors immediately
-- User manually retries
-- Pros: Simple, clear failures
-- Cons: Poor UX for temporary issues
-
-**Option C: Smart Retry**
-- Retry on specific error codes (timeout, rate limit)
-- Fail fast on others (auth, invalid data)
-- Pros: Best UX, balanced approach
-- Cons: Most complex
-
-**Recommendation:** Option C for production quality.
+**Decision: Smart Retry for MVP**
+- Retry on timeout/network errors (up to 2 retries)
+- Fail fast on authentication/validation errors
+- Log all errors with userId for debugging
+- Return user-friendly error messages
+- Rationale: Balance between resilience and simplicity
+- Consequence: Most transient errors will succeed, permanent errors fail quickly
 
 ## 6. Implementation Phases
 
 ### Phase 1: MVP (Minimum Viable Product)
-- PhoneTemplate entity with basic fields
-- PhoneCampaign entity with status tracking
-- YemotApiService with core methods
-- Basic template CRUD in admin
-- Single bulk action button implementation
-- Text-based messages (TTS) only
-- Summary-level campaign tracking
+**Target:** First working version with essential features
+
+- Add `yemotApiKey` field to User entity (varchar, nullable)
+- User settings page to configure Yemot API KEY
+- PhoneTemplate entity with TTS text only
+- PhoneCampaign entity with summary-level tracking
+- YemotApiService with core Yemot API methods (CreateTemplate, RunCampaign, GetCampaignStatus)
+- PhoneTemplateService and PhoneCampaignService extending BaseEntityService
+- Entity configs using BaseEntityModule.register()
+- phone-template.jsx - Basic CRUD for templates
+- phone-campaign.jsx - View campaign history with "Refresh Status" button
+- PhoneTemplateBulkButton integrated with student attendance pivot table
+- Execute campaign via doAction endpoint
+- TTS messages only (no audio files)
+- Summary-level campaign tracking (total, success, failed counts)
+- Manual status refresh (user-triggered button)
 
 ### Phase 2: Enhanced Features
-- Audio file upload support
-- Advanced template settings
-- Multiple bulk action integrations
-- Real-time status updates
-- Campaign report download
+- Audio file upload support (messageFilePath)
+- Advanced template settings (timeWindow, retry config)
+- Additional bulk action integrations (other entities beyond attendance)
+- Automatic status refresh (background polling)
+- Campaign report export/download
+- Template test functionality (send to single number)
 
 ### Phase 3: Advanced Features
-- Scheduled campaigns
-- Template sharing (global templates)
-- Per-call result tracking
+- Scheduled campaigns (time-delayed execution)
+- Message personalization (insert student name, class name)
 - Campaign analytics dashboard
-- Message personalization (name insertion)
-- Retry failed calls
+- Per-call result tracking (detailed logs)
+- Retry failed calls functionality
+- Campaign cost estimation before execution
 
 ## 7. Security and Compliance
 
@@ -649,18 +589,27 @@ const additionalBulkButtons = [
 - Monitor and iterate
 - Expand to all applicable entities
 
-## 11. Open Questions for Product Owner
+## 11. Decisions Made (Based on Product Owner Feedback)
 
-1. **Authentication**: Do we have Yemot API KEY for each user, or single system-level key?
-2. **Billing**: Who pays for phone calls? Is there a budget/limit per user?
-3. **Priority**: Which entity should get bulk action button first? (student-klasses-report?)
-4. **Content**: Should we support both TTS and audio files in MVP, or TTS only?
-5. **Scheduling**: Is scheduled campaign execution needed in MVP?
-6. **Reporting**: What level of detail is needed in campaign reports?
-7. **Permissions**: Should all users be able to create templates, or admin-only?
-8. **Compliance**: Are there legal requirements for calling hours, opt-out, etc.?
-9. **Integration**: Should this integrate with existing YemotCall entity for incoming calls?
-10. **Naming**: Do we prefer "Phone Template", "Phone Message", or "Call Template" in UI?
+All major questions have been answered by the product owner:
+
+1. **Authentication**: ✅ Per-user API KEY stored in user settings (User.yemotApiKey field)
+2. **Billing**: ✅ Each user pays via their own Yemot account/API KEY
+3. **Priority**: ✅ Student attendance report pivot table gets bulk button first
+4. **Content**: ✅ MVP supports TTS only, audio files in Phase 2
+5. **Scheduling**: ✅ Not needed in MVP, deferred to Phase 3
+6. **Reporting**: ✅ MVP level - summary statistics only (total, success, failed)
+7. **Permissions**: ✅ Each user creates their own templates and campaigns (per-user isolation)
+8. **Compliance**: ✅ Handled by Yemot system (calling hours, opt-out, etc.)
+9. **Integration**: ✅ Not related to existing YemotCall entity (incoming calls), separate logic
+10. **Terminology**: ✅ EN: "Phone Template" / "Campaign", HE: "תבנית שיחה" / "מסע פרסום"
+
+### Additional Implementation Details Confirmed:
+
+11. **API Endpoints**: ✅ Use standard BaseEntityModule endpoints with doAction for custom operations
+12. **Campaign Execution**: ✅ Backend extracts phone numbers from selected IDs, creates and executes campaign
+13. **Status Updates**: ✅ User-triggered "Refresh Status" button (no background polling in MVP)
+14. **Phone Number Source**: ✅ Extract from student attendance pivot table records
 
 ## 12. Dependencies and Risks
 
@@ -705,11 +654,25 @@ const additionalBulkButtons = [
 
 ## 15. Conclusion
 
-This HLD provides a comprehensive design for the Automated Phone Calls feature, covering all architectural aspects from data models to API integration. The phased implementation approach allows for incremental delivery and validation. The design questions highlight key decision points that should be discussed with stakeholders before detailed implementation begins.
+This HLD provides a comprehensive design for the Automated Phone Calls feature with all decisions finalized based on product owner feedback. The design covers:
+
+- **Data Models**: PhoneTemplate and PhoneCampaign entities with per-user isolation
+- **Services**: YemotApiService, PhoneTemplateService, PhoneCampaignService using BaseEntityModule
+- **Frontend**: React-Admin entities and bulk action button for student attendance pivot
+- **Yemot Integration**: Per-user API KEY authentication, TTS messages, manual status refresh
+- **Implementation**: Clear 3-phase roadmap (MVP → Enhanced → Advanced)
+
+**Key Design Principles:**
+- Per-user templates and campaigns with strong isolation
+- Standard BaseEntityModule patterns for consistency
+- TTS-only for MVP, audio files deferred
+- Backend-driven phone number extraction
+- User-triggered status updates (simple, no background polling)
+- Each user manages their own Yemot account and billing
 
 **Next Steps:**
-1. Review and approve HLD
-2. Answer open questions
-3. Create detailed implementation tickets
-4. Set up Yemot API test environment
+1. ✅ HLD approved with all decisions finalized
+2. Create detailed implementation tickets for Phase 1
+3. Add User.yemotApiKey field migration
+4. Set up Yemot API test environment with test API KEY
 5. Begin Phase 1 implementation

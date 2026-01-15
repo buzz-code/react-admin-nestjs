@@ -6,96 +6,103 @@
 
 ## Feature Overview
 
-Create reusable phone message templates and trigger automated phone campaigns via bulk actions using Yemot API.
+Create reusable phone message templates and trigger automated phone campaigns via bulk actions using Yemot API. Each user manages their own templates, campaigns, and Yemot API KEY.
 
 ## Key Components
 
 ### Entities
-1. **PhoneTemplate** - Reusable message template configuration
-2. **PhoneCampaign** - Campaign execution tracking
+1. **PhoneTemplate** - Per-user reusable message template (TTS text in MVP)
+2. **PhoneCampaign** - Per-user campaign execution tracking
+3. **User.yemotApiKey** - New field for per-user Yemot API KEY
 
 ### Services
-1. **YemotApiService** - Yemot REST API integration
-2. **PhoneTemplateService** - Template business logic
-3. **PhoneCampaignService** - Campaign execution logic
+1. **YemotApiService** - Yemot REST API integration (uses per-user API KEY)
+2. **PhoneTemplateService** - Extends BaseEntityService, template business logic
+3. **PhoneCampaignService** - Extends BaseEntityService, campaign execution & tracking
 
 ### Frontend
-1. **phone-template.jsx** - Template management UI
-2. **phone-campaign.jsx** - Campaign history UI
-3. **PhoneTemplateBulkButton.jsx** - Reusable bulk action component
+1. **phone-template.jsx** - Template CRUD (per-user, TTS only)
+2. **phone-campaign.jsx** - Campaign history with manual "Refresh Status" button
+3. **PhoneTemplateBulkButton.jsx** - Bulk action for student attendance pivot table
 
 ## Yemot API Methods Required
 
 **Template Management:**
-- CreateTemplate, GetTemplates, UpdateTemplate, DeleteTemplate
-
-**Content Management:**
-- UploadFile (audio files)
+- CreateTemplate, UpdateTemplate
 
 **Campaign Execution:**
-- UploadPhoneList, RunCampaign
+- UploadPhoneList, RunCampaign (with ttsMode=1)
 
 **Campaign Monitoring:**
-- GetCampaignStatus, GetActiveCampaigns, DownloadCampaignReport
+- GetCampaignStatus (user-triggered)
 
-## Key Design Decisions (Recommended)
+## Key Design Decisions (Finalized)
 
-1. **Template Creation Timing**: On PhoneTemplate creation (immediate)
-2. **Message Content**: Embedded in PhoneTemplate entity
-3. **Phone Extraction**: Configuration-based with accessor functions
-4. **Execution Flow**: Hybrid - validate sync, execute async
-5. **Result Tracking**: Summary only for MVP
-6. **Terminology**: "Phone Template" + "Campaign"
-7. **Multi-Tenancy**: Per-user templates
-8. **Error Handling**: Smart retry (retry on specific errors)
+1. **Authentication**: Per-user API KEY in User.yemotApiKey field
+2. **Billing**: Each user pays via their own Yemot account
+3. **Template Creation Timing**: Immediate on save
+4. **Message Content**: TTS text only (MVP), embedded in PhoneTemplate
+5. **Phone Extraction**: Backend extracts from selected IDs (pivot table)
+6. **Execution Flow**: Synchronous for MVP (simple, user waits for completion)
+7. **Result Tracking**: Summary only (total, success, failed counts)
+8. **Terminology**: EN: "Phone Template"/"Campaign", HE: "תבנית שיחה"/"מסע פרסום"
+9. **Multi-Tenancy**: Per-user templates and campaigns (CrudAuth filtering)
+10. **Status Updates**: User-triggered "Refresh Status" button (no background polling)
+11. **API Endpoints**: Standard BaseEntityModule with doAction for custom operations
+12. **First Integration**: Student attendance report pivot table
 
 ## Implementation Phases
 
 ### Phase 1: MVP
-- Basic entities and CRUD
+- User.yemotApiKey field & settings page
+- PhoneTemplate & PhoneCampaign entities
 - YemotApiService core methods
-- Single bulk action button
+- BaseEntityModule configs
 - TTS messages only
-- Summary tracking
+- Bulk button on student attendance pivot
+- Execute campaign via doAction
+- Manual status refresh
+- Summary-level tracking
 
 ### Phase 2: Enhanced
 - Audio file support
-- Multiple integrations
-- Real-time updates
-- Report download
+- Additional bulk actions
+- Automatic status refresh
+- Report export
+- Template testing
 
 ### Phase 3: Advanced
 - Scheduled campaigns
-- Template sharing
+- Message personalization
 - Per-call tracking
 - Analytics dashboard
-- Personalization
+- Cost estimation
 
-## Open Questions for PO
+## All Questions Answered ✅
 
-1. Do we have Yemot API KEY for each user or system-level?
-2. Who pays for calls? Budget/limits per user?
-3. Which entity gets bulk button first?
-4. TTS only or audio files in MVP?
-5. Scheduled campaigns needed in MVP?
-6. Detail level for campaign reports?
-7. Who can create templates - all users or admin only?
-8. Legal requirements for calling hours, opt-out?
-9. Integrate with existing YemotCall entity?
-10. Preferred UI terminology?
+1. ✅ API KEY strategy: Per-user in settings
+2. ✅ Billing: User's own account
+3. ✅ First integration: Student attendance pivot
+4. ✅ MVP content: TTS only
+5. ✅ Scheduling: Not in MVP
+6. ✅ Report detail: MVP level (summary)
+7. ✅ Permissions: Each user their own
+8. ✅ Compliance: Handled by Yemot
+9. ✅ YemotCall integration: Not related
+10. ✅ Terminology: Provided in EN & HE
 
 ## Success Criteria
 
-- Users can create templates and execute campaigns
-- Campaigns with 100+ numbers execute timely
-- 95%+ success rate for valid numbers
-- Users need no training
-- 50%+ adoption rate
+- Users can configure API KEY and create templates
+- Bulk action executes campaigns from attendance pivot
+- Campaigns execute with TTS messages
+- Users can manually refresh campaign status
+- 95%+ success rate for valid phone numbers
 
 ## Next Steps
 
-1. Review and approve HLD
-2. Answer open questions
-3. Create implementation tickets
-4. Set up Yemot API test environment
-5. Begin Phase 1 implementation
+1. ✅ HLD approved with all decisions
+2. Create Phase 1 implementation tickets
+3. Add User.yemotApiKey migration
+4. Set up Yemot test environment
+5. Begin Phase 1 development
