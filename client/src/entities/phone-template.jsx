@@ -8,23 +8,20 @@ import {
   TextField, 
   TextInput,
   maxLength,
-  useRecordContext,
   useNotify,
-  Button,
   useDataProvider,
   useGetRecordId,
-  FormDataConsumer,
   useGetIdentity,
+  SimpleForm,
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { ActionOrDialogButton } from '@shared/components/crudContainers/ActionOrDialogButton';
-import { DialogContent, DialogActions, Button as MuiButton, Alert } from '@mui/material';
+import { Alert } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { useState } from 'react';
 
 const filters = [
   ...commonAdminFilters,
@@ -36,27 +33,18 @@ const TestCallButton = ({ ...props }) => {
   const recordId = useGetRecordId();
   const dataProvider = useDataProvider();
   const notify = useNotify();
-  const [open, setOpen] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const handleTest = async () => {
-    if (!phoneNumber) return;
-    
-    setLoading(true);
+  const handleTest = async (values, onClose) => {
     try {
-      const result = await dataProvider.action('phone_template', 'test', {
+      await dataProvider.action('phone_template', 'test', {
         'extra.templateId': recordId,
-        'extra.phoneNumber': phoneNumber,
+        'extra.phoneNumber': values.phoneNumber,
       });
       
       notify('resources.phone_template.notifications.test_sent', { type: 'success' });
-      setOpen(false);
-      setPhoneNumber('');
+      onClose?.();
     } catch (error) {
       notify(error.message || 'resources.phone_template.notifications.test_failed', { type: 'error' });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -66,27 +54,18 @@ const TestCallButton = ({ ...props }) => {
       icon={<PhoneIcon />}
       title="resources.phone_template.dialogs.test_title"
       onClick={(e) => e.stopPropagation()}
-      dialogContent={() => (
-        <>
-          <DialogContent>
-            <TextInput
-              source="phoneNumber"
-              label="resources.phone_template.fields.test_phone"
-              type="tel"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="05XXXXXXXX"
-              fullWidth
-              autoFocus
-            />
-          </DialogContent>
-          <DialogActions>
-            <MuiButton onClick={() => setOpen(false)}>ra.action.cancel</MuiButton>
-            <MuiButton onClick={handleTest} disabled={!phoneNumber || loading} variant="contained">
-              ra.action.send
-            </MuiButton>
-          </DialogActions>
-        </>
+      dialogContent={({ onClose }) => (
+        <SimpleForm onSubmit={values => handleTest(values, onClose)}>
+          <TextInput
+            source="phoneNumber"
+            label="resources.phone_template.fields.test_phone"
+            type="tel"
+            validate={required()}
+            placeholder="05XXXXXXXX"
+            fullWidth
+            autoFocus
+          />
+        </SimpleForm>
       )}
     />
   );
@@ -127,7 +106,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 
   return <>
     {isCreate && <ApiKeyWarning />}
-    {!isCreate && <FormDataConsumer>{({ formData }) => <TestCallButton record={formData} />}</FormDataConsumer>}
+    {!isCreate && <TestCallButton />}
     {!isCreate && isAdmin && <TextInput source="id" disabled />}
     {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
     <TextInput source="name" validate={[required(), maxLength(100)]} disabled={isCreate && !hasApiKey} />

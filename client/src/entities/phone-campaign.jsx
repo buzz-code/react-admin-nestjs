@@ -63,7 +63,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
   return (
     <CommonDatagrid {...props} readonly additionalBulkButtons={additionalBulkButtons}>
       {children}
-      <TextField source="id" />
+      {isAdmin && <TextField source="id" />}
       {isAdmin && <TextField source="userId" />}
       <TextField source="phoneTemplateId" />
       <StatusField />
