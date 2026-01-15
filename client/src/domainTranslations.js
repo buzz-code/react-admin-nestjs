@@ -507,5 +507,67 @@ export default {
                 topic: 'נושא',
             }
         },
+        phone_template: {
+            name: 'תבנית שיחה |||| תבניות שיחות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                name: 'שם',
+                description: 'תיאור',
+                messageType: 'סוג הודעה',
+                messageText: 'טקסט ההודעה',
+                callerId: 'מספר מזהה שיחה',
+                isActive: 'פעיל',
+                yemotTemplateId: 'מזהה תבנית ימות',
+                test_phone: 'מספר טלפון לבדיקה',
+            },
+            messageTypes: {
+                text: 'טקסט להקראה (TTS)',
+            },
+            help: {
+                callerId: 'מספר טלפון שיוצג למקבל השיחה',
+            },
+            actions: {
+                test: 'שלח שיחת בדיקה',
+            },
+            dialogs: {
+                test_title: 'שלח שיחת בדיקה',
+            },
+            notifications: {
+                test_sent: 'שיחת הבדיקה נשלחה בהצלחה',
+                test_failed: 'שליחת שיחת הבדיקה נכשלה',
+            },
+        },
+        phone_campaign: {
+            name: 'משלוח שיחות |||| משלוחי שיחות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                template: 'תבנית',
+                phoneTemplateId: 'תבנית',
+                status: 'סטטוס',
+                yemotCampaignId: 'מזהה קמפיין ימות',
+                totalPhones: 'סה"כ שיחות',
+                successfulCalls: 'שיחות מוצלחות',
+                failedCalls: 'שיחות כושלות',
+                successRate: 'אחוז הצלחה',
+                errorMessage: 'הודעת שגיאה',
+                completedAt: 'הושלם ב',
+                dateFrom: 'מתאריך',
+                dateTo: 'עד תאריך',
+            },
+            statuses: {
+                pending: 'ממתין',
+                running: 'בביצוע',
+                completed: 'הושלם',
+                failed: 'נכשל',
+                cancelled: 'בוטל',
+            },
+            actions: {
+                refresh: 'רענן סטטוס',
+            },
+            notifications: {
+                status_refreshed: 'הסטטוס עודכן בהצלחה',
+                refresh_failed: 'עדכון הסטטוס נכשל',
+            },
+        },
     }
 };
