@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 
-const PhoneTemplateBulkButton = ({ phoneNumberExtractor, resource }) => {
+const PhoneTemplateBulkButton = ({ resource }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState([]);
@@ -29,7 +29,7 @@ const PhoneTemplateBulkButton = ({ phoneNumberExtractor, resource }) => {
   const notify = useNotify();
   const refresh = useRefresh();
   const dataProvider = useDataProvider();
-  const { selectedIds, data } = useListContext();
+  const { selectedIds } = useListContext();
 
   const handleOpen = async () => {
     setOpen(true);
@@ -53,35 +53,15 @@ const PhoneTemplateBulkButton = ({ phoneNumberExtractor, resource }) => {
 
   const handleSelectTemplate = async (template) => {
     setSelectedTemplate(template);
-    
-    // Extract phone numbers from selected records
-    const selectedRecords = selectedIds.map(id => data[id]).filter(Boolean);
-    
-    let phoneNumbers = [];
-    if (phoneNumberExtractor) {
-      phoneNumbers = selectedRecords
-        .map(record => {
-          const phone = phoneNumberExtractor(record);
-          if (phone) {
-            return {
-              phone,
-              name: record.name || record.studentName || '',
-              metadata: { recordId: record.id },
-            };
-          }
-          return null;
-        })
-        .filter(Boolean);
-    }
 
-    if (phoneNumbers.length === 0) {
-      notify('No valid phone numbers found in selected records', { type: 'warning' });
+    if (!selectedIds || selectedIds.length === 0) {
+      notify('No records selected', { type: 'warning' });
       return;
     }
 
     // Confirm action
     const confirmed = window.confirm(
-      `Send phone message to ${phoneNumbers.length} numbers using template "${template.name}"?`
+      `Send phone message to selected students using template "${template.name}"?`
     );
 
     if (!confirmed) {
@@ -101,7 +81,6 @@ const PhoneTemplateBulkButton = ({ phoneNumberExtractor, resource }) => {
           action: 'execute-phone-campaign',
           templateId: template.id,
           selectedIds,
-          phoneNumbers,
         }),
       });
 
@@ -111,7 +90,7 @@ const PhoneTemplateBulkButton = ({ phoneNumberExtractor, resource }) => {
         notify(result.error, { type: 'error' });
       } else if (result.success) {
         notify(
-          `Campaign started successfully! ${phoneNumbers.length} calls initiated.`,
+          result.message || 'Campaign started successfully!',
           { type: 'success' }
         );
         setOpen(false);
