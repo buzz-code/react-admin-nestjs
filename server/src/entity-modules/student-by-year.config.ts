@@ -1,8 +1,8 @@
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
-import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
+import { BaseEntityModuleOptions, Entity, InjectEntityRepository } from "@shared/base-entity/interface";
 import { ParsedRequestParams } from '@dataui/crud-request';
 import { StudentByYear } from "src/db/view-entities/StudentByYear.entity";
-import { FindOptionsWhere, In, Not, IsNull } from "typeorm";
+import { FindOptionsWhere, In, Not, IsNull, Repository } from "typeorm";
 import { IHeader } from "@shared/utils/exporter/types";
 import { AttReportWithReportMonth } from "src/db/view-entities/AttReportWithReportMonth.entity";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
@@ -16,10 +16,13 @@ import { Student } from "src/db/entities/Student.entity";
 import { PhoneCampaignService } from "./phone-campaign.config";
 import { CrudRequest } from "@dataui/crud";
 import { PhoneEntry } from "src/db/entities/PhoneCampaign.entity";
+import { MailSendService } from "@shared/utils/mail/mail-send.service";
+import { Injectable } from "@nestjs/common";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
         entity: StudentByYear,
+        // @ts-ignore - Service with additional dependencies, see docs/shared-modifications.md
         service: StudentByYearService,
         providers: [PhoneCampaignService],
         exporter: {
@@ -42,13 +45,19 @@ interface IStudentAttendancePivot extends StudentByYear {
     absencePercentage?: string;
     totalAbsencePercentage?: string;
 }
+
+@Injectable()
 class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityService<T> {
-    constructor(private readonly phoneCampaignService: PhoneCampaignService) {
-        super();
+    constructor(
+        @InjectEntityRepository repo: Repository<T>,
+        mailSendService: MailSendService,
+        private readonly phoneCampaignService: PhoneCampaignService
+    ) {
+        super(repo, mailSendService);
     }
 
     async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
-        const userId = req.auth?.userId;
+        const userId = (req as any).auth?.userId;
 
         switch (req.parsed.extra.action) {
             case 'execute-phone-campaign': {

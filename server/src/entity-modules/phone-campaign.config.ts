@@ -1,19 +1,25 @@
 import { Injectable } from "@nestjs/common";
 import { CrudRequest } from "@dataui/crud";
-import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
+import { BaseEntityModuleOptions, InjectEntityRepository } from "@shared/base-entity/interface";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { PhoneCampaign, PhoneEntry } from "src/db/entities/PhoneCampaign.entity";
 import { PhoneTemplate } from "src/db/entities/PhoneTemplate.entity";
 import { YemotApiService } from "src/services/yemot-api.service";
+import { Repository } from "typeorm";
+import { MailSendService } from "@shared/utils/mail/mail-send.service";
 
 @Injectable()
 export class PhoneCampaignService extends BaseEntityService<PhoneCampaign> {
-  constructor(private readonly yemotApiService: YemotApiService) {
-    super();
+  constructor(
+    @InjectEntityRepository repo: Repository<PhoneCampaign>,
+    mailSendService: MailSendService,
+    private readonly yemotApiService: YemotApiService
+  ) {
+    super(repo, mailSendService);
   }
 
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
-    const userId = req.auth?.userId;
+    const userId = (req as any).auth?.userId;
     
     switch (req.parsed.extra.action) {
       case 'refresh-status': {
@@ -201,6 +207,7 @@ export class PhoneCampaignService extends BaseEntityService<PhoneCampaign> {
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: PhoneCampaign,
+    // @ts-ignore - Service with additional dependencies, see docs/shared-modifications.md
     service: PhoneCampaignService,
     providers: [YemotApiService],
   };

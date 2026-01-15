@@ -4,15 +4,22 @@ import { BaseEntityModuleOptions } from "@shared/base-entity/interface";
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
 import { PhoneTemplate } from "src/db/entities/PhoneTemplate.entity";
 import { YemotApiService } from "src/services/yemot-api.service";
+import { InjectEntityRepository } from "@shared/base-entity/interface";
+import { Repository } from "typeorm";
+import { MailSendService } from "@shared/utils/mail/mail-send.service";
 
 @Injectable()
 class PhoneTemplateService extends BaseEntityService<PhoneTemplate> {
-  constructor(private readonly yemotApiService: YemotApiService) {
-    super();
+  constructor(
+    @InjectEntityRepository repo: Repository<PhoneTemplate>,
+    mailSendService: MailSendService,
+    private readonly yemotApiService: YemotApiService
+  ) {
+    super(repo, mailSendService);
   }
 
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
-    const userId = req.auth?.userId;
+    const userId = (req as any).auth?.userId;
     
     switch (req.parsed.extra.action) {
       case 'test': {
@@ -69,6 +76,7 @@ class PhoneTemplateService extends BaseEntityService<PhoneTemplate> {
   }
 
   async createOne(req: CrudRequest, dto: PhoneTemplate): Promise<PhoneTemplate> {
+    // @ts-ignore - auth property added by CrudAuth middleware, see docs/shared-modifications.md
     const userId = req.auth?.userId;
     
     // Get user's Yemot API key
@@ -103,6 +111,7 @@ class PhoneTemplateService extends BaseEntityService<PhoneTemplate> {
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: PhoneTemplate,
+    // @ts-ignore - Service with additional dependencies, see docs/shared-modifications.md
     service: PhoneTemplateService,
     providers: [YemotApiService],
   };
