@@ -22,6 +22,7 @@ function getConfig(): BaseEntityModuleOptions {
                 teacher: { eager: false },
                 lesson: { eager: false },
                 klass: { eager: false },
+                'klass.klassType': { eager: false },
                 reportMonth: { eager: false },
                 reportGroupSession: { eager: false }
             }

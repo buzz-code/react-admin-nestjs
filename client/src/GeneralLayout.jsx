@@ -14,6 +14,8 @@ import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import PercentIcon from '@mui/icons-material/Percent';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import ViewListIcon from '@mui/icons-material/ViewList';
+
 
 import BaseLayout from "@shared/components/layout/Layout";
 import BaseDashboard from '@shared/components/views/Dashboard';
@@ -48,7 +50,8 @@ const menuGroups = [
     ({ permissions }) => !isOnlyInLessonReport(permissions) && ({
         name: 'report', icon: <AnalyticsIcon />, routes: [
             ({ permissions }) => !isTeacherView(permissions) && <MenuItemLink key="student-attendance" to="/student/student-attendance" primaryText="דוח נוכחות (פיבוט)" leftIcon={<SummarizeIcon />} />,
-            <MenuItemLink key="percent-report-with-dates" to="/percent-report-with-dates" primaryText="דוח אחוזים לתלמידה" leftIcon={<PercentIcon />} />
+            <MenuItemLink key="percent-report-with-dates" to="/percent-report-with-dates" primaryText="דוח אחוזים לתלמידה" leftIcon={<PercentIcon />} />,
+            <MenuItemLink key="att_report_with_report_month_lead" to="/att_report_with_report_month_lead" primaryText="דוח נוכחות לרכזת" leftIcon={<ViewListIcon />} />
         ]
     }),
     { name: 'settings', icon: <SettingsIcon /> },
