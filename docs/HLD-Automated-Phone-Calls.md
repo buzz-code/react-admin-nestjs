@@ -6,7 +6,7 @@ This HLD describes a new feature for sending automated phone calls to students, 
 
 **Key Terminology:** 
 - **English**: "Phone Template" for template, "Campaign" for execution
-- **Hebrew**: "תבנית שיחה" (Tavnit Sicha) for template, "מסע פרסום" (Masa Parsum) or "משלוח שיחות" (Mishloach Sichot) for campaign
+- **Hebrew**: "תבנית שיחה" (Tavnit Sicha) for template, "משלוח שיחות" (Mishloach Sichot) for campaign
 
 ## 2. Feature Overview
 
@@ -162,7 +162,7 @@ New service to interact with Yemot REST API for campaigns/templates.
 - `getCampaignStatus(apiKey, campaignId)` - Get campaign status (user-triggered)
 - `downloadCampaignReport(apiKey, campaignId)` - Get campaign results
 
-**Authentication:** Uses per-user API KEY from User.yemotApiKey field, passed in authorization header.
+**Authentication:** Uses per-user API KEY from User.additionalData.yemotApiKey, passed in authorization header.
 
 
 #### 3.2.2 PhoneTemplateService
@@ -183,19 +183,78 @@ Business logic for managing phone templates, integrated with BaseEntityModule.
 Business logic for executing and tracking campaigns.
 
 **Key Methods:**
-- `executeCampaign(req, body)` - Handles bulk action, extracts phone numbers from selected records, creates campaign, and executes via YemotApiService
-- `refreshCampaignStatus(campaignId)` - User-triggered status update from Yemot
-- `getCampaignResults(campaignId)` - Fetch detailed results from Yemot
+- `doAction(req, body)` - Overrides base method to handle custom actions:
+  - `action: 'execute'` - Called from entity-specific service (e.g., StudentService), creates campaign and executes via YemotApiService
+  - `action: 'refresh-status'` - User-triggered status update from Yemot
+- `executeCampaign(userId, templateId, phoneNumbers)` - Core execution logic, called by entity services
+- `refreshCampaignStatus(campaignId, userId)` - Fetch and update status from Yemot
+- `getCampaignResults(campaignId, userId)` - Fetch detailed results from Yemot
 
-**Custom Endpoint:** 
-- `POST /phone-campaign/execute` - Bulk action endpoint (added to BaseEntityController via doAction method)
-- `POST /phone-campaign/:id/refresh-status` - Manual status refresh button
+**Execution Flow:**
+1. Entity service (e.g., StudentService or AttendanceService) receives bulk action request
+2. Entity service extracts phone numbers from its own entity records
+3. Entity service calls `PhoneCampaignService.executeCampaign(userId, templateId, phoneNumbers)`
+4. PhoneCampaignService creates PhoneCampaign record and executes via YemotApiService
+
+**Standard Endpoints (via BaseEntityModule):**
+- `POST /phone_campaign/action` with `{ action: 'execute', templateId, selectedIds }` - Routed to entity service
+- `POST /phone_campaign/action` with `{ action: 'refresh-status', campaignId }` - Updates campaign status
 
 #### 3.2.4 Entity Modules
 - `/server/src/entity-modules/phone-template.config.ts` - Uses BaseEntityModule.register()
 - `/server/src/entity-modules/phone-campaign.config.ts` - Uses BaseEntityModule.register()
 
 Standard CRUD configuration following existing patterns, registered in entities.module.ts.
+
+#### 3.2.5 Entity Service Integration (Example: StudentAttendanceService)
+**Location:** Entity-specific service that handles bulk actions
+
+To trigger phone campaigns from an entity (e.g., student attendance pivot table):
+
+**Implementation Pattern:**
+```typescript
+// In StudentAttendanceService or AttendanceService
+@Injectable()
+export class StudentAttendanceService extends BaseEntityService<StudentAttendance> {
+  constructor(
+    @InjectEntityRepository repo: Repository<StudentAttendance>,
+    mailSendService: MailSendService,
+    private phoneCampaignService: PhoneCampaignService,  // Inject campaign service
+  ) {
+    super(repo, mailSendService);
+  }
+
+  async doAction(req: CrudRequest, body: any): Promise<any> {
+    if (body.action === 'execute-phone-campaign') {
+      // Extract phone numbers from selected records
+      const selectedIds = body.selectedIds;
+      const phoneNumbers = await this.extractPhoneNumbers(selectedIds);
+      
+      // Execute campaign via PhoneCampaignService
+      return this.phoneCampaignService.executeCampaign(
+        req.auth.userId,
+        body.templateId,
+        phoneNumbers
+      );
+    }
+    return super.doAction(req, body);
+  }
+
+  private async extractPhoneNumbers(selectedIds: number[]): Promise<string[]> {
+    // Query pivot table or entity records to get phone numbers
+    // Implementation specific to entity structure
+    const records = await this.repo.findByIds(selectedIds);
+    return records.map(r => r.phoneNumber).filter(Boolean);
+  }
+}
+```
+
+**Flow:**
+1. Frontend sends: `POST /api/student_attendance/action` with `{ action: 'execute-phone-campaign', templateId, selectedIds }`
+2. StudentAttendanceService.doAction() receives request
+3. Service extracts phone numbers from its own entity records
+4. Service calls PhoneCampaignService.executeCampaign()
+5. PhoneCampaignService creates campaign and executes via YemotApiService
 
 ### 3.3 Frontend Components
 
@@ -233,8 +292,8 @@ Reusable bulk action button integrated with student attendance report pivot tabl
 1. Opens dialog showing user's active phone templates
 2. User selects template
 3. Confirms action with phone count
-4. Triggers POST to /phone-campaign/execute with selected IDs and templateId
-5. Backend extracts phone numbers and executes campaign
+4. Triggers POST to entity's /action endpoint (e.g., /api/student_attendance/action) with `{ action: 'execute-phone-campaign', templateId, selectedIds }`
+5. Entity service (StudentAttendanceService) extracts phone numbers and calls PhoneCampaignService
 6. Shows success/error notification
 
 #### 3.3.4 Integration Example
@@ -277,8 +336,9 @@ const additionalBulkButtons = [
 - `GET /api/phone_campaign/report` - Get campaign report data
 
 **Custom actions via POST /api/phone_campaign/action:**
-- `{ action: 'execute', templateId, selectedIds: [] }` - Execute new campaign (bulk action)
 - `{ action: 'refresh-status', campaignId }` - Manually refresh campaign status from Yemot
+
+**Note:** Campaign execution is triggered from the entity where bulk action is performed (e.g., student attendance pivot). The entity service (e.g., AttendanceService) handles the bulk action, extracts phone numbers, and calls PhoneCampaignService.executeCampaign() directly.
 
 ## 4. Yemot API Integration
 
@@ -317,32 +377,35 @@ const additionalBulkButtons = [
 
 ### 4.2 Authentication Strategy
 
-**Approach: Per-User API KEY in User Settings**
+**Approach: Per-User API KEY in User Settings (additionalData)**
 
 **Implementation:**
-1. Add `yemotApiKey` field to User entity (varchar, nullable, encrypted at rest)
+1. Store `yemotApiKey` in User.additionalData JSON field (encrypted at application level)
 2. User configures their own Yemot API KEY in user settings/profile page
-3. Backend retrieves user's API KEY when executing Yemot API calls
+3. Backend retrieves user's API KEY from additionalData when executing Yemot API calls
 4. Pass API KEY in `authorization` header to Yemot API
 5. Each user pays for their own calls via their Yemot account
 
 **Benefits:**
 - ✅ User manages their own Yemot account and billing
-- ✅ No shared system-level credentials
+- ✅ No database schema changes needed (uses existing additionalData field)
 - ✅ User-level quota and budget management (handled by Yemot)
 - ✅ Secure per-user isolation
 - ✅ Users can set different Yemot accounts if needed
 
 **Security:**
-- Store API KEY encrypted in database
+- Encrypt API KEY at application level before storing in additionalData
 - Validate API KEY on first use (test API call)
 - Show masked API KEY in UI (e.g., `077***1234`)
 - Audit log for all Yemot API calls with userId
 
-**User Entity Addition:**
+**Storage Format:**
 ```typescript
-@Column({ type: 'varchar', length: 255, nullable: true })
-yemotApiKey: string;  // Encrypted Yemot API KEY
+// User.additionalData structure
+{
+  yemotApiKey: 'encrypted_api_key_string',
+  // ... other user settings
+}
 ```
 
 ### 4.3 File Storage Strategy
@@ -481,20 +544,21 @@ async executeCampaign(req: CrudRequest, body: { templateId: number }) {
 ### Phase 1: MVP (Minimum Viable Product)
 **Target:** First working version with essential features
 
-- Add `yemotApiKey` field to User entity (varchar, nullable)
+- Store yemotApiKey in User.additionalData (no schema changes)
 - User settings page to configure Yemot API KEY
 - PhoneTemplate entity with TTS text only
 - PhoneCampaign entity with summary-level tracking
 - YemotApiService with core Yemot API methods (CreateTemplate, RunCampaign, GetCampaignStatus)
 - PhoneTemplateService and PhoneCampaignService extending BaseEntityService
 - Entity configs using BaseEntityModule.register()
+- StudentAttendanceService integration: override doAction to handle 'execute-phone-campaign' action
 - phone-template.jsx - Basic CRUD for templates
-- phone-campaign.jsx - View campaign history with "Refresh Status" button
+- phone-campaign.jsx - View campaign history with "Refresh Status" action button
 - PhoneTemplateBulkButton integrated with student attendance pivot table
-- Execute campaign via doAction endpoint
+- Execute campaign via entity service doAction (e.g., /api/student_attendance/action)
 - TTS messages only (no audio files)
 - Summary-level campaign tracking (total, success, failed counts)
-- Manual status refresh (user-triggered button)
+- Manual status refresh via /action endpoint (user-triggered button)
 
 ### Phase 2: Enhanced Features
 - Audio file upload support (messageFilePath)
@@ -575,7 +639,8 @@ async executeCampaign(req: CrudRequest, body: { templateId: number }) {
 ### 10.1 Database Migrations
 - Create PhoneTemplate table
 - Create PhoneCampaign table
-- Add indexes for performance
+- Add indexes for performance (userId, status, createdAt)
+- No User table changes needed (uses existing additionalData field)
 
 ### 10.2 Configuration
 - Environment variables for Yemot API credentials
@@ -593,7 +658,7 @@ async executeCampaign(req: CrudRequest, body: { templateId: number }) {
 
 All major questions have been answered by the product owner:
 
-1. **Authentication**: ✅ Per-user API KEY stored in user settings (User.yemotApiKey field)
+1. **Authentication**: ✅ Per-user API KEY stored in user settings (User.additionalData.yemotApiKey)
 2. **Billing**: ✅ Each user pays via their own Yemot account/API KEY
 3. **Priority**: ✅ Student attendance report pivot table gets bulk button first
 4. **Content**: ✅ MVP supports TTS only, audio files in Phase 2
@@ -602,14 +667,14 @@ All major questions have been answered by the product owner:
 7. **Permissions**: ✅ Each user creates their own templates and campaigns (per-user isolation)
 8. **Compliance**: ✅ Handled by Yemot system (calling hours, opt-out, etc.)
 9. **Integration**: ✅ Not related to existing YemotCall entity (incoming calls), separate logic
-10. **Terminology**: ✅ EN: "Phone Template" / "Campaign", HE: "תבנית שיחה" / "מסע פרסום"
+10. **Terminology**: ✅ EN: "Phone Template" / "Campaign", HE: "תבנית שיחה" / "משלוח שיחות"
 
 ### Additional Implementation Details Confirmed:
 
-11. **API Endpoints**: ✅ Use standard BaseEntityModule endpoints with doAction for custom operations
-12. **Campaign Execution**: ✅ Backend extracts phone numbers from selected IDs, creates and executes campaign
-13. **Status Updates**: ✅ User-triggered "Refresh Status" button (no background polling in MVP)
-14. **Phone Number Source**: ✅ Extract from student attendance pivot table records
+11. **API Endpoints**: ✅ Use standard BaseEntityModule endpoints only (no custom routes)
+12. **Campaign Execution**: ✅ Entity service (e.g., StudentAttendanceService) extracts phone numbers and calls PhoneCampaignService.executeCampaign()
+13. **Status Updates**: ✅ User-triggered "Refresh Status" button via /action endpoint (no background polling in MVP)
+14. **Phone Number Source**: ✅ Extract from student attendance pivot table records by entity service
 
 ## 12. Dependencies and Risks
 
@@ -664,15 +729,16 @@ This HLD provides a comprehensive design for the Automated Phone Calls feature w
 
 **Key Design Principles:**
 - Per-user templates and campaigns with strong isolation
-- Standard BaseEntityModule patterns for consistency
+- Standard BaseEntityModule patterns only (no custom routes)
+- API KEY stored in User.additionalData (no schema changes)
 - TTS-only for MVP, audio files deferred
-- Backend-driven phone number extraction
+- Entity services extract phone numbers and call PhoneCampaignService
 - User-triggered status updates (simple, no background polling)
 - Each user manages their own Yemot account and billing
 
 **Next Steps:**
 1. ✅ HLD approved with all decisions finalized
 2. Create detailed implementation tickets for Phase 1
-3. Add User.yemotApiKey field migration
+3. Configure user settings UI for additionalData.yemotApiKey
 4. Set up Yemot API test environment with test API KEY
 5. Begin Phase 1 implementation
