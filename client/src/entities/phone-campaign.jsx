@@ -1,7 +1,6 @@
 import { 
   DateField,
   DateInput,
-  DateTimeInput,
   SelectInput, 
   TextField, 
   TextInput,
@@ -9,12 +8,10 @@ import {
   ChipField,
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
-import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
-import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 
 const statusChoices = [
   { id: 'pending', name: 'resources.phone_campaign.statuses.pending' },
@@ -64,46 +61,27 @@ const additionalBulkButtons = [
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
   return (
-    <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
+    <CommonDatagrid {...props} readonly additionalBulkButtons={additionalBulkButtons}>
       {children}
-      {isAdmin && <TextField source="id" />}
+      <TextField source="id" />
       {isAdmin && <TextField source="userId" />}
       <TextField source="phoneTemplateId" />
       <StatusField />
       <NumberField source="totalPhones" />
       <NumberField source="successfulCalls" />
       <NumberField source="failedCalls" />
+      <TextField source="errorMessage" />
       <DateField showDate showTime source="createdAt" />
     </CommonDatagrid>
   );
-};
-
-const Inputs = ({ isCreate, isAdmin }) => {
-  return <>
-    {!isCreate && isAdmin && <TextInput source="id" disabled />}
-    {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
-    <TextInput source="phoneTemplateId" disabled />
-    <SelectInput source="status" choices={statusChoices} disabled />
-    <TextField source="yemotCampaignId" />
-    <NumberField source="totalPhones" />
-    <NumberField source="successfulCalls" />
-    <NumberField source="failedCalls" />
-    <TextField source="errorMessage" />
-    {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
-    {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
-    {!isCreate && <DateTimeInput source="completedAt" disabled />}
-  </>;
 };
 
 const Representation = (record) => `Campaign #${record.id}`;
 
 const entity = {
   Datagrid,
-  Inputs,
   Representation,
   filters,
-  hasCreate: false,
-  hasEdit: false,
 };
 
 export default getResourceComponents(entity);
