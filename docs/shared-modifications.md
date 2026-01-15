@@ -87,8 +87,14 @@ This works but loses type safety.
 Since we cannot modify shared files in this MVP, the following workarounds have been implemented:
 
 ### 1. Service Type Constraint
-- **Workaround:** Services are still properly typed but the config exports ignore the TypeScript error
-- **Impact:** Type safety is reduced but functionality is preserved
+- **Workaround:** Services are properly typed with additional dependencies injected via constructor parameters
+- **Pattern:** `constructor(@InjectEntityRepository repo, mailSendService, private readonly additionalService)`
+- **Note:** While @Inject can be used on class properties (e.g., `@Inject() private readonly service: ServiceType`), constructor injection is preferred because:
+  1. It's consistent with NestJS recommended patterns
+  2. Dependencies are explicit in the constructor signature
+  3. It works seamlessly with BaseEntityService's super() call
+  4. The BaseEntityModule handles dependency injection automatically
+- **Impact:** TypeScript shows warnings on the config export but functionality is preserved
 - **Location:** `phone-template.config.ts`, `phone-campaign.config.ts`, `student-by-year.config.ts`
 
 ### 2. Auth Property Access
