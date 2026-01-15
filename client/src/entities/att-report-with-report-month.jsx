@@ -83,6 +83,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
 }
 
 const entity = {
+    resource: 'att_report_with_report_month',
     Datagrid,
     Inputs,
     filters,
