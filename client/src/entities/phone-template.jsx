@@ -1,57 +1,94 @@
 import { 
   BooleanField, 
   BooleanInput, 
-  DateField, 
+  DateField,
+  DateTimeInput,
   required, 
   SelectInput, 
   TextField, 
   TextInput,
-  Create,
-  Edit,
-  List,
-  Show,
-  SimpleForm,
-  Datagrid,
-  ShowButton,
-  EditButton,
-  DeleteButton,
-  SimpleShowLayout,
-  FunctionField,
+  maxLength,
+  useRecordContext,
   useNotify,
-  useRefresh,
-  Button,
 } from 'react-admin';
+import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
+import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
+import { ActionOrDialogButton } from '@shared/components/crudContainers/ActionOrDialogButton';
+import { DialogContent, DialogActions, Button } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
+import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
+import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField as MuiTextField } from '@mui/material';
 
 const filters = [
-  <TextInput source="name:$cont" label="resources.phone_template.fields.name" alwaysOn />,
-  <BooleanInput source="isActive" label="resources.phone_template.fields.isActive" />,
+  ...commonAdminFilters,
+  <TextInput source="name:$cont" alwaysOn />,
+  <BooleanInput source="isActive" />,
 ];
 
-const PhoneTemplateList = (props) => (
-  <List {...props} filters={filters} sort={{ field: 'createdAt', order: 'DESC' }}>
-    <Datagrid rowClick="show">
-      <TextField source="name" label="resources.phone_template.fields.name" />
-      <TextField source="description" label="resources.phone_template.fields.description" />
-      <BooleanField source="isActive" label="resources.phone_template.fields.isActive" />
-      <DateField source="createdAt" showTime label="resources.phone_template.fields.createdAt" />
-      <ShowButton />
-      <EditButton />
-      <DeleteButton />
-    </Datagrid>
-  </List>
-);
+const Datagrid = ({ isAdmin, children, ...props }) => {
+  return (
+    <CommonDatagrid {...props}>
+      {children}
+      {isAdmin && <TextField source="id" />}
+      {isAdmin && <TextField source="userId" />}
+      <TextField source="name" />
+      <TextField source="description" />
+      <BooleanField source="isActive" />
+      {isAdmin && <DateField showDate showTime source="createdAt" />}
+      {isAdmin && <DateField showDate showTime source="updatedAt" />}
+    </CommonDatagrid>
+  );
+};
 
-const TestCampaignButton = ({ record }) => {
-  const [open, setOpen] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
+const Inputs = ({ isCreate, isAdmin }) => {
+  return <>
+    {!isCreate && isAdmin && <TextInput source="id" disabled />}
+    {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
+    <TextInput source="name" validate={[required(), maxLength(100)]} />
+    <TextInput 
+      source="description" 
+      multiline 
+      rows={3}
+      validate={[required(), maxLength(500)]} 
+    />
+    <SelectInput 
+      source="messageType"
+      choices={[
+        { id: 'text', name: 'resources.phone_template.messageTypes.text' },
+      ]}
+      defaultValue="text"
+      disabled
+    />
+    <TextInput 
+      source="messageText"
+      multiline 
+      rows={5}
+      validate={[required()]}
+    />
+    <TextInput 
+      source="callerId"
+      helperText="resources.phone_template.help.callerId"
+    />
+    <BooleanInput 
+      source="isActive"
+      defaultValue={true}
+    />
+    {!isCreate && isAdmin && <TextField source="yemotTemplateId" />}
+    {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+    {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+  </>;
+};
+
+const TestCallDialog = ({ onClose }) => {
+  const record = useRecordContext();
   const notify = useNotify();
-  const refresh = useRefresh();
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleTest = async () => {
+    setLoading(true);
     try {
       const response = await fetch('/api/phone_template/action', {
         method: 'POST',
@@ -71,116 +108,57 @@ const TestCampaignButton = ({ record }) => {
         notify(result.error, { type: 'error' });
       } else {
         notify('resources.phone_template.notifications.test_sent', { type: 'success' });
-        setOpen(false);
-        setPhoneNumber('');
+        onClose();
       }
     } catch (error) {
       notify('resources.phone_template.notifications.test_failed', { type: 'error' });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
-      <Button
-        label="resources.phone_template.actions.test"
-        onClick={() => setOpen(true)}
-      >
-        <PhoneIcon />
-      </Button>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>resources.phone_template.dialogs.test_title</DialogTitle>
-        <DialogContent>
-          <MuiTextField
-            autoFocus
-            margin="dense"
-            label="resources.phone_template.fields.test_phone"
-            type="tel"
-            fullWidth
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            placeholder="05XXXXXXXX"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} label="ra.action.cancel" />
-          <Button onClick={handleTest} label="ra.action.send" disabled={!phoneNumber} />
-        </DialogActions>
-      </Dialog>
+      <DialogContent>
+        <TextInput
+          source="phoneNumber"
+          label="resources.phone_template.fields.test_phone"
+          type="tel"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          placeholder="05XXXXXXXX"
+          fullWidth
+          autoFocus
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>ra.action.cancel</Button>
+        <Button onClick={handleTest} disabled={!phoneNumber || loading} variant="contained">
+          ra.action.send
+        </Button>
+      </DialogActions>
     </>
   );
 };
 
-const PhoneTemplateShow = (props) => (
-  <Show {...props} actions={<TestCampaignButton />}>
-    <SimpleShowLayout>
-      <TextField source="name" label="resources.phone_template.fields.name" />
-      <TextField source="description" label="resources.phone_template.fields.description" />
-      <TextField source="messageType" label="resources.phone_template.fields.messageType" />
-      <TextField source="messageText" label="resources.phone_template.fields.messageText" />
-      <TextField source="callerId" label="resources.phone_template.fields.callerId" />
-      <BooleanField source="isActive" label="resources.phone_template.fields.isActive" />
-      <TextField source="yemotTemplateId" label="resources.phone_template.fields.yemotTemplateId" />
-      <DateField source="createdAt" showTime label="resources.phone_template.fields.createdAt" />
-      <DateField source="updatedAt" showTime label="resources.phone_template.fields.updatedAt" />
-    </SimpleShowLayout>
-  </Show>
-);
+const additionalShowActions = [
+  <ActionOrDialogButton
+    key="test"
+    label="resources.phone_template.actions.test"
+    icon={<PhoneIcon />}
+    title="resources.phone_template.dialogs.test_title"
+    dialogContent={TestCallDialog}
+  />,
+];
 
-const PhoneTemplateForm = (props) => (
-  <SimpleForm {...props}>
-    <TextInput source="name" label="resources.phone_template.fields.name" validate={[required()]} />
-    <TextInput 
-      source="description" 
-      label="resources.phone_template.fields.description" 
-      multiline 
-      rows={3}
-      validate={[required()]} 
-    />
-    <SelectInput 
-      source="messageType" 
-      label="resources.phone_template.fields.messageType"
-      choices={[
-        { id: 'text', name: 'resources.phone_template.messageTypes.text' },
-      ]}
-      defaultValue="text"
-      disabled
-    />
-    <TextInput 
-      source="messageText" 
-      label="resources.phone_template.fields.messageText"
-      multiline 
-      rows={5}
-      validate={[required()]}
-    />
-    <TextInput 
-      source="callerId" 
-      label="resources.phone_template.fields.callerId"
-      helperText="resources.phone_template.help.callerId"
-    />
-    <BooleanInput 
-      source="isActive" 
-      label="resources.phone_template.fields.isActive"
-      defaultValue={true}
-    />
-  </SimpleForm>
-);
+const Representation = CommonRepresentation;
 
-const PhoneTemplateCreate = (props) => (
-  <Create {...props}>
-    <PhoneTemplateForm />
-  </Create>
-);
-
-const PhoneTemplateEdit = (props) => (
-  <Edit {...props}>
-    <PhoneTemplateForm />
-  </Edit>
-);
-
-export default {
-  list: PhoneTemplateList,
-  show: PhoneTemplateShow,
-  create: PhoneTemplateCreate,
-  edit: PhoneTemplateEdit,
-  recordRepresentation: CommonRepresentation,
+const entity = {
+  Datagrid,
+  Inputs,
+  Representation,
+  filters,
+  additionalShowActions,
 };
+
+export default getResourceComponents(entity);

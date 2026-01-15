@@ -1,24 +1,20 @@
 import { 
-  DateField, 
+  DateField,
   DateInput,
-  FunctionField,
-  ReferenceField,
+  DateTimeInput,
   SelectInput, 
   TextField, 
   TextInput,
-  List,
-  Show,
-  Datagrid,
-  ShowButton,
-  SimpleShowLayout,
-  useNotify,
-  useRefresh,
-  Button,
   NumberField,
   ChipField,
 } from 'react-admin';
+import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
+import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
+import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
+import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 
 const statusChoices = [
   { id: 'pending', name: 'resources.phone_campaign.statuses.pending' },
@@ -29,65 +25,15 @@ const statusChoices = [
 ];
 
 const filters = [
+  ...commonAdminFilters,
   <SelectInput 
-    source="status" 
-    label="resources.phone_campaign.fields.status" 
+    source="status"
     choices={statusChoices}
   />,
-  <TextInput 
-    source="phoneTemplateId" 
-    label="resources.phone_campaign.fields.phoneTemplateId"
-  />,
-  <DateInput 
-    source="createdAt:$gte" 
-    label="resources.phone_campaign.fields.dateFrom"
-  />,
-  <DateInput 
-    source="createdAt:$lte" 
-    label="resources.phone_campaign.fields.dateTo"
-  />,
+  <TextInput source="phoneTemplateId" />,
+  <DateInput source="createdAt:$gte" label="resources.phone_campaign.fields.dateFrom" />,
+  <DateInput source="createdAt:$lte" label="resources.phone_campaign.fields.dateTo" />,
 ];
-
-const RefreshStatusButton = ({ record }) => {
-  const notify = useNotify();
-  const refresh = useRefresh();
-
-  const handleRefresh = async () => {
-    try {
-      const response = await fetch('/api/phone_campaign/action', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'refresh-status',
-          campaignId: record.id,
-        }),
-      });
-
-      const result = await response.json();
-      
-      if (result.error) {
-        notify(result.error, { type: 'error' });
-      } else {
-        notify('resources.phone_campaign.notifications.status_refreshed', { type: 'success' });
-        refresh();
-      }
-    } catch (error) {
-      notify('resources.phone_campaign.notifications.refresh_failed', { type: 'error' });
-    }
-  };
-
-  return (
-    <Button
-      label="resources.phone_campaign.actions.refresh"
-      onClick={handleRefresh}
-      disabled={!record.yemotCampaignId}
-    >
-      <RefreshIcon />
-    </Button>
-  );
-};
 
 const StatusField = ({ record }) => {
   const colorMap = {
@@ -106,102 +52,58 @@ const StatusField = ({ record }) => {
   );
 };
 
-const PhoneCampaignList = (props) => (
-  <List {...props} filters={filters} sort={{ field: 'createdAt', order: 'DESC' }}>
-    <Datagrid rowClick="show">
-      <ReferenceField 
-        source="phoneTemplateId" 
-        reference="phone_template"
-        label="resources.phone_campaign.fields.template"
-      />
-      <FunctionField 
-        label="resources.phone_campaign.fields.status"
-        render={record => <StatusField record={record} />}
-      />
-      <NumberField 
-        source="totalPhones" 
-        label="resources.phone_campaign.fields.totalPhones"
-      />
-      <NumberField 
-        source="successfulCalls" 
-        label="resources.phone_campaign.fields.successfulCalls"
-      />
-      <NumberField 
-        source="failedCalls" 
-        label="resources.phone_campaign.fields.failedCalls"
-      />
-      <DateField 
-        source="createdAt" 
-        showTime 
-        label="resources.phone_campaign.fields.createdAt"
-      />
-      <FunctionField
-        render={record => <RefreshStatusButton record={record} />}
-      />
-      <ShowButton />
-    </Datagrid>
-  </List>
-);
+const additionalBulkButtons = [
+  <BulkActionButton
+    key="refresh-status"
+    label="resources.phone_campaign.actions.refresh"
+    icon={<RefreshIcon />}
+    name="refresh-status"
+    reloadOnEnd
+  />,
+];
 
-const PhoneCampaignShow = (props) => (
-  <Show {...props}>
-    <SimpleShowLayout>
-      <ReferenceField 
-        source="phoneTemplateId" 
-        reference="phone_template"
-        label="resources.phone_campaign.fields.template"
-      />
-      <FunctionField 
-        label="resources.phone_campaign.fields.status"
-        render={record => <StatusField record={record} />}
-      />
-      <TextField 
-        source="yemotCampaignId" 
-        label="resources.phone_campaign.fields.yemotCampaignId"
-      />
-      <NumberField 
-        source="totalPhones" 
-        label="resources.phone_campaign.fields.totalPhones"
-      />
-      <NumberField 
-        source="successfulCalls" 
-        label="resources.phone_campaign.fields.successfulCalls"
-      />
-      <NumberField 
-        source="failedCalls" 
-        label="resources.phone_campaign.fields.failedCalls"
-      />
-      <FunctionField
-        label="resources.phone_campaign.fields.successRate"
-        render={record => {
-          if (!record.totalPhones) return '0%';
-          const rate = (record.successfulCalls / record.totalPhones * 100).toFixed(1);
-          return `${rate}%`;
-        }}
-      />
-      <TextField 
-        source="errorMessage" 
-        label="resources.phone_campaign.fields.errorMessage"
-      />
-      <DateField 
-        source="createdAt" 
-        showTime 
-        label="resources.phone_campaign.fields.createdAt"
-      />
-      <DateField 
-        source="completedAt" 
-        showTime 
-        label="resources.phone_campaign.fields.completedAt"
-      />
-      <FunctionField
-        render={record => <RefreshStatusButton record={record} />}
-      />
-    </SimpleShowLayout>
-  </Show>
-);
-
-export default {
-  list: PhoneCampaignList,
-  show: PhoneCampaignShow,
-  recordRepresentation: (record) => `Campaign #${record.id}`,
+const Datagrid = ({ isAdmin, children, ...props }) => {
+  return (
+    <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
+      {children}
+      {isAdmin && <TextField source="id" />}
+      {isAdmin && <TextField source="userId" />}
+      <TextField source="phoneTemplateId" />
+      <StatusField />
+      <NumberField source="totalPhones" />
+      <NumberField source="successfulCalls" />
+      <NumberField source="failedCalls" />
+      <DateField showDate showTime source="createdAt" />
+    </CommonDatagrid>
+  );
 };
+
+const Inputs = ({ isCreate, isAdmin }) => {
+  return <>
+    {!isCreate && isAdmin && <TextInput source="id" disabled />}
+    {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
+    <TextInput source="phoneTemplateId" disabled />
+    <SelectInput source="status" choices={statusChoices} disabled />
+    <TextField source="yemotCampaignId" />
+    <NumberField source="totalPhones" />
+    <NumberField source="successfulCalls" />
+    <NumberField source="failedCalls" />
+    <TextField source="errorMessage" />
+    {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+    {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+    {!isCreate && <DateTimeInput source="completedAt" disabled />}
+  </>;
+};
+
+const Representation = (record) => `Campaign #${record.id}`;
+
+const entity = {
+  Datagrid,
+  Inputs,
+  Representation,
+  filters,
+  hasCreate: false,
+  hasEdit: false,
+};
+
+export default getResourceComponents(entity);
