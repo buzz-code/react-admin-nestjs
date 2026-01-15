@@ -37,6 +37,7 @@ export default {
                 'reportCardSettings.downComment': 'הצג הערה מתחת שם תלמידה',
                 'reportCardSettings.lastGrade': 'חשב ציון אחרון',
                 'reportCardSettings.debug': 'הצג פירוט',
+                yemotApiKey: 'מפתח API של Yemot',
             }
         },
         att_report: {

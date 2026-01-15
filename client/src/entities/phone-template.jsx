@@ -53,7 +53,6 @@ const TestCallButton = ({ ...props }) => {
       label="resources.phone_template.actions.test"
       icon={<PhoneIcon />}
       title="resources.phone_template.dialogs.test_title"
-      onClick={(e) => e.stopPropagation()}
       dialogContent={({ onClose }) => (
         <SimpleForm onSubmit={values => handleTest(values, onClose)}>
           <TextInput

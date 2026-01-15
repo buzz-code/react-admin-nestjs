@@ -7,7 +7,7 @@ import { required } from 'react-admin';
 const PhoneTemplateBulkButton = ({ resource }) => {
   return (
     <BulkActionButton
-      label="Send Phone Messages"
+      label="שליחת הודעות טלפון"
       icon={<PhoneIcon />}
       name="execute-phone-campaign"
       reloadOnEnd
@@ -17,7 +17,7 @@ const PhoneTemplateBulkButton = ({ resource }) => {
         reference="phone_template" 
         validate={required()}
         filter={{ isActive: true }}
-        label="Select Phone Template"
+        label="בחר תבנית הודעה"
       />
     </BulkActionButton>
   );
