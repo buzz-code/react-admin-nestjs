@@ -48,6 +48,8 @@ import attendanceName from "src/entities/attendance-name";
 import attGradeEffect from './entities/att-grade-effect';
 import reportGroup from './entities/report-group';
 import reportGroupSession from './entities/report-group-session';
+import phoneTemplate from './entities/phone-template';
+import phoneCampaign from './entities/phone-campaign';
 import Settings from 'src/settings/Settings';
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
@@ -66,7 +68,7 @@ import paymentTrack from '@shared/components/common-entities/payment-track';
 import yemotCall from '@shared/components/common-entities/yemot-call';
 
 import { isShowUsersData, isEditPagesData, isEditPaymentTracksData, isAdmin } from "@shared/utils/permissionsUtil";
-import { isLessonSignature, isOnlyInLessonReport, isTeacherView, isTransportation } from 'src/utils/appPermissions';
+import { isLessonSignature, isOnlyInLessonReport, isTeacherView, isTransportation, isPhoneCampaign } from 'src/utils/appPermissions';
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
@@ -107,6 +109,8 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import MessageIcon from '@mui/icons-material/Message';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -179,6 +183,12 @@ const App = () => (
               <Resource name="grade_name" {...gradeName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
               <Resource name="attendance_name" {...attendanceName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
               <Resource name="att_grade_effect" {...attGradeEffect} options={{ menuGroup: 'settings' }} icon={CalculateIcon} />
+              
+              {(isPhoneCampaign(permissions) || isAdmin(permissions)) && <>
+                <Resource name="phone_template" {...phoneTemplate} options={{ menuGroup: 'settings' }} icon={MessageIcon} />
+                <Resource name="phone_campaign" {...phoneCampaign} options={{ menuGroup: 'settings' }} icon={CampaignIcon} />
+              </>}
+              
               <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
               <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
               <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />

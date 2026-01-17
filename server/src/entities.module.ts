@@ -42,10 +42,14 @@ import { StudentSpeciality } from "./db/view-entities/StudentSpeciality.entity";
 import { AttendanceName } from "./db/entities/AttendanceName.entity";
 import reportGroupConfig from "./entity-modules/report-group.config";
 import reportGroupSessionConfig from "./entity-modules/report-group-session.config";
-import transportationConfig from './entity-modules/transportation.config'; 
+import transportationConfig from './entity-modules/transportation.config';
+import phoneTemplateConfig from './entity-modules/phone-template.config';
+import phoneCampaignConfig from './entity-modules/phone-campaign.config';
+import { HttpModule } from '@nestjs/axios'; 
 
 @Module({
     imports: [
+        HttpModule,
         BaseEntityModule.register(userConfig),
         BaseEntityModule.register(attReportConfig),
         BaseEntityModule.register(attReportWithReportMonthConfig),
@@ -88,6 +92,8 @@ import transportationConfig from './entity-modules/transportation.config';
         BaseEntityModule.register({ entity: AbsCountEffectByUser }),
         BaseEntityModule.register({ entity: LessonKlassName }),
         BaseEntityModule.register(transportationConfig),
+        BaseEntityModule.register(phoneTemplateConfig),
+        BaseEntityModule.register(phoneCampaignConfig),
     ]
 })
 export class EntitiesModule { }
