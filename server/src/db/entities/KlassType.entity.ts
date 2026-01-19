@@ -82,6 +82,10 @@ export class KlassType implements IHasUserId {
   @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
   updatedAt: Date;
 
+  @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'teacherReferenceId' })
+  teacher: Teacher;
+
   @ManyToOne(() => User, (user) => user.klassTypes, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",

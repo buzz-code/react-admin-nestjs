@@ -5,6 +5,11 @@ import { KlassType } from "src/db/entities/KlassType.entity";
 function getConfig(): BaseEntityModuleOptions {
     return {
         entity: KlassType,
+        query: {
+            join: {
+                teacher: { eager: false },
+            }
+        },
         exporter: {
             getExportHeaders(): IHeader[] {
                 return [

@@ -12,6 +12,7 @@ const filters = [
     adminUserFilter,
     <NumberInput source="key" />,
     <TextInput source="name:$cont" alwaysOn />,
+    <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {

@@ -19,6 +19,7 @@ const filters = [
     <TextInput source="name:$cont" alwaysOn />,
     <CommonReferenceInputFilter source="klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
+    <CommonReferenceInputFilter source="klassType.teacherReferenceId" label="מורה אחראית (שיוך כיתה)" reference="teacher" dynamicFilter={filterByUserId} />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
