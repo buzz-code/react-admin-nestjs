@@ -70,17 +70,17 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     let transportation = null;
 
     while (!transportation) {
-      transportation = await this.gettransportByNum();
+      transportation = await this.getTransportByNum();
 
       if (!transportation) {
-        await this.sendMessage('מספר הסעה לא תקין,נסי ');
+        await this.sendMessage(' מספר הסעה לא תקין, נסי שוב');
       }
     }
 
     return transportation;
   }
 
-  private async gettransportByNum(): Promise<Transportation> {
+  private async getTransportByNum(): Promise<Transportation> {
     const num = await this.askForInput('הקישי מספר הסעה');
     const transportation = await this.dataSource.getRepository(Transportation).findOneBy({
       userId: this.user.id,
