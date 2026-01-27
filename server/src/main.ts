@@ -29,6 +29,7 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV === 'development') {
     allowedOrigins.push(new RegExp('http(s?)://localhost:[\d]*'));
+    allowedOrigins.push(new RegExp('http(s?)://127.0.0.1:[\d]*'));
   }
 
   app.enableCors({
