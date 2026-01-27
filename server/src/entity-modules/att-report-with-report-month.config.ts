@@ -1,4 +1,4 @@
-import { CrudRequest, Override } from "@dataui/crud";
+import { CrudRequest, Override, CreateManyDto } from "@dataui/crud";
 import { In, DeepPartial } from "typeorm";
 import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
 import { IHeader } from "@shared/utils/exporter/types";
@@ -71,6 +71,19 @@ function getConfig(): BaseEntityModuleOptions {
 
 
 class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMonth> extends BaseEntityService<T> {
+    @Override()
+    async createOne(req: CrudRequest<any>, dto: DeepPartial<T>): Promise<T> {
+        const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
+        await attReportService.createOne(req, dto);
+        return this.getOne(req);
+    }
+
+    @Override()
+    async createMany(req: CrudRequest<any>, dto: CreateManyDto<DeepPartial<T>>): Promise<T[]> {
+        const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
+        return attReportService.createMany(req, dto as unknown as CreateManyDto<DeepPartial<AttReport>>) as unknown as Promise<T[]>;
+    }
+
     @Override()
     async updateOne(req: CrudRequest<any>, dto: DeepPartial<T>): Promise<T> {
         const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
