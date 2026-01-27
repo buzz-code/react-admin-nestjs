@@ -8,6 +8,7 @@ import { CommonSelectArrayField } from "@shared/components/fields/CommonSelectAr
 import { semesterChoices } from "src/entities/report-month";
 import CommonReferenceArrayInput from "@shared/components/fields/CommonReferenceArrayInput";
 import { adminUserFilter } from "@shared/components/fields/PermissionFilter";
+import PhoneTemplateBulkButton from 'src/components/PhoneTemplateBulkButton';
 
 const filters = [
     adminUserFilter,
@@ -33,11 +34,18 @@ const filterDefaultValues = {
     },
 };
 
+const additionalBulkButtons = [
+    <PhoneTemplateBulkButton 
+        key='phoneCampaign'
+        resource="student_by_year"
+    />
+];
+
 const Datagrid = ({ isAdmin, children, ...props }) => {
     const { data } = useListContext();
 
     return (
-        <CommonDatagrid {...props}>
+        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
             {children}
             {isAdmin && <TextField key="id" source="id" />}
             {isAdmin && <ReferenceField key="userId" source="userId" reference="user" />}
