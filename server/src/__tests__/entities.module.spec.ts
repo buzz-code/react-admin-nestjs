@@ -28,7 +28,7 @@ jest.mock('@shared/base-entity/base-entity.module', () => {
 const MockBaseEntityModule = global.MockBaseEntityModule;
 
 // Import all configs and entities
-import userConfig from '../entity-modules/user.config';
+import userConfig from '../../shared/entities/configs/user.config';
 import attReportConfig from '../entity-modules/att-report.config';
 import gradeConfig from '../entity-modules/grade.config';
 import klassConfig from '../entity-modules/klass.config';
@@ -38,7 +38,7 @@ import lessonConfig from '../entity-modules/lesson.config';
 import studentKlassConfig from '../entity-modules/student-klass.config';
 import studentConfig from '../entity-modules/student.config';
 import teacherConfig from '../entity-modules/teacher.config';
-import textConfig from '../entity-modules/text.config';
+import textConfig from '../../shared/entities/configs/text.config';
 import { StudentBaseKlass } from '../db/view-entities/StudentBaseKlass.entity';
 import { YemotCall } from '@shared/entities/YemotCall.entity';
 import { RecievedMail } from '@shared/entities/RecievedMail.entity';
