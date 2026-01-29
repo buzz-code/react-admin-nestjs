@@ -126,7 +126,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
                         absCountEffect: absCountEffectsMap[getAbsCountEffectId(item)],
                         gradeEffect: gradeEffectsMap[getGradeEffectId(item)],
                     };
-                    item.attGradeEffect = gradeEffectsMap[getGradeEffectId(item)] ?? absCountEffectsMap[getAbsCountEffectId(item)];
+                    item.attGradeEffect = gradeEffectsMap[getGradeEffectId(item)] || absCountEffectsMap[getAbsCountEffectId(item)];
                     item.finalGrade = getDisplayGrade(item.gradeAvg, item.attGradeEffect, gradeNames);
                     item.finalAttendance = getDisplayAttendance(item.attPercents, attendanceNames);
                 });
