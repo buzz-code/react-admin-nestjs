@@ -174,7 +174,7 @@ function fetchAttGradeEffect(dataSource: DataSource, viewEntity: any, ids: strin
             },
             select: ['id', 'effect'],
         })
-        .then(arr => Object.fromEntries(arr.map(item => [item.id, item.effect])));
+        .then(arr => Object.fromEntries(arr.map(item => [item.id, Number(item.effect)])));
 }
 
 export default getConfig();
