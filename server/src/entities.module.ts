@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { BaseEntityModule } from '@shared/base-entity/base-entity.module';
-
+// TODO: move all shared configs to shared folder
 import userConfig from '@shared/entities/configs/user.config';
 import attReportConfig from './entity-modules/att-report.config';
 import gradeConfig from './entity-modules/grade.config';
