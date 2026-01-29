@@ -71,22 +71,28 @@ function getConfig(): BaseEntityModuleOptions {
 
 
 class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMonth> extends BaseEntityService<T> {
+    private getAttReportService(): BaseEntityService<AttReport> {
+        const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
+        attReportService.dataSource = this.dataSource;
+        return attReportService;
+    }
+
     @Override()
     async createOne(req: CrudRequest<any>, dto: DeepPartial<T>): Promise<T> {
-        const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
+        const attReportService = this.getAttReportService();
         await attReportService.createOne(req, dto);
         return this.getOne(req);
     }
 
     @Override()
     async createMany(req: CrudRequest<any>, dto: CreateManyDto<DeepPartial<T>>): Promise<T[]> {
-        const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
+        const attReportService = this.getAttReportService();
         return attReportService.createMany(req, dto as unknown as CreateManyDto<DeepPartial<AttReport>>) as unknown as Promise<T[]>;
     }
 
     @Override()
     async updateOne(req: CrudRequest<any>, dto: DeepPartial<T>): Promise<T> {
-        const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
+        const attReportService = this.getAttReportService();
         await attReportService.updateOne(req, dto);
         return this.getOne(req);
     }
