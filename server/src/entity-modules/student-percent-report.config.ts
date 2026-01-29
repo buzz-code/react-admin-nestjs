@@ -157,7 +157,8 @@ async function getAbsGradeEffect(values: StudentPercentReportWithDates[], dataSo
 }
 
 function getAbsCountEffectId(item: StudentPercentReportWithDates): string {
-    return `${item.userId}_${getUnknownAbsCount(item.absCount, item.approvedAbsCount)}`;
+    const unKnownAbsCount = getUnknownAbsCount(item.absCount, item.approvedAbsCount);
+    return `${item.userId}_${Math.floor(unKnownAbsCount)}`;
 }
 
 function getGradeEffectId(item: StudentPercentReportWithDates): string {
