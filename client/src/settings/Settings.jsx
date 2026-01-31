@@ -3,11 +3,12 @@ import { Card, CardContent } from '@mui/material';
 import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider, ResourceContextProvider } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { getDefaultPageSize } from '@shared/utils/settingsUtil';
-import { getLateValue, getDashboardItems, getReportStyles, getReportCardSettings } from './settingsUtil';
+import { getLateValue, getDashboardItems, getReportStyles, getReportCardSettings, getYemotApiKey } from './settingsUtil';
 import { DashboardItemsInput } from './DashboardItemsInput';
 import { ReportStylesInput } from './ReportStylesInput';
 import { GeneralSettingsInput } from './GeneralSettingsInput';
 import { ReportCardSettingsInput } from './ReportCardSettingsInput';
+import { YemotSettingsInput } from './YemotSettingsInput';
 
 const SettingsToolbar = () => (
     <Toolbar>
@@ -28,6 +29,7 @@ export default function Settings() {
         dashboardItems: getDashboardItems(identity),
         reportStyles: getReportStyles(identity),
         reportCardSettings: getReportCardSettings(identity),
+        yemotApiKey: getYemotApiKey(identity),
     };
 
     const handleSave = async (values) => {
@@ -53,6 +55,7 @@ export default function Settings() {
                         toolbar={<SettingsToolbar />}
                     >
                         <GeneralSettingsInput />
+                        <YemotSettingsInput />
                         <DashboardItemsInput />
                         <ReportStylesInput />
                         <ReportCardSettingsInput />

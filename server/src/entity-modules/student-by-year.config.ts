@@ -1,8 +1,8 @@
 import { BaseEntityService } from "@shared/base-entity/base-entity.service";
-import { BaseEntityModuleOptions, Entity } from "@shared/base-entity/interface";
+import { BaseEntityModuleOptions, Entity, InjectEntityRepository } from "@shared/base-entity/interface";
 import { ParsedRequestParams } from '@dataui/crud-request';
 import { StudentByYear } from "src/db/view-entities/StudentByYear.entity";
-import { FindOptionsWhere, In, Not, IsNull } from "typeorm";
+import { FindOptionsWhere, In, Not, IsNull, Repository } from "typeorm";
 import { IHeader } from "@shared/utils/exporter/types";
 import { AttReportWithReportMonth } from "src/db/view-entities/AttReportWithReportMonth.entity";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
@@ -12,11 +12,19 @@ import { Klass } from "src/db/entities/Klass.entity";
 import { formatPercent } from "@shared/utils/formatting/formatter.util";
 import { roundObjectProperty } from "@shared/utils/reportData.util";
 import { getAsNumberArray } from "@shared/utils/queryParam.util";
+import { Student } from "src/db/entities/Student.entity";
+import { PhoneCampaignService } from "./phone-campaign.config";
+import { CrudRequest } from "@dataui/crud";
+import { PhoneEntry } from "src/db/entities/PhoneCampaign.entity";
+import { MailSendService } from "@shared/utils/mail/mail-send.service";
+import { Injectable } from "@nestjs/common";
 
 function getConfig(): BaseEntityModuleOptions {
     return {
         entity: StudentByYear,
+        // @ts-ignore - Service with additional dependencies, see docs/shared-modifications.md
         service: StudentByYearService,
+        providers: [PhoneCampaignService],
         exporter: {
             getExportHeaders(): IHeader[] {
                 return [
@@ -37,7 +45,67 @@ interface IStudentAttendancePivot extends StudentByYear {
     absencePercentage?: string;
     totalAbsencePercentage?: string;
 }
+
+@Injectable()
 class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityService<T> {
+    constructor(
+        @InjectEntityRepository repo: Repository<T>,
+        mailSendService: MailSendService,
+        private readonly phoneCampaignService: PhoneCampaignService
+    ) {
+        super(repo, mailSendService);
+    }
+
+    async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
+        const userId = (req as any).auth?.userId;
+
+        switch (req.parsed.extra.action) {
+            case 'execute-phone-campaign': {
+                const { templateId, selectedIds, phoneNumbers: clientPhoneNumbers } = body;
+
+                if (!templateId) {
+                    return { error: 'Missing templateId' };
+                }
+
+                if (!selectedIds || selectedIds.length === 0) {
+                    return { error: 'No records selected' };
+                }
+
+                // Extract phone numbers from selected student records
+                const students = await this.dataSource
+                    .getRepository(Student)
+                    .find({
+                        where: {
+                            id: In(selectedIds),
+                            userId,
+                        },
+                        select: ['id', 'name', 'phone'],
+                    });
+
+                const phoneNumbers: PhoneEntry[] = students
+                    .filter(student => student.phone)
+                    .map(student => ({
+                        phone: student.phone,
+                        name: student.name,
+                        metadata: { studentId: student.id },
+                    }));
+
+                if (phoneNumbers.length === 0) {
+                    return { error: 'No valid phone numbers found in selected records' };
+                }
+
+                // Execute campaign via PhoneCampaignService
+                return this.phoneCampaignService.executeCampaign(
+                    userId,
+                    templateId,
+                    phoneNumbers
+                );
+            }
+        }
+
+        return super.doAction(req, body);
+    }
+
     protected async populatePivotData(pivotName: string, list: T[], extra: any, filter: ParsedRequestParams<any>['filter']) {
         const data = list as StudentByYear[];
         const studentIds = data.map(item => item.id);

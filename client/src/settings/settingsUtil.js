@@ -68,3 +68,7 @@ export function getDefaultReportCardSettings() {
         debug: true
     };
 }
+
+export function getYemotApiKey(identity) {
+    return identity?.additionalData?.yemotApiKey || '';
+}
