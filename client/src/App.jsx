@@ -10,6 +10,7 @@ import { createTheme } from "@shared/providers/themeProvider";
 import RTLStyle from "@shared/components/layout/RTLStyle";
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import roadmapFeatures from 'src/roadmapFeatures';
+import { MaintenancePage } from '@shared/components/layout/MaintenancePage';
 
 const appTheme = createTheme({
   primary: blue[700],
@@ -143,7 +144,7 @@ const App = () => (
                   <Route path="/in-lesson-report-grade/*" element={<TeacherGuard> <InLessonReport gradeMode /> </TeacherGuard>} />
                   <Route path="/percent-report-with-dates" element={<TeacherPercentReportWithDatesList />} />
                   <Route path="/student/student-attendance" element={<TeacherStudentAttendanceList />} />
-                  <Route path="/att_report_with_report_month_lead" element={<LeadTeacherAttReportList/>}/>
+                  <Route path="/att_report_with_report_month_lead" element={<LeadTeacherAttReportList />} />
                 </CustomRoutes>
               </>
             );
@@ -224,6 +225,7 @@ const App = () => (
 
               <CustomRoutes noLayout>
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/maintenance" element={<MaintenancePage />} />
               </CustomRoutes>
 
               {!isAdmin(permissions) && <CustomRoutes>

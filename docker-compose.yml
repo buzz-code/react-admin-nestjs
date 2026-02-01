@@ -39,6 +39,8 @@ services:
             ADMIN_USER: $ADMIN_USER
             SMTP_USER: $SMTP_USER
             SMTP_PASSWORD: $SMTP_PASSWORD
+            MAINTENANCE_MODE: $MAINTENANCE_MODE
+            MAINTENANCE_MESSAGE: $MAINTENANCE_MESSAGE
         depends_on:
             - mysql
         labels:
