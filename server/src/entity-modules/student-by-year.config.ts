@@ -52,9 +52,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     // add student tz and name to the headers
                 };
 
-                if (yearFilter?.value) {
-                    data.forEach(item => item.year = [yearFilter.value]);
-                }
+                // Note: year is now a single number, not an array
 
                 const whereClause: FindOptionsWhere<AttReportWithReportMonth> = {
                     userId: data[0].userId,

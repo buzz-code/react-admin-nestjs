@@ -8,17 +8,19 @@ import { Klass } from "../entities/Klass.entity";
   expression: (dataSource: DataSource) => dataSource
     .createQueryBuilder()
     .select('students.id', 'id')
-    .addSelect('students.user_id', 'user_id')
+    .addSelect('student_klasses.user_id', 'user_id')
     .addSelect('students.tz', 'tz')
     .addSelect('students.name', 'name')
     .addSelect('students.isActive', 'isActive')
-    .addSelect('GROUP_CONCAT(DISTINCT student_klasses.year)', 'year')
+    .addSelect('student_klasses.year', 'year')
     .addSelect('GROUP_CONCAT(DISTINCT student_klasses.klassReferenceId)', 'klassReferenceIds')
     .addSelect('GROUP_CONCAT(DISTINCT klasses.klassTypeReferenceId)', 'klassTypeReferenceIds')
     .from(StudentKlass, 'student_klasses')
     .leftJoin(Student, 'students', 'students.id = student_klasses.studentReferenceId')
     .leftJoin(Klass, 'klasses', 'klasses.id = student_klasses.klassReferenceId')
     .groupBy('students.id')
+    .addGroupBy('student_klasses.user_id')
+    .addGroupBy('student_klasses.year')
 })
 export class StudentByYear implements IHasUserId {
   @Column()
@@ -36,8 +38,8 @@ export class StudentByYear implements IHasUserId {
   @Column({ name: 'isActive', default: true })
   isActive: boolean;
 
-  @Column('simple-array', { nullable: true })
-  year: string[];
+  @Column("int", { name: 'year' })
+  year: number;
 
   @Column('simple-array', { nullable: true })
   klassReferenceIds: string[];
