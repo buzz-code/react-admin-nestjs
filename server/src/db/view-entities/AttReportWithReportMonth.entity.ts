@@ -10,7 +10,8 @@ import { ReportGroupSession } from "../entities/ReportGroupSession.entity";
     .select('ar.*')
     .addSelect('report_months.id', 'reportMonthReferenceId')
     .from(AttReport, 'ar')
-    .leftJoin(ReportMonth, 'report_months', 'ar.user_id = report_months.userId AND ar.report_date <= report_months.endDate AND ar.report_date >= report_months.startDate')
+    .leftJoin(ReportMonth, 'report_months',
+      'ar.user_id = report_months.userId AND ar.year = report_months.year AND ar.report_date BETWEEN report_months.startDate AND report_months.endDate')
 })
 export class AttReportWithReportMonth extends AttReport implements IHasUserId {
   @ViewColumn()
