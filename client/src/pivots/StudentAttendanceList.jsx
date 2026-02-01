@@ -17,7 +17,7 @@ const filters = [
     <CommonReferenceInputFilter source="klassReferenceIds:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
     <CommonReferenceInputFilter source="klassTypeReferenceIds:$cont" reference="klass_type" dynamicFilter={filterByUserId} alwaysOn />,
     <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
-    <CommonAutocompleteInput source="year:$cont" choices={yearChoices} alwaysOn />,
+    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter source="extra.reportMonthReferenceId" label="תקופת דיווח" reference="report_month" dynamicFilter={filterByUserId} />,
@@ -27,7 +27,7 @@ const filters = [
 ];
 
 const filterDefaultValues = {
-    'year:$cont': defaultYearFilter.year,
+    year: defaultYearFilter.year,
     extra: {
         isCheckKlassType: true,
     },

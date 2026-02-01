@@ -3,6 +3,7 @@ import { ActionOrDialogButton } from '@shared/components/crudContainers/ActionOr
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { handleActionSuccess, handleError } from '@shared/utils/notifyUtil';
 import { useIsApprovedAbsencesBulk } from 'src/utils/appPermissions';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 
 export const BulkApproveAbsences = ({ label, name }) => {
     const dataProvider = useDataProvider();
@@ -39,7 +40,7 @@ export const BulkApproveAbsences = ({ label, name }) => {
     return (
         <ActionOrDialogButton label={label} name="approvedAbsences" title="אישור חיסורים מרוכז" dialogContent={({ onClose }) => (
             <SimpleForm defaultValues={{approvedAbsences:[{absnceCount: 1}]}} onSubmit={values => handleSave(values, onClose)}>
-                <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} label="תלמידה" />
+                <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} label="תלמידה" filter={defaultYearFilter} />
                 <DateInput source="reportDate" validate={required()} label="תאריך" />
                 <NumberInput source="absnceCode" label="קוד חיסור" />
                 <TextInput source="senderName" validate={maxLength(500)} label="שולחת" />

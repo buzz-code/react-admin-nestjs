@@ -106,7 +106,7 @@ describe('StudentByYear Config', () => {
         {
           id: 1,
           userId: 100,
-          year: ['2023'],
+          year: 2023,
           name: 'Test 1',
           tz: '123',
           klassReferenceIds: ['1'],
@@ -116,7 +116,7 @@ describe('StudentByYear Config', () => {
         {
           id: 2,
           userId: 100,
-          year: ['2023'],
+          year: 2023,
           name: 'Test 2',
           tz: '456',
           klassReferenceIds: ['1'],

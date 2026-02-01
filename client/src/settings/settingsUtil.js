@@ -29,7 +29,7 @@ export function getDefaultDashboardItems() {
         {
             resource: 'student_by_year',
             icon: 'List',
-            yearFilterType: 'year:$cont',
+            yearFilterType: 'year',
             filter: {}
         }
     ];

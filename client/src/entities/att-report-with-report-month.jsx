@@ -19,7 +19,7 @@ const filters = [
     ...commonAdminFilters,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
-    <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={{ ...filterByUserId, 'year:$cont': filterByUserIdAndYear.year }} />,
+    <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={filterByUserIdAndYear} />,
     <NullableBooleanInput source="student.isActive" label="תלמידה פעילה" />,
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
     ({ permissions }) => !isTeacherView(permissions) && (<CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />),
@@ -54,7 +54,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student_by_year" optionalTarget="tz" />
+            <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
             <TextField source="studentBaseKlass.klassName" />
             <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
