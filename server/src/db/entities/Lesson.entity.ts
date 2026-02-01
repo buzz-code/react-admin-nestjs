@@ -29,6 +29,8 @@ import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
 @Index("lessons_user_id_key_idx", ["userId", "key"])
+@Index("lessons_teacher_year_idx", ["teacherReferenceId", "year"], {})
+@Index("lessons_user_year_teacher_idx", ["userId", "year", "teacherReferenceId"], {})
 @Entity("lessons")
 export class Lesson implements IHasUserId {
   @BeforeInsert()
