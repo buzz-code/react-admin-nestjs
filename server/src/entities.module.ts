@@ -14,7 +14,7 @@ import teacherConfig from './entity-modules/teacher.config';
 import textConfig from '@shared/entities/configs/text.config';
 import studentKlassReportConfig from './entity-modules/student-klass-report.config';
 import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass.entity';
-import auditLogConfig from "./entity-modules/audit-log.config";
+import { createAuditLogConfig } from '@shared/entities/configs/audit-log.config';
 import { YemotCall } from '@shared/entities/YemotCall.entity';
 import { TextByUser } from '@shared/view-entities/TextByUser.entity';
 import mailAddressConfig from '@shared/utils/mail/mail-address.config';
@@ -37,12 +37,27 @@ import teacherGradeReportStatusConfig from "./entity-modules/teacher-grade-repor
 import { GradeEffectByUser } from "src/db/view-entities/GradeEffectByUser.entity";
 import { AbsCountEffectByUser } from "src/db/view-entities/AbsCountEffectByUser.entity";
 import { LessonKlassName } from "./db/view-entities/LessonKlassName.entity";
-import importFileConfig from "./entity-modules/import-file.config";
+import importFileConfig from "@shared/entities/configs/import-file.config";
 import { StudentSpeciality } from "./db/view-entities/StudentSpeciality.entity";
 import { AttendanceName } from "./db/entities/AttendanceName.entity";
 import reportGroupConfig from "./entity-modules/report-group.config";
 import reportGroupSessionConfig from "./entity-modules/report-group-session.config";
 import transportationConfig from './entity-modules/transportation.config'; 
+import { Student } from "./db/entities/Student.entity";
+import { Teacher } from "./db/entities/Teacher.entity";
+import { registerEntityNameMap } from '@shared/entities/configs/import-file.config';
+
+registerEntityNameMap({
+    att_report: 'נוכחות',
+    grade: 'ציונים',
+    klass: 'כיתות',
+    klass_type: 'שיוך כיתות',
+    known_absence: 'חיסורים מאושרים',
+    lesson: 'שיעורים',
+    student_klass: 'שיוך תלמידות לכיתות',
+    student: 'תלמידות',
+    teacher: 'מורות',
+});
 
 @Module({
     imports: [
@@ -61,7 +76,7 @@ import transportationConfig from './entity-modules/transportation.config';
         BaseEntityModule.register(studentKlassReportConfig),
         BaseEntityModule.register({ entity: StudentBaseKlass }),
         BaseEntityModule.register({ entity: StudentSpeciality }),
-        BaseEntityModule.register(auditLogConfig),
+        BaseEntityModule.register(createAuditLogConfig({ student: Student, teacher: Teacher })),
         BaseEntityModule.register(importFileConfig),
         BaseEntityModule.register(reportGroupConfig),
         BaseEntityModule.register(reportGroupSessionConfig),
