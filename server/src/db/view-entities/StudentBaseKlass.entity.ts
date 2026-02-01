@@ -16,9 +16,9 @@ import { KlassType, KlassTypeEnum } from "../entities/KlassType.entity";
     .innerJoin(Klass, 'klasses', 'klasses.id = student_klasses.klassReferenceId')
     .innerJoin(KlassType, 'klass_types', 'klass_types.id = klasses.klassTypeReferenceId')
     .where(`klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}'`)
-    .groupBy('student_klasses.studentReferenceId')
-    .addGroupBy('student_klasses.user_id')
+    .groupBy('student_klasses.user_id')
     .addGroupBy('student_klasses.year')
+    .addGroupBy('student_klasses.studentReferenceId')
 })
 export class StudentBaseKlass implements IHasUserId {
   @Column()
