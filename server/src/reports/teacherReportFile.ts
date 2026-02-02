@@ -33,7 +33,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
     const [user, teacher, teacherReportStatus, reportMonth] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
         dataSource.getRepository(Teacher).findOneBy({ id: Number(teacherId) }),
-        dataSource.getRepository(teacherReportTable).findOneBy({ id: params.id }),
+        dataSource.getRepository(teacherReportTable).findOneBy({ id: params.id, userId: params.userId, teacherReferenceId: Number(teacherId), year: Number(year) }),
         dataSource.getRepository(ReportMonth).findOneBy({ id: Number(reportMonthId) }),
     ])
     if ((teacherReportStatus.notReportedLessons?.length ?? 0) === 0) {
@@ -41,7 +41,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
         return [];
     }
 
-    const lessonFilter: FindOptionsWhere<Lesson> = { id: In(teacherReportStatus.notReportedLessons) };
+    const lessonFilter: FindOptionsWhere<Lesson> = { id: In(teacherReportStatus.notReportedLessons), userId: params.userId };
     if (params.lessonReferenceId) {
         if (teacherReportStatus.notReportedLessons?.includes(String(params.lessonReferenceId))) {
             lessonFilter.id = params.lessonReferenceId;
@@ -61,6 +61,7 @@ const getReportData: IGetReportDataFunction = async (params: TeacherReportFilePa
         if (lesson.klassReferenceIds?.length) {
             const students = await dataSource.getRepository(StudentKlass).find({
                 where: {
+                    userId: params.userId,
                     klassReferenceId: In(lesson.klassReferenceIds),
                     year: teacherReportStatus.year,
                     studentReferenceId: Not(IsNull()),
