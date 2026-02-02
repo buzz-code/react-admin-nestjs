@@ -1,7 +1,7 @@
 import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
 import { CommonDatagrid, getPivotColumns } from "@shared/components/crudContainers/CommonList"
 import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from "@shared/components/fields/CommonReferenceInputFilter";
-import { BooleanField, ReferenceField, TextField, useListContext, TextInput, DateInput, BooleanInput, NullableBooleanInput } from "react-admin"
+import { BooleanField, ReferenceField, TextField, useListContext, TextInput, DateInput, BooleanInput, NullableBooleanInput, SelectField } from "react-admin"
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonSelectArrayField } from "@shared/components/fields/CommonSelectArrayField";
@@ -44,7 +44,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField key="tz" source="tz" />
             <TextField key="name" source="name" />
             <BooleanField key="isActive" source="isActive" />
-            <CommonSelectArrayField key="year" source="year" choices={yearChoices} />
+            <SelectField key="year" source="year" choices={yearChoices} />
             {getPivotColumns(data)}
         </CommonDatagrid>
     );
