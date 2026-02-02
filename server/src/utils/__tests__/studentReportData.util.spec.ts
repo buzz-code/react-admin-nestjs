@@ -78,20 +78,90 @@ describe('studentReportData.util', () => {
   });
 
   describe('getKnownAbsenceFilterBySprAndDates', () => {
-    it('should create correct filters for known absences', () => {
+    it('should create optimized filter when all students share same userId and year', () => {
       const ids = ['123_456_789_101112_131415_2024'];
       const startDate = new Date('2024-01-01');
       const endDate = new Date('2024-12-31');
 
       const result = getKnownAbsenceFilterBySprAndDates(ids, startDate, endDate);
 
-      expect(result).toEqual([{
+      // Should return single object with IN clause for performance
+      expect(result).toEqual({
         isApproved: true,
         userId: 131415,
-        studentReferenceId: 123,
-        reportDate: Between(startDate, endDate),
-        year: 2024
-      }]);
+        studentReferenceId: In([123]),
+        year: 2024,
+        reportDate: Between(startDate, endDate)
+      });
+    });
+
+    it('should create optimized filter for multiple students with same userId and year', () => {
+      const ids = ['123_456_789_101112_131415_2024', '456_456_789_101112_131415_2024', '789_456_789_101112_131415_2024'];
+      const startDate = new Date('2024-01-01');
+      const endDate = new Date('2024-12-31');
+
+      const result = getKnownAbsenceFilterBySprAndDates(ids, startDate, endDate);
+
+      // Should consolidate into single query with IN clause
+      expect(result).toEqual({
+        isApproved: true,
+        userId: 131415,
+        studentReferenceId: In([123, 456, 789]),
+        year: 2024,
+        reportDate: Between(startDate, endDate)
+      });
+    });
+
+    it('should create individual filters when students have different userIds', () => {
+      const ids = ['123_456_789_101112_100_2024', '456_456_789_101112_200_2024'];
+      const startDate = new Date('2024-01-01');
+      const endDate = new Date('2024-12-31');
+
+      const result = getKnownAbsenceFilterBySprAndDates(ids, startDate, endDate);
+
+      // Should return array of individual filters
+      expect(result).toEqual([
+        {
+          isApproved: true,
+          userId: 100,
+          studentReferenceId: 123,
+          year: 2024,
+          reportDate: Between(startDate, endDate)
+        },
+        {
+          isApproved: true,
+          userId: 200,
+          studentReferenceId: 456,
+          year: 2024,
+          reportDate: Between(startDate, endDate)
+        }
+      ]);
+    });
+
+    it('should create individual filters when students have different years', () => {
+      const ids = ['123_456_789_101112_131415_2024', '456_456_789_101112_131415_2025'];
+      const startDate = new Date('2024-01-01');
+      const endDate = new Date('2024-12-31');
+
+      const result = getKnownAbsenceFilterBySprAndDates(ids, startDate, endDate);
+
+      // Should return array of individual filters
+      expect(result).toEqual([
+        {
+          isApproved: true,
+          userId: 131415,
+          studentReferenceId: 123,
+          year: 2024,
+          reportDate: Between(startDate, endDate)
+        },
+        {
+          isApproved: true,
+          userId: 131415,
+          studentReferenceId: 456,
+          year: 2025,
+          reportDate: Between(startDate, endDate)
+        }
+      ]);
     });
   });
 

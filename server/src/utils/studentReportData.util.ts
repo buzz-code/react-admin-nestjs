@@ -1,4 +1,4 @@
-import { calcAvg, calcPercents, calcSum, getNumericValueOrNull, keepBetween, roundFractional } from "@shared/utils/reportData.util";
+import { calcAvg, calcPercents, calcSum, getNumericValueOrNull, getUniqueValues, keepBetween, roundFractional } from "@shared/utils/reportData.util";
 import { getReportDateFilter } from "@shared/utils/entity/filters.util";
 import { FindOptionsWhere, FindOperator, In, Not, Any } from "typeorm";
 import { KnownAbsence } from "src/db/entities/KnownAbsence.entity";
@@ -43,17 +43,35 @@ export function getReportDataFilterBySprAndDates(ids: string[], startDate: Date,
     });
 }
 
-export function getKnownAbsenceFilterBySprAndDates(ids: string[], startDate: Date, endDate: Date): FindOptionsWhere<KnownAbsence>[] {
-    return ids.map(id => {
+export function getKnownAbsenceFilterBySprAndDates(ids: string[], startDate: Date, endDate: Date): FindOptionsWhere<KnownAbsence> | FindOptionsWhere<KnownAbsence>[] {
+    const filters = ids.map(id => {
         const { studentReferenceId, userId, year } = breakSprId(id);
         return {
-            isApproved: true,
             userId: getNumericValueOrNull(userId),
             studentReferenceId: getNumericValueOrNull(studentReferenceId),
-            reportDate: getReportDateFilter(startDate, endDate),
             year: getNumericValueOrNull(year),
         };
     });
+
+    const userIds = getUniqueValues(filters, item => item.userId);
+    const studentIds = getUniqueValues(filters, item => item.studentReferenceId);
+    const years = getUniqueValues(filters, item => item.year);
+
+    if (userIds.length === 1 && years.length === 1) {
+        return {
+            isApproved: true,
+            userId: userIds[0],
+            studentReferenceId: In(studentIds),
+            year: years[0],
+            reportDate: getReportDateFilter(startDate, endDate),
+        };
+    }
+
+    return filters.map(filter => ({
+        isApproved: true,
+        reportDate: getReportDateFilter(startDate, endDate),
+        ...filter,
+    }));
 }
 
 export function getReportsFilterForReportCard(studentId: number, year: number, reportDateFilter: FindOperator<any>, globalLessonIdsStr: string, denyLessonIdStr: string, klassIds?: number[]): FindOptionsWhere<AttReportAndGrade>[] {
