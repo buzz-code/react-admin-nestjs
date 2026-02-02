@@ -29,6 +29,7 @@ import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 
 @Index("known_users_idx", ["userId"], {})
 @Index(['studentReferenceId', 'year'])
+@Index("known_absences_lookup_idx", ["userId", "year", "isApproved", "studentReferenceId"])
 @Entity("known_absences")
 export class KnownAbsence implements IHasUserId {
   @BeforeInsert()
