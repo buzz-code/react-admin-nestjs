@@ -131,7 +131,7 @@ describe('teacherReportFile', () => {
       const result = await teacherReportFileModule.getReportData(params, mockDataSource as DataSource);
 
       expect(result).toHaveLength(1);
-      expect(mockLessonRepo.findBy).toHaveBeenCalledWith({ id: 1 });
+      expect(mockLessonRepo.findBy).toHaveBeenCalledWith({ id: 1, userId: 1 });
     });
 
     it('should handle lessons without klassReferenceIds', async () => {

@@ -30,7 +30,9 @@ import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 import { ReportGroupSession } from "./ReportGroupSession.entity";
 
 @Index("grades_users_idx", ["userId"], {})
+@Index("grades_user_year_idx", ["userId", "year"], {})
 @Index("grades_user_lesson_klass_year_idx", ["userId", "lessonReferenceId", "klassReferenceId", "year"], {})
+@Index("grades_user_year_student_teacher_klass_lesson_idx", ["userId", "year", "studentReferenceId", "teacherReferenceId", "klassReferenceId", "lessonReferenceId"], {})
 @Entity("grades")
 export class Grade implements IHasUserId {
   @BeforeInsert()

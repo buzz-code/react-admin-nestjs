@@ -26,7 +26,7 @@ import { Grade } from "../entities/Grade.entity";
       sheet_name
   FROM
       att_reports
-  UNION
+  UNION ALL
   SELECT
       CONCAT('g-', id) AS id,
       'grade' as 'type',
