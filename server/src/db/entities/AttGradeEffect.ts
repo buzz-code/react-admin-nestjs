@@ -1,16 +1,15 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
   Index,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { IsOptional } from "class-validator";
 import { IsNotEmpty, IsNumber } from "@shared/utils/validation/class-validator-he";
 import { CrudValidationGroups } from "@dataui/crud";
 import { NumberType } from "@shared/utils/entity/class-transformer";
+import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 
 @Entity("att_grade_effect")
 export class AttGradeEffect implements IHasUserId {
@@ -40,9 +39,9 @@ export class AttGradeEffect implements IHasUserId {
   @Column()
   effect: number;
 
-  @CreateDateColumn({ name: "created_at", type: "timestamp" })
+  @CreatedAtColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
+  @UpdatedAtColumn()
   updatedAt: Date;
 }

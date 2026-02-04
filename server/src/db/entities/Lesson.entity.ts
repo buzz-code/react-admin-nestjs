@@ -2,7 +2,6 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
-  CreateDateColumn,
   DataSource,
   Entity,
   In,
@@ -10,7 +9,6 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Teacher } from "./Teacher.entity";
@@ -25,6 +23,7 @@ import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { cleanDateFields } from "@shared/utils/entity/deafultValues.util";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
+import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -144,10 +143,10 @@ export class Lesson implements IHasUserId {
   @Column("int", { name: "order", nullable: true })
   order: number;
 
-  @CreateDateColumn({ name: "created_at", type: "timestamp" })
+  @CreatedAtColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
+  @UpdatedAtColumn()
   updatedAt: Date;
 
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })

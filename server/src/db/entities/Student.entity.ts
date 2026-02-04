@@ -1,12 +1,10 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
@@ -14,6 +12,7 @@ import { IsOptional } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsUniqueCombination, MaxLength, IsBoolean } from "@shared/utils/validation/class-validator-he";
 import { StringType, BooleanType } from "@shared/utils/entity/class-transformer";
+import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 
 @Index("students_users_idx", ["userId"], {})
 @Index(["userId", "tz", "year"], { unique: true })
@@ -67,10 +66,10 @@ export class Student implements IHasUserId {
   @Column("boolean", { name: "is_active", default: true })
   isActive: boolean;
 
-  @CreateDateColumn({ name: "created_at", type: "timestamp" })
+  @CreatedAtColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
+  @UpdatedAtColumn()
   updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.students, {

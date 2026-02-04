@@ -2,14 +2,12 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
-  CreateDateColumn,
   DataSource,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Student } from "./Student.entity";
@@ -26,6 +24,7 @@ import { MaxCountByUserLimit } from "@shared/utils/validation/max-count-by-user-
 import { StudentByYear } from "../view-entities/StudentByYear.entity";
 import { PaymentTrack } from "@shared/entities/PaymentTrack.entity";
 import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
+import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 
 @Index("student_klasses_users_idx", ["userId"], {})
 @Index("student_klasses_user_year_idx", ["userId", "year"], {})
@@ -102,10 +101,10 @@ export class StudentKlass implements IHasUserId {
   @Column({ nullable: true })
   klassReferenceId: number;
 
-  @CreateDateColumn({ name: "created_at", type: "timestamp" })
+  @CreatedAtColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
+  @UpdatedAtColumn()
   updatedAt: Date;
 
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })

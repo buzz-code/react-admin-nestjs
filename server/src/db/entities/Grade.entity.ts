@@ -2,14 +2,12 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
-  CreateDateColumn,
   DataSource,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
@@ -28,6 +26,7 @@ import { StudentBaseKlass } from "../view-entities/StudentBaseKlass.entity";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 import { ReportGroupSession } from "./ReportGroupSession.entity";
+import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 
 @Index("grades_users_idx", ["userId"], {})
 @Index("grades_user_year_idx", ["userId", "year"], {})
@@ -151,10 +150,10 @@ export class Grade implements IHasUserId {
   @Column("varchar", { name: "comments", nullable: true, length: 500 })
   comments: string | null;
 
-  @CreateDateColumn({ name: "created_at", type: "timestamp" })
+  @CreatedAtColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
+  @UpdatedAtColumn()
   updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.grades, {

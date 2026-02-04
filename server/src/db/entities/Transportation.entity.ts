@@ -1,11 +1,9 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
 } from 'typeorm';
@@ -16,6 +14,7 @@ import { CrudValidationGroups } from '@dataui/crud';
 import { IsNotEmpty, IsUniqueCombination, MaxLength, IsNumber } from '@shared/utils/validation/class-validator-he';
 import { StringType, NumberType } from '@shared/utils/entity/class-transformer';
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 
 @Index('transportations_users_idx', ['userId'], {})
 @Index(['userId', 'key', 'year'], { unique: true })
@@ -62,10 +61,10 @@ export class Transportation implements IHasUserId {
   @Column('varchar', { name: 'description', nullable: true, length: 1000 })
   description: string | null;
 
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  @CreatedAtColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  @UpdatedAtColumn()
   updatedAt: Date;
 
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])

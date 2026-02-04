@@ -2,14 +2,12 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
-  CreateDateColumn,
   DataSource,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Klass } from "./Klass.entity";
@@ -28,6 +26,7 @@ import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.u
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 import { ReportGroupSession } from "./ReportGroupSession.entity";
+import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 
 @Index("att_users_idx", ["userId"], {})
 @Index("att_user_sheet_name_lession_klass_year_idx", ["userId", "sheetName", "lessonReferenceId", "klassReferenceId", "year"], {})
@@ -162,10 +161,10 @@ export class AttReport implements IHasUserId {
   @Column("varchar", { name: "sheet_name", nullable: true, length: 100 })
   sheetName: string | null;
 
-  @CreateDateColumn({ name: "created_at", type: "timestamp" })
+  @CreatedAtColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
+  @UpdatedAtColumn()
   updatedAt: Date;
 
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })

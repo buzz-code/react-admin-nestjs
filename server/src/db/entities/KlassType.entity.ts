@@ -2,14 +2,12 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
-  CreateDateColumn,
   DataSource,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { User } from "src/db/entities/User.entity";
@@ -19,6 +17,7 @@ import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-
 import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
 import { Teacher } from "./Teacher.entity";
 import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
+import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 
 export enum KlassTypeEnum {
   baseKlass = 'כיתת אם',
@@ -76,10 +75,10 @@ export class KlassType implements IHasUserId {
   @Column({ nullable: true })
   teacherReferenceId: number;
 
-  @CreateDateColumn({ name: "created_at", type: "timestamp" })
+  @CreatedAtColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
+  @UpdatedAtColumn()
   updatedAt: Date;
 
   @ManyToOne(() => Teacher, { createForeignKeyConstraints: false })

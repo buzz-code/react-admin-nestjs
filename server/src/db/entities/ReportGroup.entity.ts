@@ -20,6 +20,7 @@ import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { StringType, NumberType } from "@shared/utils/entity/class-transformer";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { LongTextColumn } from "@shared/utils/entity/column-types.util";
 
 @Index("report_groups_user_id_idx", ["userId"], {})
 @Index("report_groups_user_id_year_idx", ["userId", "year"], {})
@@ -49,7 +50,7 @@ export class ReportGroup implements IHasUserId {
   topic: string;
 
   @StringType
-  @Column({ type: 'longtext', nullable: true })
+  @LongTextColumn({ nullable: true })
   signatureData: string;            // ONE signature for entire group
 
   @NumberType

@@ -2,14 +2,12 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
-  CreateDateColumn,
   DataSource,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { KlassType } from "./KlassType.entity";
@@ -21,6 +19,7 @@ import { CrudValidationGroups } from "@dataui/crud";
 import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 
 @Index("klasses_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -97,10 +96,10 @@ export class Klass implements IHasUserId {
   @Index("klasses_teacher_reference_id_idx")
   teacherReferenceId: number;
 
-  @CreateDateColumn({ name: "created_at", type: "timestamp" })
+  @CreatedAtColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at", type: 'timestamp' })
+  @UpdatedAtColumn()
   updatedAt: Date;
 
   @ManyToOne(() => KlassType, { createForeignKeyConstraints: false })
