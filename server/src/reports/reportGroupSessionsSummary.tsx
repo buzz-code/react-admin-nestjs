@@ -118,13 +118,15 @@ const getReportData: IGetReportDataFunction<ReportGroupSessionsSummaryParams, Re
     const sessionRows: SessionSummaryRow[] = sessions.map(session => {
       const lessonCount = lessonCountsBySession[session.id] || gradeLessonCountsBySession[session.id] || 0;
       const reportGroup = session.reportGroup;
+      const lesson = reportGroup?.lesson;
+      const lessonName = lesson ? `${lesson.key} - ${lesson.name}` : '';
       
       return {
         date: new Date(session.sessionDate),
         topic: session.topic || reportGroup?.topic || '',
         lessonCount,
         teacherName: reportGroup?.teacher?.name || '',
-        lessonName: reportGroup?.lesson?.name || '',
+        lessonName,
         klassName: reportGroup?.klass?.name || '',
         signatureData: reportGroup?.signatureData
       };
