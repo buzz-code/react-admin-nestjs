@@ -82,7 +82,7 @@ export class StudentPercentReport implements IHasUserId {
   @JoinColumn([
     { name: 'studentReferenceId', referencedColumnName: 'id' },
     { name: 'year', referencedColumnName: 'year' },
-    { name: 'userId', referencedColumnName: 'userId' }
+    { name: 'user_id', referencedColumnName: 'userId' }
   ])
   studentBaseKlass: StudentBaseKlass;
 }
