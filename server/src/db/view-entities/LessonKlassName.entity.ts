@@ -2,7 +2,7 @@ import { Column, DataSource, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Klass } from "../entities/Klass.entity";
 import { Lesson } from "../entities/Lesson.entity";
-import { getGroupConcatExpression } from "@shared/utils/entity/column-types.util";
+import { getGroupConcatExpression, getJsonTableColumn, getJsonTableExpression } from "@shared/utils/entity/column-types.util";
 
 @ViewEntity("lesson_klass_name", {
   expression: `
@@ -10,11 +10,8 @@ import { getGroupConcatExpression } from "@shared/utils/entity/column-types.util
            lessons.user_id AS user_id,
            ${getGroupConcatExpression('klasses.name', ', ', true)} AS name
     FROM lessons
-    LEFT JOIN JSON_TABLE(
-      lessons.klass_reference_ids_json,
-      "$[*]" COLUMNS(klass_id INT PATH "$")
-    ) AS jt ON 1=1
-    LEFT JOIN klasses ON klasses.id = jt.klass_id
+    LEFT JOIN ${getJsonTableExpression('lessons.klass_reference_ids_json', 'klass_id')} AS jt ON 1=1
+    LEFT JOIN klasses ON klasses.id = jt.${getJsonTableColumn('klass_id')}
     GROUP BY lessons.id, lessons.user_id
   `
 })
