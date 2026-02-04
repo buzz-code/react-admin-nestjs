@@ -5,6 +5,7 @@ import { StudentKlass } from "src/db/entities/StudentKlass.entity";
 import { User } from "@shared/entities/User.entity";
 import { KlassType, KlassTypeEnum } from "../entities/KlassType.entity";
 import { Student } from "../entities/Student.entity";
+import { getGroupConcatExpression } from "@shared/utils/entity/column-types.util";
 
 @ViewEntity("student_klasses_report", {
   expression: (dataSource: DataSource) => dataSource
@@ -16,15 +17,15 @@ import { Student } from "../entities/Student.entity";
     .addSelect('student_klasses.user_id', 'user_id')
     .addSelect('student_klasses.year', 'year')
 
-    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', student_klasses.klassReferenceId, null) SEPARATOR ',')`, 'klassReferenceId_1')
-    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.track}', student_klasses.klassReferenceId, null) SEPARATOR ',')`, 'klassReferenceId_2')
-    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.speciality}', student_klasses.klassReferenceId, null) SEPARATOR ',')`, 'klassReferenceId_3')
-    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.other}' || klass_types.klassTypeEnum is null, student_klasses.klassReferenceId, null) SEPARATOR ',')`, 'klassReferenceId_null')
+    .addSelect(getGroupConcatExpression(`if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', student_klasses.klassReferenceId, null)`, ',', false), 'klassReferenceId_1')
+    .addSelect(getGroupConcatExpression(`if(klass_types.klassTypeEnum = '${KlassTypeEnum.track}', student_klasses.klassReferenceId, null)`, ',', false), 'klassReferenceId_2')
+    .addSelect(getGroupConcatExpression(`if(klass_types.klassTypeEnum = '${KlassTypeEnum.speciality}', student_klasses.klassReferenceId, null)`, ',', false), 'klassReferenceId_3')
+    .addSelect(getGroupConcatExpression(`if(klass_types.klassTypeEnum = '${KlassTypeEnum.other}' || klass_types.klassTypeEnum is null, student_klasses.klassReferenceId, null)`, ',', false), 'klassReferenceId_null')
 
-    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', klasses.name, null) SEPARATOR ', ')`, 'klass_name_1')
-    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.track}', klasses.name, null) SEPARATOR ', ')`, 'klass_name_2')
-    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.speciality}', klasses.name, null) SEPARATOR ', ')`, 'klass_name_3')
-    .addSelect(`GROUP_CONCAT(if(klass_types.klassTypeEnum = '${KlassTypeEnum.other}' || klass_types.klassTypeEnum is null, klasses.name, null) SEPARATOR ', ')`, 'klass_name_null')
+    .addSelect(getGroupConcatExpression(`if(klass_types.klassTypeEnum = '${KlassTypeEnum.baseKlass}', klasses.name, null)`, ', ', false), 'klass_name_1')
+    .addSelect(getGroupConcatExpression(`if(klass_types.klassTypeEnum = '${KlassTypeEnum.track}', klasses.name, null)`, ', ', false), 'klass_name_2')
+    .addSelect(getGroupConcatExpression(`if(klass_types.klassTypeEnum = '${KlassTypeEnum.speciality}', klasses.name, null)`, ', ', false), 'klass_name_3')
+    .addSelect(getGroupConcatExpression(`if(klass_types.klassTypeEnum = '${KlassTypeEnum.other}' || klass_types.klassTypeEnum is null, klasses.name, null)`, ', ', false), 'klass_name_null')
 
     .from(StudentKlass, 'student_klasses')
     .leftJoin(Klass, 'klasses', 'klasses.id = student_klasses.klassReferenceId')

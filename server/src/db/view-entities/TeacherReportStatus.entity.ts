@@ -3,6 +3,7 @@ import { IHasUserId } from "@shared/base-entity/interface";
 import { Teacher } from "../entities/Teacher.entity";
 import { ReportMonth } from "../entities/ReportMonth.entity";
 import { TeacherLessonReportStatus } from "./TeacherLessonReportStatus.entity";
+import { getGroupConcatExpression } from "@shared/utils/entity/column-types.util";
 
 @ViewEntity("teacher_report_status", {
   expression: (dataSource: DataSource) => dataSource
@@ -16,10 +17,10 @@ import { TeacherLessonReportStatus } from "./TeacherLessonReportStatus.entity";
     .addSelect('tlrs.reportMonthId', 'reportMonthId')
     .addSelect('tlrs.year', 'year')
     .addSelect('rm.name', 'reportMonthName')
-    .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 1 THEN tlrs.lessonId END ORDER BY tlrs.lessonName)', 'reportedLessons')
-    .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonId END ORDER BY tlrs.lessonName)', 'notReportedLessons')
-    .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 1 THEN tlrs.lessonName END ORDER BY tlrs.lessonName SEPARATOR ", ")', 'reportedLessonNames')
-    .addSelect('GROUP_CONCAT(DISTINCT CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonName END ORDER BY tlrs.lessonName SEPARATOR ", ")', 'notReportedLessonNames')
+    .addSelect(getGroupConcatExpression('CASE WHEN tlrs.isReported = 1 THEN tlrs.lessonId END', ',', true, 'tlrs.lessonName'), 'reportedLessons')
+    .addSelect(getGroupConcatExpression('CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonId END', ',', true, 'tlrs.lessonName'), 'notReportedLessons')
+    .addSelect(getGroupConcatExpression('CASE WHEN tlrs.isReported = 1 THEN tlrs.lessonName END', ', ', true, 'tlrs.lessonName'), 'reportedLessonNames')
+    .addSelect(getGroupConcatExpression('CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonName END', ', ', true, 'tlrs.lessonName'), 'notReportedLessonNames')
     .from(TeacherLessonReportStatus, 'tlrs')
     .leftJoin(Teacher, 'teacher', 'tlrs.teacherId = teacher.id')
     .leftJoin(ReportMonth, 'rm', 'tlrs.reportMonthId = rm.id')

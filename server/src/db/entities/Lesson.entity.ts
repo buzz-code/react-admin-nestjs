@@ -23,7 +23,7 @@ import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { cleanDateFields } from "@shared/utils/entity/deafultValues.util";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
-import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
+import { CreatedAtColumn, JsonColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 
 @Index("lessons_users_idx", ["userId"], {})
 @Index(["userId", "key", "year"], { unique: true })
@@ -94,7 +94,7 @@ export class Lesson implements IHasUserId {
   @Column("simple-array", { nullable: true })
   klassReferenceIds: number[];
 
-  @Column({
+  @JsonColumn({
     type: "json",
     name: "klass_reference_ids_json",
     nullable: true,

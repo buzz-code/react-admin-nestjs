@@ -2,12 +2,13 @@ import { Column, DataSource, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Klass } from "../entities/Klass.entity";
 import { Lesson } from "../entities/Lesson.entity";
+import { getGroupConcatExpression } from "@shared/utils/entity/column-types.util";
 
 @ViewEntity("lesson_klass_name", {
   expression: `
     SELECT lessons.id AS id,
            lessons.user_id AS user_id,
-           GROUP_CONCAT(DISTINCT klasses.name SEPARATOR ', ') AS name
+           ${getGroupConcatExpression('klasses.name', ', ', true)} AS name
     FROM lessons
     LEFT JOIN JSON_TABLE(
       lessons.klass_reference_ids_json,
