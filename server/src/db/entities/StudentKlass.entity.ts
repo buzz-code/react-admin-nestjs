@@ -32,6 +32,7 @@ import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-ty
 @Index("student_klasses_student_reference_id_year_idx", ["studentReferenceId", "year"], {})
 @Index("student_klasses_user_klass_year_idx", ["userId", "klassReferenceId", "year"], {})
 @Index("student_klasses_user_student_klass_year_idx", ["userId", "studentReferenceId", "klassReferenceId", "year"], {})
+@Index("student_klasses_user_year_student_klass_covering_idx", ["userId", "year", "studentReferenceId", "klassReferenceId"], {})
 @Index(['studentReferenceId', 'year'])
 @Entity("student_klasses")
 export class StudentKlass implements IHasUserId {
