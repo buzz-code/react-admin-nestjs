@@ -16,6 +16,7 @@ import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-ty
 
 @Index("teachers_users_idx", ["userId"], {})
 @Index(["userId", "tz", "year"], { unique: true })
+@Index("teachers_user_id_tz_idx", ["userId", "tz"])
 @Index("teachers_user_id_phone_idx", ["userId", "phone"])
 @Index("teachers_user_id_phone2_idx", ["userId", "phone2"])
 @Entity("teachers")
