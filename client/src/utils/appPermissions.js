@@ -1,4 +1,5 @@
 import { useHasPermission, hasPermissionLogic, isAdmin } from '@shared/utils/permissionsUtil';
+import student from 'src/entities/student';
 
 export const appPermissions = {
   scannerUpload: 'scannerUpload',
@@ -11,6 +12,7 @@ export const appPermissions = {
   approvedAbsencesBulk: 'approvedAbsencesBulk',
   teacherView: 'teacherView',
   transportation: 'transportation',
+  studentView: 'studentView',
 };
 
 export const isScannerUpload = (permissions) => hasPermissionLogic(permissions, appPermissions.scannerUpload);
@@ -42,4 +44,7 @@ export const useIsTeacherView = () => useHasPermission(appPermissions.teacherVie
 
 export const isTransportation = (permissions) => hasPermissionLogic(permissions, appPermissions.transportation);
 export const useIsTransportation = () => useHasPermission(appPermissions.transportation);
+
+export const isStudentView = (permissions) => hasPermissionLogic(permissions, appPermissions.studentView);
+export const useIsisStudentView = () => useHasPermission(appPermissions.studentView);
 

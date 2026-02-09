@@ -152,6 +152,9 @@ export class KnownAbsence implements IHasUserId {
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
   user: User;
 
+  @Column('int', { name: 'event_id', nullable: true })
+  eventId: number | null;
+
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'studentReferenceId' })
   student: Student;
@@ -163,4 +166,9 @@ export class KnownAbsence implements IHasUserId {
   @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
+  
+  @ManyToOne(() => Event)
+  @JoinColumn([{ name: 'event_id', referencedColumnName: 'id' }])
+  event: Event;
+
 }

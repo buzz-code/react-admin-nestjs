@@ -1,4 +1,5 @@
 import { generalResourceFieldsTranslation } from "@shared/providers/i18nProvider"
+import event from "./entities/event";
 
 export default {
     menu_groups: {
@@ -141,6 +142,8 @@ export default {
                 reason: 'סיבה',
                 comment: 'הערה',
                 isApproved: 'מאושר',
+                eventId: 'סוג אירוע', 
+                event: 'אירוע',
             }
         },
         lesson: {
@@ -206,6 +209,16 @@ export default {
                 key: 'שילוט',
                 departureTime: 'שעת יציאה',
                 description: 'תיאור נסיעה',
+            }
+        },
+        event: {
+            name: 'אירוע |||| אירועים',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                name: 'שם האירוע',
+                year: 'שנה',
+                quota: 'מכסה שנתית',
+                requiredLabels: 'שדות חובה לדיווח',
             }
         },
         text: {

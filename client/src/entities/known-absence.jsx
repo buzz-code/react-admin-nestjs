@@ -24,6 +24,7 @@ const filters = [
     <TextInput source="comment:$cont" label="הערות" />,
     <NullableBooleanInput source="isApproved" />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonReferenceInputFilter source="eventId" reference="event" dynamicFilter={filterByUserIdAndYear} />,
 ];
 
 const filterDefaultValues = {
@@ -39,6 +40,9 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
+            <ReferenceField source="eventId" reference="event" link="show"> 
+                 <TextField source="name" /> 
+            </ReferenceField>
             <DateField source="reportDate" />
             <CommonHebrewDateField source="reportDate" />
             <NumberField source="absnceCount" />
@@ -63,6 +67,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} dynamicFilter={filterByUserIdAndYear} />
         <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserIdAndYear} />
         <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} optionText={lessonKeyAndName} />
+        <CommonReferenceInput source="eventId" reference="event" dynamicFilter={filterByUserIdAndYear}/>
         <DateInput source="reportDate" validate={required()} />
         <NumberInput source="absnceCount" validate={required()} />
         <NumberInput source="absnceCode" />
@@ -77,7 +82,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 }
 
 const importer = {
-    fields: ['studentTz', 'klassId', 'lessonId', 'reportDate', 'absnceCount', 'absnceCode', 'senderName', 'reason', 'comment', 'isApproved'],
+    fields: ['studentTz', 'klassId', 'lessonId', 'eventId', 'reportDate', 'absnceCount', 'absnceCode', 'senderName', 'reason', 'comment', 'isApproved'],
 }
 
 const additionalListActions = [
