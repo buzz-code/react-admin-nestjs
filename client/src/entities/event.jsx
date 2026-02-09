@@ -40,7 +40,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="quota" />
             <SelectField source="year" choices={yearChoices} />
 
-            <TextField source="requiredLabels" label="שדות חובה" />
+            <TextField source="requiredLabels"/>
 
             {isAdmin && <DateField source="createdAt" disabled />}
             {isAdmin && <DateField source="updatedAt" disabled />}
@@ -72,7 +72,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = 'name';
 
 const importer = {
-    fields: ["name", "quota", "year"],
+    fields: ["name", "quota", "requiredLabels", "year"],
 };
 
 const entity = {

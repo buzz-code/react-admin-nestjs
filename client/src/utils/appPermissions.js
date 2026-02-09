@@ -1,5 +1,4 @@
 import { useHasPermission, hasPermissionLogic, isAdmin } from '@shared/utils/permissionsUtil';
-import student from 'src/entities/student';
 
 export const appPermissions = {
   scannerUpload: 'scannerUpload',

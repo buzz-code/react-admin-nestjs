@@ -1,5 +1,4 @@
 import { generalResourceFieldsTranslation } from "@shared/providers/i18nProvider"
-import event from "./entities/event";
 
 export default {
     menu_groups: {
@@ -216,7 +215,6 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 name: 'שם האירוע',
-                year: 'שנה',
                 quota: 'מכסה שנתית',
                 requiredLabels: 'שדות חובה לדיווח',
             }

@@ -51,10 +51,9 @@ export class Event implements IHasUserId {
 
   @IsOptional({ always: true })
   @Column({
-    type: 'json',
+    type: 'simple-array', 
     name: 'required_labels', 
     nullable: true,
-    comment: 'רשימת התוויות שיופיעו בטופס הדיווח'
   })
   requiredLabels: string[] | null;
 

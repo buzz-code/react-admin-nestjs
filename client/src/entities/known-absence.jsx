@@ -40,7 +40,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
-            <ReferenceField source="eventId" reference="event" link="show"> 
+            <ReferenceField source="eventId" reference="event"> 
                  <TextField source="name" /> 
             </ReferenceField>
             <DateField source="reportDate" />
