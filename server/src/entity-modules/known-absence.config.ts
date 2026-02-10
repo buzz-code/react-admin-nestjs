@@ -11,14 +11,14 @@ function getConfig(): BaseEntityModuleOptions {
                 student: { eager: false },
                 lesson: { eager: false },
                 klass: { eager: false },
-                event: { eager: false },
+                absenceType: { eager: false },
             }
         },
         exporter: {
             processReqForExport(req: CrudRequest, innerFunc) {
                 req.options.query.join = {
                     student: { eager: true },
-                    event: { eager: true },
+                    absenceType: { eager: true },
                 };
                 return innerFunc(req);
             },
@@ -27,7 +27,7 @@ function getConfig(): BaseEntityModuleOptions {
                     { value: 'student.name', label: 'תלמידה' },
                     { value: 'klass.name', label: 'כיתה' },
                     { value: 'lesson.name', label: 'שיעור' },
-                    { value: 'event.name', label: 'סוג אירוע' }, 
+                    { value: 'absenceType.name', label: 'סוג אירוע' }, 
                     { value: 'reportDate', label: 'תאריך דיווח' },
                     { value: 'absnceCount', label: 'מספר היעדרויות' },
                     { value: 'absnceCode', label: 'קוד היעדרות' },

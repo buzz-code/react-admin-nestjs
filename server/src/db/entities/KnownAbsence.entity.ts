@@ -22,7 +22,7 @@ import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
 import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
-import { Event } from "./Event.entity";
+import { AbsenceType } from "./AbsenceType.entity";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
@@ -40,7 +40,7 @@ export class KnownAbsence implements IHasUserId {
 
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([Student, User, Klass, KlassType, Lesson, Teacher, LessonKlassName, Event]);
+      dataSource = await getDataSource([Student, User, Klass, KlassType, Lesson, Teacher, LessonKlassName, AbsenceType]);
 
       this.studentReferenceId = await findOneAndAssignReferenceId(
         dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
@@ -51,13 +51,6 @@ export class KnownAbsence implements IHasUserId {
       this.lessonReferenceId = await findOneAndAssignReferenceId(
         dataSource, Lesson, { year: this.year, key: this.lessonId }, this.userId, this.lessonReferenceId, this.lessonId
       );
-     if (this.eventId) {
-    this.eventReferenceId = await findOneAndAssignReferenceId(
-        dataSource, Event, { id: this.eventId }, this.userId, this.eventReferenceId, this.eventId
-    );
-    } else {
-    this.eventReferenceId = null;
-    }
     } finally {
       dataSource?.destroy();
     }
@@ -150,13 +143,9 @@ export class KnownAbsence implements IHasUserId {
   @IsOptional({ always: true })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true }) 
-  @Column("int", { name: "event_id", nullable: true })
-  eventId: number | null;
+  @Column("int", { name: "absenceType_id", nullable: true })
+  absenceTypeId: number | null;
 
-  @IsOptional({ always: true })
-  @Column({ nullable: true })
-  @Index("known_absences_event_reference_id_idx")
-  eventReferenceId: number | null;
 
   @CreatedAtColumn()
   createdAt: Date;
@@ -183,7 +172,8 @@ export class KnownAbsence implements IHasUserId {
   @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
   
-  @ManyToOne(() => Event, { createForeignKeyConstraints: false })
-  @JoinColumn({ name: 'eventReferenceId' })
-  event: Event;
+  @ManyToOne(() => AbsenceType, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'absenceType_id' })
+  absenceType: AbsenceType;
+
 }

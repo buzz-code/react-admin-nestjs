@@ -38,7 +38,7 @@ import studentKlass from "src/entities/student-klass";
 import student from "src/entities/student";
 import teacher from "src/entities/teacher";
 import transportation from 'src/entities/transportation';
-import event from 'src/entities/event';
+import absenceType from 'src/entities/absenceType';
 import studentKlassesReport from "src/entities/student-klasses-report";
 import reportMonth from "src/entities/report-month";
 import teacherReportStatus from "src/entities/teacher-report-status";
@@ -164,7 +164,7 @@ const App = () => (
               </Resource>
               <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={WorkspacesIcon} />
               {(isTransportation(permissions) || isAdmin(permissions)) && <Resource name="transportation" {...transportation} options={{ menuGroup: 'data' }} icon={DirectionsBusIcon} />}
-              {(isStudentView(permissions) || isAdmin(permissions)) && <Resource name="event" {...event} options={{ menuGroup: 'data' }} icon={CelebrationIcon} />}
+              {(isStudentView(permissions) || isAdmin(permissions)) && <Resource name="absenceType" {...absenceType} options={{ menuGroup: 'data' }} icon={CelebrationIcon} />}
               <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
               <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
               <Resource name="known_absence" {...knownAbsence} options={{ menuGroup: 'data' }} icon={PlaylistRemoveIcon} />

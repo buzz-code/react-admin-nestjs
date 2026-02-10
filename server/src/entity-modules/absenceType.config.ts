@@ -1,10 +1,10 @@
 import { BaseEntityModuleOptions } from '@shared/base-entity/interface';
 import { IHeader } from '@shared/utils/exporter/types';
-import { Event } from 'src/db/entities/Event.entity';
+import { AbsenceType } from 'src/db/entities/AbsenceType.entity';
 
 function getConfig(): BaseEntityModuleOptions {
   return {
-    entity: Event,
+    entity: AbsenceType,
     exporter: {
       getExportHeaders(): IHeader[] {
         return [

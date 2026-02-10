@@ -16,11 +16,10 @@ import { StringType, NumberType } from '@shared/utils/entity/class-transformer';
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 
-
-@Index('events_users_idx', ['userId'], {})
+@Index('absenceTypes_users_idx', ['userId'], {})
 @Index(['userId', 'name', 'year'], { unique: true })
-@Entity('events') 
-export class Event implements IHasUserId {
+@Entity('absenceTypes') 
+export class AbsenceType implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
   async fillFields() {

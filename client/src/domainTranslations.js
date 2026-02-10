@@ -141,8 +141,7 @@ export default {
                 reason: 'סיבה',
                 comment: 'הערה',
                 isApproved: 'מאושר',
-                eventId: 'סוג אירוע', 
-                event: 'אירוע',
+                absenceTypeId: 'סוג אירוע', 
             }
         },
         lesson: {
@@ -210,7 +209,7 @@ export default {
                 description: 'תיאור נסיעה',
             }
         },
-        event: {
+        absenceType: {
             name: 'אירוע |||| אירועים',
             fields: {
                 ...generalResourceFieldsTranslation,
