@@ -143,7 +143,7 @@ export class KnownAbsence implements IHasUserId {
   @IsOptional({ always: true })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true }) 
-  @Column("int", { name: "absenceType_id", nullable: true })
+  @Column("int", { name: "absence_type_id", nullable: true })
   absenceTypeId: number | null;
 
 
@@ -173,7 +173,7 @@ export class KnownAbsence implements IHasUserId {
   klass: Klass;
   
   @ManyToOne(() => AbsenceType, { createForeignKeyConstraints: false })
-  @JoinColumn({ name: 'absenceType_id' })
+  @JoinColumn({ name: 'absence_type_id' })
   absenceType: AbsenceType;
 
 }
