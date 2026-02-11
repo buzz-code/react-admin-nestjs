@@ -209,7 +209,7 @@ export default {
                 description: 'תיאור נסיעה',
             }
         },
-        absenceType: {
+        absence_type: {
             name: 'אירוע |||| אירועים',
             fields: {
                 ...generalResourceFieldsTranslation,
