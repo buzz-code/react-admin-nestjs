@@ -1,4 +1,4 @@
-import { Column, DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from "typeorm";
+import { DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Student } from "../entities/Student.entity";
 import { AttReportAndGrade } from "./AttReportAndGrade.entity";
@@ -48,34 +48,34 @@ export class StudentGlobalReport implements IHasUserId {
   @PrimaryColumn()
   id: string;
 
-  @Column("int", { name: "user_id" })
+  @ViewColumn({ name: "user_id" })
   userId: number;
 
-  @Column({ nullable: true })
+  @ViewColumn()
   year: number;
 
-  @Column()
+  @ViewColumn()
   studentReferenceId: number;
 
-  @Column()
+  @ViewColumn()
   klassReferenceId: number;
 
-  @Column()
+  @ViewColumn()
   lessonReferenceId: number;
 
-  @Column()
+  @ViewColumn()
   teacherReferenceId: number;
 
-  @Column()
+  @ViewColumn()
   isBaseKlass: boolean;
 
-  @Column({ name: 'lessons_count' })
+  @ViewColumn({ name: 'lessons_count' })
   lessonsCount: number;
 
-  @Column({ name: 'abs_count' })
+  @ViewColumn({ name: 'abs_count' })
   absCount: number;
 
-  @Column({ name: 'grade_avg' })
+  @ViewColumn({ name: 'grade_avg' })
   gradeAvg: number;
 
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })

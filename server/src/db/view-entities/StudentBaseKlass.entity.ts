@@ -1,4 +1,4 @@
-import { Column, DataSource, JoinColumn, ManyToOne, ViewEntity } from "typeorm";
+import { ViewColumn, PrimaryColumn, DataSource, JoinColumn, ManyToOne, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Klass } from "src/db/entities/Klass.entity";
 import { StudentKlass } from "src/db/entities/StudentKlass.entity";
@@ -22,16 +22,17 @@ import { getGroupConcatExpression } from "@shared/utils/entity/column-types.util
     .addGroupBy('student_klasses.studentReferenceId')
 })
 export class StudentBaseKlass implements IHasUserId {
-  @Column()
+  @ViewColumn()
+  @PrimaryColumn()
   id: number;
 
-  @Column("int", { name: "user_id" })
+  @ViewColumn({ name: "user_id" })
   userId: number;
 
-  @Column({ nullable: true })
+  @ViewColumn()
   year: number;
 
-  @Column({ name: "base_klass" })
+  @ViewColumn({ name: "base_klass" })
   klassName: string;
 
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })

@@ -1,4 +1,4 @@
-import { Column, DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from "typeorm";
+import { DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from "typeorm";
 import { IHasUserId } from "@shared/base-entity/interface";
 import { Student } from "../entities/Student.entity";
 import { Teacher } from "../entities/Teacher.entity";
@@ -29,37 +29,37 @@ export class StudentPercentReport implements IHasUserId {
   @PrimaryColumn()
   id: string;
 
-  @Column("int", { name: "user_id" })
+  @ViewColumn({ name: "user_id" })
   userId: number;
 
-  @Column({ nullable: true })
+  @ViewColumn()
   year: number;
 
-  @Column()
+  @ViewColumn()
   studentReferenceId: number;
 
-  @Column()
+  @ViewColumn()
   klassReferenceId: number;
 
-  @Column()
+  @ViewColumn()
   lessonReferenceId: number;
 
-  @Column()
+  @ViewColumn()
   teacherReferenceId: number;
 
-  @Column({ name: 'lessons_count' })
+  @ViewColumn({ name: 'lessons_count' })
   lessonsCount: number;
 
-  @Column({ name: 'abs_count' })
+  @ViewColumn({ name: 'abs_count' })
   absCount: number;
 
-  @Column({ name: 'abs_percents' })
+  @ViewColumn({ name: 'abs_percents' })
   absPercents: number;
 
-  @Column({ name: 'att_percents' })
+  @ViewColumn({ name: 'att_percents' })
   attPercents: number;
 
-  @Column({ name: 'grade_avg' })
+  @ViewColumn({ name: 'grade_avg' })
   gradeAvg: number;
 
   @ManyToOne(() => Student, { createForeignKeyConstraints: false })
