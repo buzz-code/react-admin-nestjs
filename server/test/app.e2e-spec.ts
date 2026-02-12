@@ -31,6 +31,7 @@ describe('AppController (e2e)', () => {
   });
 
   it('should use SQLite in-memory database for E2E tests', () => {
+    expect(dataSource).toBeDefined();
     expect(dataSource.options.type).toBe('sqlite');
     expect((dataSource.options as any).database).toBe(':memory:');
   });
