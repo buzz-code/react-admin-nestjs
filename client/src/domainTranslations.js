@@ -141,6 +141,7 @@ export default {
                 reason: 'סיבה',
                 comment: 'הערה',
                 isApproved: 'מאושר',
+                absenceTypeId: 'סוג אירוע', 
             }
         },
         lesson: {
@@ -206,6 +207,15 @@ export default {
                 key: 'שילוט',
                 departureTime: 'שעת יציאה',
                 description: 'תיאור נסיעה',
+            }
+        },
+        absence_type: {
+            name: 'אירוע |||| אירועים',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                name: 'שם האירוע',
+                quota: 'מכסה שנתית',
+                requiredLabels: 'שדות חובה לדיווח',
             }
         },
         text: {

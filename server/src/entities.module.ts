@@ -43,6 +43,7 @@ import { AttendanceName } from "./db/entities/AttendanceName.entity";
 import reportGroupConfig from "./entity-modules/report-group.config";
 import reportGroupSessionConfig from "./entity-modules/report-group-session.config";
 import transportationConfig from './entity-modules/transportation.config'; 
+import absenceTypeConfig from "./entity-modules/absenceType.config";
 import { Student } from "./db/entities/Student.entity";
 import { Teacher } from "./db/entities/Teacher.entity";
 import { registerEntityNameMap } from '@shared/entities/configs/import-file.config';
@@ -103,6 +104,7 @@ registerEntityNameMap({
         BaseEntityModule.register({ entity: AbsCountEffectByUser }),
         BaseEntityModule.register({ entity: LessonKlassName }),
         BaseEntityModule.register(transportationConfig),
+        BaseEntityModule.register(absenceTypeConfig)
     ]
 })
 export class EntitiesModule { }

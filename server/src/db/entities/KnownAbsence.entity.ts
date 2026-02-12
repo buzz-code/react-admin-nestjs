@@ -22,6 +22,7 @@ import { Klass } from "./Klass.entity";
 import { Lesson } from "./Lesson.entity";
 import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
+import { AbsenceType } from "./AbsenceType.entity";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
@@ -39,7 +40,7 @@ export class KnownAbsence implements IHasUserId {
 
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([Student, User, Klass, KlassType, Lesson, Teacher, LessonKlassName]);
+      dataSource = await getDataSource([Student, User, Klass, KlassType, Lesson, Teacher, LessonKlassName, AbsenceType]);
 
       this.studentReferenceId = await findOneAndAssignReferenceId(
         dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
@@ -139,6 +140,13 @@ export class KnownAbsence implements IHasUserId {
   @Column({ default: true })
   isApproved: boolean;
 
+  @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true }) 
+  @Column("int", { name: "absence_type_id", nullable: true })
+  absenceTypeId: number | null;
+
+
   @CreatedAtColumn()
   createdAt: Date;
 
@@ -163,4 +171,9 @@ export class KnownAbsence implements IHasUserId {
   @ManyToOne(() => Klass, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
+  
+  @ManyToOne(() => AbsenceType, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'absence_type_id' })
+  absenceType: AbsenceType;
+
 }
