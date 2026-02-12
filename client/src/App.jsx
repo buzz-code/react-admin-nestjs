@@ -68,7 +68,7 @@ import paymentTrack from '@shared/components/common-entities/payment-track';
 import yemotCall from '@shared/components/common-entities/yemot-call';
 
 import { isShowUsersData, isEditPagesData, isEditPaymentTracksData, isAdmin } from "@shared/utils/permissionsUtil";
-import { isLessonSignature, isOnlyInLessonReport, isTeacherView, isTransportation, isStudentView } from 'src/utils/appPermissions';
+import { isLessonSignature, isOnlyInLessonReport, isTeacherView, isTransportation, isAbsenceType } from 'src/utils/appPermissions';
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
@@ -164,7 +164,7 @@ const App = () => (
               </Resource>
               <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={WorkspacesIcon} />
               {(isTransportation(permissions) || isAdmin(permissions)) && <Resource name="transportation" {...transportation} options={{ menuGroup: 'data' }} icon={DirectionsBusIcon} />}
-              {(isStudentView(permissions) || isAdmin(permissions)) && <Resource name="absence_type" {...absenceType} options={{ menuGroup: 'data' }} icon={CelebrationIcon} />}
+              {(isAbsenceType(permissions) || isAdmin(permissions)) && <Resource name="absence_type" {...absenceType} options={{ menuGroup: 'data' }} icon={CelebrationIcon} />}
               <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
               <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
               <Resource name="known_absence" {...knownAbsence} options={{ menuGroup: 'data' }} icon={PlaylistRemoveIcon} />
