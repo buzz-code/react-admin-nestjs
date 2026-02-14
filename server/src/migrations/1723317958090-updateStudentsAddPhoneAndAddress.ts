@@ -4,6 +4,7 @@ export class updateStudentsAddPhoneAndAddress1723317958090 implements MigrationI
     name = 'updateStudentsAddPhoneAndAddress1723317958090'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`students\`
             ADD \`phone\` varchar(1000) NULL
@@ -15,6 +16,7 @@ export class updateStudentsAddPhoneAndAddress1723317958090 implements MigrationI
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`students\` DROP COLUMN \`address\`
         `);

@@ -4,12 +4,14 @@ export class removeReportGroupFromImportFile1762188353979 implements MigrationIn
     name = 'removeReportGroupFromImportFile1762188353979'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`import_file\` DROP COLUMN \`reportGroupId\`
         `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`import_file\`
             ADD \`reportGroupId\` int NULL

@@ -4,6 +4,7 @@ export class addIndexesForYemotCall1695364381711 implements MigrationInterface {
     name = 'addIndexesForYemotCall1695364381711'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE INDEX \`texts_user_id_name_idx\` ON \`texts\` (\`user_id\`, \`name\`)
         `);
@@ -51,6 +52,7 @@ export class addIndexesForYemotCall1695364381711 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`grades_user_lesson_klass_year_idx\` ON \`grades\`
         `);

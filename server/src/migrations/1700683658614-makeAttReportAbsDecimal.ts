@@ -4,6 +4,7 @@ export class makeAttReportAbsDecimal1700683658614 implements MigrationInterface 
     name = 'makeAttReportAbsDecimal1700683658614'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`att_reports\` CHANGE \`abs_count\` \`abs_count\` float NOT NULL DEFAULT '0'
         `);
@@ -13,6 +14,7 @@ export class makeAttReportAbsDecimal1700683658614 implements MigrationInterface 
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`att_reports\` CHANGE \`approved_abs_count\` \`approved_abs_count\` int NOT NULL DEFAULT '0'
         `);

@@ -4,6 +4,7 @@ export class AddReportGroups1762113630653 implements MigrationInterface {
     name = 'AddReportGroups1762113630653'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE \`report_groups\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
@@ -84,6 +85,7 @@ export class AddReportGroups1762113630653 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`att_reports\` DROP FOREIGN KEY \`FK_88c1147de5df0c80cce823ebdb8\`
         `);

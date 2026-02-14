@@ -4,6 +4,7 @@ export class addUserPaymentInfo1684693416581 implements MigrationInterface {
     name = 'addUserPaymentInfo1684693416581'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`users\`
             ADD \`isPaid\` tinyint NOT NULL DEFAULT 0
@@ -15,6 +16,7 @@ export class addUserPaymentInfo1684693416581 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`users\` DROP COLUMN \`paymentMethod\`
         `);

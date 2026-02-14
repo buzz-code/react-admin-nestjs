@@ -4,6 +4,7 @@ export class addFullSuccessToImportFile1707765928446 implements MigrationInterfa
     name = 'addFullSuccessToImportFile1707765928446'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`import_file\`
             ADD \`fullSuccess\` tinyint NULL
@@ -11,6 +12,7 @@ export class addFullSuccessToImportFile1707765928446 implements MigrationInterfa
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`grades\` DROP COLUMN \`grade\`
         `);

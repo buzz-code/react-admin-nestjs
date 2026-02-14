@@ -4,6 +4,7 @@ export class addPageTable1682968919553 implements MigrationInterface {
     name = 'addPageTable1682968919553'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE \`page\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
@@ -18,6 +19,7 @@ export class addPageTable1682968919553 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP TABLE \`page\`
         `);

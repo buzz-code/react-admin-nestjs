@@ -4,6 +4,7 @@ export class AddAttendanceNameTable1748362190659 implements MigrationInterface {
     name = 'AddAttendanceNameTable1748362190659'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE \`attendance_names\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
@@ -19,6 +20,7 @@ export class AddAttendanceNameTable1748362190659 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`attendance_names_user_id_idx\` ON \`attendance_names\`
         `);

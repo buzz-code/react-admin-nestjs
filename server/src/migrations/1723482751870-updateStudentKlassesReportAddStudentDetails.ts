@@ -4,12 +4,13 @@ export class updateStudentKlassesReportAddStudentDetails1723482751870 implements
     name = 'updateStudentKlassesReportAddStudentDetails1723482751870'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
-            DELETE FROM \`meir_att_copy_ra\`.\`typeorm_metadata\`
+            DELETE FROM \`${dbName}\`.\`typeorm_metadata\`
             WHERE \`type\` = ?
                 AND \`name\` = ?
                 AND \`schema\` = ?
-        `, ["VIEW","student_klasses_report","meir_att_copy_ra"]);
+        `, ["VIEW","student_klasses_report",dbName]);
         await queryRunner.query(`
             DROP VIEW \`student_klasses_report\`
         `);
@@ -85,7 +86,7 @@ export class updateStudentKlassesReportAddStudentDetails1723482751870 implements
                 \`student_klasses\`.\`year\`
         `);
         await queryRunner.query(`
-            INSERT INTO \`meir_att_copy_ra\`.\`typeorm_metadata\`(
+            INSERT INTO \`${dbName}\`.\`typeorm_metadata\`(
                     \`database\`,
                     \`schema\`,
                     \`table\`,
@@ -94,16 +95,17 @@ export class updateStudentKlassesReportAddStudentDetails1723482751870 implements
                     \`value\`
                 )
             VALUES (DEFAULT, ?, DEFAULT, ?, ?, ?)
-        `, ["meir_att_copy_ra","VIEW","student_klasses_report","SELECT `student_klasses`.`year` AS `year`, `students`.`id` AS `id`, `students`.`tz` AS `student_tz`, `students`.`name` AS `student_name`, `student_klasses`.`user_id` AS `user_id`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'כיתת אם', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_1`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'מסלול', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_2`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'התמחות', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_3`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'אחר' || `klass_types`.`klassTypeEnum` is null, `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_null`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'כיתת אם', `klasses`.`name`, null) SEPARATOR ', ') AS `klass_name_1`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'מסלול', `klasses`.`name`, null) SEPARATOR ', ') AS `klass_name_2`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'התמחות', `klasses`.`name`, null) SEPARATOR ', ') AS `klass_name_3`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'אחר' || `klass_types`.`klassTypeEnum` is null, `klasses`.`name`, null) SEPARATOR ', ') AS `klass_name_null` FROM `student_klasses` `student_klasses` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`  LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId` GROUP BY `students`.`id`, `student_klasses`.`user_id`, `student_klasses`.`year`"]);
+        `, [dbName,"VIEW","student_klasses_report","SELECT `student_klasses`.`year` AS `year`, `students`.`id` AS `id`, `students`.`tz` AS `student_tz`, `students`.`name` AS `student_name`, `student_klasses`.`user_id` AS `user_id`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'כיתת אם', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_1`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'מסלול', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_2`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'התמחות', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_3`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'אחר' || `klass_types`.`klassTypeEnum` is null, `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_null`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'כיתת אם', `klasses`.`name`, null) SEPARATOR ', ') AS `klass_name_1`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'מסלול', `klasses`.`name`, null) SEPARATOR ', ') AS `klass_name_2`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'התמחות', `klasses`.`name`, null) SEPARATOR ', ') AS `klass_name_3`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'אחר' || `klass_types`.`klassTypeEnum` is null, `klasses`.`name`, null) SEPARATOR ', ') AS `klass_name_null` FROM `student_klasses` `student_klasses` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`  LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId` GROUP BY `students`.`id`, `student_klasses`.`user_id`, `student_klasses`.`year`"]);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
-            DELETE FROM \`meir_att_copy_ra\`.\`typeorm_metadata\`
+            DELETE FROM \`${dbName}\`.\`typeorm_metadata\`
             WHERE \`type\` = ?
                 AND \`name\` = ?
                 AND \`schema\` = ?
-        `, ["VIEW","student_klasses_report","meir_att_copy_ra"]);
+        `, ["VIEW","student_klasses_report",dbName]);
         await queryRunner.query(`
             DROP VIEW \`student_klasses_report\`
         `);
@@ -151,7 +153,7 @@ export class updateStudentKlassesReportAddStudentDetails1723482751870 implements
                 \`student_klasses\`.\`year\`
         `);
         await queryRunner.query(`
-            INSERT INTO \`meir_att_copy_ra\`.\`typeorm_metadata\`(
+            INSERT INTO \`${dbName}\`.\`typeorm_metadata\`(
                     \`database\`,
                     \`schema\`,
                     \`table\`,
@@ -160,7 +162,7 @@ export class updateStudentKlassesReportAddStudentDetails1723482751870 implements
                     \`value\`
                 )
             VALUES (DEFAULT, ?, DEFAULT, ?, ?, ?)
-        `, ["meir_att_copy_ra","VIEW","student_klasses_report","SELECT `student_klasses`.`year` AS `year`, `students`.`id` AS `id`, `students`.`tz` AS `student_tz`, `students`.`name` AS `student_name`, `student_klasses`.`user_id` AS `user_id`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'כיתת אם', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_1`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'מסלול', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_2`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'התמחות', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_3`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'אחר' || `klass_types`.`klassTypeEnum` is null, `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_null` FROM `student_klasses` `student_klasses` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`  LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId` GROUP BY `students`.`id`, `student_klasses`.`user_id`, `student_klasses`.`year`"]);
+        `, [dbName,"VIEW","student_klasses_report","SELECT `student_klasses`.`year` AS `year`, `students`.`id` AS `id`, `students`.`tz` AS `student_tz`, `students`.`name` AS `student_name`, `student_klasses`.`user_id` AS `user_id`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'כיתת אם', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_1`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'מסלול', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_2`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'התמחות', `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_3`, GROUP_CONCAT(if(`klass_types`.`klassTypeEnum` = 'אחר' || `klass_types`.`klassTypeEnum` is null, `student_klasses`.`klassReferenceId`, null) SEPARATOR ',') AS `klassReferenceId_null` FROM `student_klasses` `student_klasses` LEFT JOIN `klasses` `klasses` ON `klasses`.`id` = `student_klasses`.`klassReferenceId`  LEFT JOIN `klass_types` `klass_types` ON `klass_types`.`id` = `klasses`.`klassTypeReferenceId`  LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId` GROUP BY `students`.`id`, `student_klasses`.`user_id`, `student_klasses`.`year`"]);
     }
 
 }

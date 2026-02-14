@@ -4,6 +4,7 @@ export class addAuditLog1676319747789 implements MigrationInterface {
     name = 'addAuditLog1676319747789'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`CREATE TABLE \`audit_log\` (
                 \`id\` int NOT NULL AUTO_INCREMENT, 
                 \`userId\` int NOT NULL, 
@@ -17,6 +18,7 @@ export class addAuditLog1676319747789 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`DROP TABLE \`audit_log\``);
     }
 

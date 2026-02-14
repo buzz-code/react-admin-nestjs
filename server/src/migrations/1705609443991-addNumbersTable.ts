@@ -3,6 +3,7 @@ import { MigrationInterface, QueryRunner } from "typeorm"
 export class addNumbersTable1705609443991 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE numbers (
                 id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -22,6 +23,7 @@ export class addNumbersTable1705609443991 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP TABLE numbers;
         `)

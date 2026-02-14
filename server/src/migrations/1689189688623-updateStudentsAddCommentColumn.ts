@@ -4,6 +4,7 @@ export class updateStudentsAddCommentColumn1689189688623 implements MigrationInt
     name = 'updateStudentsAddCommentColumn1689189688623'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`students\`
             ADD \`comment\` varchar(1000) NULL
@@ -11,6 +12,7 @@ export class updateStudentsAddCommentColumn1689189688623 implements MigrationInt
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`students\` DROP COLUMN \`comment\`
         `);

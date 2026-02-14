@@ -4,6 +4,7 @@ export class addGradeNameAndAttGradeEffect1702580912725 implements MigrationInte
     name = 'addGradeNameAndAttGradeEffect1702580912725'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE \`att_grade_effect\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
@@ -32,6 +33,7 @@ export class addGradeNameAndAttGradeEffect1702580912725 implements MigrationInte
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`IDX_3969f5c06a11e499582a2ad109\` ON \`grade_names\`
         `);

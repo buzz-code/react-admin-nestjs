@@ -4,6 +4,7 @@ export class makeLessonsColumnFloat1711026137081 implements MigrationInterface {
     name = 'makeLessonsColumnFloat1711026137081'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`att_reports\` CHANGE \`how_many_lessons\` \`how_many_lessons\` float NULL
         `);
@@ -13,6 +14,7 @@ export class makeLessonsColumnFloat1711026137081 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`att_reports\` CHANGE \`how_many_lessons\` \`how_many_lessons\` int NULL
         `);

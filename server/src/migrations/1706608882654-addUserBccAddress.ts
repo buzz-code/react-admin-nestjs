@@ -4,6 +4,7 @@ export class addUserBccAddress1706608882654 implements MigrationInterface {
     name = 'addUserBccAddress1706608882654'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`users\`
             ADD \`bccAddress\` varchar(255) NULL
@@ -11,6 +12,7 @@ export class addUserBccAddress1706608882654 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`users\` DROP COLUMN \`bccAddress\`
         `);

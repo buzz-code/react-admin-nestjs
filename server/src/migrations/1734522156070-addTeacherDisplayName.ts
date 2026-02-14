@@ -4,6 +4,7 @@ export class addTeacherDisplayName1734522156070 implements MigrationInterface {
     name = 'addTeacherDisplayName1734522156070'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`teachers\`
             ADD \`displayName\` varchar(500) NULL
@@ -11,6 +12,7 @@ export class addTeacherDisplayName1734522156070 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`teachers\` DROP COLUMN \`displayName\`
         `);

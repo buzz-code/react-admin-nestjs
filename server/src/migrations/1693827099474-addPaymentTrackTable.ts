@@ -4,6 +4,7 @@ export class addPaymentTrackTable1693827099474 implements MigrationInterface {
     name = 'addPaymentTrackTable1693827099474'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE \`payment_track\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
@@ -24,6 +25,7 @@ export class addPaymentTrackTable1693827099474 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`users\` DROP COLUMN \`paymentTrackId\`
         `);

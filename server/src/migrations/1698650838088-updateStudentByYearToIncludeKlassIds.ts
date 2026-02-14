@@ -4,12 +4,13 @@ export class updateStudentByYearToIncludeKlassIds1698650838088 implements Migrat
     name = 'updateStudentByYearToIncludeKlassIds1698650838088'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
-            DELETE FROM \`meir_att_copy_ra\`.\`typeorm_metadata\`
+            DELETE FROM \`${dbName}\`.\`typeorm_metadata\`
             WHERE \`type\` = ?
                 AND \`name\` = ?
                 AND \`schema\` = ?
-        `, ["VIEW","student_by_year","meir_att_copy_ra"]);
+        `, ["VIEW","student_by_year",dbName]);
         await queryRunner.query(`
             DROP VIEW \`student_by_year\`
         `);
@@ -26,7 +27,7 @@ export class updateStudentByYearToIncludeKlassIds1698650838088 implements Migrat
             GROUP BY \`students\`.\`id\`
         `);
         await queryRunner.query(`
-            INSERT INTO \`meir_att_copy_ra\`.\`typeorm_metadata\`(
+            INSERT INTO \`${dbName}\`.\`typeorm_metadata\`(
                     \`database\`,
                     \`schema\`,
                     \`table\`,
@@ -35,16 +36,17 @@ export class updateStudentByYearToIncludeKlassIds1698650838088 implements Migrat
                     \`value\`
                 )
             VALUES (DEFAULT, ?, DEFAULT, ?, ?, ?)
-        `, ["meir_att_copy_ra","VIEW","student_by_year","SELECT `students`.`id` AS `id`, `students`.`tz` AS `tz`, `students`.`name` AS `name`, `students`.`user_id` AS `user_id`, GROUP_CONCAT(DISTINCT `student_klasses`.`year`) AS `year`, GROUP_CONCAT(DISTINCT `student_klasses`.`klassReferenceId`) AS `klassReferenceIds` FROM `student_klasses` `student_klasses` LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId` GROUP BY `students`.`id`"]);
+        `, [dbName,"VIEW","student_by_year","SELECT `students`.`id` AS `id`, `students`.`tz` AS `tz`, `students`.`name` AS `name`, `students`.`user_id` AS `user_id`, GROUP_CONCAT(DISTINCT `student_klasses`.`year`) AS `year`, GROUP_CONCAT(DISTINCT `student_klasses`.`klassReferenceId`) AS `klassReferenceIds` FROM `student_klasses` `student_klasses` LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId` GROUP BY `students`.`id`"]);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
-            DELETE FROM \`meir_att_copy_ra\`.\`typeorm_metadata\`
+            DELETE FROM \`${dbName}\`.\`typeorm_metadata\`
             WHERE \`type\` = ?
                 AND \`name\` = ?
                 AND \`schema\` = ?
-        `, ["VIEW","student_by_year","meir_att_copy_ra"]);
+        `, ["VIEW","student_by_year",dbName]);
         await queryRunner.query(`
             DROP VIEW \`student_by_year\`
         `);
@@ -60,7 +62,7 @@ export class updateStudentByYearToIncludeKlassIds1698650838088 implements Migrat
             GROUP BY \`students\`.\`id\`
         `);
         await queryRunner.query(`
-            INSERT INTO \`meir_att_copy_ra\`.\`typeorm_metadata\`(
+            INSERT INTO \`${dbName}\`.\`typeorm_metadata\`(
                     \`database\`,
                     \`schema\`,
                     \`table\`,
@@ -69,7 +71,7 @@ export class updateStudentByYearToIncludeKlassIds1698650838088 implements Migrat
                     \`value\`
                 )
             VALUES (DEFAULT, ?, DEFAULT, ?, ?, ?)
-        `, ["meir_att_copy_ra","VIEW","student_by_year","SELECT `students`.`id` AS `id`, `students`.`tz` AS `tz`, `students`.`name` AS `name`, `students`.`user_id` AS `user_id`, GROUP_CONCAT(DISTINCT `student_klasses`.`year`) AS `year` FROM `student_klasses` `student_klasses` LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId` GROUP BY `students`.`id`"]);
+        `, [dbName,"VIEW","student_by_year","SELECT `students`.`id` AS `id`, `students`.`tz` AS `tz`, `students`.`name` AS `name`, `students`.`user_id` AS `user_id`, GROUP_CONCAT(DISTINCT `student_klasses`.`year`) AS `year` FROM `student_klasses` `student_klasses` LEFT JOIN `students` `students` ON `students`.`id` = `student_klasses`.`studentReferenceId` GROUP BY `students`.`id`"]);
     }
 
 }

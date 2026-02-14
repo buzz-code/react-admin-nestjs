@@ -4,6 +4,7 @@ export class addStudentPercentReportView1686766165368 implements MigrationInterf
     name = 'addStudentPercentReportView1686766165368'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE VIEW \`student_percent_report\` AS
             SELECT id,
@@ -23,7 +24,7 @@ export class addStudentPercentReportView1686766165368 implements MigrationInterf
             FROM \`student_global_report\` \`sgr\`
         `);
         await queryRunner.query(`
-            INSERT INTO \`meir_att_copy_ra\`.\`typeorm_metadata\`(
+            INSERT INTO \`${dbName}\`.\`typeorm_metadata\`(
                     \`database\`,
                     \`schema\`,
                     \`table\`,
@@ -32,16 +33,17 @@ export class addStudentPercentReportView1686766165368 implements MigrationInterf
                     \`value\`
                 )
             VALUES (DEFAULT, ?, DEFAULT, ?, ?, ?)
-        `, ["meir_att_copy_ra","VIEW","student_percent_report","SELECT id, user_id, year, studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId, lessons_count, abs_count, COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1) * 100 AS `abs_percents`, (1 - COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1)) * 100 AS `att_percents`, grade_avg FROM `student_global_report` `sgr`"]);
+        `, [dbName,"VIEW","student_percent_report","SELECT id, user_id, year, studentReferenceId, teacherReferenceId, klassReferenceId, lessonReferenceId, lessons_count, abs_count, COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1) * 100 AS `abs_percents`, (1 - COALESCE(abs_count, 0) / GREATEST(COALESCE(lessons_count, 1), 1)) * 100 AS `att_percents`, grade_avg FROM `student_global_report` `sgr`"]);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
-            DELETE FROM \`meir_att_copy_ra\`.\`typeorm_metadata\`
+            DELETE FROM \`${dbName}\`.\`typeorm_metadata\`
             WHERE \`type\` = ?
                 AND \`name\` = ?
                 AND \`schema\` = ?
-        `, ["VIEW","student_percent_report","meir_att_copy_ra"]);
+        `, ["VIEW","student_percent_report",dbName]);
         await queryRunner.query(`
             DROP VIEW \`student_percent_report\`
         `);

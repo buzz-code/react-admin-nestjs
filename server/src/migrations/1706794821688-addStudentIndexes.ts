@@ -4,6 +4,7 @@ export class addStudentIndexes1706794821688 implements MigrationInterface {
     name = 'addStudentIndexes1706794821688'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE INDEX \`IDX_a7a9761c4d14939ffa38598ee8\` ON \`student_klasses\` (\`studentReferenceId\`, \`year\`)
         `);
@@ -16,6 +17,7 @@ export class addStudentIndexes1706794821688 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`IDX_f2e0b7295d97b24618d46079c1\` ON \`known_absences\`
         `);

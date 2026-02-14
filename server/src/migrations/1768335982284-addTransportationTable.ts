@@ -4,6 +4,7 @@ export class addTransportationTable1768335982284 implements MigrationInterface {
     name = 'addTransportationTable1768335982284'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE \`transportations\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
@@ -22,6 +23,7 @@ export class addTransportationTable1768335982284 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`transportations_users_idx\` ON \`transportations\`
         `);
