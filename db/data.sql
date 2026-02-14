@@ -5,6 +5,10 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+-- Ensure app DB user has SYSTEM_USER dynamic privilege
+GRANT SYSTEM_USER ON *.* TO 'mysql_user'@'%';
+FLUSH PRIVILEGES;
+
 -- ============================================================
 -- Table: migrations
 -- Stores migration history
