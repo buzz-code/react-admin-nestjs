@@ -40,6 +40,7 @@ import teacher from "src/entities/teacher";
 import transportation from 'src/entities/transportation';
 import absenceType from 'src/entities/absenceType';
 import studentKlassesReport from "src/entities/student-klasses-report";
+import studentEventReport from "src/entities/student-event-report";
 import reportMonth from "src/entities/report-month";
 import teacherReportStatus from "src/entities/teacher-report-status";
 import teacherGradeReportStatus from "src/entities/teacher-grade-report-status";
@@ -68,7 +69,7 @@ import paymentTrack from '@shared/components/common-entities/payment-track';
 import yemotCall from '@shared/components/common-entities/yemot-call';
 
 import { isShowUsersData, isEditPagesData, isEditPaymentTracksData, isAdmin } from "@shared/utils/permissionsUtil";
-import { isLessonSignature, isOnlyInLessonReport, isTeacherView, isTransportation, isAbsenceType } from 'src/utils/appPermissions';
+import { isLessonSignature, isOnlyInLessonReport, isTeacherView, isTransportation, isAbsenceType, isStudentView } from 'src/utils/appPermissions';
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
 import { LoginPage } from '@shared/components/layout/LoginPage';
@@ -110,6 +111,7 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import CelebrationIcon from '@mui/icons-material/Celebration';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 
 const i18nProvider = getI18nProvider(domainTranslations);
 
@@ -168,7 +170,7 @@ const App = () => (
               <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
               <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
               <Resource name="known_absence" {...knownAbsence} options={{ menuGroup: 'data' }} icon={PlaylistRemoveIcon} />
-
+              {(isStudentView(permissions) || isAdmin(permissions)) && <Resource name="student_event_report" {...studentEventReport} options={{ menuGroup: 'data' }} icon={EventNoteIcon} />}
               <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
               <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
               <Resource name="teacher_grade_report_status" {...teacherGradeReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />

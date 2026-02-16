@@ -141,7 +141,22 @@ export default {
                 reason: 'סיבה',
                 comment: 'הערה',
                 isApproved: 'מאושר',
-                absenceTypeId: 'סוג אירוע', 
+                absenceTypeId: 'סוג אירוע',
+            }
+        },
+        student_event_report: {
+            name: 'דיווח אירוע לתלמידה',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                studentReferenceId: 'תלמידה',
+                klassReferenceId: 'כיתה',
+                absenceTypeId: 'סוג אירוע',
+                reportDate: 'תאריך',
+                absnceCount: 'כמות', 
+                senderName: 'שם שולח',
+                reason: 'סיבה',
+                year: 'שנה',
+                isApproved: 'מאושר'
             }
         },
         lesson: {
@@ -213,6 +228,7 @@ export default {
             name: 'אירוע |||| אירועים',
             fields: {
                 ...generalResourceFieldsTranslation,
+                absenceTypeId: 'סוג אירוע',
                 name: 'שם האירוע',
                 quota: 'מכסה שנתית',
                 requiredLabels: 'שדות חובה לדיווח',
