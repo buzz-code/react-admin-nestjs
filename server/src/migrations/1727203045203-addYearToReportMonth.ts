@@ -42,6 +42,7 @@ export class addYearToReportMonth1727203045203 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`report_month_user_id_year_idx\` ON \`report_month\`
         `);

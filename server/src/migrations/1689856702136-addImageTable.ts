@@ -4,6 +4,7 @@ export class addImageTable1689856702136 implements MigrationInterface {
     name = 'addImageTable1689856702136'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE \`image\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
@@ -20,6 +21,7 @@ export class addImageTable1689856702136 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`IDX_35596848f8bb8f7b5ec5fcf9e0\` ON \`image\`
         `);

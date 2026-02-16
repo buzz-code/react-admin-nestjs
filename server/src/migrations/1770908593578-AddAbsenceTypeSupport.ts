@@ -4,6 +4,7 @@ export class AddAbsenceTypeSupport1770908593578 implements MigrationInterface {
     name = 'AddAbsenceTypeSupport1770908593578'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE \`absenceTypes\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
@@ -26,6 +27,7 @@ export class AddAbsenceTypeSupport1770908593578 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`known_absences\` DROP COLUMN \`absence_type_id\`
         `);

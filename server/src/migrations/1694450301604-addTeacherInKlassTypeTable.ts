@@ -4,6 +4,7 @@ export class addTeacherInKlassTypeTable1694450301604 implements MigrationInterfa
     name = 'addTeacherInKlassTypeTable1694450301604'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`klass_types\`
             ADD \`teacher_id\` varchar(10) NULL
@@ -15,6 +16,7 @@ export class addTeacherInKlassTypeTable1694450301604 implements MigrationInterfa
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`klass_types\` DROP COLUMN \`teacherReferenceId\`
         `);

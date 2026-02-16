@@ -4,6 +4,7 @@ export class addAttReportIndexes1708547027795 implements MigrationInterface {
     name = 'addAttReportIndexes1708547027795'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE INDEX \`att_user_year_lesson_reference_id_idx\` ON \`att_reports\` (\`user_id\`, \`lessonReferenceId\`, \`year\`)
         `);
@@ -19,6 +20,7 @@ export class addAttReportIndexes1708547027795 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`att_user_year_idx\` ON \`att_reports\`
         `);

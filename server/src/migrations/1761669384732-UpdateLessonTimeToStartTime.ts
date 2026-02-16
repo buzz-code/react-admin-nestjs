@@ -46,6 +46,7 @@ export class UpdateLessonTimeToStartTime1761669384732 implements MigrationInterf
     }
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await this.migrateLessonTime(queryRunner, (details: any) => {
             if (details.lessonTime && !details.lessonStartTime) {
                 details.lessonStartTime = details.lessonTime;
@@ -57,6 +58,7 @@ export class UpdateLessonTimeToStartTime1761669384732 implements MigrationInterf
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await this.migrateLessonTime(queryRunner, (details: any) => {
             if (details.lessonStartTime && !details.lessonTime) {
                 details.lessonTime = details.lessonStartTime;

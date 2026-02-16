@@ -3,6 +3,7 @@ import { MigrationInterface, QueryRunner, TableColumn } from "typeorm"
 export class rerunReferenceIdForProd1683527164577 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await createAndFillReferenceIdColumn(queryRunner, 'student_klasses', EnumJoinTypes.students);
         await createAndFillReferenceIdColumn(queryRunner, 'student_klasses', EnumJoinTypes.klasses);
         await createAndFillReferenceIdColumn(queryRunner, 'lessons', EnumJoinTypes.teachers);
@@ -20,6 +21,7 @@ export class rerunReferenceIdForProd1683527164577 implements MigrationInterface 
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await dropColumnFromTable(queryRunner, 'student_klasses', EnumJoinTypes.students);
         await dropColumnFromTable(queryRunner, 'student_klasses', EnumJoinTypes.klasses);
         await dropColumnFromTable(queryRunner, 'lessons', EnumJoinTypes.teachers);

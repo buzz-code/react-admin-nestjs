@@ -50,6 +50,7 @@ export class addKlassReferenceIdForLessons1684223659058 implements MigrationInte
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`lessons\` DROP COLUMN \`klassReferenceIds\`
         `);

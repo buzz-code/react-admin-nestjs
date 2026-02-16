@@ -4,6 +4,7 @@ export class updateHandleEmailData1679607283312 implements MigrationInterface {
     name = 'updateHandleEmailData1679607283312'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`recieved_mail\` DROP COLUMN \`subject\`
         `);
@@ -21,6 +22,7 @@ export class updateHandleEmailData1679607283312 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`recieved_mail\` DROP COLUMN \`body\`
         `);

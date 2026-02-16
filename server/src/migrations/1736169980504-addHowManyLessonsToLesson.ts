@@ -4,6 +4,7 @@ export class addHowManyLessonsToLesson1736169980504 implements MigrationInterfac
     name = 'addHowManyLessonsToLesson1736169980504'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`lessons\`
             ADD \`how_many_lessons\` float NULL
@@ -11,6 +12,7 @@ export class addHowManyLessonsToLesson1736169980504 implements MigrationInterfac
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`lessons\` DROP COLUMN \`how_many_lessons\`
         `);

@@ -4,6 +4,7 @@ export class removePathAddOrderPagesTable1683142771777 implements MigrationInter
     name = 'removePathAddOrderPagesTable1683142771777'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`page\` CHANGE \`path\` \`order\` varchar(255) NOT NULL
         `);
@@ -17,6 +18,7 @@ export class removePathAddOrderPagesTable1683142771777 implements MigrationInter
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`page\` DROP COLUMN \`order\`
         `);

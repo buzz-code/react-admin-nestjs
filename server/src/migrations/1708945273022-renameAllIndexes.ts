@@ -107,6 +107,7 @@ export class renameAllIndexes1708945273022 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`report_month_user_id_start_date_end_date_idx\` ON \`report_month\`
         `);

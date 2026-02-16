@@ -3,6 +3,7 @@ import { MigrationInterface, QueryRunner } from "typeorm"
 export class fillCurrentYearOnTables1687171083496 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             update att_reports
             set year = 5783

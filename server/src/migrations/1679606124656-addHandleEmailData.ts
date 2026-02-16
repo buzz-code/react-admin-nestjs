@@ -4,6 +4,7 @@ export class addHandleEmailData1679606124656 implements MigrationInterface {
     name = 'addHandleEmailData1679606124656'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE \`recieved_mail\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
@@ -30,6 +31,7 @@ export class addHandleEmailData1679606124656 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`import_file\` DROP COLUMN \`response\`
         `);

@@ -4,6 +4,7 @@ export class updateDateFields1682967271092 implements MigrationInterface {
     name = 'updateDateFields1682967271092'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`users\` CHANGE \`created_at\` \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
         `);
@@ -75,6 +76,7 @@ export class updateDateFields1682967271092 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.renameColumn('known_absences', 'updated_at', 'id_copy1');
       
         await queryRunner.query(`

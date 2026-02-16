@@ -4,6 +4,7 @@ export class recievedMailNullableColumns1681588431337 implements MigrationInterf
     name = 'recievedMailNullableColumns1681588431337'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`recieved_mail\` CHANGE \`subject\` \`subject\` text NULL
         `);
@@ -13,6 +14,7 @@ export class recievedMailNullableColumns1681588431337 implements MigrationInterf
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`recieved_mail\` CHANGE \`body\` \`body\` text NOT NULL
         `);

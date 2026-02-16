@@ -4,6 +4,7 @@ export class addUserSendMailFromInfo1684694518104 implements MigrationInterface 
     name = 'addUserSendMailFromInfo1684694518104'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`users\`
             ADD \`mailAddressAlias\` varchar(255) NULL
@@ -15,6 +16,7 @@ export class addUserSendMailFromInfo1684694518104 implements MigrationInterface 
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`users\` DROP COLUMN \`mailAddressTitle\`
         `);

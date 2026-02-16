@@ -4,6 +4,7 @@ export class addDisplayNameToLessonAndKlass1742452916412 implements MigrationInt
     name = 'addDisplayNameToLessonAndKlass1742452916412'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`klasses\`
             ADD \`display_name\` varchar(500) NOT NULL
@@ -15,6 +16,7 @@ export class addDisplayNameToLessonAndKlass1742452916412 implements MigrationInt
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`lessons\` DROP COLUMN \`display_name\`
         `);

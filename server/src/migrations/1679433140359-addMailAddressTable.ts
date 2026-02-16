@@ -4,6 +4,7 @@ export class addMailAddressTable1679433140359 implements MigrationInterface {
     name = 'addMailAddressTable1679433140359'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             CREATE TABLE \`mail_address\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
@@ -19,6 +20,7 @@ export class addMailAddressTable1679433140359 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`IDX_10d2242b0e45f6add0b4269cbf\` ON \`mail_address\`
         `);

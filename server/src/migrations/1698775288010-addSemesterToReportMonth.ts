@@ -4,6 +4,7 @@ export class addSemesterToReportMonth1698775288010 implements MigrationInterface
     name = 'addSemesterToReportMonth1698775288010'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`report_month\`
             ADD \`semester\` varchar(255) NOT NULL DEFAULT 'שנתי'
@@ -11,6 +12,7 @@ export class addSemesterToReportMonth1698775288010 implements MigrationInterface
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`report_month\` DROP COLUMN \`semester\`
         `);

@@ -4,6 +4,7 @@ export class adColumnsToKnownAbsences1698821603832 implements MigrationInterface
     name = 'adColumnsToKnownAbsences1698821603832'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`known_absences\`
             ADD \`klass_id\` int NULL
@@ -27,6 +28,7 @@ export class adColumnsToKnownAbsences1698821603832 implements MigrationInterface
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`known_absences\` DROP COLUMN \`isApproved\`
         `);

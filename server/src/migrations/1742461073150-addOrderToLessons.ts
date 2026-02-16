@@ -4,6 +4,7 @@ export class addOrderToLessons1742461073150 implements MigrationInterface {
     name = 'addOrderToLessons1742461073150'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`lessons\`
             ADD \`order\` int NULL
@@ -11,6 +12,7 @@ export class addOrderToLessons1742461073150 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`lessons\` DROP COLUMN \`order\`
         `);

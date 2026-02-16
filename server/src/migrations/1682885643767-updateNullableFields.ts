@@ -4,6 +4,7 @@ export class updateNullableFields1682885643767 implements MigrationInterface {
     name = 'updateNullableFields1682885643767'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP INDEX \`FK_9a2642196187f93e9fd8d20529e\` ON \`klasses\`
         `);
@@ -40,6 +41,7 @@ export class updateNullableFields1682885643767 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`known_absences\` CHANGE \`student_tz\` \`student_tz\` varchar(10) NOT NULL
         `);

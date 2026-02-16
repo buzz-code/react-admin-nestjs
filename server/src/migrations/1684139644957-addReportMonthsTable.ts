@@ -4,6 +4,7 @@ export class addReportMonthsTable1684139644957 implements MigrationInterface {
     name = 'addReportMonthsTable1684139644957'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             ALTER TABLE \`texts\` DROP FOREIGN KEY \`FK_3bd98826defee1e013ee26a4406\`
         `);
@@ -22,6 +23,7 @@ export class addReportMonthsTable1684139644957 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const dbName = queryRunner.connection.options.database;
         await queryRunner.query(`
             DROP TABLE \`report_month\`
         `);
