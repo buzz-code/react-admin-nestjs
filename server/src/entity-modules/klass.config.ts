@@ -7,6 +7,7 @@ import { IHeader } from "@shared/utils/exporter/types";
 import { Klass } from "src/db/entities/Klass.entity";
 import klassAttendanceReportGenerator from "src/reports/klassAttendanceReport";
 import { getAsDate, getAsNumberArray } from "@shared/utils/queryParam.util";
+import { fixReferences } from "@shared/utils/entity/fixReference.util";
 
 class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
     reportsDict = {
@@ -20,6 +21,21 @@ class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
             return { generator, params };
         }
         return super.getReportData(req);
+    }
+
+    async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
+        switch (req.parsed.extra.action) {
+            case 'fixReferences': {
+                const ids = getAsNumberArray(req.parsed.extra.ids);
+                if (!ids) return 'לא נבחרו רשומות';
+                const referenceFields = {
+                    klassTypeId: 'klassTypeReferenceId',
+                    teacherId: 'teacherReferenceId',
+                };
+                return fixReferences(this.dataSource.getRepository(Klass), ids, referenceFields);
+            }
+        }
+        return super.doAction(req, body);
     }
 
     private getKlassAttendanceReportParams(req: CrudRequest<any, any>) {

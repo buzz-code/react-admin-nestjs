@@ -9,6 +9,7 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { useUnique } from '@shared/utils/useUnique';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
+import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
 import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
@@ -49,7 +50,8 @@ const additionalBulkButtons = [
             label="שיעורים" 
             dynamicFilter={filterByUserIdAndYear}
         />
-    </BulkReportButton>
+    </BulkReportButton>,
+    <BulkFixReferenceButton key='fixReferences' label='תיקון שיוך' />,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
