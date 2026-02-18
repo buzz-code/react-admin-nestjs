@@ -46,6 +46,9 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
         const klassReferenceIdFilter = filter.find(item => item.field === 'klassReferenceIds');
         const klassTypeReferenceIdFilter = filter.find(item => item.field === 'klassTypeReferenceIds');
 
+        const klassReferenceIds = getAsNumberArray(extra.klassReferenceIds) || klassReferenceIdFilter?.value;
+        const klassTypeReferenceIds = getAsNumberArray(extra.klassTypeReferenceIds) || klassTypeReferenceIdFilter?.value;
+
         switch (pivotName) {
             case 'StudentAttendance': {
                 const headers = {
@@ -57,8 +60,8 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                 const whereClause: FindOptionsWhere<AttReportWithReportMonth> = {
                     userId: data[0].userId,
                     studentReferenceId: In(studentIds),
-                    klassReferenceId: klassReferenceIdFilter?.value,
-                    klass: Utils.getKlassFilter(extra.isCheckKlassType, klassTypeReferenceIdFilter?.value),
+                    klassReferenceId: Utils.getInFilter(klassReferenceIds),
+                    klass: Utils.getKlassFilter(klassTypeReferenceIds),
                     lessonReferenceId: extra?.lessonId,
                     year: yearFilter?.value,
                     reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
@@ -99,8 +102,8 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     isApproved: true,
                     userId: data[0].userId,
                     studentReferenceId: In(studentIds),
-                    klassReferenceId: klassReferenceIdFilter?.value,
-                    klass: Utils.getKlassFilter(extra.isCheckKlassType, klassTypeReferenceIdFilter?.value),
+                    klassReferenceId: Utils.getInFilter(klassReferenceIds),
+                    klass: Utils.getKlassFilter(klassTypeReferenceIds),
                     reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                     reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                 };
@@ -185,9 +188,15 @@ export const Utils = {
             return filter;
         }
     },
-    getKlassFilter(isCheckKlassType: Boolean, klassTypeReferenceId: number): FindOptionsWhere<Klass> {
-        if (isCheckKlassType && klassTypeReferenceId) {
-            return { klassTypeReferenceId };
+    getInFilter(value: any) {
+        if (value) {
+            return Array.isArray(value) ? In(value) : value;
+        }
+    },
+    getKlassFilter(klassTypeReferenceId: any): FindOptionsWhere<Klass> {
+        const filter = Utils.getInFilter(klassTypeReferenceId);
+        if (filter) {
+            return { klassTypeReferenceId: filter };
         }
     }
 };
