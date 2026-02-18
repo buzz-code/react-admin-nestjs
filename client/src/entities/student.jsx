@@ -15,6 +15,7 @@ import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 const filters = [
     ...commonAdminFilters,
     <TextInput source="tz:$cont" label="תז" />,
+    <TextInput source="phone:$cont" label="טלפון" />,
     <TextInput source="name:$cont" alwaysOn />,
     <NullableBooleanInput source="isActive" alwaysOn />,,
 ];
