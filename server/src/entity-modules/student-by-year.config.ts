@@ -10,7 +10,7 @@ import { ReportMonth, ReportMonthSemester } from "src/db/entities/ReportMonth.en
 import { KnownAbsenceWithReportMonth } from "src/db/view-entities/KnownAbsenceWithReportMonth.entity";
 import { Klass } from "src/db/entities/Klass.entity";
 import { formatPercent } from "@shared/utils/formatting/formatter.util";
-import { roundObjectProperty } from "@shared/utils/reportData.util";
+import { roundAllNumericProperties } from "@shared/utils/reportData.util";
 import { getAsNumberArray } from "@shared/utils/queryParam.util";
 
 function getConfig(): BaseEntityModuleOptions {
@@ -139,10 +139,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     student.absencePercentage = formatPercent(unApprovedAbsences / totalLessons, 2);
                     student.totalAbsencePercentage = formatPercent((student.total ?? 0) / totalLessons, 2);
 
-                    roundObjectProperty(student, 'total');
-                    roundObjectProperty(student, 'totalKnownAbsences');
-                    roundObjectProperty(student, 'unApprovedAbsences');
-                    roundObjectProperty(student, 'totalLessons');
+                    roundAllNumericProperties(student);
                 });
 
                 headers['total'] = {
