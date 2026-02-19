@@ -221,18 +221,18 @@ describe('StudentByYear Config', () => {
     });
 
     describe('getKlassFilter', () => {
-      it('should return filter when both conditions are true', () => {
-        const result = Utils.getKlassFilter(true, 1);
+      it('should return filter when klassTypeReferenceId is provided', () => {
+        const result = Utils.getKlassFilter(1);
         expect(result).toEqual({ klassTypeReferenceId: 1 });
       });
 
-      it('should return undefined when isCheckKlassType is false', () => {
-        const result = Utils.getKlassFilter(false, 1);
+      it('should return undefined when klassTypeReferenceId is false', () => {
+        const result = Utils.getKlassFilter(false);
         expect(result).toBeUndefined();
       });
 
       it('should return undefined when klassTypeReferenceId is not provided', () => {
-        const result = Utils.getKlassFilter(true, null);
+        const result = Utils.getKlassFilter(null);
         expect(result).toBeUndefined();
       });
     });
