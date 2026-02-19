@@ -19,11 +19,11 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 
 import BaseLayout from "@shared/components/layout/Layout";
 import BaseDashboard from '@shared/components/views/Dashboard';
-import { isInLessonReport, isScannerUpload, isOnlyInLessonReport, isTeacherView } from './utils/appPermissions';
+import { isInLessonReport, isScannerUpload, isOnlyInLessonReport, isTeacherView, isStudentView } from './utils/appPermissions';
 import { useDashboardItems } from './settings/settingsUtil';
 
-const isStandardView = (permissions) => !isOnlyInLessonReport(permissions) && !isTeacherView(permissions);
-const shouldShowLessonReports = (permissions) => isInLessonReport(permissions) || isTeacherView(permissions);
+const isStandardView = (permissions) => !isOnlyInLessonReport(permissions) && !isTeacherView(permissions) && !isStudentView(permissions);
+const shouldShowLessonReports = (permissions) => (isInLessonReport(permissions) || isTeacherView(permissions)) && !isStudentView(permissions);
 
 const customMenuItems = [
     // static items: render only when NOT restricted to lesson-report-only
@@ -36,18 +36,18 @@ const customMenuItems = [
     // lesson report links: show when user has lesson-report permission OR when they're in-only mode
     ({ permissions }) => (shouldShowLessonReports(permissions)) && <MenuItemLink key="in-lesson-report-att" to="/in-lesson-report-att" primaryText="טופס נוכחות" leftIcon={<EventAvailableIcon />} />,
     ({ permissions }) => (shouldShowLessonReports(permissions)) && <MenuItemLink key="in-lesson-report-grade" to="/in-lesson-report-grade" primaryText="טופס ציונים" leftIcon={<EditCalendarIcon />} />,
-    ({ permissions }) => isStandardView(permissions) && <MenuItemLink key="roadmap" to="/roadmap" primaryText="פיתוחים עתידיים" leftIcon={<MapIcon />} />,
-    ({ permissions }) => isStandardView(permissions) && <MenuItemLink key="michlol-file-helper" to="/michlol-file-helper" primaryText="עדכון קבצי מכלול" leftIcon={<ContentPasteSearchIcon />} />,
-    ({ permissions }) => isStandardView(permissions) && <MenuItemLink key="settings" to="/settings" primaryText="הגדרות משתמש" leftIcon={<SettingsIcon />} />,
+    ({ permissions }) => (isStandardView(permissions) && (!isStudentView(permissions))) && <MenuItemLink key="roadmap" to="/roadmap" primaryText="פיתוחים עתידיים" leftIcon={<MapIcon />} />,
+    ({ permissions }) => (isStandardView(permissions) && (!isStudentView(permissions))) && <MenuItemLink key="michlol-file-helper" to="/michlol-file-helper" primaryText="עדכון קבצי מכלול" leftIcon={<ContentPasteSearchIcon />} />,
+    ({ permissions }) => (isStandardView(permissions) && (!isStudentView(permissions))) && <MenuItemLink key="settings" to="/settings" primaryText="הגדרות משתמש" leftIcon={<SettingsIcon />} />,
 ];
 
 const menuGroups = [
-    ({ permissions }) => (isStandardView(permissions)) && ({
+    ({ permissions }) => ((isStandardView(permissions)) && (!isStudentView(permissions))) && ({
         name: 'data', icon: <DatasetIcon />, routes: [
             <MenuItemLink key="approved-absences-upload" to="/approved-absences-upload" primaryText="העלאת חיסורים מאושרים" leftIcon={<FileUploadIcon />} />
         ]
     }),
-    ({ permissions }) => !isOnlyInLessonReport(permissions) && ({
+    ({ permissions }) => (!isOnlyInLessonReport(permissions) && (!isStudentView(permissions))) && ({
         name: 'report', icon: <AnalyticsIcon />, routes: [
             ({ permissions }) => !isTeacherView(permissions) && <MenuItemLink key="student-attendance" to="/student/student-attendance" primaryText="דוח נוכחות (פיבוט)" leftIcon={<SummarizeIcon />} />,
             <MenuItemLink key="percent-report-with-dates" to="/percent-report-with-dates" primaryText="דוח אחוזים לתלמידה" leftIcon={<PercentIcon />} />,

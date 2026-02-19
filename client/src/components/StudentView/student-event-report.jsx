@@ -6,7 +6,7 @@ import {
     BooleanInput,
     required,
     useNotify,
-    useRedirect,
+    useResetStore,
     useDataProvider,
     useGetOne,
     Create,
@@ -14,13 +14,12 @@ import {
     FormDataConsumer,
     Loading,
 } from 'react-admin';
-
 import { filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { handleActionSuccess, handleError } from '@shared/utils/notifyUtil';
-
+import { useObjectStore } from "src/utils/storeUtil";
 
 const DynamicFields = ({ absenceTypeId }) => {
     const { data, isLoading } = useGetOne(
@@ -47,7 +46,7 @@ const DynamicFields = ({ absenceTypeId }) => {
     );
 };
 
-const formatPayload = (values) => {
+const formatPayload = (values, userId) => {
     const extraInfo = Object.keys(values)
         .filter(key => key.startsWith('dynamic_') && values[key])
         .map(key => {
@@ -63,7 +62,7 @@ const formatPayload = (values) => {
 
     return {
         ...cleanValues,
-        userId: cleanValues.userId,
+        userId: userId,
         year: parseInt(cleanValues.year),
         reportDate: cleanValues.reportDate ? new Date(cleanValues.reportDate).toISOString() : new Date().toISOString(),
         absnceCount: parseFloat(cleanValues.absnceCount) || 1,
@@ -75,10 +74,11 @@ const formatPayload = (values) => {
     };
 };
 
-const StudentEventReportCreate = (props) => {
+const StudentEventReport = (props) => {
     const dataProvider = useDataProvider();
     const notify = useNotify();
-    const redirect = useRedirect();
+    const reset = useResetStore();
+    const { value: student, clear } = useObjectStore("student");
 
     const handleSave = async (values) => {
         try {
@@ -92,7 +92,7 @@ const StudentEventReportCreate = (props) => {
                 const { data: existingAbsences } = await dataProvider.getList('known_absence', {
                     pagination: { page: 1, perPage: 1000 },
                     filter: {
-                        studentReferenceId: values.studentReferenceId,
+                        studentReferenceId: student.id,
                         absenceTypeId: values.absenceTypeId,
                         year: values.year
                     },
@@ -110,48 +110,30 @@ const StudentEventReportCreate = (props) => {
                 }
             }
 
-            const formattedData = formatPayload(values);
+
+            const formattedData = {
+                ...formatPayload(values, student.userId),
+                studentReferenceId: student.id
+            };
             const response = await dataProvider.create('known_absence', { data: formattedData });
             handleActionSuccess(notify)(response);
-            redirect('/known_absence');
-
+            clear();
+            reset();
         } catch (error) {
-            handleError(notify)(err);
+            handleError(notify)(error);
         }
     };
 
     return (
-        <Create {...props} title="הוספת דיווח אירוע">
+        <Create resource="known_absence" {...props} {...props} title="הוספת דיווח אירוע">
             <SimpleForm onSubmit={handleSave} sanitizeEmptyValues>
-                <CommonReferenceInput source="userId" reference="user" validate={required()} />
-
-                <CommonReferenceInput
-                    source="studentReferenceId"
-                    reference="student_by_year"
-                    validate={required()}
-                    dynamicFilter={filterByUserIdAndYear}
-                />
-
-                <CommonReferenceInput
-                    source="klassReferenceId"
-                    reference="klass"
-                    validate={required()}
-                    dynamicFilter={filterByUserIdAndYear}
-
-                />
-
-                <CommonReferenceInput
-                    source="absenceTypeId"
-                    reference="absence_type"
-                    dynamicFilter={filterByUserIdAndYear}
-                    validate={required()}
-                />
+                <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserIdAndYear} />
+                <CommonReferenceInput source="absenceTypeId" reference="absence_type" dynamicFilter={filterByUserIdAndYear} validate={required()} />
                 <FormDataConsumer>
                     {({ formData }) => (
                         <DynamicFields absenceTypeId={formData.absenceTypeId} />
                     )}
                 </FormDataConsumer>
-
                 <DateInput source="reportDate" validate={required()} defaultValue={new Date()} />
                 <NumberInput source="absnceCount" defaultValue={1} min={0} step={0.5} />
                 <TextInput source="senderName" />
@@ -163,7 +145,4 @@ const StudentEventReportCreate = (props) => {
     );
 };
 
-export default {
-    create: StudentEventReportCreate,
-    list: StudentEventReportCreate,
-};
+export default StudentEventReport;
