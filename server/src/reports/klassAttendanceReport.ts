@@ -163,9 +163,11 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
     });
     console.log(`klass attendance report: built attendance data for ${students.length} students`);
 
+    const klassName = klass.displayName || klass.name || 'לא ידוע';
+
     // Build and return Excel data
     const excelData = BUILDING.buildExcelData({
-      klassName: klass?.displayName || klass?.name || '',
+      klassName: `${klassName} - ${klass.key}`,
       institutionName: user?.userInfo?.organizationName || 'לא ידוע',
       institutionCode: user?.userInfo?.organizationCode || 'לא ידוע',
       sessions,
