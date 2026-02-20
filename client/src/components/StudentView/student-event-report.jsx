@@ -21,21 +21,15 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { handleActionSuccess, handleError } from '@shared/utils/notifyUtil';
 import { useObjectStore } from "src/utils/storeUtil";
 
-const DynamicFields = ({ absenceTypeId }) => {
-    const { data, isLoading } = useGetOne(
-        'absence_type',
-        { id: absenceTypeId },
-        { enabled: !!absenceTypeId }
-    );
+const DynamicFields = ({ absenceType, isLoading }) => {
 
     if (isLoading) return <Loading loadingPrimary="טוען שדות..." />;
-    if (!data?.requiredLabels?.length) return null;
-
+    if (!absenceType?.requiredLabels?.length) return null;
     return (
         <div style={{ padding: '10px 0', width: '100%', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {data.requiredLabels.map((label, index) => (
+            {absenceType.requiredLabels.map((label, index) => (
                 <TextInput
-                    key={`${absenceTypeId}-${label}`}
+                    key={`${absenceType.id}-${label}`}
                     source={`dynamic_${label}`}
                     label={label}
                     validate={required()}
@@ -46,16 +40,22 @@ const DynamicFields = ({ absenceTypeId }) => {
     );
 };
 
-const formatPayload = (values, userId) => {
+const formatPayload = (values, userId, studentId, absenceType) => {
+    const allowedLabels = absenceType?.requiredLabels || [];
+
     const extraInfo = Object.keys(values)
-        .filter(key => key.startsWith('dynamic_') && values[key])
+        .filter(key => {
+            if (!key.startsWith('dynamic_')) return false;
+            const label = key.replace('dynamic_', '');
+            return allowedLabels.includes(label) && values[key];
+        })
         .map(key => {
             const label = key.replace('dynamic_', '');
             return `${label}: ${values[key]}`;
         })
         .join(' | ');
 
-    const { ...cleanValues } = values;
+    const cleanValues = { ...values };
     Object.keys(cleanValues).forEach(key => {
         if (key.startsWith('dynamic_')) delete cleanValues[key];
     });
@@ -63,12 +63,10 @@ const formatPayload = (values, userId) => {
     return {
         ...cleanValues,
         userId: userId,
-        year: parseInt(cleanValues.year),
+        studentReferenceId: studentId,
+        year: parseInt(defaultYearFilter.year),
         reportDate: cleanValues.reportDate ? new Date(cleanValues.reportDate).toISOString() : new Date().toISOString(),
         absnceCount: parseFloat(cleanValues.absnceCount) || 1,
-        absnceCode: 0,
-        klassId: 0,
-        lessonId: 0,
         isApproved: true,
         reason: cleanValues.reason ? `${cleanValues.reason} [${extraInfo}]` : extraInfo,
     };
@@ -79,16 +77,18 @@ const StudentEventReport = (props) => {
     const notify = useNotify();
     const reset = useResetStore();
     const { value: student, clear } = useObjectStore("student");
+    const [selectedAbsenceTypeId, setSelectedAbsenceTypeId] = React.useState(null);
+    const { data: absenceType, isLoading } = useGetOne(
+        'absence_type',
+        { id: selectedAbsenceTypeId },
+        { enabled: !!selectedAbsenceTypeId }
+    );
 
     const handleSave = async (values) => {
         try {
-            const { data: absenceType } = await dataProvider.getOne('absence_type', {
-                id: values.absenceTypeId
-            });
-
             const quota = absenceType?.quota;
 
-            if (quota !== undefined && quota !== null) {
+            if (quota) {
                 const { data: existingAbsences } = await dataProvider.getList('known_absence', {
                     pagination: { page: 1, perPage: 1000 },
                     filter: {
@@ -110,11 +110,7 @@ const StudentEventReport = (props) => {
                 }
             }
 
-
-            const formattedData = {
-                ...formatPayload(values, student.userId),
-                studentReferenceId: student.id
-            };
+            const formattedData = formatPayload(values, student.userId, student.id, absenceType)
             const response = await dataProvider.create('known_absence', { data: formattedData });
             handleActionSuccess(notify)(response);
             clear();
@@ -128,17 +124,18 @@ const StudentEventReport = (props) => {
         <Create resource="known_absence" {...props} {...props} title="הוספת דיווח אירוע">
             <SimpleForm onSubmit={handleSave} sanitizeEmptyValues>
                 <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserIdAndYear} />
-                <CommonReferenceInput source="absenceTypeId" reference="absence_type" dynamicFilter={filterByUserIdAndYear} validate={required()} />
+                <CommonReferenceInput source="absenceTypeId" reference="absence_type" dynamicFilter={filterByUserIdAndYear} validate={required()}
+                    onChange={(e) => { const value = e?.target ? e.target.value : e; setSelectedAbsenceTypeId(value); }} />
                 <FormDataConsumer>
-                    {({ formData }) => (
-                        <DynamicFields absenceTypeId={formData.absenceTypeId} />
+                    {() => (
+                        <DynamicFields absenceType={absenceType} isLoading={isLoading} />
                     )}
                 </FormDataConsumer>
                 <DateInput source="reportDate" validate={required()} defaultValue={new Date()} />
                 <NumberInput source="absnceCount" defaultValue={1} min={0} step={0.5} />
                 <TextInput source="senderName" />
                 <TextInput source="reason" multiline fullWidth />
-                <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
+                <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} disabled />
                 <BooleanInput source="isApproved" defaultValue={true} disabled />
             </SimpleForm>
         </Create>

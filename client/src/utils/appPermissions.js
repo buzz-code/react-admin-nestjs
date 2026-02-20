@@ -46,8 +46,8 @@ export const isTransportation = (permissions) => hasPermissionLogic(permissions,
 export const useIsTransportation = () => useHasPermission(appPermissions.transportation);
 
 export const isAbsenceType = (permissions) => hasPermissionLogic(permissions, appPermissions.absenceType);
-export const useIsisAbsenceType = () => useHasPermission(appPermissions.absenceType);
+export const useIsAbsenceType = () => useHasPermission(appPermissions.absenceType);
 
 export const isStudentView = (permissions) => hasPermissionLogic(permissions, appPermissions.studentView);
-export const useIsisStudentView = () => useHasPermission(appPermissions.studentView);
+export const useIsStudentView = () => useHasPermission(appPermissions.studentView);
 

@@ -144,21 +144,6 @@ export default {
                 absenceTypeId: 'סוג אירוע',
             }
         },
-        student_event_report: {
-            name: 'דיווח אירוע לתלמידה',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                studentReferenceId: 'תלמידה',
-                klassReferenceId: 'כיתה',
-                absenceTypeId: 'סוג אירוע',
-                reportDate: 'תאריך',
-                absnceCount: 'כמות', 
-                senderName: 'שם שולח',
-                reason: 'סיבה',
-                year: 'שנה',
-                isApproved: 'מאושר'
-            }
-        },
         lesson: {
             name: 'שיעור |||| שיעורים',
             fields: {

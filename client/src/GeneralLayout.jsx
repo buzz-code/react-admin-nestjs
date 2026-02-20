@@ -36,9 +36,9 @@ const customMenuItems = [
     // lesson report links: show when user has lesson-report permission OR when they're in-only mode
     ({ permissions }) => (shouldShowLessonReports(permissions)) && <MenuItemLink key="in-lesson-report-att" to="/in-lesson-report-att" primaryText="טופס נוכחות" leftIcon={<EventAvailableIcon />} />,
     ({ permissions }) => (shouldShowLessonReports(permissions)) && <MenuItemLink key="in-lesson-report-grade" to="/in-lesson-report-grade" primaryText="טופס ציונים" leftIcon={<EditCalendarIcon />} />,
-    ({ permissions }) => (isStandardView(permissions) && (!isStudentView(permissions))) && <MenuItemLink key="roadmap" to="/roadmap" primaryText="פיתוחים עתידיים" leftIcon={<MapIcon />} />,
-    ({ permissions }) => (isStandardView(permissions) && (!isStudentView(permissions))) && <MenuItemLink key="michlol-file-helper" to="/michlol-file-helper" primaryText="עדכון קבצי מכלול" leftIcon={<ContentPasteSearchIcon />} />,
-    ({ permissions }) => (isStandardView(permissions) && (!isStudentView(permissions))) && <MenuItemLink key="settings" to="/settings" primaryText="הגדרות משתמש" leftIcon={<SettingsIcon />} />,
+    ({ permissions }) => isStandardView(permissions) && <MenuItemLink key="roadmap" to="/roadmap" primaryText="פיתוחים עתידיים" leftIcon={<MapIcon />} />,
+    ({ permissions }) => isStandardView(permissions) && <MenuItemLink key="michlol-file-helper" to="/michlol-file-helper" primaryText="עדכון קבצי מכלול" leftIcon={<ContentPasteSearchIcon />} />,
+    ({ permissions }) => isStandardView(permissions) && <MenuItemLink key="settings" to="/settings" primaryText="הגדרות משתמש" leftIcon={<SettingsIcon />} />,
 ];
 
 const menuGroups = [
