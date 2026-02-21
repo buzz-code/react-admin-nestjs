@@ -65,7 +65,7 @@ const formatPayload = (values, userId, studentId, absenceType) => {
         userId: userId,
         studentReferenceId: studentId,
         year: parseInt(defaultYearFilter.year),
-        reportDate: cleanValues.reportDate ? new Date(cleanValues.reportDate).toISOString() : new Date().toISOString(),
+        reportDate: cleanValues.reportDate,
         absnceCount: parseFloat(cleanValues.absnceCount) || 1,
         isApproved: true,
         reason: cleanValues.reason ? `${cleanValues.reason} [${extraInfo}]` : extraInfo,
@@ -125,7 +125,7 @@ const StudentEventReport = (props) => {
             <SimpleForm onSubmit={handleSave} sanitizeEmptyValues>
                 <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserIdAndYear} />
                 <CommonReferenceInput source="absenceTypeId" reference="absence_type" dynamicFilter={filterByUserIdAndYear} validate={required()}
-                    onChange={(e) => { const value = e?.target ? e.target.value : e; setSelectedAbsenceTypeId(value); }} />
+                   onChange={(e) => setSelectedAbsenceTypeId(e?.target?.value ?? e)} />
                 <FormDataConsumer>
                     {() => (
                         <DynamicFields absenceType={absenceType} isLoading={isLoading} />

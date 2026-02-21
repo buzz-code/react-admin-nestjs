@@ -23,7 +23,7 @@ import { isInLessonReport, isScannerUpload, isOnlyInLessonReport, isTeacherView,
 import { useDashboardItems } from './settings/settingsUtil';
 
 const isStandardView = (permissions) => !isOnlyInLessonReport(permissions) && !isTeacherView(permissions) && !isStudentView(permissions);
-const shouldShowLessonReports = (permissions) => (isInLessonReport(permissions) || isTeacherView(permissions)) && !isStudentView(permissions);
+const shouldShowLessonReports = (permissions) => (isInLessonReport(permissions) || isTeacherView(permissions));
 
 const customMenuItems = [
     // static items: render only when NOT restricted to lesson-report-only
