@@ -26,6 +26,8 @@ export interface KlassAttendanceReportData extends IDataToExcelReportGenerator {
   institutionCode: string;
   sessions: SessionData[];
   students: StudentAttendanceData[];
+  startDate?: Date;
+  endDate?: Date;
 }
 
 interface SessionData {
@@ -174,6 +176,8 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
       institutionCode: user?.userInfo?.organizationCode || 'לא ידוע',
       sessions,
       students,
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
       headerRow: [],
       formattedData: [],
       sheetName: '',
@@ -372,10 +376,13 @@ const BUILDING = {
     institutionName: string,
     institutionCode: string,
     klassName: string,
-    sessionCount: number
+    sessionCount: number,
+    startDate?: Date,
+    endDate?: Date
   ) {
     const titleRow1 = `יומן נוכחות ${institutionName} סמל מוסד ${institutionCode}`;
     const titleRow2 = klassName;
+    const dateRangeText = `מתאריך ${startDate ? formatDate(startDate) : ''} עד תאריך ${endDate ? formatDate(endDate) : ''}`;
     const lastCol = sessionCount;
 
     return {
@@ -391,13 +398,19 @@ const BUILDING = {
           value: titleRow2,
           style: STYLING.subHeaderStyle,
           merge: { s: { r: ROW_INDEX.TITLE_2, c: 0 }, e: { r: ROW_INDEX.TITLE_2, c: sessionCount } }
+        },
+        {
+          cell: { r: ROW_INDEX.SPACING, c: 0 },
+          value: dateRangeText,
+          style: STYLING.subHeaderStyle,
+          merge: { s: { r: ROW_INDEX.SPACING, c: 0 }, e: { r: ROW_INDEX.SPACING, c: sessionCount } }
         }
       ],
       borderRanges: [
         // Heavy border around title rows
         {
           from: { r: ROW_INDEX.TITLE_1, c: 0 },
-          to: { r: ROW_INDEX.TITLE_2, c: lastCol },
+          to: { r: ROW_INDEX.SPACING, c: lastCol },
           outerBorder: { style: 'medium' } as ExcelJS.Border
         }
       ]
@@ -406,7 +419,7 @@ const BUILDING = {
 
   // Main function - orchestrates building the Excel data structure
   buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportData {
-    const { klassName, institutionName, institutionCode, sessions, students } = data;
+    const { klassName, institutionName, institutionCode, sessions, students, startDate, endDate } = data;
 
     console.log('buildExcelData input:', {
       klassName,
@@ -415,7 +428,7 @@ const BUILDING = {
     });
 
     // 1. Build title section (merged headers + borders)
-    const titleSection = BUILDING.buildTitleSection(institutionName, institutionCode, klassName, sessions.length);
+    const titleSection = BUILDING.buildTitleSection(institutionName, institutionCode, klassName, sessions.length, startDate, endDate);
 
     // 2. Build complete table section (header rows + student rows + borders)
     const tableSection = BUILDING.buildTableSection(sessions, students);
@@ -440,6 +453,8 @@ const BUILDING = {
       institutionCode,
       sessions,
       students,
+      startDate,
+      endDate,
       headerRow: [],
       formattedData: [],
       sheetName: klassName || 'יומן נוכחות',
