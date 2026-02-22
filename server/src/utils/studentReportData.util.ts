@@ -211,7 +211,3 @@ export function getGradeEffect(attGradeEffect: AttGradeEffect[], attPercents: nu
     const actualPercents = attPercents * 100;
     return attGradeEffect?.find(item => item.percents <= actualPercents || item.count >= absCount)?.effect ?? 0;
 }
-
-export function getDisplayable(entity?: { name: string, displayName?: string }) {
-    return entity?.displayName || entity?.name;
-}

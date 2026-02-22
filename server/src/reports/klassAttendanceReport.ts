@@ -10,7 +10,7 @@ import { ISpecialField } from '@shared/utils/importer/types';
 import * as ExcelJS from 'exceljs';
 import { getUniqueValues, groupDataByKeysAndCalc } from '@shared/utils/reportData.util';
 import { ReportGroup } from 'src/db/entities/ReportGroup.entity';
-import { formatTime, formatDate } from '@shared/utils/formatting/formatter.util';
+import { formatTime, formatDate, formatDisplayName } from '@shared/utils/formatting/formatter.util';
 
 export interface KlassAttendanceReportParams {
   userId: number;
@@ -165,7 +165,7 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
     });
     console.log(`klass attendance report: built attendance data for ${students.length} students`);
 
-    const klassName = klass.displayName || klass.name || 'לא ידוע';
+    const klassName = formatDisplayName(klass) || 'לא ידוע';
 
     // Build and return Excel data
     const excelData = BUILDING.buildExcelData({

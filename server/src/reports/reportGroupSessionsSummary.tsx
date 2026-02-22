@@ -4,7 +4,7 @@ import { ReportGroupSession } from 'src/db/entities/ReportGroupSession.entity';
 import { AttReport } from 'src/db/entities/AttReport.entity';
 import { Grade } from 'src/db/entities/Grade.entity';
 import { groupDataByKeysAndCalc, getSingleUnique } from '@shared/utils/reportData.util';
-import { formatDate } from '@shared/utils/formatting/formatter.util';
+import { formatDate, formatDisplayName } from '@shared/utils/formatting/formatter.util';
 import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { ReactToPdfReportGenerator } from '@shared/utils/report/react-to-pdf.generator';
 import { convertToReactStyle, ReportStyles } from '@shared/utils/report/react-user-styles/reportStyles';
@@ -120,7 +120,7 @@ const getReportData: IGetReportDataFunction<ReportGroupSessionsSummaryParams, Re
       const lessonCount = lessonCountsBySession[session.id] || gradeLessonCountsBySession[session.id] || 0;
       const reportGroup = session.reportGroup;
       const lesson = reportGroup?.lesson;
-      const lessonName = lesson ? `${lesson.key} - ${lesson.name}` : '';
+      const lessonName = formatDisplayName(lesson) || '';
       
       return {
         date: new Date(session.sessionDate),
@@ -128,13 +128,13 @@ const getReportData: IGetReportDataFunction<ReportGroupSessionsSummaryParams, Re
         lessonCount,
         teacherName: reportGroup?.teacher?.name || '',
         lessonName,
-        klassName: reportGroup?.klass?.name || '',
+        klassName: formatDisplayName(reportGroup?.klass) || '',
         signatureData: reportGroup?.signatureData
       };
     });
 
     const singleKlass = getSingleUnique(sessions, s => s.reportGroup?.klass, k => k.id);
-    const singleKlassName = singleKlass ? `${singleKlass.displayName || singleKlass.name} (${singleKlass.key})` : null;
+    const singleKlassName = singleKlass ? `${formatDisplayName(singleKlass)} (${singleKlass.key})` : null;
 
     console.log(`report group sessions summary: built data for ${sessionRows.length} sessions`);
 
