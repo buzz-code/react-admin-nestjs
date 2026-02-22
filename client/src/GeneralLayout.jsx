@@ -42,7 +42,7 @@ const customMenuItems = [
 ];
 
 const menuGroups = [
-    ({ permissions }) => ((isStandardView(permissions)) && (!isStudentView(permissions))) && ({
+    ({ permissions }) => (isStandardView(permissions)) && ({
         name: 'data', icon: <DatasetIcon />, routes: [
             <MenuItemLink key="approved-absences-upload" to="/approved-absences-upload" primaryText="העלאת חיסורים מאושרים" leftIcon={<FileUploadIcon />} />
         ]
