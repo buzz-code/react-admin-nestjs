@@ -40,6 +40,7 @@ interface SessionData {
 
 interface StudentAttendanceData {
   studentName: string;
+  tz: string;
   attendanceMarks: string[];  // 'V', '±', 'X', '--' for each session
 }
 
@@ -158,6 +159,7 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
 
       return {
         studentName: student.name,
+        tz: student.tz,
         attendanceMarks
       };
     });
@@ -309,7 +311,8 @@ const BUILDING = {
     const specialFields: ISpecialField[] = [];
     students.forEach((student, rowIndex) => {
       const actualRowIndex = startRow + rowIndex;
-      const row = [student.studentName, ...student.attendanceMarks];
+      const studentNameAndTz = `${student.studentName} (${student.tz})`;
+      const row = [studentNameAndTz, ...student.attendanceMarks];
 
       row.forEach((cell, colIndex) => {
         if (cell !== '') {
