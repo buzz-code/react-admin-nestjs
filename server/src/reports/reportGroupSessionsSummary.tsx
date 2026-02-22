@@ -3,7 +3,7 @@ import { DataSource, In } from 'typeorm';
 import { ReportGroupSession } from 'src/db/entities/ReportGroupSession.entity';
 import { AttReport } from 'src/db/entities/AttReport.entity';
 import { Grade } from 'src/db/entities/Grade.entity';
-import { groupDataByKeysAndCalc, getUniqueValues } from '@shared/utils/reportData.util';
+import { groupDataByKeysAndCalc, getSingleUnique } from '@shared/utils/reportData.util';
 import { formatDate } from '@shared/utils/formatting/formatter.util';
 import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { ReactToPdfReportGenerator } from '@shared/utils/report/react-to-pdf.generator';
@@ -133,8 +133,8 @@ const getReportData: IGetReportDataFunction<ReportGroupSessionsSummaryParams, Re
       };
     });
 
-    const klassNames = getUniqueValues(sessions, session => session.reportGroup?.klass?.name?.trim());
-    const singleKlassName = klassNames.length === 1 ? klassNames[0] : undefined;
+    const singleKlass = getSingleUnique(sessions, s => s.reportGroup?.klass, k => k.id);
+    const singleKlassName = singleKlass ? `${singleKlass.displayName || singleKlass.name} (${singleKlass.key})` : null;
 
     console.log(`report group sessions summary: built data for ${sessionRows.length} sessions`);
 
