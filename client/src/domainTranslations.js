@@ -141,7 +141,7 @@ export default {
                 reason: 'סיבה',
                 comment: 'הערה',
                 isApproved: 'מאושר',
-                absenceTypeId: 'סוג אירוע', 
+                absenceTypeId: 'סוג אירוע',
             }
         },
         lesson: {
@@ -213,6 +213,7 @@ export default {
             name: 'אירוע |||| אירועים',
             fields: {
                 ...generalResourceFieldsTranslation,
+                absenceTypeId: 'סוג אירוע',
                 name: 'שם האירוע',
                 quota: 'מכסה שנתית',
                 requiredLabels: 'שדות חובה לדיווח',

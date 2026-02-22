@@ -19,11 +19,11 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 
 import BaseLayout from "@shared/components/layout/Layout";
 import BaseDashboard from '@shared/components/views/Dashboard';
-import { isInLessonReport, isScannerUpload, isOnlyInLessonReport, isTeacherView } from './utils/appPermissions';
+import { isInLessonReport, isScannerUpload, isOnlyInLessonReport, isTeacherView, isStudentView } from './utils/appPermissions';
 import { useDashboardItems } from './settings/settingsUtil';
 
-const isStandardView = (permissions) => !isOnlyInLessonReport(permissions) && !isTeacherView(permissions);
-const shouldShowLessonReports = (permissions) => isInLessonReport(permissions) || isTeacherView(permissions);
+const isStandardView = (permissions) => !isOnlyInLessonReport(permissions) && !isTeacherView(permissions) && !isStudentView(permissions);
+const shouldShowLessonReports = (permissions) => (isInLessonReport(permissions) || isTeacherView(permissions));
 
 const customMenuItems = [
     // static items: render only when NOT restricted to lesson-report-only
@@ -47,7 +47,7 @@ const menuGroups = [
             <MenuItemLink key="approved-absences-upload" to="/approved-absences-upload" primaryText="העלאת חיסורים מאושרים" leftIcon={<FileUploadIcon />} />
         ]
     }),
-    ({ permissions }) => !isOnlyInLessonReport(permissions) && ({
+    ({ permissions }) => (!isOnlyInLessonReport(permissions) && (!isStudentView(permissions))) && ({
         name: 'report', icon: <AnalyticsIcon />, routes: [
             ({ permissions }) => !isTeacherView(permissions) && <MenuItemLink key="student-attendance" to="/student/student-attendance" primaryText="דוח נוכחות (פיבוט)" leftIcon={<SummarizeIcon />} />,
             <MenuItemLink key="percent-report-with-dates" to="/percent-report-with-dates" primaryText="דוח אחוזים לתלמידה" leftIcon={<PercentIcon />} />,
