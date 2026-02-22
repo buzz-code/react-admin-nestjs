@@ -15,7 +15,7 @@ import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity
 import { Student } from "./Student.entity";
 import { IsOptional, ValidateIf } from "class-validator";
 import { CrudValidationGroups } from "@dataui/crud";
-import { IsDate, IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
+import { IsBoolean, IsDate, IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
 import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
 import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
 import { Klass } from "./Klass.entity";
@@ -23,7 +23,7 @@ import { Lesson } from "./Lesson.entity";
 import { KlassType } from "./KlassType.entity";
 import { Teacher } from "./Teacher.entity";
 import { AbsenceType } from "./AbsenceType.entity";
-import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
+import { BooleanType, DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 
@@ -137,6 +137,8 @@ export class KnownAbsence implements IHasUserId {
   comment: string | null;
 
   @IsOptional({ always: true })
+  @BooleanType
+  @IsBoolean({ always: true })
   @Column({ default: true })
   isApproved: boolean;
 
