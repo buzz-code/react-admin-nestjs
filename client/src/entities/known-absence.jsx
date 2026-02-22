@@ -9,6 +9,7 @@ import CommonAutocompleteInput from '@shared/components/fields/CommonAutocomplet
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 import { BulkApproveAbsences } from 'src/components/BulkApproveAbsences';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
+import { useIsAbsenceType } from 'src/utils/appPermissions';
 
 const filters = [
     ...commonAdminFilters,
@@ -32,6 +33,7 @@ const filterDefaultValues = {
 };
 
 const Datagrid = ({ isAdmin, children, isPreview, ...props }) => {
+    const isAbsenceType = useIsAbsenceType();
     return (
         <CommonDatagrid {...props}>
             {children}
@@ -40,9 +42,7 @@ const Datagrid = ({ isAdmin, children, isPreview, ...props }) => {
             <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
-            <ReferenceField source="absenceTypeId" reference="absence_type">
-                <TextField source="name" />
-            </ReferenceField>
+            {isAbsenceType && <ReferenceField source="absenceTypeId" reference="absence_type" />}
             <DateField source="reportDate" />
             <CommonHebrewDateField source="reportDate" />
             <NumberField source="absnceCount" />

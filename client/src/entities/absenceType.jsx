@@ -18,6 +18,7 @@ import { useUnique } from "@shared/utils/useUnique";
 import { commonAdminFilters } from "@shared/components/fields/PermissionFilter";
 import { defaultYearFilter, yearChoices } from "@shared/utils/yearFilter";
 import CommonAutocompleteInput from "@shared/components/fields/CommonAutocompleteInput";
+import { CommonRepresentation } from "@shared/components/CommonRepresentation";
 
 const filters = [
     ...commonAdminFilters,
@@ -49,7 +50,6 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
 };
 
 const Inputs = ({ isCreate, isAdmin }) => {
-    const unique = useUnique();
     return (
         <>
             {!isCreate && isAdmin && <TextInput source="id" disabled />}
@@ -69,7 +69,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
     );
 };
 
-const Representation = 'name';
+const Representation = CommonRepresentation;
 
 const importer = {
     fields: ["name", "quota", "requiredLabels", "year"],
