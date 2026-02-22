@@ -39,6 +39,7 @@ import student from "src/entities/student";
 import teacher from "src/entities/teacher";
 import transportation from 'src/entities/transportation';
 import absenceType from 'src/entities/absenceType';
+import uploadedFile from "@shared/components/common-entities/uploaded-file";
 import studentKlassesReport from "src/entities/student-klasses-report";
 import StudentEventReport from "src/components/StudentView/student-event-report";
 import reportMonth from "src/entities/report-month";
@@ -68,7 +69,7 @@ import image from '@shared/components/common-entities/image';
 import paymentTrack from '@shared/components/common-entities/payment-track';
 import yemotCall from '@shared/components/common-entities/yemot-call';
 
-import { isShowUsersData, isEditPagesData, isEditPaymentTracksData, isAdmin } from "@shared/utils/permissionsUtil";
+import { isShowUsersData, isEditPagesData, isEditPaymentTracksData, isUploadedFiles, isAdmin } from "@shared/utils/permissionsUtil";
 import { isLessonSignature, isOnlyInLessonReport, isTeacherView, isTransportation, isAbsenceType, isStudentView } from 'src/utils/appPermissions';
 import YemotSimulator from "@shared/components/views/YemotSimulator";
 import { RegisterPage } from '@shared/components/layout/RegisterPage';
@@ -183,6 +184,7 @@ const App = () => (
               <Resource name="mail_address" {...mailAddress} options={{ menuGroup: 'settings' }} icon={AlternateEmailIcon} />
               <Resource name="image" {...image} options={{ menuGroup: 'settings' }} icon={ImageIcon} />
               <Resource name="import_file" {...importFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />
+              {isUploadedFiles(permissions) && <Resource name="uploaded_file" {...uploadedFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />}
               <Resource name="att_report" {...attReport} options={{ menuGroup: 'settings' }} icon={ViewListIcon} />
               <Resource name="grade_name" {...gradeName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
               <Resource name="attendance_name" {...attendanceName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />

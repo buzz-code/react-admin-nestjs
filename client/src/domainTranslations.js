@@ -8,6 +8,15 @@ export default {
         admin: 'ניהול',
     },
     resources: {
+        uploaded_file: {
+            name: 'קבצים שהועלו',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                title: 'כותרת',
+                description: 'תיאור',
+                fileData: 'קובץ',
+            },
+        },
         settings: {
             name: 'הגדרות',
             fields: {

@@ -44,6 +44,7 @@ import reportGroupConfig from "./entity-modules/report-group.config";
 import reportGroupSessionConfig from "./entity-modules/report-group-session.config";
 import transportationConfig from './entity-modules/transportation.config'; 
 import absenceTypeConfig from "./entity-modules/absenceType.config";
+import uploadedFileConfig from "@shared/entities/configs/uploaded-file.config";
 import { Student } from "./db/entities/Student.entity";
 import { Teacher } from "./db/entities/Teacher.entity";
 import { registerEntityNameMap } from '@shared/entities/configs/import-file.config';
@@ -58,6 +59,7 @@ registerEntityNameMap({
     student_klass: 'שיוך תלמידות לכיתות',
     student: 'תלמידות',
     teacher: 'מורות',
+    uploaded_file: 'קבצים שהועלו',
 });
 
 @Module({
@@ -104,7 +106,8 @@ registerEntityNameMap({
         BaseEntityModule.register({ entity: AbsCountEffectByUser }),
         BaseEntityModule.register({ entity: LessonKlassName }),
         BaseEntityModule.register(transportationConfig),
-        BaseEntityModule.register(absenceTypeConfig)
+        BaseEntityModule.register(absenceTypeConfig),
+        BaseEntityModule.register(uploadedFileConfig)
     ]
 })
 export class EntitiesModule { }
