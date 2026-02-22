@@ -31,7 +31,7 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
-const Datagrid = ({ isAdmin, children, ...props }) => {
+const Datagrid = ({ isAdmin, children, isPreview, ...props }) => {
     return (
         <CommonDatagrid {...props}>
             {children}
@@ -40,8 +40,8 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
             <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
             <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
-            <ReferenceField source="absenceTypeId" reference="absence_type"> 
-                 <TextField source="name" /> 
+            <ReferenceField source="absenceTypeId" reference="absence_type">
+                <TextField source="name" />
             </ReferenceField>
             <DateField source="reportDate" />
             <CommonHebrewDateField source="reportDate" />
@@ -51,7 +51,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="reason" />
             <TextField source="comment" />
             <BooleanField source="isApproved" />
-            <SelectField source="year" choices={yearChoices} />
+            {!isPreview && <SelectField source="year" choices={yearChoices} />}
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -67,7 +67,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} dynamicFilter={filterByUserIdAndYear} />
         <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserIdAndYear} />
         <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} optionText={lessonKeyAndName} />
-        <CommonReferenceInput source="absenceTypeId" reference="absence_type" dynamicFilter={filterByUserIdAndYear}/>
+        <CommonReferenceInput source="absenceTypeId" reference="absence_type" dynamicFilter={filterByUserIdAndYear} />
         <DateInput source="reportDate" validate={required()} />
         <NumberInput source="absnceCount" validate={required()} />
         <NumberInput source="absnceCode" />
