@@ -304,7 +304,7 @@ export default {
             }
         },
         import_file: {
-            name: 'קבצים שהועלו',
+            name: 'קבצים שיובאו',
             fields: {
                 ...generalResourceFieldsTranslation,
                 fileName: 'שם הקובץ',
