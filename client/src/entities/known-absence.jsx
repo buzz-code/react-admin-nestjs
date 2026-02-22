@@ -82,7 +82,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 }
 
 const importer = {
-    fields: ['studentTz', 'klassId', 'lessonId', 'absenceTypeId', 'reportDate', 'absnceCount', 'absnceCode', 'senderName', 'reason', 'comment', 'isApproved'],
+    fields: ['studentTz', 'klassId', 'lessonId', 'reportDate', 'absnceCount', 'absnceCode', 'senderName', 'reason', 'comment', 'isApproved'],
 }
 
 const additionalListActions = [
