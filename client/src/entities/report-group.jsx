@@ -6,7 +6,9 @@ import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
+import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import ImageIcon from '@mui/icons-material/Image';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import SignatureInput from '@shared/components/fields/signature/SignatureInput';
@@ -19,6 +21,15 @@ const additionalBulkButtons = [
         name='lessonSignaturePdf'
         filename='דוחות-קבוצות'
     />,
+    <BulkActionButton
+        key='updateSignatureData'
+        label='עדכון חתימה'
+        icon={<ImageIcon />}
+        name='updateSignatureData'
+        reloadOnEnd
+    >
+        <SignatureInput source="signatureData" label="חתימה" validate={[required()]} />
+    </BulkActionButton>,
 ];
 
 const filters = [
