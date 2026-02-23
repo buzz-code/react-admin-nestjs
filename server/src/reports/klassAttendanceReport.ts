@@ -259,20 +259,20 @@ const BUILDING = {
   buildTableHeaderSection(sessions: SessionData[]) {
     const dayRow = ['יום בשבוע', ...sessions.map(s => s.dayOfWeek)];
     const dateRow = ['תאריך', ...sessions.map(s => formatDate(s.date))];
-    const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
-    const topicRow = ['שיעור', ...sessions.map(s => s.topic)];
-    const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
-    const teacherRow = ['שם המורה', ...sessions.map(s => s.teacherName)];
-    const separatorRow = ['', ...sessions.map(() => '--')];
+    // const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
+    // const topicRow = ['שיעור', ...sessions.map(s => s.topic)];
+    // const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
+    // const teacherRow = ['שם המורה', ...sessions.map(s => s.teacherName)];
+    // const separatorRow = ['', ...sessions.map(() => '--')];
 
     const rows = [
       dayRow,
       dateRow,
-      hoursRow,
-      topicRow,
-      lessonCountRow,
-      teacherRow,
-      separatorRow
+      // hoursRow,
+      // topicRow,
+      // lessonCountRow,
+      // teacherRow,
+      // separatorRow
     ];
 
     // Convert header rows to special fields with styling
