@@ -5,10 +5,11 @@ import { ReportGroupSession } from 'src/db/entities/ReportGroupSession.entity';
 import { AttReport } from 'src/db/entities/AttReport.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { User } from '@shared/entities/User.entity';
-import { In, Between, FindOptionsWhere } from 'typeorm';
+import { In, FindOptionsWhere } from 'typeorm';
+import { getReportDateFilter, getDateRange } from '@shared/utils/entity/filters.util';
 import { ISpecialField } from '@shared/utils/importer/types';
 import * as ExcelJS from 'exceljs';
-import { getUniqueValues, groupDataByKeysAndCalc } from '@shared/utils/reportData.util';
+import { getUniqueValues, groupDataByKeysAndCalc, groupDataByKeyFn } from '@shared/utils/reportData.util';
 import { ReportGroup } from 'src/db/entities/ReportGroup.entity';
 import { formatTime, formatDate, formatDisplayName } from '@shared/utils/formatting/formatter.util';
 
@@ -31,6 +32,7 @@ export interface KlassAttendanceReportData extends IDataToExcelReportGenerator {
 }
 
 interface SessionData {
+  sessionId: number | null;  // null for placeholder (no session that day)
   date: Date;
   dayOfWeek: string;
   startTime: string;
@@ -67,7 +69,7 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
     }
 
     // Add date filtering (both dates are required)
-    sessionWhere.sessionDate = Between(startDate, endDate);
+    sessionWhere.sessionDate = getReportDateFilter(startDate, endDate);
 
     // Fetch all data in parallel
     const [user, klass, allSessions] = await Promise.all([
@@ -116,19 +118,26 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
       (reports) => reports[0]
     );
 
-    // Build session data - each session includes report group info
-    const sessions: SessionData[] = allSessions
-      .filter(session => lessonCountsBySession[session.id])
-      .map(session => {
-        return {
-          date: new Date(session.sessionDate),
-          dayOfWeek: FORMATTING.getHebrewDayOfWeek(new Date(session.sessionDate)),
-          startTime: session.startTime || '',
-          endTime: session.endTime || '',
-          topic: session.reportGroup?.lesson?.name || '',
-          lessonCount: lessonCountsBySession[session.id],
-          teacherName: session.reportGroup?.teacher?.name || '',
-        };
+    // Group sessions by date string for fast lookup
+    const sessionsByDate = groupDataByKeyFn(
+      allSessions.filter(s => lessonCountsBySession[s.id]),
+      s => formatDate(s.sessionDate)
+    );
+
+    // Build sessions list: one entry per real session, placeholder for days with no data
+    const sessions: SessionData[] = getDateRange(startDate, endDate)
+      .flatMap(date => {
+        const dateSessions: (ReportGroupSession | null)[] = sessionsByDate[formatDate(date)] || [null];
+        return dateSessions.map(session => ({
+          sessionId: session?.id ?? null,
+          date,
+          dayOfWeek: FORMATTING.getHebrewDayOfWeek(date),
+          startTime: session?.startTime || '',
+          endTime: session?.endTime || '',
+          topic: session?.reportGroup?.lesson?.name || '',
+          lessonCount: session ? lessonCountsBySession[session.id] : 0,
+          teacherName: session?.reportGroup?.teacher?.name || '',
+        }));
       });
 
     // Get unique students from attendance reports
@@ -143,15 +152,14 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
       .filter(s => s)
       .sort((a, b) => a.name.localeCompare(b.name, 'he'));
 
-    // Build student data with attendance marks
+    // Build student data with attendance marks (one mark per session column)
     const students: StudentAttendanceData[] = uniqueStudents.map(student => {
-      const attendanceMarks = allSessions
-        .filter(session => lessonCountsBySession[session.id])
-        .map(session => {
-          const key = `${student.id}_${session.id}`;
-          const report = reportsByStudentAndSession[key];
-          return FORMATTING.getAttendanceMark(report);
-        });
+      const attendanceMarks = sessions.map(session => {
+        if (!session.sessionId) return '';
+        const key = `${student.id}_${session.sessionId}`;
+        const report = reportsByStudentAndSession[key];
+        return FORMATTING.getAttendanceMark(report);
+      });
 
       return {
         studentName: student.name,
