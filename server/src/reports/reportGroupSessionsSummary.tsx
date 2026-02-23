@@ -194,7 +194,7 @@ const SessionsSummaryReport: React.FC<ReportGroupSessionsSummaryData> = (props) 
           <tr>
             <th style={headerStyle}>תאריך</th>
             <th style={headerStyle}>נושא</th>
-            <th style={headerStyle}>שיעור</th>
+            {/* <th style={headerStyle}>שיעור</th> */}
             {!isSingleKlass && <th style={headerStyle}>כיתה</th>}
             <th style={headerStyle}>מספר שיעורים</th>
             <th style={headerStyle}>חתימת מורה</th>
@@ -205,7 +205,7 @@ const SessionsSummaryReport: React.FC<ReportGroupSessionsSummaryData> = (props) 
             <tr key={index}>
               <td style={cellStyle}>{formatDate(session.date)}</td>
               <td style={cellStyle}>{session.topic || '-'}</td>
-              <td style={cellStyle}>{session.lessonName || '-'}</td>
+              {/* <td style={cellStyle}>{session.lessonName || '-'}</td> */}
               {!isSingleKlass && <td style={cellStyle}>{session.klassName || '-'}</td>}
               <td style={cellStyle}>{session.lessonCount}</td>
               <td style={cellStyle}>
