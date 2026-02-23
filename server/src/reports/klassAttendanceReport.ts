@@ -260,7 +260,7 @@ const BUILDING = {
   // Build table header section: rows + special fields + borders
   buildTableHeaderSection(sessions: SessionData[]) {
     const dayRow = ['יום בשבוע', ...sessions.map(s => s.dayOfWeek)];
-    const dateRow = ['תאריך', ...sessions.map(s => formatDate(s.date))];
+    const dateRow = ['תאריך', ...sessions.map(s => s.date.getDate().toString())];
     // const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
     // const topicRow = ['שיעור', ...sessions.map(s => s.topic)];
     // const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
