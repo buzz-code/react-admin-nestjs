@@ -39,10 +39,12 @@ const additionalBulkButtons = [
         <DateInput 
             source="startDate" 
             label="תאריך התחלה" 
+            validate={required()}
         />
         <DateInput 
             source="endDate" 
             label="תאריך סיום" 
+            validate={required()}
         />
         <CommonReferenceArrayInput 
             source="lessonReferenceIds" 

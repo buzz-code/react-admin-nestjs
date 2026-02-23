@@ -5,7 +5,7 @@ import { ReportGroupSession } from 'src/db/entities/ReportGroupSession.entity';
 import { AttReport } from 'src/db/entities/AttReport.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { User } from '@shared/entities/User.entity';
-import { In, Between, MoreThanOrEqual, LessThanOrEqual, FindOptionsWhere, FindOperator } from 'typeorm';
+import { In, Between, FindOptionsWhere } from 'typeorm';
 import { ISpecialField } from '@shared/utils/importer/types';
 import * as ExcelJS from 'exceljs';
 import { getUniqueValues, groupDataByKeysAndCalc } from '@shared/utils/reportData.util';
@@ -15,8 +15,8 @@ import { formatTime, formatDate, formatDisplayName } from '@shared/utils/formatt
 export interface KlassAttendanceReportParams {
   userId: number;
   klassId: number;        // Single klass ID
-  startDate?: Date;     // ISO date string (optional)
-  endDate?: Date;       // ISO date string (optional)
+  startDate: Date;        // ISO date string (required)
+  endDate: Date;          // ISO date string (required)
   lessonReferenceIds?: number[];
 }
 
@@ -26,8 +26,8 @@ export interface KlassAttendanceReportData extends IDataToExcelReportGenerator {
   institutionCode: string;
   sessions: SessionData[];
   students: StudentAttendanceData[];
-  startDate?: Date;
-  endDate?: Date;
+  startDate: Date;
+  endDate: Date;
 }
 
 interface SessionData {
@@ -66,14 +66,8 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
       (sessionWhere.reportGroup as FindOptionsWhere<ReportGroup>).lessonReferenceId = In(lessonReferenceIds);
     }
 
-    // Add date filtering using TypeORM operators
-    if (startDate && endDate) {
-      sessionWhere.sessionDate = Between(startDate, endDate);
-    } else if (startDate) {
-      sessionWhere.sessionDate = MoreThanOrEqual(startDate);
-    } else if (endDate) {
-      sessionWhere.sessionDate = LessThanOrEqual(endDate);
-    }
+    // Add date filtering (both dates are required)
+    sessionWhere.sessionDate = Between(startDate, endDate);
 
     // Fetch all data in parallel
     const [user, klass, allSessions] = await Promise.all([
@@ -176,8 +170,8 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
       institutionCode: user?.userInfo?.organizationCode || 'לא ידוע',
       sessions,
       students,
-      startDate: startDate ? new Date(startDate) : undefined,
-      endDate: endDate ? new Date(endDate) : undefined,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
       headerRow: [],
       formattedData: [],
       sheetName: '',
