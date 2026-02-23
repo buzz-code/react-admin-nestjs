@@ -7,7 +7,7 @@ import { Klass } from 'src/db/entities/Klass.entity';
 import { User } from '@shared/entities/User.entity';
 import { In, FindOptionsWhere } from 'typeorm';
 import { getReportDateFilter, getDateRange } from '@shared/utils/entity/filters.util';
-import { ISpecialField } from '@shared/utils/importer/types';
+import { IImageField, ISpecialField } from '@shared/utils/importer/types';
 import * as ExcelJS from 'exceljs';
 import { getUniqueValues, groupDataByKeysAndCalc, groupDataByKeyFn } from '@shared/utils/reportData.util';
 import { ReportGroup } from 'src/db/entities/ReportGroup.entity';
@@ -40,6 +40,7 @@ interface SessionData {
   topic: string;
   lessonCount: number;
   teacherName: string;
+  signatureData?: string;
 }
 
 interface StudentAttendanceData {
@@ -137,6 +138,7 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
           topic: session?.reportGroup?.lesson?.name || '',
           lessonCount: session ? lessonCountsBySession[session.id] : 0,
           teacherName: session?.reportGroup?.teacher?.name || '',
+          signatureData: session?.reportGroup?.signatureData,
         }));
       });
 
@@ -419,6 +421,45 @@ const BUILDING = {
     };
   },
 
+  // Build signature section: one signature (first available) below the entire table
+  buildSignatureSection(sessions: SessionData[], tableEndRow: number) {
+    const signatureRow = tableEndRow + 2;  // Leave 2 rows spacing after table
+
+    const firstSignature = sessions.find(s => s.signatureData)?.signatureData;
+
+    const specialFields: ISpecialField[] = [];
+    const images: IImageField[] = [];
+
+    if (firstSignature) {
+      specialFields.push({
+        cell: { r: signatureRow, c: 0 },
+        value: 'חתימת המורה',
+        style: {
+          font: { bold: true, size: 12, name: 'Arial' },
+          alignment: {
+            horizontal: 'center' as const,
+            vertical: 'middle' as const,
+            readingOrder: 'rtl' as const
+          }
+        }
+      });
+
+      images.push({
+        imageBase64Data: firstSignature,
+        position: {
+          tl: { row: signatureRow, col: 1 },
+          ext: { width: 120, height: 80 }
+        }
+      });
+    }
+
+    return {
+      specialFields,
+      images,
+      additionalRows: firstSignature ? 8 : 0
+    };
+  },
+
   // Main function - orchestrates building the Excel data structure
   buildExcelData(data: KlassAttendanceReportData): KlassAttendanceReportData {
     const { klassName, institutionName, institutionCode, sessions, students, startDate, endDate } = data;
@@ -436,17 +477,23 @@ const BUILDING = {
     const tableSection = BUILDING.buildTableSection(sessions, students);
 
 
-    // 3. Combine everything
+    // 3. Build signature section - one signature below the table
+    const signatureSection = BUILDING.buildSignatureSection(sessions, tableSection.totalRowCount);
+
+    // 4. Combine everything
     const specialFields = [
       ...titleSection.specialFields,
       ...tableSection.specialFields,
+      ...signatureSection.specialFields,
     ];
     const borderRanges = [...titleSection.borderRanges, ...tableSection.borderRanges];
+    const images = signatureSection.images;
 
     console.log('buildExcelData output:', {
-      rowCount: tableSection.totalRowCount,
+      rowCount: tableSection.totalRowCount + signatureSection.additionalRows,
       specialFieldCount: specialFields.length,
       borderRangeCount: borderRanges.length,
+      imageCount: images.length,
     });
 
     return {
@@ -462,6 +509,7 @@ const BUILDING = {
       sheetName: klassName || 'יומן נוכחות',
       specialFields,
       borderRanges,
+      images,
     };
   }
 }
