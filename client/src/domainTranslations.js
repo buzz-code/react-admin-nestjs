@@ -357,7 +357,7 @@ export default {
                 tz: 'תז',
                 isActive: 'פעיל?',
                 'extra.klassId': 'כיתה',
-                'extra.lessonId': 'שיעור',
+                'extra.lessonIds': 'סנן לפי מקצועות',
                 'year:$cont': 'שנה',
                 'klassReferenceIds:$cont': 'כיתה',
                 'klassTypeReferenceIds:$cont': 'שיוך כיתה',

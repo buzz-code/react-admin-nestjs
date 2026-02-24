@@ -18,7 +18,7 @@ const filters = [
     <CommonReferenceInputFilter source="klassTypeReferenceIds:$cont" label="תלמידות מסוג כיתה" reference="klass_type" dynamicFilter={filterByUserId} alwaysOn />,
     <CommonReferenceArrayInput source="extra.klassReferenceIds" label="נתונים מכיתות" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
     <CommonReferenceArrayInput source="extra.klassTypeReferenceIds" label="נתונים מסוגי כיתות" reference="klass_type" dynamicFilter={filterByUserId} />,
-    <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
+    <CommonReferenceArrayInput source="extra.lessonIds" reference="lesson" label="סנן לפי מקצועות" dynamicFilter={filterByUserIdAndYear} />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,

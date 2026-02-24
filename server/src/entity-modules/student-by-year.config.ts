@@ -62,11 +62,15 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     studentReferenceId: In(studentIds),
                     klassReferenceId: Utils.getInFilter(klassReferenceIds),
                     klass: Utils.getKlassFilter(klassTypeReferenceIds),
-                    lessonReferenceId: extra?.lessonId,
                     year: yearFilter?.value,
                     reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                     reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                 };
+
+                const lessonIds = getAsNumberArray(extra?.lessonIds);
+                if (lessonIds?.length > 0) {
+                    whereClause.lessonReferenceId = In(lessonIds);
+                }
 
                 const excludedLessonIds = getAsNumberArray(extra?.excludedLessonIds)
                 if (excludedLessonIds?.length > 0) {
@@ -104,6 +108,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     studentReferenceId: In(studentIds),
                     klassReferenceId: Utils.getInFilter(klassReferenceIds),
                     klass: Utils.getKlassFilter(klassTypeReferenceIds),
+                    lessonReferenceId: lessonIds?.length > 0 ? In(lessonIds) : undefined,
                     reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                     reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                 };
