@@ -45,9 +45,10 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
         const yearFilter = filter.find(item => item.field === 'year');
         const klassReferenceIdFilter = filter.find(item => item.field === 'klassReferenceIds');
         const klassTypeReferenceIdFilter = filter.find(item => item.field === 'klassTypeReferenceIds');
-
         const klassReferenceIds = getAsNumberArray(extra.klassReferenceIds) || klassReferenceIdFilter?.value;
         const klassTypeReferenceIds = getAsNumberArray(extra.klassTypeReferenceIds) || klassTypeReferenceIdFilter?.value;
+        const lessonIds = getAsNumberArray(extra?.lessonIds);
+        const excludedLessonIds = getAsNumberArray(extra?.excludedLessonIds)
 
         switch (pivotName) {
             case 'StudentAttendance': {
@@ -62,17 +63,12 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     studentReferenceId: In(studentIds),
                     klassReferenceId: Utils.getInFilter(klassReferenceIds),
                     klass: Utils.getKlassFilter(klassTypeReferenceIds),
+                    lessonReferenceId: Utils.getInFilter(lessonIds),
                     year: yearFilter?.value,
                     reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                     reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                 };
 
-                const lessonIds = getAsNumberArray(extra?.lessonIds);
-                if (lessonIds?.length > 0) {
-                    whereClause.lessonReferenceId = In(lessonIds);
-                }
-
-                const excludedLessonIds = getAsNumberArray(extra?.excludedLessonIds)
                 if (excludedLessonIds?.length > 0) {
                     whereClause.lessonReferenceId = Not(In(excludedLessonIds));
                 }
@@ -108,7 +104,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     studentReferenceId: In(studentIds),
                     klassReferenceId: Utils.getInFilter(klassReferenceIds),
                     klass: Utils.getKlassFilter(klassTypeReferenceIds),
-                    lessonReferenceId: lessonIds?.length > 0 ? In(lessonIds) : undefined,
+                    lessonReferenceId: Utils.getInFilter(lessonIds),
                     reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                     reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                 };
