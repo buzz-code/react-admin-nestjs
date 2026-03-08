@@ -16,7 +16,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   override async processCall(): Promise<void> {
     await this.getUserByDidPhone();
     this.logger.log(`Processing call with ID: ${this.call.callId} from phone: ${this.call.phone}`);
-    const student = await this.getStudentByPhone()
+    const student = await this.getStudentByInput()
     if (!student) return;
     const alreadyReported = await this.hasReportedToday(student.id);
     if (alreadyReported) {
@@ -35,15 +35,23 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     }
   }
 
-  private async getStudentByPhone(): Promise<Student> {
+  private async getStudentByInput(): Promise<Student> {
+    let student = null;
+    while (!student) {
+      student = await this.getStudentById();
+
+      if (!student) {
+        await this.sendMessage('מספר תז לא תקין נסי שוב');
+      }
+    }
+    return student;
+  }
+  private async getStudentById(): Promise<Student> {
+    const id = await this.askForInput('הקישי מספר תז');
     const student = await this.dataSource.getRepository(Student).findOneBy({
       userId: this.user.id,
-      phone: this.call.phone,
+      tz: id,
     });
-    if (!student) {
-      await this.hangupWithMessage('הטלפון לא קיים במערכת');
-      return null
-    }
     return student;
   }
 
