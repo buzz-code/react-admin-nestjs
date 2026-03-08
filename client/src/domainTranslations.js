@@ -1,4 +1,5 @@
 import { generalResourceFieldsTranslation } from "@shared/providers/i18nProvider"
+import { sharedEntityTranslations } from "@shared/entities/shared-entity.translations"
 
 export default {
     menu_groups: {
@@ -8,15 +9,7 @@ export default {
         admin: 'ניהול',
     },
     resources: {
-        uploaded_file: {
-            name: 'קבצים שהועלו',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                title: 'כותרת',
-                description: 'תיאור',
-                fileData: 'קובץ',
-            },
-        },
+        ...sharedEntityTranslations,
         settings: {
             name: 'הגדרות',
             fields: {
@@ -228,65 +221,6 @@ export default {
                 requiredLabels: 'שדות חובה לדיווח',
             }
         },
-        text: {
-            name: 'הודעה |||| הודעות - טבלת אדמין',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                description: 'תיאור',
-                value: 'ערך',
-            }
-        },
-        text_by_user: {
-            name: 'הודעה |||| הודעות',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                description: 'תיאור',
-                value: 'ערך',
-            }
-        },
-        page: {
-            name: 'הסבר למשתמשים',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                description: 'כותרת',
-                value: 'תוכן',
-            }
-        },
-        user: {
-            name: 'משתמש |||| משתמשים',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                email: 'כתובת מייל',
-                password: 'סיסמא',
-                phoneNumber: 'מספר טלפון',
-                userInfo: 'מידע על המשתמש',
-                isPaid: 'האם שילם?',
-                paymentMethod: 'אופן התשלום',
-                mailAddressAlias: 'כתובת המייל ממנה יישלחו מיילים',
-                mailAddressTitle: 'שם כתובת המייל',
-                bccAddress: 'כתובת מייל לשליחת עותק',
-                paymentTrackId: 'תוכנית',
-                'additionalData.trialEndDate': 'תאריך חובת תשלום',
-                'additionalData.customTrialMessage': 'הודעה מקדימה חובת תשלום',
-                'additionalData.customTrialEndedMessage': 'הודעת סיום חובת תשלום',
-            }
-        },
-        yemot_call: {
-            name: 'שיחה |||| שיחות',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                phone: 'מאת',
-                'phone:$cont': 'מאת',
-                currentStep: 'שלב נוכחי',
-                hasError: 'שגיאה?',
-                errorMessage: 'הודעת שגיאה',
-                'errorMessage:$cont': 'הודעת שגיאה',
-                history: 'שלבים',
-                data: 'נתונים',
-                isOpen: 'פעיל?',
-                apiCallId: 'מזהה שיחה (ימות)',
-            },
-        },
         student_klass_report: {
             name: 'דוח שיוך תלמידה',
             fields: {
@@ -301,53 +235,6 @@ export default {
                 'klassReferenceId3:$cont': 'התמחות',
                 klassReferenceIdNull: 'אחר',
                 'klassReferenceIdNull:$cont': 'אחר',
-            }
-        },
-        import_file: {
-            name: 'קבצים שיובאו',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                fileName: 'שם הקובץ',
-                fileSource: 'מקור הקובץ',
-                'metadata.lessonTopic': 'נושא השיעור',
-                'metadata.lessonStartTime': 'זמן תחילת השיעור',
-                'metadata.lessonEndTime': 'זמן סיום השיעור',
-                'metadata.signatureData': 'חתימה',
-                entityIds: 'רשומות',
-                entityName: 'סוג טבלה',
-                fullSuccess: 'הצלחה',
-                response: 'תגובה',
-            }
-        },
-        mail_address: {
-            name: 'כתובת מייל |||| כתובות מייל',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                alias: 'כתובת המייל',
-                entity: 'טבלת יעד',
-            }
-        },
-        audit_log: {
-            name: 'נתונים שהשתנו',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                entityId: 'מזהה שורה',
-                entityName: 'טבלה',
-                operation: 'פעולה',
-                entityData: 'המידע שהשתנה',
-                isReverted: 'שוחזר',
-            }
-        },
-        recieved_mail: {
-            name: 'מיילים שהתקבלו',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                from: 'מאת',
-                to: 'אל',
-                subject: 'כותרת',
-                body: 'תוכן',
-                entityName: 'טבלת יעד',
-                importFileIds: 'קבצים מצורפים',
             }
         },
         'student_by_year/pivot?extra.pivot=StudentAttendance': {
@@ -432,25 +319,6 @@ export default {
                 estimation: 'הערכה',
                 comments: 'הערה',
                 estimatedAbsPercents: 'אחוז חיסור משוער',
-            }
-        },
-        image: {
-            name: 'תמונה |||| תמונות',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                fileData: 'תמונה',
-                'fileData.src': 'תמונה',
-                imageTarget: 'יעד',
-            }
-        },
-        payment_track: {
-            name: 'מסלול תשלום |||| מסלולי תשלום',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                description: 'תיאור',
-                monthlyPrice: 'מחיר חודשי',
-                annualPrice: 'מחיר שנתי',
-                studentNumberLimit: 'מספר תלמידות',
             }
         },
         teacher_salary_report: {
