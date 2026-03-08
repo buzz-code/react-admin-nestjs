@@ -109,9 +109,7 @@ const StudentEventReport = (props) => {
             if (quota) {
                 const newDates = new Set(uniqueDates);
                 reports.forEach(report => {
-                    if (report.reportDate) {
-                        newDates.add(new Date(report.reportDate).toISOString().split('T')[0]);
-                    }
+                   newDates.add(new Date(report.reportDate).toISOString().split('T')[0]);
                 });
 
                 if (newDates.size > quota) {
