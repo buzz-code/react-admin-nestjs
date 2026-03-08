@@ -53,7 +53,7 @@ const extractBasePayload = (rootValues, reportValues, userId, studentId, absence
     return {
         userId: userId,
         studentReferenceId: studentId,
-        year: parseInt(defaultYearFilter.year),
+        year: defaultYearFilter.year,
         reportDate: reportValues.reportDate,
         isApproved: true,
         reason: extraInfo || "",
@@ -81,93 +81,85 @@ const StudentEventReport = (props) => {
             filter: {
                 studentReferenceId: student?.id,
                 absenceTypeId: selectedAbsenceTypeId,
-                year: parseInt(defaultYearFilter.year)
+                year: defaultYearFilter.year
             }
         },
         { enabled: !!selectedAbsenceTypeId && !!student?.id }
     );
 
-    const uniqueDates = new Set();
-    if (existingAbsences) {
-        existingAbsences.forEach(item => {
+   const uniqueDates = React.useMemo(() => {
+        const datesSet = new Set();
+        
+        existingAbsences?.forEach(item => {
             if (item.reportDate) {
-                uniqueDates.add(new Date(item.reportDate).toISOString().split('T')[0]);
+                datesSet.add(new Date(item.reportDate).toISOString().split('T')[0]);
             }
         });
-    }
+        
+        return datesSet;
+    }, [existingAbsences]); 
     const utilizedDays = uniqueDates.size;
 
-    const handleSave = async (values) => {
-        try {
-            const reports = values.reports || [];
-            if (reports.length === 0) {
-                notify("יש להזין לפחות דיווח אחד", { type: 'warning' });
-                return;
-            }
+ const handleSave = async (values) => {
+    try {
+        const reports = values.reports || [];
+        if (reports.length === 0) {
+            notify("יש להזין לפחות דיווח אחד", { type: 'warning' });
+            return;
+        }
 
-            const quota = absenceType?.quota;
-
-            if (quota) {
-                const newDates = new Set(uniqueDates);
-
-                reports.forEach(report => {
-                    if (report.reportDate) {
-                        newDates.add(new Date(report.reportDate).toISOString().split('T')[0]);
-                    }
-                });
-
-                if (newDates.size > quota) {
-                    notify(
-                        `חריגה מהמכסה! המכסה היא ${quota} ימים. עם הדיווחים החדשים את מנסה לנצל ${newDates.size} ימים שונים.`,
-                        { type: 'error', autoHideDuration: 10000 }
-                    );
-                    return;
-                }
-            }
-
-            let payloadsToCreate = [];
-
+        const quota = absenceType?.quota;
+        if (quota) {
+            const newDates = new Set(uniqueDates);
             reports.forEach(report => {
-                const basePayload = extractBasePayload(values, report, student.userId, student.id, absenceType);
-
-                if (report.homeroomKlassId && (parseFloat(report.homeroomAbsnceCount) > 0)) {
-                    payloadsToCreate.push({
-                        ...basePayload,
-                        klassReferenceId: report.homeroomKlassId,
-                        absnceCount: parseFloat(report.homeroomAbsnceCount)
-                    });
-                }
-
-                if (report.specializationKlassId && (parseFloat(report.specializationAbsnceCount) > 0)) {
-                    payloadsToCreate.push({
-                        ...basePayload,
-                        klassReferenceId: report.specializationKlassId,
-                        absnceCount: parseFloat(report.specializationAbsnceCount)
-                    });
-                }
-
-                if (report.extraKlassId && (parseFloat(report.extraAbsnceCount) > 0)) {
-                    payloadsToCreate.push({
-                        ...basePayload,
-                        klassReferenceId: report.extraKlassId,
-                        absnceCount: parseFloat(report.extraAbsnceCount)
-                    });
+                if (report.reportDate) {
+                    newDates.add(new Date(report.reportDate).toISOString().split('T')[0]);
                 }
             });
 
-            if (payloadsToCreate.length === 0) {
-                notify("יש להזין שעות היעדרות לפחות עבור כיתה אחת באחד הדיווחים", { type: 'warning' });
+            if (newDates.size > quota) {
+                notify(
+                    `חריגה מהמכסה! המכסה היא ${quota} ימים. עם הדיווחים החדשים את מנסה לנצל ${newDates.size} ימים שונים.`,
+                    { type: 'error', autoHideDuration: 10000 }
+                );
                 return;
             }
-
-            const response = await dataProvider.createMany('known_absence', payloadsToCreate);
-            handleActionSuccess(notify)(response);
-            clear();
-            reset();
-        } catch (error) {
-            handleError(notify)(error);
         }
-    };
+
+        let payloadsToCreate = [];
+
+        const addPayloadIfValid = (base, klassId, count) => {
+            const parsedCount = parseFloat(count);
+            if (klassId && parsedCount > 0) {
+                payloadsToCreate.push({
+                    ...base,
+                    klassReferenceId: klassId,
+                    absnceCount: parsedCount
+                });
+            }
+        };
+
+        reports.forEach(report => {
+            const basePayload = extractBasePayload(values, report, student.userId, student.id, absenceType);
+
+            addPayloadIfValid(basePayload, report.homeroomKlassId, report.homeroomAbsnceCount);
+            addPayloadIfValid(basePayload, report.specializationKlassId, report.specializationAbsnceCount);
+            addPayloadIfValid(basePayload, report.extraKlassId, report.extraAbsnceCount);
+        });
+
+        if (payloadsToCreate.length === 0) {
+            notify("יש להזין שעות היעדרות לפחות עבור כיתה אחת באחד הדיווחים", { type: 'warning' });
+            return;
+        }
+
+        const response = await dataProvider.createMany('known_absence', payloadsToCreate);
+        handleActionSuccess(notify)(response);
+        clear();
+        reset();
+    } catch (error) {
+        handleError(notify)(error);
+    }
+};
 
     return (
         <Create resource="known_absence" {...props} title="הוספת דיווח אירוע">
@@ -178,9 +170,8 @@ const StudentEventReport = (props) => {
                         <strong>שימי לב:</strong> המכסה השנתית לאירוע זה היא {absenceType.quota} ימים. עד כה ניצלת {utilizedDays} ימים. באפשרותך לדווח על {Math.max(0, absenceType.quota - utilizedDays)} ימים במקביל. מלאי את השדות הנדרשים מטה.
                     </div>
                 )}
-                <FormDataConsumer>
-                    {() => <DynamicFields absenceType={absenceType} isLoading={isLoading} />}
-                </FormDataConsumer>
+                <DynamicFields absenceType={absenceType} isLoading={isLoading} />
+
                 <ArrayInput source="reports" label="פירוט היעדרויות">
                     <SimpleFormIterator disableReordering>
                         <DateInput source="reportDate" label="תאריך החיסור" validate={required()} />

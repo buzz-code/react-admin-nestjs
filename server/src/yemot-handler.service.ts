@@ -38,7 +38,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   private async getStudentByInput(): Promise<Student> {
     let student = null;
     while (!student) {
-      student = await this.getStudentById();
+      student = await this.getStudentByTz();
 
       if (!student) {
         await this.sendMessage('מספר תז לא תקין נסי שוב');
@@ -46,11 +46,11 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     }
     return student;
   }
-  private async getStudentById(): Promise<Student> {
-    const id = await this.askForInput('הקישי מספר תז');
+  private async getStudentByTz(): Promise<Student> {
+    const tz = await this.askForInput('הקישי מספר תז');
     const student = await this.dataSource.getRepository(Student).findOneBy({
       userId: this.user.id,
-      tz: id,
+      tz: tz,
     });
     return student;
   }
