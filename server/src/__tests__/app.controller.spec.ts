@@ -39,8 +39,8 @@ describe('AppController', () => {
     authService = app.get<AuthService>(AuthService);
   });
 
-  it('should return "Hello World!"', () => {
-    expect(appController.getHello()).toBe('Hello World!');
+  it('should return hello message with startup timestamp', () => {
+    expect(appController.getHello()).toMatch(/^Hello World! Server started at /);
   });
 
   it('should log in a user and return a success message', async () => {

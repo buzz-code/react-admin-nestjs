@@ -17,8 +17,8 @@ describe('AppService', () => {
   });
 
   describe('getHello', () => {
-    it('should return "Hello World!"', () => {
-      expect(service.getHello()).toBe('Hello World!');
+    it('should return hello message with startup timestamp', () => {
+      expect(service.getHello()).toMatch(/^Hello World! Server started at /);
     });
   });
 });
