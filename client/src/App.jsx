@@ -121,10 +121,10 @@ const App = () => (
         );
       }
       if (studentView) {
-          return(
+        return (
           <> </>
         );
-     }
+      }
       return (
         <>
           <Resource name="teacher" {...teacher} options={{ menuGroup: 'data' }} icon={BadgeIcon} />
@@ -146,7 +146,7 @@ const App = () => (
           <Resource name="teacher_salary_report" {...teacherSalaryReport} options={{ menuGroup: 'report' }} icon={LocalAtmIcon} />
 
           <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
-          <CommonSettingsResources />
+          {CommonSettingsResources()}
           {isUploadedFiles(permissions) && <Resource name="uploaded_file" {...uploadedFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />}
           <Resource name="att_report" {...attReport} options={{ menuGroup: 'settings' }} icon={ViewListIcon} />
           <Resource name="grade_name" {...gradeName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
@@ -157,7 +157,7 @@ const App = () => (
           <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
 
           {isAdmin(permissions) && <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />}
-          <CommonAdminResources permissions={permissions} />
+          {CommonAdminResources({ permissions })}
 
           {isLessonSignature(permissions) && <>
             <Resource name="report_group" {...reportGroup} create={null} edit={isAdmin(permissions) ? reportGroup.edit : null} options={{ menuGroup: 'settings' }} icon={GroupWorkIcon} />
@@ -172,11 +172,7 @@ const App = () => (
             <Route path="/michlol-file-helper" element={<MichlolFileHelper />} />
             <Route path="/approved-absences-upload" element={<ApprovedAbsencesUpload />} />
           </CustomRoutes>
-          <CommonRoutes
-            permissions={permissions}
-            roadmapFeatures={roadmapFeatures}
-            settingsPage={<Settings />}
-          />
+          {CommonRoutes({ permissions, roadmapFeatures, settingsPage: <Settings /> })}
         </>
       );
     }}
