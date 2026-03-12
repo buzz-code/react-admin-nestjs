@@ -164,18 +164,18 @@ const App = () => (
             <Resource name="report_group_session" {...reportGroupSession} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
           </>}
 
+          <CustomRoutes>
+            <Route path="/percent-report-with-dates" element={<PercentReportWithDatesList />} />
+            <Route path="/scanner-upload" element={<ScannerUpload />} />
+            <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
+            <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
+            <Route path="/michlol-file-helper" element={<MichlolFileHelper />} />
+            <Route path="/approved-absences-upload" element={<ApprovedAbsencesUpload />} />
+          </CustomRoutes>
           <CommonRoutes
             permissions={permissions}
             roadmapFeatures={roadmapFeatures}
             settingsPage={<Settings />}
-            extraRoutes={<>
-              <Route path="/percent-report-with-dates" element={<PercentReportWithDatesList />} />
-              <Route path="/scanner-upload" element={<ScannerUpload />} />
-              <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
-              <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
-              <Route path="/michlol-file-helper" element={<MichlolFileHelper />} />
-              <Route path="/approved-absences-upload" element={<ApprovedAbsencesUpload />} />
-            </>}
           />
         </>
       );
