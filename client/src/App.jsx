@@ -101,7 +101,6 @@ const App = () => (
               <Route path="/in-lesson-report-att/*" element={<InLessonReport />} />
               <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
             </CustomRoutes>
-            <CommonRoutes permissions={permissions} roadmapFeatures={roadmapFeatures} />
           </>
         );
       }
@@ -118,17 +117,14 @@ const App = () => (
               <Route path="/student/student-attendance" element={<TeacherStudentAttendanceList />} />
               <Route path="/att_report_with_report_month_lead" element={<LeadTeacherAttReportList />} />
             </CustomRoutes>
-            <CommonRoutes permissions={permissions} roadmapFeatures={roadmapFeatures} settingsPage={<Settings />} />
           </>
         );
       }
       if (studentView) {
-        return (
-          <>
-            <CommonRoutes permissions={permissions} roadmapFeatures={roadmapFeatures} settingsPage={<Settings />} />
-          </>
+          return(
+          <> </>
         );
-      }
+     }
       return (
         <>
           <Resource name="teacher" {...teacher} options={{ menuGroup: 'data' }} icon={BadgeIcon} />
