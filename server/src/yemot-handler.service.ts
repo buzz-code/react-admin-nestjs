@@ -41,13 +41,13 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       student = await this.getStudentByTz();
 
       if (!student) {
-        await this.sendMessage('מספר תז לא תקין נסי שוב');
+        await this.sendMessage('מספר תעודת הזהות לא תקין נסי שוב');
       }
     }
     return student;
   }
   private async getStudentByTz(): Promise<Student> {
-    const tz = await this.askForInput('הקישי מספר תז');
+    const tz = await this.askForInput('הקישי מספר תעודת זהות');
     const student = await this.dataSource.getRepository(Student).findOneBy({
       userId: this.user.id,
       tz: tz,
