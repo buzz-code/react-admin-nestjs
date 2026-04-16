@@ -50,14 +50,16 @@ const extractBasePayload = (rootValues, reportValues, userId, studentId, absence
         .map(key => `${key.replace('dynamic_', '')}: ${rootValues[key]}`)
         .join(' | ');
 
+    const finalReason = extraInfo ? "דיווח תלמידה: " + extraInfo : "";
     return {
         userId: userId,
         studentReferenceId: studentId,
         year: defaultYearFilter.year,
         reportDate: reportValues.reportDate,
         isApproved: true,
-        reason: extraInfo || "",
-        absenceTypeId: rootValues.absenceTypeId
+        reason: finalReason,
+        absenceTypeId: rootValues.absenceTypeId,
+        absnceCode: rootValues.absnceCode
     };
 };
 
@@ -72,6 +74,17 @@ const StudentEventReport = (props) => {
         'absence_type',
         { id: selectedAbsenceTypeId },
         { enabled: !!selectedAbsenceTypeId }
+    );
+    const { data: studentKlasses } = useGetList(
+        'student_klass',
+        {
+            pagination: { page: 1, perPage: 20 },
+            filter: {
+                studentReferenceId: student?.id,
+                year: defaultYearFilter.year
+            }
+        },
+        { enabled: !!student?.id }
     );
 
     const { data: existingAbsences } = useGetList(
@@ -109,7 +122,7 @@ const StudentEventReport = (props) => {
             if (quota) {
                 const newDates = new Set(uniqueDates);
                 reports.forEach(report => {
-                   newDates.add(new Date(report.reportDate).toISOString().split('T')[0]);
+                    newDates.add(new Date(report.reportDate).toISOString().split('T')[0]);
                 });
 
                 if (newDates.size > quota) {
@@ -123,23 +136,21 @@ const StudentEventReport = (props) => {
 
             let payloadsToCreate = [];
 
-            const addPayloadIfValid = (base, klassId, count) => {
-                const parsedCount = parseFloat(count);
-                if (klassId && parsedCount > 0) {
-                    payloadsToCreate.push({
-                        ...base,
-                        klassReferenceId: klassId,
-                        absnceCount: parsedCount
-                    });
-                }
-            };
-
             reports.forEach(report => {
                 const basePayload = extractBasePayload(values, report, student.userId, student.id, absenceType);
 
-                addPayloadIfValid(basePayload, report.homeroomKlassId, report.homeroomAbsnceCount);
-                addPayloadIfValid(basePayload, report.specializationKlassId, report.specializationAbsnceCount);
-                addPayloadIfValid(basePayload, report.extraKlassId, report.extraAbsnceCount);
+                if (report.klassAbsences) {
+                    Object.entries(report.klassAbsences).forEach(([klassId, count]) => {
+                        const parsedCount = parseFloat(count);
+                        if (parsedCount > 0) {
+                            payloadsToCreate.push({
+                                ...basePayload,
+                                klassReferenceId: klassId,
+                                absnceCount: parsedCount
+                            });
+                        }
+                    });
+                }
             });
 
             if (payloadsToCreate.length === 0) {
@@ -171,35 +182,33 @@ const StudentEventReport = (props) => {
                     <SimpleFormIterator disableReordering>
                         <DateInput source="reportDate" label="תאריך החיסור" validate={required()} />
 
-                        <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', width: '100%' }}>
-                            <div style={{ flex: 1 }}>
-                                <CommonReferenceInput source="homeroomKlassId" label="כיתת אם" reference="klass" validate={required()} dynamicFilter={filterByUserIdAndYear} />
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <NumberInput source="homeroomAbsnceCount" label="שעות היעדרות" validate={required()} defaultValue={0} min={0} step={1} />
-                            </div>
-                        </div>
-
-                        <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', width: '100%' }}>
-                            <div style={{ flex: 1 }}>
-                                <CommonReferenceInput source="specializationKlassId" label="כיתת התמחות (אופציונלי)" reference="klass" dynamicFilter={filterByUserIdAndYear} />
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <NumberInput source="specializationAbsnceCount" label="שעות היעדרות" defaultValue={0} min={0} step={1} />
-                            </div>
-                        </div>
-
-                        <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', width: '100%' }}>
-                            <div style={{ flex: 1 }}>
-                                <CommonReferenceInput source="extraKlassId" label="כיתת התמחות 2 (אופציונלי)" reference="klass" dynamicFilter={filterByUserIdAndYear} />
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <NumberInput source="extraAbsnceCount" label="שעות היעדרות" defaultValue={0} min={0} step={1} />
-                            </div>
+                        <div style={{ marginTop: '10px', borderRight: '3px solid #eee', paddingRight: '15px' }}>
+                            <p style={{ fontWeight: 'bold', fontSize: '0.9em' }}>מספר שיעורי חיסור בכל כיתה:</p>
+                            {studentKlasses?.map(sk => (
+                                <div key={sk.klassReferenceId} style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '8px' }}>
+                                    <div style={{ flex: 1, fontSize: '14px' }}>
+                                        <CommonReferenceInput
+                                            source={`klassAbsences_display_${sk.klassReferenceId}`}
+                                            label="כיתה"
+                                            reference="klass"
+                                            defaultValue={sk.klassReferenceId}
+                                            disabled
+                                        />
+                                    </div>
+                                    <div style={{ flex: 1 }}>
+                                        <NumberInput
+                                            source={`klassAbsences.${sk.klassReferenceId}`}
+                                            label="שעות"
+                                            min={0}
+                                            defaultValue={0}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </SimpleFormIterator>
                 </ArrayInput>
-
+                <NumberInput source="absnceCode" validate={required()} />
                 <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} disabled />
                 <BooleanInput source="isApproved" defaultValue={true} disabled />
                 <SignatureInput source="signatureData" validate={[required()]} label='אני מאשרת כי המידע המוצג בדו"ח זה אמין ומדויק, וכי סיבת ההיעדרות המצוינת היא הסיבה בפועל.' />
