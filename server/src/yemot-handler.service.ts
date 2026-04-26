@@ -16,6 +16,10 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   override async processCall(): Promise<void> {
     await this.getUserByDidPhone();
     this.logger.log(`Processing call with ID: ${this.call.callId} from phone: ${this.call.phone}`);
+    if (await this.isPastReportingDeadline()) {
+      await this.hangupWithMessage("המערכת סגורה. לא ניתן לדווח אחרי השעה תשע וחצי בבוקר. המשך יום טוב.");
+      return;
+    }
     const student = await this.getStudentByInput()
     if (!student) return;
     const alreadyReported = await this.hasReportedToday(student.id);
@@ -34,20 +38,28 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       await this.hangupWithMessage("יצאת מאוחר מידי המשך יום טוב");
     }
   }
+  private isPastReportingDeadline(): boolean {
+    const now = new Date();
+    const israelTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
 
+    const hour = israelTime.getHours();
+    const minute = israelTime.getMinutes();
+
+    return hour > 9 || (hour === 9 && minute >= 30);
+  }
   private async getStudentByInput(): Promise<Student> {
     let student = null;
     while (!student) {
       student = await this.getStudentByTz();
 
       if (!student) {
-        await this.sendMessage('מספר תז לא תקין נסי שוב');
+        await this.sendMessage('מספר תעודת הזהות לא תקין נסי שוב');
       }
     }
     return student;
   }
   private async getStudentByTz(): Promise<Student> {
-    const tz = await this.askForInput('הקישי מספר תז');
+    const tz = await this.askForInput('הקישי מספר תעודת זהות');
     const student = await this.dataSource.getRepository(Student).findOneBy({
       userId: this.user.id,
       tz: tz,
