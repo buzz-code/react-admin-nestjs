@@ -27,7 +27,7 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect(/^Hello World! Server started at /);
   });
 
   it('should use SQLite in-memory database for E2E tests', () => {
