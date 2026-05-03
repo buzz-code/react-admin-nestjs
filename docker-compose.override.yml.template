@@ -1,8 +1,8 @@
 version: "3"
 name: react-admin-nestjs-dev
 services:
-    frontend:
-        container_name: frontend-dev
+    client:
+        container_name: client-dev
         build:
             target: development
         environment:
@@ -14,8 +14,8 @@ services:
         networks:
             - private-network
 
-    backend:
-        container_name: backend-dev
+    server:
+        container_name: server-dev
         build:
             target: development
         ports:
@@ -25,8 +25,8 @@ services:
         networks:
             - private-network
 
-    mysql:
-        container_name: mysql-dev
+    database:
+        container_name: database-dev
         ports:
             - "3306:3306"  # MySQL port for local access
 
