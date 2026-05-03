@@ -1,4 +1,5 @@
 import { Resource, CustomRoutes } from 'react-admin';
+import { buildResources } from '@shared/components/app/buildResources';
 import { Route } from 'react-router-dom';
 import { blue, purple } from '@mui/material/colors';
 
@@ -125,38 +126,40 @@ const App = () => (
           <> </>
         );
       }
+      const adminResources = [
+        { name: 'teacher',                      config: teacher,                 icon: BadgeIcon,              menuGroup: 'data' },
+        { name: 'klass_type',                   config: klassType,               icon: CategoryIcon,           menuGroup: 'data' },
+        { name: 'klass',                        config: klass,                   icon: SupervisedUserCircleIcon, menuGroup: 'data' },
+        { name: 'lesson',                       config: lesson,                  icon: SchoolIcon,             menuGroup: 'data' },
+        { name: 'student_klass',                config: studentKlass,            icon: WorkspacesIcon,         menuGroup: 'data' },
+        { name: 'transportation',               config: transportation,           icon: DirectionsBusIcon,      menuGroup: 'data', condition: p => isTransportation(p) || isAdmin(p) },
+        { name: 'absence_type',                 config: absenceType,             icon: CelebrationIcon,        menuGroup: 'data', condition: p => isAbsenceType(p) || isAdmin(p) },
+        { name: 'att_report_with_report_month', config: attReportWithReportMonth, icon: ViewListIcon,           menuGroup: 'data' },
+        { name: 'grade',                        config: grade,                   icon: GradingIcon,            menuGroup: 'data' },
+        { name: 'known_absence',                config: knownAbsence,            icon: PlaylistRemoveIcon,     menuGroup: 'data' },
+        { name: 'student_klass_report',         config: studentKlassesReport,    icon: GroupWorkIcon,          menuGroup: 'report' },
+        { name: 'teacher_report_status',        config: teacherReportStatus,     icon: RuleIcon,               menuGroup: 'report' },
+        { name: 'teacher_grade_report_status',  config: teacherGradeReportStatus, icon: RuleIcon,              menuGroup: 'report' },
+        { name: 'teacher_salary_report',        config: teacherSalaryReport,     icon: LocalAtmIcon,           menuGroup: 'report' },
+        { name: 'student_percent_report',       config: studentPercentReport,    icon: SummarizeIcon,          menuGroup: 'report', condition: isAdmin },
+        { name: 'report_month',                 config: reportMonth,             icon: DateRangeIcon,          menuGroup: 'settings' },
+        { name: 'uploaded_file',                config: uploadedFile,            icon: UploadFileIcon,         menuGroup: 'settings', condition: isUploadedFiles },
+        { name: 'att_report',                   config: attReport,               icon: ViewListIcon,           menuGroup: 'settings' },
+        { name: 'grade_name',                   config: gradeName,               icon: LabelIcon,              menuGroup: 'settings' },
+        { name: 'attendance_name',              config: attendanceName,          icon: LabelIcon,              menuGroup: 'settings' },
+        { name: 'att_grade_effect',             config: attGradeEffect,          icon: CalculateIcon,          menuGroup: 'settings' },
+        { name: 'student_by_year',              config: resourceEntityGuesser,   icon: PermContactCalendarIcon, menuGroup: 'admin',   condition: isAdmin },
+        { name: 'grade_effect_by_user',         config: resourceEntityGuesser,   icon: AdminPanelSettingsIcon, menuGroup: 'admin',   condition: isAdmin },
+        { name: 'abs_count_effect_by_user',     config: resourceEntityGuesser,   icon: AdminPanelSettingsIcon, menuGroup: 'admin',   condition: isAdmin },
+      ];
       return (
         <>
-          <Resource name="teacher" {...teacher} options={{ menuGroup: 'data' }} icon={BadgeIcon} />
-          <Resource name="klass_type" {...klassType} options={{ menuGroup: 'data' }} icon={CategoryIcon} />
-          <Resource name="klass" {...klass} options={{ menuGroup: 'data' }} icon={SupervisedUserCircleIcon} />
-          <Resource name="lesson" {...lesson} options={{ menuGroup: 'data' }} icon={SchoolIcon} />
+          {buildResources(adminResources, permissions)}
+          {/* student resource has a nested route so stays inline */}
           <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
             <Route path="student-attendance" element={<StudentAttendanceList />} />
           </Resource>
-          <Resource name="student_klass" {...studentKlass} options={{ menuGroup: 'data' }} icon={WorkspacesIcon} />
-          {(isTransportation(permissions) || isAdmin(permissions)) && <Resource name="transportation" {...transportation} options={{ menuGroup: 'data' }} icon={DirectionsBusIcon} />}
-          {(isAbsenceType(permissions) || isAdmin(permissions)) && <Resource name="absence_type" {...absenceType} options={{ menuGroup: 'data' }} icon={CelebrationIcon} />}
-          <Resource name="att_report_with_report_month" {...attReportWithReportMonth} options={{ menuGroup: 'data' }} icon={ViewListIcon} />
-          <Resource name="grade" {...grade} options={{ menuGroup: 'data' }} icon={GradingIcon} />
-          <Resource name="known_absence" {...knownAbsence} options={{ menuGroup: 'data' }} icon={PlaylistRemoveIcon} />
-          <Resource name="student_klass_report" {...studentKlassesReport} options={{ menuGroup: 'report' }} icon={GroupWorkIcon} />
-          <Resource name="teacher_report_status" {...teacherReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
-          <Resource name="teacher_grade_report_status" {...teacherGradeReportStatus} options={{ menuGroup: 'report' }} icon={RuleIcon} />
-          <Resource name="teacher_salary_report" {...teacherSalaryReport} options={{ menuGroup: 'report' }} icon={LocalAtmIcon} />
-
-          <Resource name="report_month" {...reportMonth} options={{ menuGroup: 'settings' }} icon={DateRangeIcon} />
           {CommonSettingsResources()}
-          {isUploadedFiles(permissions) && <Resource name="uploaded_file" {...uploadedFile} options={{ menuGroup: 'settings' }} icon={UploadFileIcon} />}
-          <Resource name="att_report" {...attReport} options={{ menuGroup: 'settings' }} icon={ViewListIcon} />
-          <Resource name="grade_name" {...gradeName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
-          <Resource name="attendance_name" {...attendanceName} options={{ menuGroup: 'settings' }} icon={LabelIcon} />
-          <Resource name="att_grade_effect" {...attGradeEffect} options={{ menuGroup: 'settings' }} icon={CalculateIcon} />
-          <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
-          <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
-          <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
-
-          {isAdmin(permissions) && <Resource name="student_percent_report" {...studentPercentReport} options={{ menuGroup: 'report' }} icon={SummarizeIcon} />}
           {CommonAdminResources({ permissions })}
 
           {isLessonSignature(permissions) && <>
