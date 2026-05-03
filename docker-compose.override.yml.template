@@ -7,8 +7,10 @@ services:
             target: development
         environment:
             PORT: 3000
+            HMR_PORT: 24678
         ports:
-            - "3000:3000"    # Main Vite dev server port
+            - "3000:3000"    # Vite dev server
+            - "24678:24678"  # Vite HMR
         volumes:
             - ./client:/app
         networks:
