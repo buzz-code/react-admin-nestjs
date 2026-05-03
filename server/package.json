@@ -27,7 +27,8 @@
     "typeorm:generate": "npm run typeorm:cli -- migration:generate",
     "typeorm:create": "npm run typeorm:cli-no-d -- migration:create",
     "typeorm:revert": "npm run typeorm:cli -- migration:revert",
-    "clean-migrations": "node helpers/clean-migrations"
+    "clean-migrations": "node helpers/clean-migrations",
+    "prettier": "prettier --write \"{src,apps,libs,test}/**/*.ts\""
   },
   "dependencies": {
     "@dataui/crud": "^5.2.3",
