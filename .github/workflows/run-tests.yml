@@ -9,5 +9,6 @@ jobs:
   tests:
     uses: buzz-code/multi-repo-codespace/.github/workflows/reusable-tests.yml@main
     with:
-      run_e2e: true
+      run_client: true
+      run_server: true
 
