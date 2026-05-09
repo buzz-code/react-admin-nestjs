@@ -6,9 +6,39 @@ on:
       - main
 
 jobs:
-  tests:
-    uses: buzz-code/multi-repo-codespace/.github/workflows/reusable-tests.yml@2fd248e058518a8d28f0ee90f03c73e187904c7e
-    with:
-      run_client: true
-      run_server: true
+  server-tests:
+    name: Run server tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: server/yarn.lock
+      - run: yarn
+      - run: yarn test
+
+  client-tests:
+    name: Run client tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: client/yarn.lock
+      - run: yarn
+      - run: yarn test
 
