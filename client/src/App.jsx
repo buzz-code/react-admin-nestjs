@@ -148,13 +148,13 @@ const App = () => (
         { name: 'grade_name', config: gradeName, icon: LabelIcon, menuGroup: 'settings' },
         { name: 'attendance_name', config: attendanceName, icon: LabelIcon, menuGroup: 'settings' },
         { name: 'att_grade_effect', config: attGradeEffect, icon: CalculateIcon, menuGroup: 'settings' },
-        p => isAdmin(p) && { name: 'student_by_year', config: resourceEntityGuesser, icon: PermContactCalendarIcon, menuGroup: 'admin' },
-        p => isAdmin(p) && { name: 'grade_effect_by_user', config: resourceEntityGuesser, icon: AdminPanelSettingsIcon, menuGroup: 'admin' },
-        p => isAdmin(p) && { name: 'abs_count_effect_by_user', config: resourceEntityGuesser, icon: AdminPanelSettingsIcon, menuGroup: 'admin' },
       ];
       return (
         <>
           {buildResources(adminResources, permissions)}
+          <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
+          <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
+          <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
           {/* student resource has a nested route so stays inline */}
           <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
             <Route path="student-attendance" element={<StudentAttendanceList />} />
