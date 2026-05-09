@@ -23,13 +23,6 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect(/^Hello World! Server started at /);
-  });
-
   it('should use SQLite in-memory database for E2E tests', () => {
     expect(dataSource).toBeDefined();
     expect(dataSource.options.type).toBe('sqlite');

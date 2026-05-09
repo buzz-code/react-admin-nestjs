@@ -23,6 +23,7 @@ jobs:
           cache-dependency-path: server/yarn.lock
       - run: yarn
       - run: yarn test
+      - run: yarn test:e2e
 
   client-tests:
     name: Run client tests
