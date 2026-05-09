@@ -38,6 +38,7 @@ import absenceTypeConfig from "./entity-modules/absenceType.config";
 import uploadedFileConfig from "@shared/entities/configs/uploaded-file.config";
 import { Student } from "./db/entities/Student.entity";
 import { Teacher } from "./db/entities/Teacher.entity";
+import userConfig from "../shared/entities/configs/user.config";
 
 registerEntityNameMap({
     att_report: 'נוכחות',
@@ -54,7 +55,7 @@ registerEntityNameMap({
 
 @Module({
     imports: [
-        ...createSharedEntitiesImports(),
+        ...createSharedEntitiesImports(userConfig),
         BaseEntityModule.register(attReportConfig),
         BaseEntityModule.register(attReportWithReportMonthConfig),
         BaseEntityModule.register(gradeConfig),
