@@ -126,11 +126,15 @@ const App = () => (
           <> </>
         );
       }
-      const adminResources = [
+      // student has a nested route so cannot go through buildResources; it sits between
+      // lesson and student_klass to preserve the original data-group menu order.
+      const preStudentResources = [
         { name: 'teacher', config: teacher, icon: BadgeIcon, menuGroup: 'data' },
         { name: 'klass_type', config: klassType, icon: CategoryIcon, menuGroup: 'data' },
         { name: 'klass', config: klass, icon: SupervisedUserCircleIcon, menuGroup: 'data' },
         { name: 'lesson', config: lesson, icon: SchoolIcon, menuGroup: 'data' },
+      ];
+      const postStudentResources = [
         { name: 'student_klass', config: studentKlass, icon: WorkspacesIcon, menuGroup: 'data' },
         p => (isTransportation(p) || isAdmin(p)) && { name: 'transportation', config: transportation, icon: DirectionsBusIcon, menuGroup: 'data' },
         p => (isAbsenceType(p) || isAdmin(p)) && { name: 'absence_type', config: absenceType, icon: CelebrationIcon, menuGroup: 'data' },
@@ -151,14 +155,14 @@ const App = () => (
       ];
       return (
         <>
-          {buildResources(adminResources, permissions)}
-          <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
-          <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
-          <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
-          {/* student resource has a nested route so stays inline */}
+          {buildResources(preStudentResources, permissions)}
           <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
             <Route path="student-attendance" element={<StudentAttendanceList />} />
           </Resource>
+          {buildResources(postStudentResources, permissions)}
+          <Resource name="student_by_year" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={CommonRepresentation} options={{ menuGroup: 'admin' }} icon={PermContactCalendarIcon} />
+          <Resource name="grade_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
+          <Resource name="abs_count_effect_by_user" {...(isAdmin(permissions) ? resourceEntityGuesser : {})} recordRepresentation={'effect'} options={{ menuGroup: 'admin' }} icon={AdminPanelSettingsIcon} />
           {CommonSettingsResources()}
           {CommonAdminResources({ permissions })}
 
