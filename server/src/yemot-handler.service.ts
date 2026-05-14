@@ -130,7 +130,6 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const studentKlass = await this.dataSource.getRepository(StudentKlass).findOneBy({
       userId: this.user.id,
       studentReferenceId: student.id,
-      studentTz: student.tz
     });
     if (!studentKlass) {
       await this.hangupWithMessage(' התלמידה אינה משויכת לכיתה.');
