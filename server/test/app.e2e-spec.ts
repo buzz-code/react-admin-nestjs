@@ -28,4 +28,13 @@ describe('AppController (e2e)', () => {
     expect(dataSource.options.type).toBe('sqlite');
     expect((dataSource.options as any).database).toBe(':memory:');
   });
+
+  it('GET / should return 200 with Hello World message', () => {
+    return request(app.getHttpServer())
+      .get('/')
+      .expect(200)
+      .expect((res) => {
+        expect(res.text).toContain('Hello World!');
+      });
+  });
 });
