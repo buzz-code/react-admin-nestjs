@@ -1,14 +1,14 @@
-FROM node:18-alpine as development
+FROM node:18-alpine AS development
 
-RUN apk add git
+RUN apk add --no-cache git
+
+ENV NODE_ENV development
 
 WORKDIR /app
 
-# COPY package*.json /app/
-# COPY yarn.lock /app/
-
+# No need to do this, because external node_modules are mounted
+# COPY package*.json yarn.lock ./
 # RUN yarn install
-
 # COPY . .
 
 CMD ["yarn", "start"]
