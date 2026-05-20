@@ -58,7 +58,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
 
                 // Note: year is now a single number, not an array
 
-                const whereClause: FindOptionsWhere<AttReportWithReportMonth> = {
+                const baseWhere = {
                     userId: data[0].userId,
                     studentReferenceId: In(studentIds),
                     klassReferenceId: Utils.getInFilter(klassReferenceIds),
@@ -69,14 +69,10 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                 };
 
-                if (excludedLessonIds?.length > 0) {
-                    whereClause.lessonReferenceId = Not(In(excludedLessonIds));
-                }
-
                 const pivotData = await this.dataSource
                     .getRepository(AttReportWithReportMonth)
                     .find({
-                        where: whereClause,
+                        where: Utils.applyExcludedLessons<AttReportWithReportMonth>(baseWhere, excludedLessonIds),
                         relations: {
                             klass: true,
                             lesson: true,
@@ -98,31 +94,14 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     studentMap[item.studentReferenceId].totalLessons += item.howManyLessons;
                 });
 
-                const commonWhere: FindOptionsWhere<KnownAbsenceWithReportMonth> = {
-                    isApproved: true,
-                    userId: data[0].userId,
-                    studentReferenceId: In(studentIds),
-                    klassReferenceId: Utils.getInFilter(klassReferenceIds),
-                    klass: Utils.getKlassFilter(klassTypeReferenceIds),
-                    lessonReferenceId: Utils.getInFilter(lessonIds),
-                    year: yearFilter?.value,
-                    reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
-                    reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
-                };
-
-                let knownAbsenceWhere: FindOptionsWhere<KnownAbsenceWithReportMonth> | FindOptionsWhere<KnownAbsenceWithReportMonth>[] = commonWhere;
-
-                if (extra?.excludedLessonIds && excludedLessonIds.length > 0) {
-                    knownAbsenceWhere = [
-                        { ...commonWhere, lessonReferenceId: Not(In(excludedLessonIds)) },
-                        { ...commonWhere, lessonReferenceId: IsNull() }
-                    ];
-                }
-
                 const totalAbsencesData = await this.dataSource
                     .getRepository(KnownAbsenceWithReportMonth)
                     .find({
-                        where: knownAbsenceWhere,
+                        where: Utils.applyExcludedLessons<KnownAbsenceWithReportMonth>(
+                            { ...baseWhere, isApproved: true },
+                            excludedLessonIds,
+                            true
+                        ),
                         relations: {
                             klass: true,
                             reportMonth: true,
@@ -197,6 +176,14 @@ export const Utils = {
         if (filter) {
             return { klassTypeReferenceId: filter };
         }
+    },
+    applyExcludedLessons<T>(where: FindOptionsWhere<T>, excludedLessonIds: number[], includeNull = false): FindOptionsWhere<T> | FindOptionsWhere<T>[] {
+        if (!excludedLessonIds?.length) return where;
+        const withExclusion: FindOptionsWhere<T> = { ...where, lessonReferenceId: Not(In(excludedLessonIds)) };
+        if (includeNull) {
+            return [withExclusion, { ...where, lessonReferenceId: IsNull() }];
+        }
+        return withExclusion;
     }
 };
 
