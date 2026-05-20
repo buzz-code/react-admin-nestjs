@@ -4,7 +4,7 @@ import { ReportContext } from './context';
 
 export const ReportHeader = () => {
     const { lesson, gradeMode } = useContext(ReportContext);
-    
+
     return (
         <Box padding={2}>
             <Typography variant="h6" component="div">

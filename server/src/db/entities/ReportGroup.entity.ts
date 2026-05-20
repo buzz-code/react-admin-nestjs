@@ -10,21 +10,21 @@ import {
   PrimaryGeneratedColumn,
   BeforeInsert,
   BeforeUpdate,
-} from "typeorm";
-import { IHasUserId } from "@shared/base-entity/interface";
-import { Teacher } from "./Teacher.entity";
-import { Lesson } from "./Lesson.entity";
-import { Klass } from "./Klass.entity";
-import { ReportGroupSession } from "./ReportGroupSession.entity";
-import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, MaxLength } from "@shared/utils/validation/class-validator-he";
-import { StringType, NumberType } from "@shared/utils/entity/class-transformer";
-import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
-import { LongTextColumn } from "@shared/utils/entity/column-types.util";
+} from 'typeorm';
+import { IHasUserId } from '@shared/base-entity/interface';
+import { Teacher } from './Teacher.entity';
+import { Lesson } from './Lesson.entity';
+import { Klass } from './Klass.entity';
+import { ReportGroupSession } from './ReportGroupSession.entity';
+import { CrudValidationGroups } from '@dataui/crud';
+import { IsNotEmpty, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { StringType, NumberType } from '@shared/utils/entity/class-transformer';
+import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
+import { LongTextColumn } from '@shared/utils/entity/column-types.util';
 
-@Index("report_groups_user_id_idx", ["userId"], {})
-@Index("report_groups_user_id_year_idx", ["userId", "year"], {})
-@Entity("report_groups")
+@Index('report_groups_user_id_idx', ['userId'], {})
+@Index('report_groups_user_id_year_idx', ['userId', 'year'], {})
+@Entity('report_groups')
 export class ReportGroup implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
@@ -32,10 +32,10 @@ export class ReportGroup implements IHasUserId {
     fillDefaultYearValue(this);
   }
 
- @PrimaryGeneratedColumn({ type: "int", name: "id" })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column("int", { name: "user_id" })
+  @Column('int', { name: 'user_id' })
   userId: number;
 
   @StringType
@@ -51,21 +51,21 @@ export class ReportGroup implements IHasUserId {
 
   @StringType
   @LongTextColumn({ nullable: true })
-  signatureData: string;            // ONE signature for entire group
+  signatureData: string; // ONE signature for entire group
 
   @NumberType
   @Column({ nullable: true })
-  @Index("report_groups_teacher_reference_id_idx")
+  @Index('report_groups_teacher_reference_id_idx')
   teacherReferenceId: number;
 
   @NumberType
   @Column({ nullable: true })
-  @Index("report_groups_lesson_reference_id_idx")
+  @Index('report_groups_lesson_reference_id_idx')
   lessonReferenceId: number;
 
   @NumberType
   @Column({ nullable: true })
-  @Index("report_groups_klass_reference_id_idx")
+  @Index('report_groups_klass_reference_id_idx')
   klassReferenceId: number;
 
   @NumberType
@@ -91,6 +91,6 @@ export class ReportGroup implements IHasUserId {
   @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
 
-  @OneToMany(() => ReportGroupSession, session => session.reportGroup)
+  @OneToMany(() => ReportGroupSession, (session) => session.reportGroup)
   sessions: ReportGroupSession[];
 }

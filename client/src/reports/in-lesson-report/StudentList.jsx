@@ -1,5 +1,14 @@
 import React, { useCallback, useContext, useMemo } from 'react';
-import { NumberInput, DateInput, minValue, maxValue, useRecordContext, TextInput, maxLength, required } from 'react-admin';
+import {
+    NumberInput,
+    DateInput,
+    minValue,
+    maxValue,
+    useRecordContext,
+    TextInput,
+    maxLength,
+    required,
+} from 'react-admin';
 import Table from '@mui/material/Table';
 import { CommonTimeInput } from '@shared/components/fields/CommonTimeInput';
 import TableBody from '@mui/material/TableBody';
@@ -39,39 +48,42 @@ export const StudentList = ({ reportDates, setReportDates }) => {
         return cols;
     }, [gradeMode, isShowLate]);
 
-    const handleDateChange = useCallback((index) => (event) => {
-        setReportDates(reportDates => {
-            const newDates = [...reportDates];
-            newDates[index] = event.target.value;
-            return newDates;
-        });
-    }, [setReportDates]);
+    const handleDateChange = useCallback(
+        (index) => (event) => {
+            setReportDates((reportDates) => {
+                const newDates = [...reportDates];
+                newDates[index] = event.target.value;
+                return newDates;
+            });
+        },
+        [setReportDates],
+    );
 
     const addReportDate = useCallback(() => {
-        setReportDates(reportDates => [...reportDates, getDefaultReportDate()]);
+        setReportDates((reportDates) => [...reportDates, getDefaultReportDate()]);
     }, [setReportDates]);
 
-    const removeReportDate = useCallback((index) => {
-        setReportDates(reportDates => {
-            const newDates = [...reportDates];
-            newDates.splice(index, 1);
-            return newDates;
-        });
-    }, [setReportDates]);
+    const removeReportDate = useCallback(
+        (index) => {
+            setReportDates((reportDates) => {
+                const newDates = [...reportDates];
+                newDates.splice(index, 1);
+                return newDates;
+            });
+        },
+        [setReportDates],
+    );
 
     return (
         <TableContainer component={Paper}>
-            <Table stickyHeader size='small'>
+            <Table stickyHeader size="small">
                 <TableHead>
                     <TableRow>
                         <TableCell>
                             <Button onClick={addReportDate}>הוסף תאריך חדש</Button>
                         </TableCell>
                         {reportDates.map((date, index) => (
-                            <TableCell
-                                key={`date-${index}`}
-                                colSpan={columns.length}
-                            >
+                            <TableCell key={`date-${index}`} colSpan={columns.length}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                     <div style={{ flex: 1 }}>
                                         <DateInput
@@ -97,7 +109,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                         </IconButton>
                                     )}
                                 </div>
-                                
+
                                 {hasLessonSignaturePermission && (
                                     <>
                                         <CommonTimeInput
@@ -126,34 +138,35 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                         <TableCell>
                             <Text>שם התלמידה</Text>
                         </TableCell>
-                        {reportDates.map((date, index) => (
-                            columns.map(column => (
+                        {reportDates.map((date, index) =>
+                            columns.map((column) => (
                                 <TableCell key={`header-${index}-${column.id}`}>
                                     <Text>{column.label}</Text>
                                 </TableCell>
-                            ))
-                        ))}
+                            )),
+                        )}
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {students && students
-                        .filter(student => student.student)
-                        .map(student => (
-                            <TableRow key={student.student.id}>
-                                <TableCell>
-                                    <Text>{student.student.name}</Text>
-                                </TableCell>
-                                {reportDates.map((date, index) => (
-                                    <ReportItemInputs
-                                        key={`report-${student.student.id}-${index}`}
-                                        index={index}
-                                        columns={columns}
-                                        studentId={student.student.id}
-                                        lessonCount={record.howManyLessons}
-                                    />
-                                ))}
-                            </TableRow>
-                        ))}
+                    {students &&
+                        students
+                            .filter((student) => student.student)
+                            .map((student) => (
+                                <TableRow key={student.student.id}>
+                                    <TableCell>
+                                        <Text>{student.student.name}</Text>
+                                    </TableCell>
+                                    {reportDates.map((date, index) => (
+                                        <ReportItemInputs
+                                            key={`report-${student.student.id}-${index}`}
+                                            index={index}
+                                            columns={columns}
+                                            studentId={student.student.id}
+                                            lessonCount={record.howManyLessons}
+                                        />
+                                    ))}
+                                </TableRow>
+                            ))}
                 </TableBody>
             </Table>
         </TableContainer>
@@ -166,7 +179,7 @@ const Text = ({ children }) => (
     </Typography>
 );
 
-const ReportItemInputs = ({ index, columns, studentId, lessonCount, ...rest }) => (
+const ReportItemInputs = ({ index, columns, studentId, lessonCount, ...rest }) =>
     columns.map((column) => (
         <TableCell key={column.id}>
             {column.type === 'number' ? (
@@ -188,12 +201,7 @@ const ReportItemInputs = ({ index, columns, studentId, lessonCount, ...rest }) =
                     {...rest}
                 />
             ) : (
-                <CommonSliderInput
-                    source={`${studentId}.${column.id}_${index}`}
-                    max={lessonCount}
-                    {...rest}
-                />
+                <CommonSliderInput source={`${studentId}.${column.id}_${index}`} max={lessonCount} {...rest} />
             )}
         </TableCell>
-    ))
-);
+    ));

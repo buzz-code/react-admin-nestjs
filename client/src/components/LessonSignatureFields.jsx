@@ -5,22 +5,22 @@ import SignatureInput from '@shared/components/fields/signature/SignatureInput';
 import { useIsLessonSignature } from 'src/utils/appPermissions';
 
 const LessonSignatureFields = ({ record }) => {
-  const hasPermission = useIsLessonSignature();
+    const hasPermission = useIsLessonSignature();
 
-  if (!hasPermission) return null;
+    if (!hasPermission) return null;
 
-  return (
-    <>
-      <Divider />
-      <Box sx={{ mt: 2, mb: 2 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          חתימה דיגיטלית
-        </Typography>
+    return (
+        <>
+            <Divider />
+            <Box sx={{ mt: 2, mb: 2 }}>
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                    חתימה דיגיטלית
+                </Typography>
 
-        <SignatureInput source="signatureData" label="חתימה דיגיטלית" validate={[required()]} />
-      </Box>
-    </>
-  );
+                <SignatureInput source="signatureData" label="חתימה דיגיטלית" validate={[required()]} />
+            </Box>
+        </>
+    );
 };
 
 export default LessonSignatureFields;

@@ -5,8 +5,8 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter } from '@shared/utils/yearFilter';
 
-const lessonKeyAndName = item => `${item.name} (${item.key})`;
-const filterToQuery = searchText => {
+const lessonKeyAndName = (item) => `${item.name} (${item.key})`;
+const filterToQuery = (searchText) => {
     const keyMatch = /\((\d+)\)/.exec(searchText);
     if (keyMatch) {
         return { key: keyMatch[1] };
@@ -29,7 +29,9 @@ export const LessonSelector = ({ onLessonFound, selectedTeacher }) => {
 
     const handleGetLesson = useCallback(async () => {
         try {
-            const { data: [lesson] } = await dataProvider.getManyReference('lesson', {
+            const {
+                data: [lesson],
+            } = await dataProvider.getManyReference('lesson', {
                 target: 'key',
                 id: lessonKey,
                 pagination: { page: 1, perPage: 1 },
@@ -39,21 +41,25 @@ export const LessonSelector = ({ onLessonFound, selectedTeacher }) => {
                 throw new Error('Lesson not found');
             }
 
-            const allStudents = await Promise.all(lesson.klassReferenceIds.map(async (klassId) => {
-                const { data: students } = await dataProvider.getManyReference('student_klass', {
-                    target: 'klassReferenceId',
-                    id: klassId,
-                    pagination: { page: 1, perPage: 1000 },
-                    sort: { field: 'student.name', order: 'ASC' },
-                    filter: { year: defaultYearFilter.year },
-                });
-                return students;
-            }));
+            const allStudents = await Promise.all(
+                lesson.klassReferenceIds.map(async (klassId) => {
+                    const { data: students } = await dataProvider.getManyReference('student_klass', {
+                        target: 'klassReferenceId',
+                        id: klassId,
+                        pagination: { page: 1, perPage: 1000 },
+                        sort: { field: 'student.name', order: 'ASC' },
+                        filter: { year: defaultYearFilter.year },
+                    });
+                    return students;
+                }),
+            );
 
-            const students = [], studentIds = new Set();
-            allStudents.flat()
-                .filter(student => student.student)
-                .forEach(student => {
+            const students = [],
+                studentIds = new Set();
+            allStudents
+                .flat()
+                .filter((student) => student.student)
+                .forEach((student) => {
                     if (!studentIds.has(student.student.id)) {
                         students.push(student);
                         studentIds.add(student.student.id);
@@ -85,14 +91,19 @@ export const LessonSelector = ({ onLessonFound, selectedTeacher }) => {
             <Divider />
             <Box padding={2}>
                 <TabbedForm
-                    toolbar={<Toolbar><SaveButton icon={<PlayArrowIcon />} label='הצג שיעור' /></Toolbar>}
-                    onSubmit={handleGetLesson}>
+                    toolbar={
+                        <Toolbar>
+                            <SaveButton icon={<PlayArrowIcon />} label="הצג שיעור" />
+                        </Toolbar>
+                    }
+                    onSubmit={handleGetLesson}
+                >
                     <TabbedForm.Tab label="רשימה נפתחת">
                         <CommonReferenceInput
                             label="שיעור"
                             source="lessonKey"
                             reference="lesson"
-                            optionValue='key'
+                            optionValue="key"
                             optionText={lessonKeyAndName}
                             filterToQuery={filterToQuery}
                             onChange={(e) => setLessonKey(e)}
@@ -100,7 +111,11 @@ export const LessonSelector = ({ onLessonFound, selectedTeacher }) => {
                         />
                     </TabbedForm.Tab>
                     <TabbedForm.Tab label="מספר שיעור">
-                        <TextInput label="מזהה שיעור" source="lessonKey" onChange={(e) => setLessonKey(e.target.value)} />
+                        <TextInput
+                            label="מזהה שיעור"
+                            source="lessonKey"
+                            onChange={(e) => setLessonKey(e.target.value)}
+                        />
                     </TabbedForm.Tab>
                 </TabbedForm>
             </Box>

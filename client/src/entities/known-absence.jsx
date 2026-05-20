@@ -1,8 +1,27 @@
-import { BooleanField, BooleanInput, DateField, DateInput, DateTimeInput, maxLength, NullableBooleanInput, NumberField, NumberInput, ReferenceField, required, SelectField, TextField, TextInput } from 'react-admin';
+import {
+    BooleanField,
+    BooleanInput,
+    DateField,
+    DateInput,
+    DateTimeInput,
+    maxLength,
+    NullableBooleanInput,
+    NumberField,
+    NumberInput,
+    ReferenceField,
+    required,
+    SelectField,
+    TextField,
+    TextInput,
+} from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
+import {
+    CommonReferenceInputFilter,
+    filterByUserId,
+    filterByUserIdAndYear,
+} from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
@@ -13,10 +32,18 @@ import { useIsAbsenceType } from 'src/utils/appPermissions';
 
 const filters = [
     ...commonAdminFilters,
-    <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={filterByUserIdAndYear} />,
+    <CommonReferenceInputFilter
+        source="studentReferenceId"
+        reference="student_by_year"
+        dynamicFilter={filterByUserIdAndYear}
+    />,
     <NullableBooleanInput source="student.isActive" label="תלמידה פעילה" />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
-    <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ ...filterByUserIdAndYear, 'klassReferenceIds:$cont': 'klassReferenceId' }} />,
+    <CommonReferenceInputFilter
+        source="lessonReferenceId"
+        reference="lesson"
+        dynamicFilter={{ ...filterByUserIdAndYear, 'klassReferenceIds:$cont': 'klassReferenceId' }}
+    />,
     <DateInput source="reportDate" />,
     <NumberInput source="absnceCount" />,
     <NumberInput source="absnceCode" />,
@@ -25,7 +52,11 @@ const filters = [
     <TextInput source="comment:$cont" label="הערות" />,
     <NullableBooleanInput source="isApproved" />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
-    <CommonReferenceInputFilter source="absenceTypeId" reference="absence_type" dynamicFilter={filterByUserIdAndYear} />,
+    <CommonReferenceInputFilter
+        source="absenceTypeId"
+        reference="absence_type"
+        dynamicFilter={filterByUserIdAndYear}
+    />,
 ];
 
 const filterDefaultValues = {
@@ -39,9 +70,27 @@ const Datagrid = ({ isAdmin, children, isPreview, ...props }) => {
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
-            <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
-            <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
+            <MultiReferenceField
+                source="studentReferenceId"
+                sortBy="student.name"
+                optionalSource="studentTz"
+                reference="student"
+                optionalTarget="tz"
+            />
+            <MultiReferenceField
+                source="klassReferenceId"
+                sortBy="klass.name"
+                optionalSource="klassId"
+                reference="klass"
+                optionalTarget="key"
+            />
+            <MultiReferenceField
+                source="lessonReferenceId"
+                sortBy="lesson.name"
+                optionalSource="lessonId"
+                reference="lesson"
+                optionalTarget="key"
+            />
             {isAbsenceType && <ReferenceField source="absenceTypeId" reference="absence_type" />}
             <DateField source="reportDate" />
             <CommonHebrewDateField source="reportDate" />
@@ -56,41 +105,69 @@ const Datagrid = ({ isAdmin, children, isPreview, ...props }) => {
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
     );
-}
+};
 
-const lessonKeyAndName = item => `${item.name} (${item.key})`;
+const lessonKeyAndName = (item) => `${item.name} (${item.key})`;
 
 const Inputs = ({ isCreate, isAdmin }) => {
-    return <>
-        {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} dynamicFilter={filterByUserIdAndYear} />
-        <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserIdAndYear} />
-        <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} optionText={lessonKeyAndName} />
-        <CommonReferenceInput source="absenceTypeId" reference="absence_type" dynamicFilter={filterByUserIdAndYear} />
-        <DateInput source="reportDate" validate={required()} />
-        <NumberInput source="absnceCount" validate={required()} />
-        <NumberInput source="absnceCode" />
-        <TextInput source="senderName" validate={maxLength(100)} />
-        <TextInput source="reason" validate={maxLength(500)} />
-        <TextInput source="comment" validate={maxLength(500)} />
-        <BooleanInput source="isApproved" defaultValue={true} />
-        <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
-        {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
-        {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
-    </>
-}
+    return (
+        <>
+            {!isCreate && isAdmin && <TextInput source="id" disabled />}
+            {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
+            <CommonReferenceInput
+                source="studentReferenceId"
+                reference="student_by_year"
+                validate={required()}
+                dynamicFilter={filterByUserIdAndYear}
+            />
+            <CommonReferenceInput
+                source="klassReferenceId"
+                reference="klass"
+                validate={required()}
+                dynamicFilter={filterByUserIdAndYear}
+            />
+            <CommonReferenceInput
+                source="lessonReferenceId"
+                reference="lesson"
+                dynamicFilter={filterByUserIdAndYear}
+                optionText={lessonKeyAndName}
+            />
+            <CommonReferenceInput
+                source="absenceTypeId"
+                reference="absence_type"
+                dynamicFilter={filterByUserIdAndYear}
+            />
+            <DateInput source="reportDate" validate={required()} />
+            <NumberInput source="absnceCount" validate={required()} />
+            <NumberInput source="absnceCode" />
+            <TextInput source="senderName" validate={maxLength(100)} />
+            <TextInput source="reason" validate={maxLength(500)} />
+            <TextInput source="comment" validate={maxLength(500)} />
+            <BooleanInput source="isApproved" defaultValue={true} />
+            <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
+            {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+            {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+        </>
+    );
+};
 
 const importer = {
-    fields: ['studentTz', 'klassId', 'lessonId', 'reportDate', 'absnceCount', 'absnceCode', 'senderName', 'reason', 'comment', 'isApproved'],
-}
+    fields: [
+        'studentTz',
+        'klassId',
+        'lessonId',
+        'reportDate',
+        'absnceCount',
+        'absnceCode',
+        'senderName',
+        'reason',
+        'comment',
+        'isApproved',
+    ],
+};
 
 const additionalListActions = [
-    <BulkApproveAbsences
-        key="approvedAbsences"
-        label="אישור חיסורים לתלמידה"
-        name="approvedAbsences"
-    />,
+    <BulkApproveAbsences key="approvedAbsences" label="אישור חיסורים לתלמידה" name="approvedAbsences" />,
 ];
 
 const entity = {

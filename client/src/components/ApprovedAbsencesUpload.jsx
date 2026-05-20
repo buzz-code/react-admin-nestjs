@@ -30,20 +30,20 @@ const ApprovedAbsencesUpload = () => {
     const [configValues, setConfigValues] = useState({
         reason: 'התמחות מאושרת',
         senderName: '',
-        comment: ''
+        comment: '',
     });
     const fileInputRef = useRef();
 
     // Custom hooks
     const { handleFileUpload } = useFileProcessor(setFileName, setPreviewData, setLoading);
-    
+
     const resetForm = () => {
         setPreviewData(null);
         setFileName('');
         setConfigValues({
             reason: 'התמחות מאושרת',
             senderName: '',
-            comment: ''
+            comment: '',
         });
     };
 
@@ -100,10 +100,7 @@ const ApprovedAbsencesUpload = () => {
                             <Divider />
 
                             {/* Configuration Form */}
-                            <ConfigurationForm
-                                configValues={configValues}
-                                onChange={setConfigValues}
-                            />
+                            <ConfigurationForm configValues={configValues} onChange={setConfigValues} />
 
                             {/* Action Buttons */}
                             <ActionButtons

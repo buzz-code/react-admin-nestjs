@@ -12,19 +12,18 @@ import { Between } from 'typeorm';
 
 @Injectable()
 export class YemotHandlerService extends BaseYemotHandlerService {
-
   override async processCall(): Promise<void> {
     await this.getUserByDidPhone();
     this.logger.log(`Processing call with ID: ${this.call.callId} from phone: ${this.call.phone}`);
     if (await this.isPastReportingDeadline()) {
-      await this.hangupWithMessage("המערכת סגורה. לא ניתן לדווח אחרי השעה תשע וחצי בבוקר. המשך יום טוב.");
+      await this.hangupWithMessage('המערכת סגורה. לא ניתן לדווח אחרי השעה תשע וחצי בבוקר. המשך יום טוב.');
       return;
     }
-    const student = await this.getStudentByInput()
+    const student = await this.getStudentByInput();
     if (!student) return;
     const alreadyReported = await this.hasReportedToday(student.id);
     if (alreadyReported) {
-      await this.hangupWithMessage("כבר דיווחת היום, לא ניתן לדווח פעמיים.");
+      await this.hangupWithMessage('כבר דיווחת היום, לא ניתן לדווח פעמיים.');
       return;
     }
     const transportation = await this.getTransportByInput();
@@ -32,10 +31,9 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const isValid = await this.isDepartureTimeValid(transportation);
     if (isValid) {
       await this.createAbsenceRecord(student, transportation);
-      await this.hangupWithMessage("דווח בהצלחה")
-    }
-    else {
-      await this.hangupWithMessage("יצאת מאוחר מידי המשך יום טוב");
+      await this.hangupWithMessage('דווח בהצלחה');
+    } else {
+      await this.hangupWithMessage('יצאת מאוחר מידי המשך יום טוב');
     }
   }
   private isPastReportingDeadline(): boolean {
@@ -80,8 +78,8 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       where: {
         userId: this.user.id,
         studentReferenceId: studentId,
-        reportDate: Between(startOfDay, endOfDay)
-      }
+        reportDate: Between(startOfDay, endOfDay),
+      },
     });
     return !!existingReport;
   }
@@ -148,5 +146,3 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     await absenceRepo.save(newAbsence);
   }
 }
-
-

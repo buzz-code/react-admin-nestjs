@@ -10,8 +10,16 @@ import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 const filters = [
     adminUserFilter,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
-    <CommonReferenceInputFilter source="reportMonthReferenceId" reference="report_month" dynamicFilter={filterByUserId} />,
-    <CommonReferenceInputFilter source="klass.klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
+    <CommonReferenceInputFilter
+        source="reportMonthReferenceId"
+        reference="report_month"
+        dynamicFilter={filterByUserId}
+    />,
+    <CommonReferenceInputFilter
+        source="klass.klassTypeReferenceId"
+        reference="klass_type"
+        dynamicFilter={filterByUserId}
+    />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
@@ -25,18 +33,25 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <ReferenceField source="teacherReferenceId" reference="teacher" sortBy='teacher.name' />
-            <ReferenceField source="lessonReferenceId" reference="lesson" sortBy='lesson.name' />
-            <ReferenceField source="klassReferenceId" reference="klass" sortBy='klass.name' />
-            <MultiReferenceField source="klassReferenceId" label='resources.teacher_salary_report.fields.klass.klassTypeReferenceId' sortable={false} optionalSource="klassId" reference="klass" optionalTarget="key" >
-                <MultiReferenceField source='klassTypeReferenceId' reference='klass_type' />
+            <ReferenceField source="teacherReferenceId" reference="teacher" sortBy="teacher.name" />
+            <ReferenceField source="lessonReferenceId" reference="lesson" sortBy="lesson.name" />
+            <ReferenceField source="klassReferenceId" reference="klass" sortBy="klass.name" />
+            <MultiReferenceField
+                source="klassReferenceId"
+                label="resources.teacher_salary_report.fields.klass.klassTypeReferenceId"
+                sortable={false}
+                optionalSource="klassId"
+                reference="klass"
+                optionalTarget="key"
+            >
+                <MultiReferenceField source="klassTypeReferenceId" reference="klass_type" />
             </MultiReferenceField>
             <NumberField source="howManyLessons" />
-            <ReferenceField source="reportMonthReferenceId" reference="report_month" sortBy='reportMonth.name' />
+            <ReferenceField source="reportMonthReferenceId" reference="report_month" sortBy="reportMonth.name" />
             <SelectField source="year" choices={yearChoices} />
         </CommonDatagrid>
     );
-}
+};
 
 const entity = {
     Datagrid,
