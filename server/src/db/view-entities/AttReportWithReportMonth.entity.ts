@@ -1,17 +1,21 @@
-import { Column, DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from "typeorm";
-import { IHasUserId } from "@shared/base-entity/interface";
-import { AttReport } from "../entities/AttReport.entity";
-import { ReportMonth } from "../entities/ReportMonth.entity";
-import { ReportGroupSession } from "../entities/ReportGroupSession.entity";
+import { Column, DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
+import { IHasUserId } from '@shared/base-entity/interface';
+import { AttReport } from '../entities/AttReport.entity';
+import { ReportMonth } from '../entities/ReportMonth.entity';
+import { ReportGroupSession } from '../entities/ReportGroupSession.entity';
 
-@ViewEntity("att_report_with_report_month", {
-  expression: (dataSource: DataSource) => dataSource
-    .createQueryBuilder()
-    .select('ar.*')
-    .addSelect('report_months.id', 'reportMonthReferenceId')
-    .from(AttReport, 'ar')
-    .leftJoin(ReportMonth, 'report_months',
-      'ar.user_id = report_months.userId AND ar.year = report_months.year AND ar.report_date BETWEEN report_months.startDate AND report_months.endDate')
+@ViewEntity('att_report_with_report_month', {
+  expression: (dataSource: DataSource) =>
+    dataSource
+      .createQueryBuilder()
+      .select('ar.*')
+      .addSelect('report_months.id', 'reportMonthReferenceId')
+      .from(AttReport, 'ar')
+      .leftJoin(
+        ReportMonth,
+        'report_months',
+        'ar.user_id = report_months.userId AND ar.year = report_months.year AND ar.report_date BETWEEN report_months.startDate AND report_months.endDate',
+      ),
 })
 export class AttReportWithReportMonth extends AttReport implements IHasUserId {
   @ViewColumn()
@@ -28,7 +32,7 @@ export class AttReportWithReportMonth extends AttReport implements IHasUserId {
   @JoinColumn({ name: 'reportMonthReferenceId' })
   reportMonth: ReportMonth;
 
-  @ManyToOne(() => ReportGroupSession, session => session.attReports, { nullable: true })
+  @ManyToOne(() => ReportGroupSession, (session) => session.attReports, { nullable: true })
   @JoinColumn({ name: 'reportGroupSessionId' })
   reportGroupSession: ReportGroupSession;
 }

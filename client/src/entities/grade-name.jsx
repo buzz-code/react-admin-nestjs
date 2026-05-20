@@ -1,15 +1,20 @@
-import { NumberInput, TextField, TextInput, ReferenceField, DateField, DateTimeInput, required, maxLength } from 'react-admin';
+import {
+    NumberInput,
+    TextField,
+    TextInput,
+    ReferenceField,
+    DateField,
+    DateTimeInput,
+    required,
+    maxLength,
+} from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
-const filters = [
-    adminUserFilter,
-    <NumberInput source="key" />,
-    <TextInput source="name:$cont" alwaysOn />,
-];
+const filters = [adminUserFilter, <NumberInput source="key" />, <TextInput source="name:$cont" alwaysOn />];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
@@ -23,24 +28,26 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
     );
-}
+};
 
 const Inputs = ({ isCreate, isAdmin }) => {
-    return <>
-        {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <NumberInput source="key" validate={required()} />
-        <TextInput source="name" validate={[maxLength(500)]} />
-        {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
-        {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
-    </>
-}
+    return (
+        <>
+            {!isCreate && isAdmin && <TextInput source="id" disabled />}
+            {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
+            <NumberInput source="key" validate={required()} />
+            <TextInput source="name" validate={[maxLength(500)]} />
+            {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+            {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+        </>
+    );
+};
 
 const Representation = CommonRepresentation;
 
 const importer = {
     fields: ['key', 'name'],
-}
+};
 
 const entity = {
     Datagrid,

@@ -18,9 +18,7 @@ const PreviewSummary = ({ previewData }) => {
                     <Typography variant="body2" color="text.secondary">
                         סך הכל שורות בקובץ
                     </Typography>
-                    <Typography variant="h5">
-                        {previewData.total || 0}
-                    </Typography>
+                    <Typography variant="h5">{previewData.total || 0}</Typography>
                 </Box>
                 <Box>
                     <Typography variant="body2" color="text.secondary">

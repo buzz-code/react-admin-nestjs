@@ -14,12 +14,7 @@ const FileUploadSection = ({ fileInputRef, fileName, loading, onFileSelect, onDa
                 שלב 1: בחירת קובץ
             </Typography>
             <Stack direction="row" spacing={2} alignItems="center">
-                <Button
-                    variant="contained"
-                    startIcon={<FileUploadIcon />}
-                    onClick={onFileSelect}
-                    disabled={loading}
-                >
+                <Button variant="contained" startIcon={<FileUploadIcon />} onClick={onFileSelect} disabled={loading}>
                     בחר קובץ Excel
                 </Button>
                 <ExcelImportInput

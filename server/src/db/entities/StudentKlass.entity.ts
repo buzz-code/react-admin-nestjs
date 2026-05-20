@@ -8,33 +8,37 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { IHasUserId } from "@shared/base-entity/interface";
-import { Student } from "./Student.entity";
-import { Klass } from "./Klass.entity";
-import { User } from "./User.entity";
-import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
-import { KlassType } from "./KlassType.entity";
-import { Teacher } from "./Teacher.entity";
-import { IsOptional, ValidateIf } from "class-validator";
-import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
-import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
-import { MaxCountByUserLimit } from "@shared/utils/validation/max-count-by-user-limit";
-import { StudentByYear } from "../view-entities/StudentByYear.entity";
-import { PaymentTrack } from "@shared/entities/PaymentTrack.entity";
-import { NumberType, StringType } from "@shared/utils/entity/class-transformer";
-import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
+} from 'typeorm';
+import { IHasUserId } from '@shared/base-entity/interface';
+import { Student } from './Student.entity';
+import { Klass } from './Klass.entity';
+import { User } from './User.entity';
+import { findOneAndAssignReferenceId, getDataSource } from '@shared/utils/entity/foreignKey.util';
+import { KlassType } from './KlassType.entity';
+import { Teacher } from './Teacher.entity';
+import { IsOptional, ValidateIf } from 'class-validator';
+import { CrudValidationGroups } from '@dataui/crud';
+import { IsNotEmpty, IsNumber, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
+import { MaxCountByUserLimit } from '@shared/utils/validation/max-count-by-user-limit';
+import { StudentByYear } from '../view-entities/StudentByYear.entity';
+import { PaymentTrack } from '@shared/entities/PaymentTrack.entity';
+import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
+import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 
-@Index("student_klasses_users_idx", ["userId"], {})
-@Index("student_klasses_user_year_idx", ["userId", "year"], {})
-@Index("student_klasses_user_year_student_idx", ["userId", "year", "studentReferenceId"], {})
-@Index("student_klasses_student_reference_id_year_idx", ["studentReferenceId", "year"], {})
-@Index("student_klasses_user_klass_year_idx", ["userId", "klassReferenceId", "year"], {})
-@Index("student_klasses_user_student_klass_year_idx", ["userId", "studentReferenceId", "klassReferenceId", "year"], {})
-@Index("student_klasses_user_year_student_klass_covering_idx", ["userId", "year", "studentReferenceId", "klassReferenceId"], {})
+@Index('student_klasses_users_idx', ['userId'], {})
+@Index('student_klasses_user_year_idx', ['userId', 'year'], {})
+@Index('student_klasses_user_year_student_idx', ['userId', 'year', 'studentReferenceId'], {})
+@Index('student_klasses_student_reference_id_year_idx', ['studentReferenceId', 'year'], {})
+@Index('student_klasses_user_klass_year_idx', ['userId', 'klassReferenceId', 'year'], {})
+@Index('student_klasses_user_student_klass_year_idx', ['userId', 'studentReferenceId', 'klassReferenceId', 'year'], {})
+@Index(
+  'student_klasses_user_year_student_klass_covering_idx',
+  ['userId', 'year', 'studentReferenceId', 'klassReferenceId'],
+  {},
+)
 @Index(['studentReferenceId', 'year'])
-@Entity("student_klasses")
+@Entity('student_klasses')
 export class StudentKlass implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
@@ -46,29 +50,52 @@ export class StudentKlass implements IHasUserId {
       dataSource = await getDataSource([Student, Klass, User, KlassType, Teacher]);
 
       this.studentReferenceId = await findOneAndAssignReferenceId(
-        dataSource, Student, { tz: this.studentTz }, this.userId, this.studentReferenceId, this.studentTz
+        dataSource,
+        Student,
+        { tz: this.studentTz },
+        this.userId,
+        this.studentReferenceId,
+        this.studentTz,
       );
       this.klassReferenceId = await findOneAndAssignReferenceId(
-        dataSource, Klass, { year: this.year, key: this.klassId }, this.userId, this.klassReferenceId, this.klassId
+        dataSource,
+        Klass,
+        { year: this.year, key: this.klassId },
+        this.userId,
+        this.klassReferenceId,
+        this.klassId,
       );
     } finally {
       dataSource?.destroy();
     }
   }
 
-  @MaxCountByUserLimit(StudentByYear, (userId, dataSource: DataSource) =>
-    dataSource.getRepository(User).findOne({ where: { id: userId }, select: { paymentTrackId: true } })
-      .then(user => user?.paymentTrackId)
-      .then(ptid => ptid
-        ? dataSource.getRepository(PaymentTrack).findOne({ where: { id: ptid }, select: { studentNumberLimit: true } })
-        : dataSource.getRepository(PaymentTrack).find({ order: { studentNumberLimit: 'asc' }, take: 1, select: { studentNumberLimit: true } }).then(res => res[0])
-      )
-      .then(pt => pt?.studentNumberLimit ?? 0)
-    , [User, PaymentTrack], 'studentReferenceId', { always: true, message: 'הגעת להגבלת הכמות לטבלת שיוך תלמידות, אנא פני לאחראית כדי להגדיל את החבילה' })
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
+  @MaxCountByUserLimit(
+    StudentByYear,
+    (userId, dataSource: DataSource) =>
+      dataSource
+        .getRepository(User)
+        .findOne({ where: { id: userId }, select: { paymentTrackId: true } })
+        .then((user) => user?.paymentTrackId)
+        .then((ptid) =>
+          ptid
+            ? dataSource
+                .getRepository(PaymentTrack)
+                .findOne({ where: { id: ptid }, select: { studentNumberLimit: true } })
+            : dataSource
+                .getRepository(PaymentTrack)
+                .find({ order: { studentNumberLimit: 'asc' }, take: 1, select: { studentNumberLimit: true } })
+                .then((res) => res[0]),
+        )
+        .then((pt) => pt?.studentNumberLimit ?? 0),
+    [User, PaymentTrack],
+    'studentReferenceId',
+    { always: true, message: 'הגעת להגבלת הכמות לטבלת שיוך תלמידות, אנא פני לאחראית כדי להגדיל את החבילה' },
+  )
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column("int", { name: "user_id" })
+  @Column('int', { name: 'user_id' })
   userId: number;
 
   @IsOptional({ always: true })
@@ -81,10 +108,12 @@ export class StudentKlass implements IHasUserId {
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @MaxLength(10, { always: true })
   @StringType
-  @Column("varchar", { name: "student_tz", length: 10, nullable: true })
+  @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;
 
-  @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.studentTz) && Boolean(attReport.studentReferenceId), { always: true })
+  @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.studentTz) && Boolean(attReport.studentReferenceId), {
+    always: true,
+  })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   studentReferenceId: number;
@@ -94,10 +123,12 @@ export class StudentKlass implements IHasUserId {
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
-  @Column("int", { name: "klass_id", nullable: true })
+  @Column('int', { name: 'klass_id', nullable: true })
   klassId: number;
 
-  @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.klassId) && Boolean(attReport.klassReferenceId), { always: true })
+  @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.klassId) && Boolean(attReport.klassReferenceId), {
+    always: true,
+  })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column({ nullable: true })
   klassReferenceId: number;

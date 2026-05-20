@@ -40,15 +40,21 @@ export const InLessonReport = ({
         }
     }, [teacher]);
 
-    const handleTeacherSelect = useCallback((teacher) => {
-        setSelectedTeacher(teacher);
-    }, [setSelectedTeacher]);
+    const handleTeacherSelect = useCallback(
+        (teacher) => {
+            setSelectedTeacher(teacher);
+        },
+        [setSelectedTeacher],
+    );
 
-    const handleLessonFound = useCallback(({ lesson, students }) => {
-        setTimeout(() => {
-            setLessonContext({ lesson, students });
-        }, 0);
-    }, [setLessonContext]);
+    const handleLessonFound = useCallback(
+        ({ lesson, students }) => {
+            setTimeout(() => {
+                setLessonContext({ lesson, students });
+            }, 0);
+        },
+        [setLessonContext],
+    );
 
     const clearData = useCallback(() => {
         setLessonContext(null);
@@ -67,52 +73,55 @@ export const InLessonReport = ({
         handleSuccess();
     }, [clearData, handleSuccess]);
 
-    const handleSave = useCallback(async (formData) => {
-        const { reportDates, howManyLessons, lessonDetails, signatureData, ...rest } = formData;
+    const handleSave = useCallback(
+        async (formData) => {
+            const { reportDates, howManyLessons, lessonDetails, signatureData, ...rest } = formData;
 
-        // Build dataToSave array WITHOUT reportGroupSessionId
-        // The preSaveHook will add it when actually saving
-        const dataToSave = [];
-        const entry = {
-            teacherReferenceId: lesson.teacherReferenceId,
-            klassReferenceId: lesson.klassReferenceIds[0],
-            lessonReferenceId: lesson.id,
-        };
-
-        reportDates.forEach((reportDate, index) => {
-            const reportDateEntry = {
-                ...entry,
-                reportDate,
-                // Store index for preSaveHook to match with sessions
-                _dateIndex: index,
+            // Build dataToSave array WITHOUT reportGroupSessionId
+            // The preSaveHook will add it when actually saving
+            const dataToSave = [];
+            const entry = {
+                teacherReferenceId: lesson.teacherReferenceId,
+                klassReferenceId: lesson.klassReferenceIds[0],
+                lessonReferenceId: lesson.id,
             };
 
-            Object.keys(rest).forEach((studentId) => {
-                const newEntry = { ...reportDateEntry, studentReferenceId: studentId };
-                if (gradeMode) {
-                    newEntry.grade = rest[studentId]?.[`grade_${index}`] ?? 0;
-                    newEntry.comments = rest[studentId]?.[`comments_${index}`] ?? '';
-                } else {
-                    newEntry.howManyLessons = howManyLessons;
-                    newEntry.absCount = round(
-                        (rest[studentId]?.[`absence_${index}`] ?? 0) +
-                        (rest[studentId]?.[`late_${index}`] ?? 0) * lateValue
-                    );
-                }
-                dataToSave.push(newEntry);
+            reportDates.forEach((reportDate, index) => {
+                const reportDateEntry = {
+                    ...entry,
+                    reportDate,
+                    // Store index for preSaveHook to match with sessions
+                    _dateIndex: index,
+                };
+
+                Object.keys(rest).forEach((studentId) => {
+                    const newEntry = { ...reportDateEntry, studentReferenceId: studentId };
+                    if (gradeMode) {
+                        newEntry.grade = rest[studentId]?.[`grade_${index}`] ?? 0;
+                        newEntry.comments = rest[studentId]?.[`comments_${index}`] ?? '';
+                    } else {
+                        newEntry.howManyLessons = howManyLessons;
+                        newEntry.absCount = round(
+                            (rest[studentId]?.[`absence_${index}`] ?? 0) +
+                                (rest[studentId]?.[`late_${index}`] ?? 0) * lateValue,
+                        );
+                    }
+                    dataToSave.push(newEntry);
+                });
             });
-        });
 
-        // Store form data for preSaveHook to use
-        dataToSave._formData = {
-            reportDates,
-            lessonDetails,
-            signatureData,
-            lesson,
-        };
+            // Store form data for preSaveHook to use
+            dataToSave._formData = {
+                reportDates,
+                lessonDetails,
+                signatureData,
+                lesson,
+            };
 
-        setDataToSave(dataToSave);
-    }, [lesson, gradeMode, lateValue, setDataToSave]);
+            setDataToSave(dataToSave);
+        },
+        [lesson, gradeMode, lateValue, setDataToSave],
+    );
 
     const contextValue = {
         ...defaultContextValue,

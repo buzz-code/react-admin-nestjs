@@ -1,4 +1,14 @@
-import { DateField, DateInput, DateTimeInput, EmailField, maxLength, ReferenceField, required, TextField, TextInput } from 'react-admin';
+import {
+    DateField,
+    DateInput,
+    DateTimeInput,
+    EmailField,
+    maxLength,
+    ReferenceField,
+    required,
+    TextField,
+    TextInput,
+} from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -29,30 +39,32 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
     );
-}
+};
 
 const Inputs = ({ isCreate, isAdmin }) => {
     const unique = useUnique();
-    return <>
-        {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <TextInput source="tz" validate={[required(), maxLength(10), unique()]} />
-        <TextInput source="name" validate={[required(), maxLength(500)]} />
-        <TextInput source="displayName" validate={maxLength(500)} />
-        <TextInput source="phone" validate={maxLength(10)} />
-        <TextInput source="phone2" validate={maxLength(10)} />
-        <TextInput source="email" validate={maxLength(500)} />
-        <TextInput source="comment" validate={maxLength(1000)} />
-        {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
-        {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
-    </>
-}
+    return (
+        <>
+            {!isCreate && isAdmin && <TextInput source="id" disabled />}
+            {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
+            <TextInput source="tz" validate={[required(), maxLength(10), unique()]} />
+            <TextInput source="name" validate={[required(), maxLength(500)]} />
+            <TextInput source="displayName" validate={maxLength(500)} />
+            <TextInput source="phone" validate={maxLength(10)} />
+            <TextInput source="phone2" validate={maxLength(10)} />
+            <TextInput source="email" validate={maxLength(500)} />
+            <TextInput source="comment" validate={maxLength(1000)} />
+            {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+            {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+        </>
+    );
+};
 
 const Representation = CommonRepresentation;
 
 const importer = {
     fields: ['tz', 'name', 'phone', 'phone2', 'email', 'comment', 'displayName'],
-}
+};
 
 const entity = {
     Datagrid,

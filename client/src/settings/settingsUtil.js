@@ -1,8 +1,8 @@
-import { useGetIdentity } from "react-admin";
+import { useGetIdentity } from 'react-admin';
 
 export function useLateValue() {
-   const { identity } = useGetIdentity();
-   return getLateValue(identity);
+    const { identity } = useGetIdentity();
+    return getLateValue(identity);
 }
 
 export function getLateValue(identity) {
@@ -12,7 +12,7 @@ export function getLateValue(identity) {
 export const useDashboardItems = () => {
     const { identity } = useGetIdentity();
     return getDashboardItems(identity);
-}
+};
 
 export function getDashboardItems(identity) {
     return identity?.additionalData?.dashboardItems || getDefaultDashboardItems();
@@ -24,21 +24,21 @@ export function getDefaultDashboardItems() {
             resource: 'att_report_with_report_month',
             icon: 'List',
             yearFilterType: 'year',
-            filter: {}
+            filter: {},
         },
         {
             resource: 'student_by_year',
             icon: 'List',
             yearFilterType: 'year',
-            filter: {}
-        }
+            filter: {},
+        },
     ];
 }
 
 export const useReportStyles = () => {
     const { identity } = useGetIdentity();
     return getReportStyles(identity);
-}
+};
 
 export function getReportStyles(identity) {
     return identity?.additionalData?.reportStyles || [];
@@ -47,7 +47,7 @@ export function getReportStyles(identity) {
 export const useReportCardSettings = () => {
     const { identity } = useGetIdentity();
     return getReportCardSettings(identity);
-}
+};
 
 export function getReportCardSettings(identity) {
     return identity?.additionalData?.reportCardSettings || getDefaultReportCardSettings();
@@ -65,6 +65,6 @@ export function getDefaultReportCardSettings() {
         forceGrades: false,
         downComment: false,
         lastGrade: true,
-        debug: true
+        debug: true,
     };
 }

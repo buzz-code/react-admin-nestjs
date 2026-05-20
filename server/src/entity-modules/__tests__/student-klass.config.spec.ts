@@ -13,40 +13,41 @@ jest.mock('@shared/utils/report/bulk-to-pdf.generator');
 jest.mock('src/reports/reportGenerator');
 jest.mock('@shared/base-entity/base-entity.service');
 
-const createMockCrudRequest = (extra: any): CrudRequest => ({
-  parsed: {
-    fields: [],
-    paramsFilter: [],
-    authPersist: undefined,
-    classTransformOptions: undefined,
-    search: undefined,
-    filter: [],
-    or: [],
-    join: [],
-    sort: [],
-    limit: undefined,
-    offset: undefined,
-    page: undefined,
-    cache: undefined,
-    includeDeleted: undefined,
-    extra,
-  },
-  options: {
-    query: {
-      join: {},
+const createMockCrudRequest = (extra: any): CrudRequest =>
+  ({
+    parsed: {
+      fields: [],
+      paramsFilter: [],
+      authPersist: undefined,
+      classTransformOptions: undefined,
+      search: undefined,
+      filter: [],
+      or: [],
+      join: [],
+      sort: [],
+      limit: undefined,
+      offset: undefined,
+      page: undefined,
+      cache: undefined,
+      includeDeleted: undefined,
+      extra,
     },
-    routes: {
-      getManyBase: { interceptors: [], decorators: [] },
-      getOneBase: { interceptors: [], decorators: [] },
-      createOneBase: { interceptors: [], decorators: [] },
-      createManyBase: { interceptors: [], decorators: [] },
-      updateOneBase: { interceptors: [], decorators: [] },
-      replaceOneBase: { interceptors: [], decorators: [] },
-      deleteOneBase: { interceptors: [], decorators: [] },
+    options: {
+      query: {
+        join: {},
+      },
+      routes: {
+        getManyBase: { interceptors: [], decorators: [] },
+        getOneBase: { interceptors: [], decorators: [] },
+        createOneBase: { interceptors: [], decorators: [] },
+        createManyBase: { interceptors: [], decorators: [] },
+        updateOneBase: { interceptors: [], decorators: [] },
+        replaceOneBase: { interceptors: [], decorators: [] },
+        deleteOneBase: { interceptors: [], decorators: [] },
+      },
+      params: {},
     },
-    params: {},
-  },
-}) as CrudRequest;
+  }) as CrudRequest;
 
 const createMockStudentKlass = (data: Partial<StudentKlass> = {}): StudentKlass => ({
   id: 1,
@@ -137,7 +138,7 @@ describe('StudentKlassConfig', () => {
       // Mock save method to handle both single entities and arrays
       mockRepository.save = jest.fn().mockImplementation((entity: any) => {
         if (Array.isArray(entity)) {
-          return Promise.resolve(entity.map(e => ({ ...e })));
+          return Promise.resolve(entity.map((e) => ({ ...e })));
         }
         return Promise.resolve({ ...entity });
       });
@@ -157,9 +158,11 @@ describe('StudentKlassConfig', () => {
         params: {},
       };
 
-      mockBaseEntityGetReportData = jest.spyOn(BaseEntityService.prototype, 'getReportData')
+      mockBaseEntityGetReportData = jest
+        .spyOn(BaseEntityService.prototype, 'getReportData')
         .mockImplementation(() => Promise.resolve(mockReportData));
-      mockBaseEntityDoAction = jest.spyOn(BaseEntityService.prototype, 'doAction')
+      mockBaseEntityDoAction = jest
+        .spyOn(BaseEntityService.prototype, 'doAction')
         .mockImplementation(() => Promise.resolve({}));
 
       const Service = config.service;

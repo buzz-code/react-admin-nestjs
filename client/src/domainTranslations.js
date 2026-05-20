@@ -1,5 +1,5 @@
-import { generalResourceFieldsTranslation } from "@shared/providers/i18nProvider"
-import { sharedEntityTranslations } from "@shared/entities/shared-entity.translations"
+import { generalResourceFieldsTranslation } from '@shared/providers/i18nProvider';
+import { sharedEntityTranslations } from '@shared/entities/shared-entity.translations';
 
 export default {
     menu_groups: {
@@ -39,7 +39,7 @@ export default {
                 'reportCardSettings.downComment': 'הצג הערה מתחת שם תלמידה',
                 'reportCardSettings.lastGrade': 'חשב ציון אחרון',
                 'reportCardSettings.debug': 'הצג פירוט',
-            }
+            },
         },
         att_report: {
             name: 'רשומת נוכחות |||| נוכחות',
@@ -61,7 +61,7 @@ export default {
                 approvedAbsCount: 'חיסורים מאושרים',
                 comments: 'הערה',
                 sheetName: 'חודש דיווח',
-            }
+            },
         },
         att_report_with_report_month: {
             name: 'רשומת נוכחות |||| נוכחות',
@@ -84,7 +84,7 @@ export default {
                 approvedAbsCount: 'חיסורים מאושרים',
                 comments: 'הערה',
                 sheetName: 'חודש דיווח',
-            }
+            },
         },
         grade: {
             name: 'רשומת ציונים |||| ציונים',
@@ -104,7 +104,7 @@ export default {
                 grade: 'ציון',
                 estimation: 'הערכה',
                 comments: 'הערה',
-            }
+            },
         },
         klass: {
             name: 'כיתה |||| כיתות',
@@ -115,7 +115,7 @@ export default {
                 klassTypeReferenceId: 'שיוך כיתה',
                 teacherId: 'מורה',
                 teacherReferenceId: 'מורה',
-            }
+            },
         },
         klass_type: {
             name: 'שיוך כיתה |||| שיוך כיתות',
@@ -124,7 +124,7 @@ export default {
                 klassTypeEnum: 'סוג כיתה בדו"ח',
                 teacherId: 'מורה אחראית',
                 teacherReferenceId: 'מורה אחראית',
-            }
+            },
         },
         known_absence: {
             name: 'חיסור מאושר |||| חיסורים מאושרים',
@@ -144,7 +144,7 @@ export default {
                 comment: 'הערה',
                 isApproved: 'מאושר',
                 absenceTypeId: 'סוג אירוע',
-            }
+            },
         },
         lesson: {
             name: 'שיעור |||| שיעורים',
@@ -160,7 +160,7 @@ export default {
                 howManyLessons: 'מספר שיעורים',
                 displayName: 'שם לתעודה',
                 order: 'סדר',
-            }
+            },
         },
         student_klass: {
             name: 'רשומת שיוך תלמידות לכיתות |||| שיוך תלמידות לכיתות',
@@ -170,7 +170,7 @@ export default {
                 studentReferenceId: 'תלמידה',
                 klassId: 'כיתה',
                 klassReferenceId: 'כיתה',
-            }
+            },
         },
         student: {
             name: 'תלמידה |||| תלמידות',
@@ -181,7 +181,7 @@ export default {
                 phone: 'טלפון',
                 address: 'כתובת',
                 isActive: 'פעיל?',
-            }
+            },
         },
         student_by_year: {
             name: 'תלמידה |||| תלמידות',
@@ -189,7 +189,7 @@ export default {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
                 year: 'שנה',
-            }
+            },
         },
         teacher: {
             name: 'מורה |||| מורות',
@@ -199,8 +199,8 @@ export default {
                 phone: 'טלפון',
                 phone2: 'טלפון 2',
                 email: 'כתובת מייל',
-                displayName: 'שם לתעודה'
-            }
+                displayName: 'שם לתעודה',
+            },
         },
         transportation: {
             name: 'הסעה |||| הסעות',
@@ -209,7 +209,7 @@ export default {
                 key: 'שילוט',
                 departureTime: 'שעת יציאה',
                 description: 'תיאור נסיעה',
-            }
+            },
         },
         absence_type: {
             name: 'אירוע |||| אירועים',
@@ -219,7 +219,7 @@ export default {
                 name: 'שם האירוע',
                 quota: 'מכסה שנתית',
                 requiredLabels: 'שדות חובה לדיווח',
-            }
+            },
         },
         student_klass_report: {
             name: 'דוח שיוך תלמידה',
@@ -235,7 +235,7 @@ export default {
                 'klassReferenceId3:$cont': 'התמחות',
                 klassReferenceIdNull: 'אחר',
                 'klassReferenceIdNull:$cont': 'אחר',
-            }
+            },
         },
         'student_by_year/pivot?extra.pivot=StudentAttendance': {
             name: 'דוח נוכחות (פיבוט)',
@@ -248,7 +248,7 @@ export default {
                 'year:$cont': 'שנה',
                 'klassReferenceIds:$cont': 'כיתה',
                 'klassTypeReferenceIds:$cont': 'שיוך כיתה',
-            }
+            },
         },
         report_month: {
             name: 'תקופות דיווח',
@@ -257,7 +257,7 @@ export default {
                 startDate: 'תאריך התחלה',
                 endDate: 'תאריך סיום',
                 semester: 'מחצית',
-            }
+            },
         },
         teacher_report_status: {
             name: 'דיווחים למורה',
@@ -268,7 +268,7 @@ export default {
                 reportMonthReferenceId: 'תקופת דיווח',
                 reportedLessons: 'שיעורים שדווחו',
                 notReportedLessons: 'שיעורים שלא דווחו',
-            }
+            },
         },
         teacher_grade_report_status: {
             name: 'ציונים למורה',
@@ -279,7 +279,7 @@ export default {
                 reportMonthReferenceId: 'תקופת דיווח',
                 reportedLessons: 'שיעורים שדווחו',
                 notReportedLessons: 'שיעורים שלא דווחו',
-            }
+            },
         },
         student_percent_report: {
             name: 'דוח אחוזים כללי',
@@ -295,7 +295,7 @@ export default {
                 absPercents: 'אחוז חיסור',
                 attPercents: 'אחוז נוכחות',
                 gradeAvg: 'ציון ממוצע',
-            }
+            },
         },
         'student_percent_report/pivot?extra.pivot=PercentReportWithDates': {
             name: 'דוח אחוזים לתלמידה',
@@ -319,7 +319,7 @@ export default {
                 estimation: 'הערכה',
                 comments: 'הערה',
                 estimatedAbsPercents: 'אחוז חיסור משוער',
-            }
+            },
         },
         teacher_salary_report: {
             name: 'דוח שכר למורה',
@@ -331,19 +331,19 @@ export default {
                 'klass.klassTypeReferenceId': 'שיוך כיתה',
                 reportMonthReferenceId: 'תקופת דיווח',
                 howManyLessons: 'מספר שיעורים',
-            }
+            },
         },
         grade_name: {
             name: 'שם ציון |||| שמות ציונים',
             fields: {
                 ...generalResourceFieldsTranslation,
-            }
+            },
         },
         attendance_name: {
             name: 'שם נוכחות |||| שמות נוכחות',
             fields: {
                 ...generalResourceFieldsTranslation,
-            }
+            },
         },
         att_grade_effect: {
             name: 'קשר נוכחות ציון',
@@ -352,7 +352,7 @@ export default {
                 percents: 'אחוז נוכחות',
                 count: 'מספר חיסורים',
                 effect: 'השפעה',
-            }
+            },
         },
         grade_effect_by_user: {
             name: 'קשר נוכחות ציון מורחב',
@@ -360,7 +360,7 @@ export default {
                 ...generalResourceFieldsTranslation,
                 number: 'אחוז חיסור',
                 effect: 'השפעה',
-            }
+            },
         },
         abs_count_effect_by_user: {
             name: 'קשר נוכחות חיסור מורחב',
@@ -368,7 +368,7 @@ export default {
                 ...generalResourceFieldsTranslation,
                 number: 'מספר חיסורים',
                 effect: 'השפעה',
-            }
+            },
         },
         report_group: {
             name: 'קבוצת דיווח |||| קבוצות דיווח',
@@ -381,7 +381,7 @@ export default {
                 klassReferenceId: 'כיתה',
                 year: 'שנה',
                 signatureData: 'חתימה',
-            }
+            },
         },
         report_group_session: {
             name: 'מפגש דיווח |||| מפגשי דיווח',
@@ -393,7 +393,7 @@ export default {
                 startTime: 'שעת התחלה',
                 endTime: 'שעת סיום',
                 topic: 'נושא',
-            }
+            },
         },
-    }
+    },
 };

@@ -1,4 +1,15 @@
-import { DateField, DateInput, DateTimeInput, maxLength, NumberInput, ReferenceField, required, SelectField, TextField, TextInput } from 'react-admin';
+import {
+    DateField,
+    DateInput,
+    DateTimeInput,
+    maxLength,
+    NumberInput,
+    ReferenceField,
+    required,
+    SelectField,
+    TextField,
+    TextInput,
+} from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -34,30 +45,32 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
     );
-}
+};
 
 const semesterEnum = ['א', 'ב', 'ג', 'שנתי'];
-export const semesterChoices = semesterEnum.map(item => ({ id: item, name: item }));
+export const semesterChoices = semesterEnum.map((item) => ({ id: item, name: item }));
 
 const Inputs = ({ isCreate, isAdmin }) => {
-    return <>
-        {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <TextInput source="name" validate={[required(), maxLength(500)]} />
-        <DateInput source="startDate" validate={required()} />
-        <DateInput source="endDate" validate={required()} />
-        <CommonAutocompleteInput source="semester" choices={semesterChoices} validate={required()} />
-        <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
-        {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
-        {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
-    </>
-}
+    return (
+        <>
+            {!isCreate && isAdmin && <TextInput source="id" disabled />}
+            {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
+            <TextInput source="name" validate={[required(), maxLength(500)]} />
+            <DateInput source="startDate" validate={required()} />
+            <DateInput source="endDate" validate={required()} />
+            <CommonAutocompleteInput source="semester" choices={semesterChoices} validate={required()} />
+            <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
+            {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+            {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+        </>
+    );
+};
 
 const Representation = CommonRepresentation;
 
 const importer = {
     fields: ['name', 'startDate', 'endDate', 'semester', 'year'],
-}
+};
 
 const entity = {
     Datagrid,

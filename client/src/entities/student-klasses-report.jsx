@@ -5,16 +5,36 @@ import { getResourceComponents } from '@shared/components/crudContainers/CommonE
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
-import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
+import {
+    CommonReferenceInputFilter,
+    filterByUserId,
+    filterByUserIdAndYear,
+} from '@shared/components/fields/CommonReferenceInputFilter';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
     adminUserFilter,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student" dynamicFilter={filterByUserId} />,
-    <CommonReferenceInputFilter source="klassReferenceId1:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
-    <CommonReferenceInputFilter source="klassReferenceId2:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
-    <CommonReferenceInputFilter source="klassReferenceId3:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
-    <CommonReferenceInputFilter source="klassReferenceIdNull:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
+    <CommonReferenceInputFilter
+        source="klassReferenceId1:$cont"
+        reference="klass"
+        dynamicFilter={filterByUserIdAndYear}
+    />,
+    <CommonReferenceInputFilter
+        source="klassReferenceId2:$cont"
+        reference="klass"
+        dynamicFilter={filterByUserIdAndYear}
+    />,
+    <CommonReferenceInputFilter
+        source="klassReferenceId3:$cont"
+        reference="klass"
+        dynamicFilter={filterByUserIdAndYear}
+    />,
+    <CommonReferenceInputFilter
+        source="klassReferenceIdNull:$cont"
+        reference="klass"
+        dynamicFilter={filterByUserIdAndYear}
+    />,
     <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
 ];
 
@@ -23,7 +43,7 @@ const filterDefaultValues = {
 };
 
 const additionalBulkButtons = [
-    <StudentReportCardReactButton key='studentReportCardReact' defaultRequestValues={filterDefaultValues} />,
+    <StudentReportCardReactButton key="studentReportCardReact" defaultRequestValues={filterDefaultValues} />,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
@@ -32,8 +52,21 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <MultiReferenceField source="studentReferenceId" sortBy="studentName" optionalSource="studentTz" reference="student_by_year" optionalTarget="tz" />
-            <MultiReferenceField label="תז תלמידה" source="studentReferenceId" sortBy="studentTz" optionalSource="studentTz" reference="student" optionalTarget="tz">
+            <MultiReferenceField
+                source="studentReferenceId"
+                sortBy="studentName"
+                optionalSource="studentTz"
+                reference="student_by_year"
+                optionalTarget="tz"
+            />
+            <MultiReferenceField
+                label="תז תלמידה"
+                source="studentReferenceId"
+                sortBy="studentTz"
+                optionalSource="studentTz"
+                reference="student"
+                optionalTarget="tz"
+            >
                 <TextField source="tz" />
             </MultiReferenceField>
             <SelectField source="year" choices={yearChoices} />
@@ -41,13 +74,33 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="klasses2" />
             <TextField source="klasses3" />
             <TextField source="klassesNull" /> */}
-            <MultiReferenceArrayField source="klassReferenceId1" reference="klass" target="id" sort={{field: 'name', order: 'ASC'}}/>
-            <MultiReferenceArrayField source="klassReferenceId2" reference="klass" target="id" sort={{field: 'name', order: 'ASC'}}/>
-            <MultiReferenceArrayField source="klassReferenceId3" reference="klass" target="id" sort={{field: 'name', order: 'ASC'}}/>
-            <MultiReferenceArrayField source="klassReferenceIdNull" reference="klass" target="id" sort={{field: 'name', order: 'ASC'}}/>
+            <MultiReferenceArrayField
+                source="klassReferenceId1"
+                reference="klass"
+                target="id"
+                sort={{ field: 'name', order: 'ASC' }}
+            />
+            <MultiReferenceArrayField
+                source="klassReferenceId2"
+                reference="klass"
+                target="id"
+                sort={{ field: 'name', order: 'ASC' }}
+            />
+            <MultiReferenceArrayField
+                source="klassReferenceId3"
+                reference="klass"
+                target="id"
+                sort={{ field: 'name', order: 'ASC' }}
+            />
+            <MultiReferenceArrayField
+                source="klassReferenceIdNull"
+                reference="klass"
+                target="id"
+                sort={{ field: 'name', order: 'ASC' }}
+            />
         </CommonDatagrid>
     );
-}
+};
 
 const entity = {
     Datagrid,

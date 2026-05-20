@@ -1,31 +1,31 @@
-import attReport from "../../entities/att-report-with-report-month.jsx";
-import { TeacherGuard } from "src/components/TeacherView/TeacherAccess.jsx";
-import { useObjectStore } from "src/utils/storeUtil";
+import attReport from '../../entities/att-report-with-report-month.jsx';
+import { TeacherGuard } from 'src/components/TeacherView/TeacherAccess.jsx';
+import { useObjectStore } from 'src/utils/storeUtil';
 
 const BaseList = attReport.list;
 const BaseEdit = attReport.edit;
 
 const teacherAttReportList = (props) => {
-  const { value: teacher } = useObjectStore("teacher");
-  const teacherFilter = {
-    teacherReferenceId: teacher?.id,
-  };
+    const { value: teacher } = useObjectStore('teacher');
+    const teacherFilter = {
+        teacherReferenceId: teacher?.id,
+    };
 
-  return (
-    <TeacherGuard>
-      <BaseList {...props} filter={teacherFilter} />
-    </TeacherGuard>
-  );
+    return (
+        <TeacherGuard>
+            <BaseList {...props} filter={teacherFilter} />
+        </TeacherGuard>
+    );
 };
 
 const teacherAttReportEdit = (props) => {
-  return (
-    <TeacherGuard>
-      <BaseEdit {...props} />
-    </TeacherGuard>
-  );
+    return (
+        <TeacherGuard>
+            <BaseEdit {...props} />
+        </TeacherGuard>
+    );
 };
 export default {
-  list: teacherAttReportList,
-  edit: teacherAttReportEdit,
+    list: teacherAttReportList,
+    edit: teacherAttReportEdit,
 };

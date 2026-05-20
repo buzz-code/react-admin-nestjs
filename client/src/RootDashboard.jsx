@@ -6,24 +6,20 @@ import { StudentGuard } from './components/StudentView/StudentAccess';
 import StudentEventReport from './components/StudentView/student-event-report';
 
 export const RootDashboard = (props) => {
-  const isTeacherView = useIsTeacherView();
-  const isStudentView = useIsStudentView();
+    const isTeacherView = useIsTeacherView();
+    const isStudentView = useIsStudentView();
 
-  if (isTeacherView) {
-    return (
-      <TeacherGuard>
-        <Dashboard {...props} />
-      </TeacherGuard>
-
-    );
-  }
-  else if (isStudentView) {
-    return (
-      <StudentGuard>
-        <StudentEventReport />
-      </StudentGuard>
-    );
-  }
-  else return <Dashboard {...props} />;
-
-}
+    if (isTeacherView) {
+        return (
+            <TeacherGuard>
+                <Dashboard {...props} />
+            </TeacherGuard>
+        );
+    } else if (isStudentView) {
+        return (
+            <StudentGuard>
+                <StudentEventReport />
+            </StudentGuard>
+        );
+    } else return <Dashboard {...props} />;
+};

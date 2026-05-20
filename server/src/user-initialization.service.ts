@@ -8,9 +8,7 @@ import { getCurrentHebrewYear, getCurrentYearMonths } from '@shared/utils/entity
 
 @Injectable()
 export class UserInitializationService implements IUserInitializationService {
-  constructor(
-    @InjectRepository(ReportMonth) private reportMonthRepository: Repository<ReportMonth>,
-  ) { }
+  constructor(@InjectRepository(ReportMonth) private reportMonthRepository: Repository<ReportMonth>) {}
 
   async initializeUserData(user: User): Promise<void> {
     await this.generateReportMonthsForUser(user);
@@ -18,14 +16,13 @@ export class UserInitializationService implements IUserInitializationService {
 
   private async generateReportMonthsForUser(user: User): Promise<void> {
     const formatter = new Intl.DateTimeFormat('he', { month: 'long' });
-    const reportMonths: Partial<ReportMonth>[] = getCurrentYearMonths()
-      .map(monthStartDate => ({
-        userId: user.id,
-        name: formatter.format(monthStartDate),
-        startDate: monthStartDate,
-        endDate: new Date(monthStartDate.getFullYear(), monthStartDate.getMonth() + 1, 0),
-        year: getCurrentHebrewYear()
-      }))
+    const reportMonths: Partial<ReportMonth>[] = getCurrentYearMonths().map((monthStartDate) => ({
+      userId: user.id,
+      name: formatter.format(monthStartDate),
+      startDate: monthStartDate,
+      endDate: new Date(monthStartDate.getFullYear(), monthStartDate.getMonth() + 1, 0),
+      year: getCurrentHebrewYear(),
+    }));
     await this.reportMonthRepository.save(reportMonths);
   }
 }
