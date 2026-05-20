@@ -105,6 +105,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
                     klassReferenceId: Utils.getInFilter(klassReferenceIds),
                     klass: Utils.getKlassFilter(klassTypeReferenceIds),
                     lessonReferenceId: Utils.getInFilter(lessonIds),
+                    year: yearFilter?.value,
                     reportDate: getReportDateFilter(extra?.fromDate, extra?.toDate),
                     reportMonth: Utils.getReportMonthFilter(extra?.reportMonthReferenceId, extra?.semester),
                 };
