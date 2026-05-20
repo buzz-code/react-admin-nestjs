@@ -34,7 +34,6 @@ const filters = [
     <TextInput source="phone:$cont" label="טלפון" />,
     <TextInput source="name:$cont" alwaysOn />,
     <NullableBooleanInput source="isActive" alwaysOn />,
-    ,
 ];
 
 const filterDefaultValues = {
