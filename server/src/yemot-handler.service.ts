@@ -43,7 +43,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const hour = israelTime.getHours();
     const minute = israelTime.getMinutes();
 
-    return hour > 9 || (hour === 9 && minute >= 30);
+    return hour > 8 || (hour === 8 && minute >= 50);
   }
   private async getStudentByInput(): Promise<Student> {
     let student = null;
