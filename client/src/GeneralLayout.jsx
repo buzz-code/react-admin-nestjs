@@ -15,6 +15,7 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import PercentIcon from '@mui/icons-material/Percent';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import ViewListIcon from '@mui/icons-material/ViewList';
+import GridOnIcon from '@mui/icons-material/GridOn';
 
 import BaseLayout from '@shared/components/layout/Layout';
 import BaseDashboard from '@shared/components/views/Dashboard';
@@ -128,6 +129,15 @@ const menuGroups = [
                             to="/student/student-attendance"
                             primaryText="דוח נוכחות (פיבוט)"
                             leftIcon={<SummarizeIcon />}
+                        />
+                    ),
+                ({ permissions }) =>
+                    !isTeacherView(permissions) && (
+                        <MenuItemLink
+                            key="student-attendance-by-klass"
+                            to="/student/student-attendance-by-klass"
+                            primaryText="נוכחות לפי כיתה (פיבוט)"
+                            leftIcon={<GridOnIcon />}
                         />
                     ),
                 <MenuItemLink

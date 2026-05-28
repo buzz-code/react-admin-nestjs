@@ -47,6 +47,7 @@ import reportGroupSession from './entities/report-group-session';
 import Settings from 'src/settings/Settings';
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
+import StudentAttendanceByKlassList from 'src/pivots/StudentAttendanceByKlassList';
 import PercentReportWithDatesList from 'src/pivots/PercentReportWithDatesList';
 
 import { isUploadedFiles, isAdmin } from '@shared/utils/permissionsUtil';
@@ -154,6 +155,7 @@ const App = () => (
                     <Resource name="lesson" {...lesson} options={{ menuGroup: 'data' }} icon={SchoolIcon} />
                     <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
                         <Route path="student-attendance" element={<StudentAttendanceList />} />
+                        <Route path="student-attendance-by-klass" element={<StudentAttendanceByKlassList />} />
                     </Resource>
                     <Resource
                         name="student_klass"

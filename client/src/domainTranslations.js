@@ -250,6 +250,24 @@ export default {
                 'klassTypeReferenceIds:$cont': 'שיוך כיתה',
             },
         },
+        'student_by_year/pivot?extra.pivot=StudentAttendanceByKlass': {
+            name: 'נוכחות לפי כיתה (פיבוט)',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                tz: 'תז',
+                isActive: 'תלמידה פעילה',
+                'tz:$cont': 'תז',
+                'klassReferenceIds:$cont': 'תלמידות בכיתה',
+                'klassTypeReferenceIds:$cont': 'סוג כיתה',
+                'extra.klassReferenceIds': 'כיתות לדוח (עמודות)',
+                'extra.klassTypeReferenceIds': 'סוגי כיתות לדוח',
+                'extra.fromDate': 'תאריך דיווח אחרי',
+                'extra.toDate': 'תאריך דיווח לפני',
+                'extra.reportMonthReferenceId': 'תקופת דיווח',
+                'extra.semester': 'מחצית',
+                'extra.excludedLessonIds': 'הסר מקצועות מהדוח',
+            },
+        },
         report_month: {
             name: 'תקופות דיווח',
             fields: {

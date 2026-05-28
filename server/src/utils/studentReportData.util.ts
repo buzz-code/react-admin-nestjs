@@ -2,6 +2,7 @@ import {
   calcAvg,
   calcPercents,
   calcSum,
+  findByThreshold,
   getNumericValueOrNull,
   getUniqueValues,
   keepBetween,
@@ -218,7 +219,7 @@ export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNam
   // ========== end of investigation ==========
 
   var finalGrade = getFinalGrade(grade * 100, gradeEffect);
-  var matchingGradeName = getItemNameByKey(gradeNames, finalGrade);
+  var matchingGradeName = findByThreshold(finalGrade, gradeNames, 'key', 'name');
   var displayGrade = matchingGradeName ?? Math.round(finalGrade) + '%';
   return displayGrade;
 }
@@ -226,7 +227,7 @@ export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNam
 export function getDisplayAttendance(attPercents: number, attendanceNames: AttendanceName[] = []) {
   if (attPercents === null || attPercents === undefined) return '';
   var finalAttPercents = Math.round(attPercents * 100);
-  var matchingAttendanceName = getItemNameByKey(attendanceNames, finalAttPercents);
+  var matchingAttendanceName = findByThreshold(finalAttPercents, attendanceNames, 'key', 'name');
   var displayAttendance = matchingAttendanceName ?? finalAttPercents + '%';
   return displayAttendance;
 }
@@ -235,10 +236,6 @@ function getFinalGrade(grade: number, gradeEffect: number) {
   var isOriginalGrade = grade > 100 || grade == 0;
   var finalGrade = isOriginalGrade ? grade : keepBetween(grade + gradeEffect, 0, 100);
   return finalGrade;
-}
-
-function getItemNameByKey<T extends { key: number; name: string }>(items: T[], key: number) {
-  return items?.find((item) => item.key <= key)?.name || null;
 }
 
 export function getGradeEffect(attGradeEffect: AttGradeEffect[], attPercents: number, absCount: number) {
