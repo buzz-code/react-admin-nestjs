@@ -14,6 +14,7 @@ import {
 } from 'react-admin';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import HelpIcon from '@mui/icons-material/Help';
+import ClassIcon from '@mui/icons-material/Class';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -76,6 +77,11 @@ const filterDefaultValues = {
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     const additionalBulkButtons = [
+        <BulkActionButton label="שינוי כיתה" icon={<ClassIcon />} name="bulkChangeKlass" key="bulkChangeKlass" reloadOnEnd>
+            {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
+            {isAdmin && <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />}
+            <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />
+        </BulkActionButton>,
         <BulkActionButton label="הוספת חיסורים מאושרים" icon={<PlaylistRemoveIcon />} name="bulkKnownAbsences">
             <DateInput source="reportDate" resource="known_absence" />
             <NumberInput source="absnceCount" resource="known_absence" defaultValue={1} />

@@ -114,61 +114,81 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
 
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
-      case 'bulkKnownAbsences': {
-        const ids = getAsArray(req.parsed.extra.ids);
-        if (!ids) return 'לא נבחרו רשומות';
-        const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
-
-        const knownAbsences: Array<Partial<KnownAbsence>> = reports.map((report) => ({
-          userId: report.userId,
-          studentReferenceId: report.studentReferenceId,
-          klassReferenceId: report.klassReferenceId,
-          lessonReferenceId: report.lessonReferenceId,
-          reportDate: getAsDate(req.parsed.extra.reportDate) ?? report.reportDate,
-          absnceCount: getAsNumber(req.parsed.extra.absnceCount) ?? Math.round(report.absCount),
-          absnceCode: getAsNumber(req.parsed.extra.absnceCode),
-          senderName: getAsString(req.parsed.extra.senderName),
-          reason: getAsString(req.parsed.extra.reason),
-          comment: getAsString(req.parsed.extra.comment),
-          isApproved: getAsBoolean(req.parsed.extra.isApproved),
-          year: report.year,
-        }));
-        await validateBulk<T>(knownAbsences, KnownAbsence);
-        await this.dataSource.getRepository(KnownAbsence).insert(knownAbsences);
-
-        return `נוצרו ${reports.length} חיסורים מאושרים`;
-      }
-      case 'fixStudentReferenceV2': {
-        const ids = getAsArray(req.parsed.extra.ids);
-        if (!ids) return 'לא נבחרו רשומות';
-        const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
-
-        const reportsToSave = [];
-        for (const report of reports) {
-          if (report.studentReferenceId && !report.studentTz) {
-            report.studentTz = String(report.studentReferenceId)?.padStart(9, '0');
-            report.studentReferenceId = null;
-            await report.fillFields();
-            reportsToSave.push(report);
-          }
-        }
-        if (reportsToSave.length > 0) {
-          await this.dataSource.getRepository(AttReport).save(reportsToSave);
-        }
-        return `עודכנו ${reportsToSave.length} רשומות`;
-      }
-      case 'fixReferences': {
-        const ids = getAsNumberArray(req.parsed.extra.ids);
-        if (!ids) return 'לא נבחרו רשומות';
-        const referenceFields = {
-          studentTz: 'studentReferenceId',
-          klassId: 'klassReferenceId',
-          lessonId: 'lessonReferenceId',
-        };
-        return fixReferences(this.dataSource.getRepository(AttReport), ids, referenceFields);
-      }
+      case 'bulkChangeKlass':
+        return this.bulkChangeKlass(req.parsed.extra);
+      case 'bulkKnownAbsences':
+        return this.bulkKnownAbsences(req.parsed.extra);
+      case 'fixStudentReferenceV2':
+        return this.fixStudentReferenceV2(req.parsed.extra);
+      case 'fixReferences':
+        return this.fixReferences(req.parsed.extra);
     }
     return super.doAction(req, body);
+  }
+
+  private async bulkChangeKlass(extra: any): Promise<string> {
+    const ids = getAsNumberArray(extra.ids);
+    if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
+    const klassReferenceId = getAsNumber(extra.klassReferenceId);
+    if (!klassReferenceId) return 'לא נבחרה כיתה';
+    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, { klassReferenceId });
+    return `עודכנו ${result.affected} רשומות`;
+  }
+
+  private async bulkKnownAbsences(extra: any): Promise<string> {
+    const ids = getAsArray(extra.ids);
+    if (!ids) return 'לא נבחרו רשומות';
+    const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
+
+    const knownAbsences: Array<Partial<KnownAbsence>> = reports.map((report) => ({
+      userId: report.userId,
+      studentReferenceId: report.studentReferenceId,
+      klassReferenceId: report.klassReferenceId,
+      lessonReferenceId: report.lessonReferenceId,
+      reportDate: getAsDate(extra.reportDate) ?? report.reportDate,
+      absnceCount: getAsNumber(extra.absnceCount) ?? Math.round(report.absCount),
+      absnceCode: getAsNumber(extra.absnceCode),
+      senderName: getAsString(extra.senderName),
+      reason: getAsString(extra.reason),
+      comment: getAsString(extra.comment),
+      isApproved: getAsBoolean(extra.isApproved),
+      year: report.year,
+    }));
+    await validateBulk<AttReportWithReportMonth>(knownAbsences, KnownAbsence);
+    await this.dataSource.getRepository(KnownAbsence).insert(knownAbsences);
+
+    return `נוצרו ${reports.length} חיסורים מאושרים`;
+  }
+
+  private async fixStudentReferenceV2(extra: any): Promise<string> {
+    const ids = getAsArray(extra.ids);
+    if (!ids) return 'לא נבחרו רשומות';
+    const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
+
+    const reportsToSave = [];
+    for (const report of reports) {
+      if (report.studentReferenceId && !report.studentTz) {
+        report.studentTz = String(report.studentReferenceId)?.padStart(9, '0');
+        report.studentReferenceId = null;
+        await report.fillFields();
+        reportsToSave.push(report);
+      }
+    }
+    if (reportsToSave.length > 0) {
+      await this.dataSource.getRepository(AttReport).save(reportsToSave);
+    }
+    return `עודכנו ${reportsToSave.length} רשומות`;
+  }
+
+  private async fixReferences(extra: any): Promise<string> {
+    const ids = getAsNumberArray(extra.ids);
+    if (!ids) return 'לא נבחרו רשומות';
+    const referenceFields = {
+      studentTz: 'studentReferenceId',
+      klassId: 'klassReferenceId',
+      lessonId: 'lessonReferenceId',
+    };
+    return fixReferences(this.dataSource.getRepository(AttReport), ids, referenceFields);
   }
 }
 
