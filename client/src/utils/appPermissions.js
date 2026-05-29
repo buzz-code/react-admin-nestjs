@@ -13,6 +13,7 @@ export const appPermissions = {
     transportation: 'transportation',
     absenceType: 'absenceType',
     studentView: 'studentView',
+    studentAttendanceByKlass: 'studentAttendanceByKlass',
 };
 
 export const isScannerUpload = (permissions) => hasPermissionLogic(permissions, appPermissions.scannerUpload);
@@ -56,3 +57,7 @@ export const useIsAbsenceType = () => useHasPermission(appPermissions.absenceTyp
 
 export const isStudentView = (permissions) => hasPermissionLogic(permissions, appPermissions.studentView);
 export const useIsStudentView = () => useHasPermission(appPermissions.studentView);
+
+export const isStudentAttendanceByKlass = (permissions) =>
+    isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.studentAttendanceByKlass);
+export const useIsStudentAttendanceByKlass = () => useHasPermission(appPermissions.studentAttendanceByKlass);
