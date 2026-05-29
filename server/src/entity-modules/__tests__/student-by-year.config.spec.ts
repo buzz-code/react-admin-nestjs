@@ -18,7 +18,10 @@ interface MockStudent extends StudentByYear {
   unApprovedAbsences?: number;
   absencePercentage?: string;
   totalAbsencePercentage?: string;
+  absenceRatio?: number;
+  totalAbsenceRatio?: number;
   headers?: any[];
+  [key: string]: any;
 }
 
 describe('StudentByYear Config', () => {
@@ -185,6 +188,84 @@ describe('StudentByYear Config', () => {
       expect(mockStudents[0].headers).toContainEqual({
         value: '101',
         label: 'Math',
+      });
+    });
+
+    it('should round StudentAttendanceByKlass numeric results', async () => {
+      const mockStudents: MockStudent[] = [
+        {
+          id: 1,
+          userId: 100,
+          year: 2023,
+          name: 'Test 1',
+          tz: '123',
+          klassReferenceIds: ['1'],
+          klassTypeReferenceIds: ['1'],
+          isActive: true,
+        },
+      ];
+
+      const mockAttReports = [
+        {
+          studentReferenceId: 1,
+          klassReferenceId: 1,
+          absCount: 1,
+          howManyLessons: 3,
+        },
+      ];
+
+      const mockKnownAbsences = [
+        {
+          studentReferenceId: 1,
+          klassReferenceId: 1,
+          absnceCount: 0,
+          isApproved: true,
+        },
+      ];
+
+      const mockKlasses = [
+        {
+          id: 1,
+          name: 'כיתה א',
+        },
+      ];
+
+      (mockDataSource.getRepository as jest.Mock).mockImplementation((entity) => ({
+        find: jest.fn().mockImplementation(() => {
+          if (entity.name === 'AttReportWithReportMonth') {
+            return Promise.resolve(mockAttReports);
+          }
+          if (entity.name === 'KnownAbsenceWithReportMonth') {
+            return Promise.resolve(mockKnownAbsences);
+          }
+          if (entity.name === 'Klass') {
+            return Promise.resolve(mockKlasses);
+          }
+          return Promise.resolve([]);
+        }),
+      }));
+
+      const filter = [{ field: 'year', value: '2023' }] as ParsedRequestParams<any>['filter'];
+
+      await (service as any).populatePivotData(
+        'StudentAttendanceByKlass',
+        mockStudents,
+        { klassReferenceIds: ['1'] },
+        filter,
+        {},
+      );
+
+      expect(mockStudents[0].klass_1).toBe(0.3333);
+      expect(mockStudents[0].total).toBe(1);
+      expect(mockStudents[0].totalKnownAbsences).toBe(0);
+      expect(mockStudents[0].unApprovedAbsences).toBe(1);
+      expect(mockStudents[0].absenceRatio).toBe(0.3333);
+      expect(mockStudents[0].totalAbsenceRatio).toBe(0.3333);
+      expect(mockStudents[0].headers).toContainEqual({
+        value: 'klass_1',
+        label: 'כיתה א',
+        numFmt: '0.00%',
+        thresholds: expect.any(Array),
       });
     });
   });

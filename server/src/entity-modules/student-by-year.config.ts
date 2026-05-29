@@ -265,6 +265,8 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
       student.unApprovedAbsences = unApproved;
       student.absenceRatio = Utils.safeRatio(unApproved, totalLessons);
       student.totalAbsenceRatio = Utils.safeRatio(totalAbs, totalLessons);
+
+      roundAllNumericProperties(student);
     });
 
     const summaryHeaders = [
