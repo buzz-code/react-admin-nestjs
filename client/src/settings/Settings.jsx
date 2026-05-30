@@ -18,6 +18,7 @@ import { DashboardItemsInput } from './DashboardItemsInput';
 import { ReportStylesInput } from './ReportStylesInput';
 import { GeneralSettingsInput } from './GeneralSettingsInput';
 import { ReportCardSettingsInput } from './ReportCardSettingsInput';
+import { YemotSettingsInput } from '@shared/components/phone/YemotSettingsInput';
 
 const SettingsToolbar = () => (
     <Toolbar>
@@ -62,6 +63,7 @@ export default function Settings() {
                         <DashboardItemsInput />
                         <ReportStylesInput />
                         <ReportCardSettingsInput />
+                        <YemotSettingsInput />
                     </SimpleForm>
                 </ResourceContextProvider>
             </CardContent>

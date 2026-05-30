@@ -32,6 +32,8 @@ import teacher from 'src/entities/teacher';
 import transportation from 'src/entities/transportation';
 import absenceType from 'src/entities/absenceType';
 import uploadedFile from '@shared/components/common-entities/uploaded-file';
+import phoneCampaign from '@shared/components/common-entities/phone-campaign';
+import phoneTemplate from '@shared/components/common-entities/phone-template';
 import studentKlassesReport from 'src/entities/student-klasses-report';
 import StudentEventReport from 'src/components/StudentView/student-event-report';
 import reportMonth from 'src/entities/report-month';
@@ -50,7 +52,7 @@ import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
 import StudentAttendanceByKlassList from 'src/pivots/StudentAttendanceByKlassList';
 import PercentReportWithDatesList from 'src/pivots/PercentReportWithDatesList';
 
-import { isUploadedFiles, isAdmin } from '@shared/utils/permissionsUtil';
+import { isUploadedFiles, isAdmin, isPhoneCampaign } from '@shared/utils/permissionsUtil';
 import {
     isLessonSignature,
     isOnlyInLessonReport,
@@ -81,6 +83,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import LabelIcon from '@mui/icons-material/Label';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import PhoneIcon from '@mui/icons-material/Phone';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -241,6 +244,12 @@ const App = () => (
                             options={{ menuGroup: 'settings' }}
                             icon={UploadFileIcon}
                         />
+                    )}
+                    {isPhoneCampaign(permissions) && (
+                        <>
+                            <Resource name="phone_template" {...phoneTemplate} options={{ menuGroup: 'phone' }} icon={PhoneIcon} />
+                            <Resource name="phone_campaign" {...phoneCampaign} options={{ menuGroup: 'phone' }} icon={PhoneIcon} />
+                        </>
                     )}
                     <Resource
                         name="att_report"

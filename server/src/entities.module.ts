@@ -36,6 +36,8 @@ import reportGroupSessionConfig from './entity-modules/report-group-session.conf
 import transportationConfig from './entity-modules/transportation.config';
 import absenceTypeConfig from './entity-modules/absenceType.config';
 import uploadedFileConfig from '@shared/entities/configs/uploaded-file.config';
+import phoneTemplateConfig from '@shared/entities/configs/phone-template.config';
+import phoneCampaignConfig from '@shared/entities/configs/phone-campaign.config';
 import { Student } from './db/entities/Student.entity';
 import { Teacher } from './db/entities/Teacher.entity';
 import userConfig from '@shared/entities/configs/user.config';
@@ -90,6 +92,8 @@ registerEntityNameMap({
     BaseEntityModule.register(transportationConfig),
     BaseEntityModule.register(absenceTypeConfig),
     BaseEntityModule.register(uploadedFileConfig),
+    BaseEntityModule.register(phoneTemplateConfig),
+    BaseEntityModule.register(phoneCampaignConfig),
   ],
 })
 export class EntitiesModule {}
