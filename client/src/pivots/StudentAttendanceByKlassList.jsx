@@ -13,9 +13,8 @@ import {
     TextInput,
     DateInput,
     NullableBooleanInput,
-    SelectField,
 } from 'react-admin';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { semesterChoices } from 'src/entities/report-month';
@@ -97,7 +96,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField key="tz" source="tz" />
             <TextField key="name" source="name" />
             <BooleanField key="isActive" source="isActive" />
-            <SelectField key="year" source="year" choices={yearChoices} />
+            <CommonYearField key="year" />
 
             {klassHeaders.map((h) => (
                 <ThresholdColorField key={h.value} source={h.value} label={h.label} thresholds={ABSENCE_THRESHOLDS} />

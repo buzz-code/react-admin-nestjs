@@ -14,9 +14,8 @@ import {
     DateInput,
     BooleanInput,
     NullableBooleanInput,
-    SelectField,
 } from 'react-admin';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { CommonSelectArrayField } from '@shared/components/fields/CommonSelectArrayField';
@@ -95,7 +94,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField key="tz" source="tz" />
             <TextField key="name" source="name" />
             <BooleanField key="isActive" source="isActive" />
-            <SelectField key="year" source="year" choices={yearChoices} />
+            <CommonYearField key="year" />
             {getPivotColumns(data)}
         </CommonDatagrid>
     );
