@@ -3,10 +3,9 @@ import {
     ReferenceArrayField,
     TextField,
     required,
-    SelectField,
     BooleanInput,
     TextInput,
-    useGetList,
+    useGetList
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -16,8 +15,8 @@ import { BulkActionButton } from '@shared/components/crudContainers/BulkActionBu
 import AttachEmailIcon from '@mui/icons-material/AttachEmail';
 import BrowserUpdatedIcon from '@mui/icons-material/BrowserUpdated';
 import { CommonRichTextInput } from '@shared/components/fields/CommonRichTextInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
@@ -28,7 +27,7 @@ const filters = [
         reference="report_month"
         dynamicFilter={filterByUserId}
     />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -86,7 +85,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <ReferenceField source="teacherReferenceId" reference="teacher" sortBy="teacherName" />
             <TextField source="teacherComment" />
             <ReferenceField source="reportMonthReferenceId" reference="report_month" sortBy="reportMonthName" />
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             <ReferenceArrayField source="reportedLessons" reference="lesson" sortBy="reportedLessonNames" />
             <ReferenceArrayField source="notReportedLessons" reference="lesson" sortBy="notReportedLessonNames" />
         </CommonDatagrid>

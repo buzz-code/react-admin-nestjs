@@ -10,8 +10,7 @@ import {
     required,
     TextField,
     TextInput,
-    SelectField,
-    minValue,
+    minValue
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField, MultiReferenceArrayField } from '@shared/components/fields/CommonReferenceField';
@@ -23,8 +22,8 @@ import {
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
 import { useUnique } from '@shared/utils/useUnique';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
@@ -45,7 +44,7 @@ const filters = [
         dynamicFilter={filterByUserId}
         alwaysOn
     />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -76,7 +75,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             />
             <DateField source="startDate" />
             <DateField source="endDate" />
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             <TextField source="comment" />
             <TextField source="howManyLessons" />
             <TextField source="order" />
@@ -103,7 +102,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
             <DateInput source="startDate" />
             <DateInput source="endDate" />
-            <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
+            <CommonYearInput />
             <TextInput source="comment" validate={[maxLength(1000)]} />
             <NumberInput source="howManyLessons" validate={minValue(0)} />
             <NumberInput source="order" />

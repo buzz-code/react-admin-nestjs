@@ -4,8 +4,7 @@ import {
     TextField,
     ReferenceField,
     useRecordContext,
-    SelectField,
-    TextInput,
+    TextInput
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
@@ -15,9 +14,9 @@ import {
     filterByUserId,
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { ShowMatchingRecordsButton } from '@shared/components/fields/ShowMatchingRecordsButton';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
@@ -41,7 +40,7 @@ const filters = [
             'klassReferenceIds:$cont': 'klassReferenceId',
         }}
     />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -83,7 +82,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
                 reference="lesson"
                 optionalTarget="key"
             />
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             <NumberField source="lessonsCount" />
             <NumberField source="absCount" />
             <NumberField source="absPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />

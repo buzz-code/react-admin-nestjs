@@ -10,16 +10,15 @@ import {
     ReferenceField,
     ReferenceManyField,
     required,
-    SelectField,
     SelectInput,
     TextField,
-    TextInput,
+    TextInput
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { useUnique } from '@shared/utils/useUnique';
 import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
@@ -27,6 +26,7 @@ import StudentReportCardReactButton from 'src/reports/studentReportCardReactButt
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
+import { CommonYearField } from '@shared/components/fields/CommonYear';
 
 const filters = [
     ...commonAdminFilters,
@@ -98,7 +98,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
                                 reference="klass"
                                 optionalTarget="key"
                             />
-                            <SelectField source="year" choices={yearChoices} />
+                            <CommonYearField />
                         </CommonDatagrid>
                     </ReferenceManyField>
                 </Labeled>

@@ -2,8 +2,8 @@ import { ReferenceField, TextField, SelectField, NumberField } from 'react-admin
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
@@ -20,7 +20,7 @@ const filters = [
         reference="klass_type"
         dynamicFilter={filterByUserId}
     />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -48,7 +48,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             </MultiReferenceField>
             <NumberField source="howManyLessons" />
             <ReferenceField source="reportMonthReferenceId" reference="report_month" sortBy="reportMonth.name" />
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
         </CommonDatagrid>
     );
 };

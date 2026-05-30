@@ -5,12 +5,11 @@ import {
     TextField,
     TextInput,
     ReferenceField,
-    SelectField,
     required,
     NumberInput,
     BooleanInput,
     NullableBooleanInput,
-    maxLength,
+    maxLength
 } from 'react-admin';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import HelpIcon from '@mui/icons-material/Help';
@@ -24,8 +23,8 @@ import {
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { Inputs } from './att-report';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
@@ -68,7 +67,7 @@ const filters = [
         }}
     />,
     <CommonReferenceInput source="reportMonthReferenceId" reference="report_month" dynamicFilter={filterByUserId} />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -79,7 +78,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
     const additionalBulkButtons = [
         <BulkActionButton label="שינוי כיתה" icon={<ClassIcon />} name="bulkChangeKlass" key="bulkChangeKlass" reloadOnEnd>
             {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
-            {isAdmin && <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />}
+            {isAdmin && <CommonYearInput />}
             <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />
         </BulkActionButton>,
         <BulkActionButton label="הוספת חיסורים מאושרים" icon={<PlaylistRemoveIcon />} name="bulkKnownAbsences">
@@ -158,7 +157,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
                 </ReferenceField>
             )}
             <MultiReferenceField source="reportMonthReferenceId" sortBy="reportMonth.name" reference="report_month" />
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             <DateField source="reportDate" />
             <CommonHebrewDateField source="reportDate" />
             <NumberField source="howManyLessons" />

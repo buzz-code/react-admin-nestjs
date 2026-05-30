@@ -19,8 +19,8 @@ import {
 } from 'react-admin';
 import { filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearInput } from '@shared/components/fields/CommonYear';
 import { handleActionSuccess, handleError } from '@shared/utils/notifyUtil';
 import SignatureInput from '@shared/components/fields/signature/SignatureInput';
 import { useObjectStore } from 'src/utils/storeUtil';
@@ -231,12 +231,7 @@ const StudentEventReport = (props) => {
                     </SimpleFormIterator>
                 </ArrayInput>
                 <NumberInput source="absnceCode" validate={required()} />
-                <CommonAutocompleteInput
-                    source="year"
-                    choices={yearChoices}
-                    defaultValue={defaultYearFilter.year}
-                    disabled
-                />
+                <CommonYearInput disabled />
                 <BooleanInput source="isApproved" defaultValue={true} disabled />
                 <SignatureInput
                     source="signatureData"

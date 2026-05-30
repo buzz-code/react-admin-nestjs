@@ -2,8 +2,8 @@ import { ReferenceField, TextField, SelectField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceArrayField, MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
 import {
     CommonReferenceInputFilter,
@@ -35,7 +35,7 @@ const filters = [
         reference="klass"
         dynamicFilter={filterByUserIdAndYear}
     />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -69,7 +69,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             >
                 <TextField source="tz" />
             </MultiReferenceField>
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             {/* <TextField source="klasses1" />
             <TextField source="klasses2" />
             <TextField source="klasses3" />

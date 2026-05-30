@@ -10,9 +10,8 @@ import {
     NumberInput,
     ReferenceField,
     required,
-    SelectField,
     TextField,
-    TextInput,
+    TextInput
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
@@ -23,8 +22,8 @@ import {
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 import { BulkApproveAbsences } from 'src/components/BulkApproveAbsences';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
@@ -51,7 +50,7 @@ const filters = [
     <TextInput source="reason:$cont" label="סיבה" />,
     <TextInput source="comment:$cont" label="הערות" />,
     <NullableBooleanInput source="isApproved" />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
     <CommonReferenceInputFilter
         source="absenceTypeId"
         reference="absence_type"
@@ -100,7 +99,7 @@ const Datagrid = ({ isAdmin, children, isPreview, ...props }) => {
             <TextField source="reason" />
             <TextField source="comment" />
             <BooleanField source="isApproved" />
-            {!isPreview && <SelectField source="year" choices={yearChoices} />}
+            {!isPreview && <CommonYearField />}
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -144,7 +143,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <TextInput source="reason" validate={maxLength(500)} />
             <TextInput source="comment" validate={maxLength(500)} />
             <BooleanInput source="isApproved" defaultValue={true} />
-            <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
+            <CommonYearInput />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
         </>

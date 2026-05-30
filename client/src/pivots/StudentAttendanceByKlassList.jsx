@@ -17,6 +17,7 @@ import {
 } from 'react-admin';
 import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { semesterChoices } from 'src/entities/report-month';
 import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
@@ -56,7 +57,7 @@ const filters = [
         reference="klass_type"
         dynamicFilter={filterByUserId}
     />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter
