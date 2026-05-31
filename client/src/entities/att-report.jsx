@@ -9,8 +9,7 @@ import {
     ReferenceField,
     required,
     minValue,
-    maxLength,
-    SelectField,
+    maxLength
 } from 'react-admin';
 import { useIsLessonSignature, useIsTeacherView } from 'src/utils/appPermissions';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
@@ -22,8 +21,8 @@ import {
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 
@@ -53,7 +52,7 @@ const filters = [
             'klassReferenceIds:$cont': 'klassReferenceId',
         }}
     />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -116,7 +115,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
                     <TextField source="topic" />
                 </ReferenceField>
             )}
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             <DateField source="reportDate" />
             <CommonHebrewDateField source="reportDate" />
             <NumberField source="howManyLessons" />
@@ -168,7 +167,7 @@ export const Inputs = ({ isCreate, isAdmin }) => {
             <NumberInput source="absCount" defaultValue={0} />
             {/* <NumberInput source="approvedAbsCount" defaultValue={0} /> */}
             <TextInput source="comments" validate={maxLength(500)} />
-            <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
+            <CommonYearInput />
             {/* <TextInput source="sheetName" validate={maxLength(100)} /> */}
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}

@@ -2,12 +2,11 @@ import {
     DateField,
     TextField,
     TextInput,
-    SelectField,
     ReferenceField,
     ReferenceManyCount,
     DateTimeInput,
     required,
-    maxLength,
+    maxLength
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -16,8 +15,8 @@ import {
     filterByUserId,
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput } from '@shared/components/fields/CommonYear';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
@@ -52,7 +51,7 @@ const filters = [
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} />,
+    <CommonYearInput />,
     ...commonAdminFilters,
 ];
 
@@ -70,7 +69,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             <ReferenceField source="teacherReferenceId" reference="teacher" />
             <ReferenceField source="lessonReferenceId" reference="lesson" />
             <ReferenceField source="klassReferenceId" reference="klass" />
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             <ReferenceManyCount label="שיעורים" reference="report_group_session" target="reportGroupId" />
             <DateField source="createdAt" showTime />
             {isAdmin && <DateField source="updatedAt" showTime />}
@@ -102,7 +101,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
                 dynamicFilter={filterByUserIdAndYear}
                 validate={required()}
             />
-            <CommonAutocompleteInput source="year" choices={yearChoices} validate={required()} />
+            <CommonYearInput validate={required()} />
             <SignatureInput source="signatureData" label="חתימה דיגיטלית" validate={[required()]} />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}

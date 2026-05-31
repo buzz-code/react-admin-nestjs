@@ -14,10 +14,10 @@ import {
     DateInput,
     BooleanInput,
     NullableBooleanInput,
-    SelectField,
 } from 'react-admin';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { CommonSelectArrayField } from '@shared/components/fields/CommonSelectArrayField';
 import { semesterChoices } from 'src/entities/report-month';
 import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
@@ -60,7 +60,7 @@ const filters = [
         label="סנן לפי מקצועות"
         dynamicFilter={filterByUserIdAndYear}
     />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter
@@ -94,7 +94,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField key="tz" source="tz" />
             <TextField key="name" source="name" />
             <BooleanField key="isActive" source="isActive" />
-            <SelectField key="year" source="year" choices={yearChoices} />
+            <CommonYearField key="year" />
             {getPivotColumns(data)}
         </CommonDatagrid>
     );

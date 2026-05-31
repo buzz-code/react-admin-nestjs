@@ -1,6 +1,6 @@
 import { TextInput, DateInput, NumberInput } from 'react-admin';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearInput } from '@shared/components/fields/CommonYear';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
@@ -24,7 +24,7 @@ export default ({ defaultRequestValues }) => {
             defaultRequestValues={{ ...defaultValues, ...defaultRequestValues }}
             requestValues={reportCardSettings}
         >
-            <CommonAutocompleteInput source="year" label="שנה" choices={yearChoices} />
+            <CommonYearInput label="שנה" />
             <DateInput source="startDate" label="תאריך התחלה" />
             <DateInput source="endDate" label="תאריך סיום" />
             <CommonReferenceArrayInput

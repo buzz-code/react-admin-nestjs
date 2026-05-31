@@ -9,8 +9,7 @@ import {
     ReferenceField,
     required,
     maxLength,
-    SelectField,
-    NullableBooleanInput,
+    NullableBooleanInput
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
@@ -21,8 +20,8 @@ import {
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
@@ -47,7 +46,7 @@ const filters = [
             'klassReferenceIds:$cont': 'klassReferenceId',
         }}
     />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -89,7 +88,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
                 reference="lesson"
                 optionalTarget="key"
             />
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             <DateField source="reportDate" />
             {/* <NumberField source="howManyLessons" /> */}
             <NumberField source="grade" />
@@ -135,7 +134,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <NumberInput source="grade" validate={required()} />
             <TextInput source="estimation" validate={maxLength(500)} />
             <TextInput source="comments" validate={maxLength(500)} />
-            <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
+            <CommonYearInput />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
         </>

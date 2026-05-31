@@ -6,21 +6,20 @@ import {
     TextField,
     TextInput,
     NumberInput,
-    maxLength,
-    SelectField,
+    maxLength
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { useUnique } from '@shared/utils/useUnique';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import CommonTimeInput from '@shared/components/fields/CommonTimeInput';
 
 const filters = [
     ...commonAdminFilters,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
     <TextInput source="key:$cont" label="שילוט" />,
     <TextInput source="description:$cont" label="תיאור" />,
 ];
@@ -38,7 +37,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="key" />
             <TextField source="departureTime" />
             <TextField source="description" />
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -54,12 +53,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 
             <NumberInput source="key" validate={[required(), unique()]} />
             <CommonTimeInput source="departureTime" validate={[required()]} />
-            <CommonAutocompleteInput
-                source="year"
-                choices={yearChoices}
-                validate={required()}
-                defaultValue={defaultYearFilter.year}
-            />
+            <CommonYearInput validate={required()} />
 
             <TextInput source="description" multiline validate={maxLength(1000)} />
 

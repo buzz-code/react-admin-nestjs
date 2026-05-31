@@ -1,5 +1,4 @@
 import {
-    SelectField,
     TextField,
     TextInput,
     ReferenceField,
@@ -8,7 +7,7 @@ import {
     DateTimeInput,
     NumberInput,
     required,
-    maxLength,
+    maxLength
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
@@ -20,8 +19,8 @@ import {
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { useUnique } from '@shared/utils/useUnique';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
 import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
@@ -41,7 +40,7 @@ const filters = [
         reference="teacher"
         dynamicFilter={filterByUserId}
     />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -91,7 +90,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
                 optionalSource="teacherId"
                 optionalTarget="tz"
             />
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -114,7 +113,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
                 dynamicFilter={filterByUserId}
             />
             <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
-            <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
+            <CommonYearInput />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
         </>
