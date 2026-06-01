@@ -8,7 +8,9 @@ import {
     NumberInput,
     maxLength,
     ArrayInput,
-    SimpleFormIterator
+    SimpleFormIterator,
+    BooleanInput,
+    BooleanField,
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -38,6 +40,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
 
             <TextField source="name" />
             <TextField source="quota" />
+            <BooleanField source="isFileRequired" />
             <CommonYearField />
 
             <TextField source="requiredLabels" />
@@ -61,6 +64,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
                     <TextInput fullWidth />
                 </SimpleFormIterator>
             </ArrayInput>
+            <BooleanInput source="isFileRequired" />
 
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
@@ -71,7 +75,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['name', 'quota', 'requiredLabels', 'year'],
+    fields: ['name', 'quota', 'requiredLabels', 'year', 'isFileRequired'],
 };
 
 const entity = {

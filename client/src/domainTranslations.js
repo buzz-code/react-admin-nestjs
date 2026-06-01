@@ -144,7 +144,8 @@ export default {
                 comment: 'הערה',
                 isApproved: 'מאושר',
                 absenceTypeId: 'סוג אירוע',
-            },
+                fileData: 'קובץ מצורף',
+            }
         },
         lesson: {
             name: 'שיעור |||| שיעורים',
@@ -219,6 +220,7 @@ export default {
                 name: 'שם האירוע',
                 quota: 'מכסה שנתית',
                 requiredLabels: 'שדות חובה לדיווח',
+                isFileRequired:'חובה לצרף קובץ',
             },
         },
         student_klass_report: {

@@ -23,7 +23,8 @@ import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { CommonYearInput } from '@shared/components/fields/CommonYear';
 import { handleActionSuccess, handleError } from '@shared/utils/notifyUtil';
 import SignatureInput from '@shared/components/fields/signature/SignatureInput';
-import { useObjectStore } from 'src/utils/storeUtil';
+import { useObjectStore } from "src/utils/storeUtil";
+import { CommonFileInput } from '@shared/components/fields/CommonFileInput';
 
 const DynamicFields = ({ absenceType, isLoading }) => {
     if (isLoading) return <Loading loadingPrimary="טוען שדות..." />;
@@ -63,6 +64,8 @@ const extractBasePayload = (rootValues, reportValues, userId, studentId, absence
         reason: finalReason,
         absenceTypeId: rootValues.absenceTypeId,
         absnceCode: rootValues.absnceCode,
+        fileData: rootValues.fileData
+
     };
 };
 
@@ -230,6 +233,7 @@ const StudentEventReport = (props) => {
                         </div>
                     </SimpleFormIterator>
                 </ArrayInput>
+                <CommonFileInput source="fileData" validate={absenceType?.isFileRequired ? [required()] : []} label=" צירוף קובץ אסמכתא לאירוע" />
                 <NumberInput source="absnceCode" validate={required()} />
                 <CommonYearInput disabled />
                 <BooleanInput source="isApproved" defaultValue={true} disabled />

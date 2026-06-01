@@ -29,6 +29,9 @@ import { BulkApproveAbsences } from 'src/components/BulkApproveAbsences';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import { useIsAbsenceType } from 'src/utils/appPermissions';
 
+import CommonFileField from '@shared/components/fields/CommonFileField';
+import { CommonFileDownloadButton } from '@shared/components/fields/CommonFilePreviewButton';
+
 const filters = [
     ...commonAdminFilters,
     <CommonReferenceInputFilter
@@ -98,6 +101,8 @@ const Datagrid = ({ isAdmin, children, isPreview, ...props }) => {
             <TextField source="senderName" />
             <TextField source="reason" />
             <TextField source="comment" />
+            <CommonFileField source="fileData" />
+            <CommonFileDownloadButton source="fileData" label="הורד קובץ" />
             <BooleanField source="isApproved" />
             {!isPreview && <CommonYearField />}
             {isAdmin && <DateField showDate showTime source="createdAt" />}
@@ -142,6 +147,8 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <TextInput source="senderName" validate={maxLength(100)} />
             <TextInput source="reason" validate={maxLength(500)} />
             <TextInput source="comment" validate={maxLength(500)} />
+            <CommonFileField source="fileData" />
+            <CommonFileDownloadButton source="fileData" label="הורד קובץ" />
             <BooleanInput source="isApproved" defaultValue={true} />
             <CommonYearInput />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
@@ -155,6 +162,7 @@ const importer = {
         'studentTz',
         'klassId',
         'lessonId',
+        'absenceTypeId',
         'reportDate',
         'absnceCount',
         'absnceCode',
@@ -162,6 +170,7 @@ const importer = {
         'reason',
         'comment',
         'isApproved',
+        'fileData',
     ],
 };
 
