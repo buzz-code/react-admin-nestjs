@@ -1,24 +1,48 @@
-import { DateField, TextField, TextInput, SelectField, ReferenceField, ReferenceManyCount, DateTimeInput, required, maxLength } from 'react-admin';
+import {
+    DateField,
+    TextField,
+    TextInput,
+    ReferenceField,
+    ReferenceManyCount,
+    DateTimeInput,
+    required,
+    maxLength
+} from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import {
+    CommonReferenceInputFilter,
+    filterByUserId,
+    filterByUserIdAndYear,
+} from '@shared/components/fields/CommonReferenceInputFilter';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput } from '@shared/components/fields/CommonYear';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
+import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import ImageIcon from '@mui/icons-material/Image';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import SignatureInput from '@shared/components/fields/signature/SignatureInput';
 
 const additionalBulkButtons = [
     <BulkReportButton
-        key='lessonSignaturePdf'
-        label='הורד דוחות PDF'
+        key="lessonSignaturePdf"
+        label="הורד דוחות PDF"
         icon={<PictureAsPdfIcon />}
-        name='lessonSignaturePdf'
-        filename='דוחות-קבוצות'
+        name="lessonSignaturePdf"
+        filename="דוחות-קבוצות"
     />,
+    <BulkActionButton
+        key="updateSignatureData"
+        label="עדכון חתימה"
+        icon={<ImageIcon />}
+        name="updateSignatureData"
+        reloadOnEnd
+    >
+        <SignatureInput source="signatureData" label="חתימה" validate={[required()]} />
+    </BulkActionButton>,
 ];
 
 const filters = [
@@ -27,7 +51,7 @@ const filters = [
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} />,
+    <CommonYearInput />,
     ...commonAdminFilters,
 ];
 
@@ -45,7 +69,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             <ReferenceField source="teacherReferenceId" reference="teacher" />
             <ReferenceField source="lessonReferenceId" reference="lesson" />
             <ReferenceField source="klassReferenceId" reference="klass" />
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             <ReferenceManyCount label="שיעורים" reference="report_group_session" target="reportGroupId" />
             <DateField source="createdAt" showTime />
             {isAdmin && <DateField source="updatedAt" showTime />}
@@ -54,19 +78,36 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
 };
 
 const Inputs = ({ isCreate, isAdmin }) => {
-    return <>
-        {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        <TextInput source="name" validate={[required(), maxLength(255)]} />
-        <TextInput source="topic" validate={[required(), maxLength(255)]} />
-        <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} validate={required()} />
-        <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} validate={required()} />
-        <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} validate={required()} />
-        <CommonAutocompleteInput source="year" choices={yearChoices} validate={required()} />
-        <SignatureInput source="signatureData" label="חתימה דיגיטלית" validate={[required()]} />
-        {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
-        {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
-    </>
-}
+    return (
+        <>
+            {!isCreate && isAdmin && <TextInput source="id" disabled />}
+            <TextInput source="name" validate={[required(), maxLength(255)]} />
+            <TextInput source="topic" validate={[required(), maxLength(255)]} />
+            <CommonReferenceInput
+                source="teacherReferenceId"
+                reference="teacher"
+                dynamicFilter={filterByUserId}
+                validate={required()}
+            />
+            <CommonReferenceInput
+                source="lessonReferenceId"
+                reference="lesson"
+                dynamicFilter={filterByUserIdAndYear}
+                validate={required()}
+            />
+            <CommonReferenceInput
+                source="klassReferenceId"
+                reference="klass"
+                dynamicFilter={filterByUserIdAndYear}
+                validate={required()}
+            />
+            <CommonYearInput validate={required()} />
+            <SignatureInput source="signatureData" label="חתימה דיגיטלית" validate={[required()]} />
+            {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+            {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+        </>
+    );
+};
 
 const Representation = CommonRepresentation;
 

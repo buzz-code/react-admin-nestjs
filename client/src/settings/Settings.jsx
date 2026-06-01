@@ -1,6 +1,16 @@
 import React from 'react';
 import { Card, CardContent } from '@mui/material';
-import { SimpleForm, Title, useNotify, useGetIdentity, useDataProvider, SaveButton, Toolbar, useAuthProvider, ResourceContextProvider } from 'react-admin';
+import {
+    SimpleForm,
+    Title,
+    useNotify,
+    useGetIdentity,
+    useDataProvider,
+    SaveButton,
+    Toolbar,
+    useAuthProvider,
+    ResourceContextProvider,
+} from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { getDefaultPageSize } from '@shared/utils/settingsUtil';
 import { getLateValue, getDashboardItems, getReportStyles, getReportCardSettings } from './settingsUtil';
@@ -8,6 +18,7 @@ import { DashboardItemsInput } from './DashboardItemsInput';
 import { ReportStylesInput } from './ReportStylesInput';
 import { GeneralSettingsInput } from './GeneralSettingsInput';
 import { ReportCardSettingsInput } from './ReportCardSettingsInput';
+import { YemotSettingsInput } from '@shared/components/phone/YemotSettingsInput';
 
 const SettingsToolbar = () => (
     <Toolbar>
@@ -47,15 +58,12 @@ export default function Settings() {
             <Title title="הגדרות" />
             <CardContent>
                 <ResourceContextProvider value="settings">
-                    <SimpleForm
-                        onSubmit={handleSave}
-                        defaultValues={defaultValues}
-                        toolbar={<SettingsToolbar />}
-                    >
+                    <SimpleForm onSubmit={handleSave} defaultValues={defaultValues} toolbar={<SettingsToolbar />}>
                         <GeneralSettingsInput />
                         <DashboardItemsInput />
                         <ReportStylesInput />
                         <ReportCardSettingsInput />
+                        <YemotSettingsInput />
                     </SimpleForm>
                 </ResourceContextProvider>
             </CardContent>

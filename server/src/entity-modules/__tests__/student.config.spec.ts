@@ -22,7 +22,7 @@ class MockReportGenerator extends BaseReportGenerator {
   constructor() {
     super(
       (data) => 'test-report',
-      async (params) => params
+      async (params) => params,
     );
   }
 
@@ -48,7 +48,7 @@ describe('StudentConfig', () => {
       { value: 'comment', label: 'הערה' },
       { value: 'phone', label: 'טלפון' },
       { value: 'year', label: 'כתובת' },
-      { value: expect.any(Function), label: 'פעיל' }
+      { value: expect.any(Function), label: 'פעיל' },
     ]);
   });
 
@@ -71,24 +71,24 @@ describe('StudentConfig', () => {
           connection: {
             options: {
               type: 'mysql',
-              name: 'default'
-            }
-          }
+              name: 'default',
+            },
+          },
         },
         metadata: {
           columns: [],
           relations: [],
           connection: {
             options: {
-              type: 'mysql'
-            }
-          }
-        }
+              type: 'mysql',
+            },
+          },
+        },
       } as any;
 
       // Create mock mail service
       mockMailService = {
-        sendMail: jest.fn()
+        sendMail: jest.fn(),
       } as any;
 
       // Mock DataSource
@@ -99,7 +99,7 @@ describe('StudentConfig', () => {
           commitTransaction: jest.fn(),
           rollbackTransaction: jest.fn(),
           release: jest.fn(),
-        })
+        }),
       };
 
       // Create service instance with mocks
@@ -110,12 +110,12 @@ describe('StudentConfig', () => {
       // Mock the injected properties
       Object.defineProperty(service, 'dataSource', {
         value: mockDataSource,
-        writable: true
+        writable: true,
       });
 
       Object.defineProperty(service, 'exportDefinition', {
         value: studentConfig.exporter,
-        writable: true
+        writable: true,
       });
     });
 
@@ -142,8 +142,8 @@ describe('StudentConfig', () => {
           limit: 10,
           offset: 0,
           page: 1,
-          cache: 0
-        }
+          cache: 0,
+        },
       };
 
       beforeEach(() => {
@@ -154,7 +154,7 @@ describe('StudentConfig', () => {
         const mockGenerator = new MockReportGenerator();
         const mockReportData: CommonReportData = {
           generator: mockGenerator,
-          params: { someParams: 'value' }
+          params: { someParams: 'value' },
         };
         (generateStudentReportCard as jest.Mock).mockResolvedValue(mockReportData);
 
@@ -164,7 +164,7 @@ describe('StudentConfig', () => {
         expect(generateStudentReportCard).toHaveBeenCalledWith(
           mockUserId,
           mockExtra,
-          expect.any(BulkToPdfReportGenerator)
+          expect.any(BulkToPdfReportGenerator),
         );
         expect(result).toBe(mockReportData);
       });
@@ -174,17 +174,16 @@ describe('StudentConfig', () => {
           ...mockReq,
           parsed: {
             ...mockReq.parsed,
-            extra: { report: 'unsupported' }
-          }
+            extra: { report: 'unsupported' },
+          },
         };
 
         const mockGenerator = new MockReportGenerator();
         const mockParentResult: CommonReportData = {
           generator: mockGenerator,
-          params: { parentParams: 'value' }
+          params: { parentParams: 'value' },
         };
-        jest.spyOn(BaseEntityService.prototype, 'getReportData')
-          .mockResolvedValue(mockParentResult);
+        jest.spyOn(BaseEntityService.prototype, 'getReportData').mockResolvedValue(mockParentResult);
 
         const result = await service.getReportData(unsupportedReq as any);
 

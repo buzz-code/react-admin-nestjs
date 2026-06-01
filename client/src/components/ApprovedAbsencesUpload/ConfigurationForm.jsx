@@ -16,23 +16,9 @@ const ConfigurationForm = ({ configValues, onChange }) => {
             </Typography>
             <Form record={configValues} onSubmit={() => {}} onChange={handleFormChange}>
                 <Stack spacing={2} sx={{ maxWidth: 600 }}>
-                    <TextInput
-                        source="reason"
-                        label="סיבה"
-                        fullWidth
-                    />
-                    <TextInput
-                        source="senderName"
-                        label="שם השולח"
-                        fullWidth
-                    />
-                    <TextInput
-                        source="comment"
-                        label="הערה"
-                        multiline
-                        rows={3}
-                        fullWidth
-                    />
+                    <TextInput source="reason" label="סיבה" fullWidth />
+                    <TextInput source="senderName" label="שם השולח" fullWidth />
+                    <TextInput source="comment" label="הערה" multiline rows={3} fullWidth />
                     <Typography variant="caption" color="text.secondary">
                         הערה: תאריך ומספר חיסורים יילקחו מהדיווח המקורי
                     </Typography>

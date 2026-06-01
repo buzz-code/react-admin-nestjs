@@ -1,14 +1,29 @@
-import { SelectField, TextField, TextInput, ReferenceField, DateField, DateInput, DateTimeInput, NumberInput, required, maxLength } from 'react-admin';
+import {
+    TextField,
+    TextInput,
+    ReferenceField,
+    DateField,
+    DateInput,
+    DateTimeInput,
+    NumberInput,
+    required,
+    maxLength
+} from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
+import {
+    CommonReferenceInputFilter,
+    filterByUserId,
+    filterByUserIdAndYear,
+} from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { useUnique } from '@shared/utils/useUnique';
 import { BulkReportButton } from '@shared/components/crudContainers/BulkReportButton';
+import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
 import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
@@ -19,8 +34,13 @@ const filters = [
     <TextInput source="name:$cont" alwaysOn />,
     <CommonReferenceInputFilter source="klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
-    <CommonReferenceInputFilter source="klassType.teacherReferenceId" label="מורה אחראית (שיוך כיתה)" reference="teacher" dynamicFilter={filterByUserId} />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonReferenceInputFilter
+        source="klassType.teacherReferenceId"
+        label="מורה אחראית (שיוך כיתה)"
+        reference="teacher"
+        dynamicFilter={filterByUserId}
+    />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -28,28 +48,23 @@ const filterDefaultValues = {
 };
 
 const additionalBulkButtons = [
-    <BulkReportButton 
-        key='klassAttendanceReport'
-        label='הורד יומן נוכחות' 
-        icon={<AssignmentIcon />} 
-        name='klassAttendanceReport' 
-        filename='יומן-נוכחות'
+    <BulkReportButton
+        key="klassAttendanceReport"
+        label="הורד יומן נוכחות"
+        icon={<AssignmentIcon />}
+        name="klassAttendanceReport"
+        filename="יומן-נוכחות"
     >
-        <DateInput 
-            source="startDate" 
-            label="תאריך התחלה" 
-        />
-        <DateInput 
-            source="endDate" 
-            label="תאריך סיום" 
-        />
-        <CommonReferenceArrayInput 
-            source="lessonReferenceIds" 
-            reference="lesson" 
-            label="שיעורים" 
+        <DateInput source="startDate" label="תאריך התחלה" validate={required()} />
+        <DateInput source="endDate" label="תאריך סיום" validate={required()} />
+        <CommonReferenceArrayInput
+            source="lessonReferenceIds"
+            reference="lesson"
+            label="שיעורים"
             dynamicFilter={filterByUserIdAndYear}
         />
-    </BulkReportButton>
+    </BulkReportButton>,
+    <BulkFixReferenceButton key="fixReferences" label="תיקון שיוך" />,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
@@ -61,36 +76,55 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="key" />
             <TextField source="name" />
             <TextField source="displayName" />
-            <MultiReferenceField source="klassTypeReferenceId" sortBy="klassType.name" reference="klass_type" optionalSource="klassTypeId" optionalTarget="key" />
-            <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" reference="teacher" optionalSource="teacherId" optionalTarget="tz" />
-            <SelectField source="year" choices={yearChoices} />
+            <MultiReferenceField
+                source="klassTypeReferenceId"
+                sortBy="klassType.name"
+                reference="klass_type"
+                optionalSource="klassTypeId"
+                optionalTarget="key"
+            />
+            <MultiReferenceField
+                source="teacherReferenceId"
+                sortBy="teacher.name"
+                reference="teacher"
+                optionalSource="teacherId"
+                optionalTarget="tz"
+            />
+            <CommonYearField />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
     );
-}
+};
 
 const Inputs = ({ isCreate, isAdmin }) => {
     const unique = useUnique({ dynamicFilter: { year: 'year' } });
-    return <>
-        {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <NumberInput source="key" validate={[required(), unique()]} />
-        <TextInput source="name" validate={[required(), maxLength(500)]} />
-        <TextInput source="displayName" validate={[maxLength(500)]} />
-        <CommonReferenceInput source="klassTypeReferenceId" reference="klass_type" validate={required()} dynamicFilter={filterByUserId} />
-        <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
-        <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
-        {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
-        {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
-    </>
+    return (
+        <>
+            {!isCreate && isAdmin && <TextInput source="id" disabled />}
+            {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
+            <NumberInput source="key" validate={[required(), unique()]} />
+            <TextInput source="name" validate={[required(), maxLength(500)]} />
+            <TextInput source="displayName" validate={[maxLength(500)]} />
+            <CommonReferenceInput
+                source="klassTypeReferenceId"
+                reference="klass_type"
+                validate={required()}
+                dynamicFilter={filterByUserId}
+            />
+            <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
+            <CommonYearInput />
+            {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+            {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+        </>
+    );
 };
 
 const Representation = CommonRepresentation;
 
 const importer = {
     fields: ['key', 'name', 'klassTypeId', 'teacherId', 'year', 'displayName'],
-}
+};
 
 const entity = {
     Datagrid,

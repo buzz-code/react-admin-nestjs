@@ -247,7 +247,7 @@ const reportTemplate = `
 `;
 
 const reportOptions: ejs.Options = {
-    compileDebug: true,
+  compileDebug: true,
 };
 
 export default new EjsToPdfReportGenerator(getReportName, getReportData, reportTemplate, reportOptions);

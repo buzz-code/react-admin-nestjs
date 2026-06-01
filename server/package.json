@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d shared/config/migration.config.ts",
+    "typeorm:cli": "ts-node --project tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli -d shared/config/migration.config.ts",
     "typeorm:cli-js": "typeorm -d dist/shared/config/migration.config.js",
     "typeorm:cli-no-d": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
     "typeorm:run": "npm run typeorm:cli -- migration:run",
@@ -27,7 +27,8 @@
     "typeorm:generate": "npm run typeorm:cli -- migration:generate",
     "typeorm:create": "npm run typeorm:cli-no-d -- migration:create",
     "typeorm:revert": "npm run typeorm:cli -- migration:revert",
-    "clean-migrations": "node helpers/clean-migrations"
+    "clean-migrations": "node helpers/clean-migrations",
+    "prettier": "prettier --write \"{src,apps,libs,test}/**/*.ts\""
   },
   "dependencies": {
     "@dataui/crud": "^5.2.3",
@@ -54,6 +55,7 @@
     "class-validator": "0.13",
     "cookie-parser": "^1.4.6",
     "exceljs": "^4.3.0",
+    "gematriya": "^2.0.0",
     "handlebars": "^4.7.7",
     "jewish-date": "^2.0.20",
     "jszip": "^3.10.1",
@@ -105,7 +107,7 @@
     "ts-jest": "^29.0.5",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
-    "tsconfig-paths": "4.1.0",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^4.7.4"
   }
 }

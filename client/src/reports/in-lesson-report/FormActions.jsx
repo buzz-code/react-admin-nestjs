@@ -11,7 +11,9 @@ export const FormActions = () => {
         <>
             <Divider />
             <Box padding={2}>
-                <Button onClick={handleCancel}><>ביטול</></Button>
+                <Button onClick={handleCancel}>
+                    <>ביטול</>
+                </Button>
                 <SaveButton alwaysEnable />
             </Box>
             <PreviewListWithSavingDialog

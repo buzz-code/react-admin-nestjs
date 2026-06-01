@@ -1,36 +1,86 @@
-import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
-import { CommonDatagrid, getPivotColumns } from "@shared/components/crudContainers/CommonList"
-import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from "@shared/components/fields/CommonReferenceInputFilter";
-import { BooleanField, ReferenceField, TextField, useListContext, TextInput, DateInput, BooleanInput, NullableBooleanInput, SelectField } from "react-admin"
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
+import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
+import { CommonDatagrid, getPivotColumns } from '@shared/components/crudContainers/CommonList';
+import {
+    CommonReferenceInputFilter,
+    filterByUserId,
+    filterByUserIdAndYear,
+} from '@shared/components/fields/CommonReferenceInputFilter';
+import {
+    BooleanField,
+    ReferenceField,
+    TextField,
+    useListContext,
+    TextInput,
+    DateInput,
+    BooleanInput,
+    NullableBooleanInput,
+} from 'react-admin';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
-import { CommonSelectArrayField } from "@shared/components/fields/CommonSelectArrayField";
-import { semesterChoices } from "src/entities/report-month";
-import CommonReferenceArrayInput from "@shared/components/fields/CommonReferenceArrayInput";
-import { adminUserFilter } from "@shared/components/fields/PermissionFilter";
+import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
+import { CommonSelectArrayField } from '@shared/components/fields/CommonSelectArrayField';
+import { semesterChoices } from 'src/entities/report-month';
+import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
+import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
     adminUserFilter,
     <TextInput source="tz:$cont" label="תז" />,
     <TextInput source="name:$cont" alwaysOn />,
     <NullableBooleanInput source="isActive" label="תלמידה פעילה" />,
-    <CommonReferenceInputFilter source="klassReferenceIds:$cont" reference="klass" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
-    <CommonReferenceInputFilter source="klassTypeReferenceIds:$cont" reference="klass_type" dynamicFilter={filterByUserId} alwaysOn />,
-    <CommonReferenceInputFilter source="extra.lessonId" reference="lesson" dynamicFilter={filterByUserIdAndYear} alwaysOn />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonReferenceInputFilter
+        source="klassReferenceIds:$cont"
+        label="תלמידות בכיתה"
+        reference="klass"
+        dynamicFilter={filterByUserIdAndYear}
+        alwaysOn
+    />,
+    <CommonReferenceInputFilter
+        source="klassTypeReferenceIds:$cont"
+        label="תלמידות מסוג כיתה"
+        reference="klass_type"
+        dynamicFilter={filterByUserId}
+        alwaysOn
+    />,
+    <CommonReferenceArrayInput
+        source="extra.klassReferenceIds"
+        label="נתונים מכיתות"
+        reference="klass"
+        dynamicFilter={filterByUserIdAndYear}
+    />,
+    <CommonReferenceArrayInput
+        source="extra.klassTypeReferenceIds"
+        label="נתונים מסוגי כיתות"
+        reference="klass_type"
+        dynamicFilter={filterByUserId}
+    />,
+    <CommonReferenceArrayInput
+        source="extra.lessonIds"
+        reference="lesson"
+        label="סנן לפי מקצועות"
+        dynamicFilter={filterByUserIdAndYear}
+    />,
+    <CommonYearInputFilter />,
     <DateInput source="extra.fromDate" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="extra.toDate" label="תאריך דיווח לפני" alwaysOn />,
-    <CommonReferenceInputFilter source="extra.reportMonthReferenceId" label="תקופת דיווח" reference="report_month" dynamicFilter={filterByUserId} />,
+    <CommonReferenceInputFilter
+        source="extra.reportMonthReferenceId"
+        label="תקופת דיווח"
+        reference="report_month"
+        dynamicFilter={filterByUserId}
+    />,
     <CommonAutocompleteInput source="extra.semester" label="מחצית" choices={semesterChoices} />,
-    <BooleanInput source="extra.isCheckKlassType" label="סינון לפי שיוך כיתה" />,
-    <CommonReferenceArrayInput source="extra.excludedLessonIds" reference="lesson" label="הסר מקצועות מהדוח" dynamicFilter={filterByUserIdAndYear} />,
+    <CommonReferenceArrayInput
+        source="extra.excludedLessonIds"
+        reference="lesson"
+        label="הסר מקצועות מהדוח"
+        dynamicFilter={filterByUserIdAndYear}
+    />,
 ];
 
 const filterDefaultValues = {
     year: defaultYearFilter.year,
-    extra: {
-        isCheckKlassType: true,
-    },
+    extra: {},
 };
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
@@ -44,11 +94,11 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField key="tz" source="tz" />
             <TextField key="name" source="name" />
             <BooleanField key="isActive" source="isActive" />
-            <SelectField key="year" source="year" choices={yearChoices} />
+            <CommonYearField key="year" />
             {getPivotColumns(data)}
         </CommonDatagrid>
     );
-}
+};
 
 const entity = {
     resource: 'student_by_year/pivot?extra.pivot=StudentAttendance',
@@ -56,6 +106,6 @@ const entity = {
     filters,
     filterDefaultValues,
     configurable: false,
-}
+};
 
 export default getResourceComponents(entity).list;

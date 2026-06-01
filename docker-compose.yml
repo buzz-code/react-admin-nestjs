@@ -1,10 +1,10 @@
 version: "3"
 services:
-    frontend:
-        container_name: frontend
+    client:
+        container_name: client
         restart: unless-stopped
         depends_on:
-            - backend
+            - server
         build:
             context: ./client
             target: production
@@ -44,8 +44,8 @@ services:
                 window: 120s
 
 
-    backend:
-        container_name: backend
+    server:
+        container_name: server
         restart: unless-stopped
         build:
             context: ./server
@@ -64,7 +64,7 @@ services:
             MAINTENANCE_MODE: $MAINTENANCE_MODE
             MAINTENANCE_MESSAGE: $MAINTENANCE_MESSAGE
         depends_on:
-            - mysql
+            - database
         labels:
             caddy: api.$DOMAIN_NAME
             caddy.reverse_proxy: "{{upstreams 3000}}"
@@ -97,8 +97,8 @@ services:
                 max_attempts: 3
                 window: 120s
 
-    mysql:
-        container_name: mysql
+    database:
+        container_name: database
         restart: unless-stopped
         build:
             context: ./db
@@ -119,13 +119,13 @@ services:
         container_name: php-myadmin
         restart: unless-stopped
         depends_on:
-            - mysql
+            - database
         image: phpmyadmin
         labels:
             caddy: sql.$DOMAIN_NAME
             caddy.reverse_proxy: "{{upstreams 80}}"
         environment:
-            PMA_HOST: mysql
+            PMA_HOST: database
             MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
         # ports:
         #   - "80"

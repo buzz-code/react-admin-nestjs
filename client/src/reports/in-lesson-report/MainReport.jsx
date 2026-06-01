@@ -19,18 +19,10 @@ export const MainReport = ({ gradeMode, handleSave, storePrefix }) => {
                     {({ formData }) => (
                         <RecordContextProvider value={formData}>
                             {!gradeMode && (
-                                <NumberInput
-                                    source="howManyLessons"
-                                    label="מספר שיעורים"
-                                    defaultValue={1}
-                                    fullWidth
-                                />
+                                <NumberInput source="howManyLessons" label="מספר שיעורים" defaultValue={1} fullWidth />
                             )}
                             <Divider />
-                            <StudentList
-                                reportDates={reportDates}
-                                setReportDates={setReportDates}
-                            />
+                            <StudentList reportDates={reportDates} setReportDates={setReportDates} />
                             <LessonSignatureFields />
                             <FormActions />
                         </RecordContextProvider>

@@ -1,24 +1,16 @@
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  PrimaryGeneratedColumn,
-  BeforeInsert,
-  BeforeUpdate,
-} from 'typeorm';
+import { Column, Entity, Index, JoinColumn, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
 import { User } from 'src/db/entities/User.entity';
 import { IsOptional, Min } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
 import { IsNotEmpty, IsUniqueCombination, MaxLength, IsNumber } from '@shared/utils/validation/class-validator-he';
 import { StringType, NumberType } from '@shared/utils/entity/class-transformer';
-import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
+import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 
 @Index('absenceTypes_users_idx', ['userId'], {})
 @Index(['userId', 'name', 'year'], { unique: true })
-@Entity('absenceTypes') 
+@Entity('absenceTypes')
 export class AbsenceType implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
@@ -43,15 +35,15 @@ export class AbsenceType implements IHasUserId {
 
   @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @Min(0, { always: true }) 
+  @Min(0, { always: true })
   @NumberType
   @Column('decimal', { name: 'quota', precision: 5, scale: 1 })
   quota: number;
 
   @IsOptional({ always: true })
   @Column({
-    type: 'simple-array', 
-    name: 'required_labels', 
+    type: 'simple-array',
+    name: 'required_labels',
     nullable: true,
   })
   requiredLabels: string[] | null;

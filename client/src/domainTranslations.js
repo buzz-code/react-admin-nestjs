@@ -1,4 +1,5 @@
-import { generalResourceFieldsTranslation } from "@shared/providers/i18nProvider"
+import { generalResourceFieldsTranslation } from '@shared/providers/i18nProvider';
+import { sharedEntityTranslations } from '@shared/entities/shared-entity.translations';
 
 export default {
     menu_groups: {
@@ -8,6 +9,7 @@ export default {
         admin: 'ניהול',
     },
     resources: {
+        ...sharedEntityTranslations,
         settings: {
             name: 'הגדרות',
             fields: {
@@ -37,7 +39,7 @@ export default {
                 'reportCardSettings.downComment': 'הצג הערה מתחת שם תלמידה',
                 'reportCardSettings.lastGrade': 'חשב ציון אחרון',
                 'reportCardSettings.debug': 'הצג פירוט',
-            }
+            },
         },
         att_report: {
             name: 'רשומת נוכחות |||| נוכחות',
@@ -59,7 +61,7 @@ export default {
                 approvedAbsCount: 'חיסורים מאושרים',
                 comments: 'הערה',
                 sheetName: 'חודש דיווח',
-            }
+            },
         },
         att_report_with_report_month: {
             name: 'רשומת נוכחות |||| נוכחות',
@@ -82,7 +84,7 @@ export default {
                 approvedAbsCount: 'חיסורים מאושרים',
                 comments: 'הערה',
                 sheetName: 'חודש דיווח',
-            }
+            },
         },
         grade: {
             name: 'רשומת ציונים |||| ציונים',
@@ -102,7 +104,7 @@ export default {
                 grade: 'ציון',
                 estimation: 'הערכה',
                 comments: 'הערה',
-            }
+            },
         },
         klass: {
             name: 'כיתה |||| כיתות',
@@ -113,7 +115,7 @@ export default {
                 klassTypeReferenceId: 'שיוך כיתה',
                 teacherId: 'מורה',
                 teacherReferenceId: 'מורה',
-            }
+            },
         },
         klass_type: {
             name: 'שיוך כיתה |||| שיוך כיתות',
@@ -122,7 +124,7 @@ export default {
                 klassTypeEnum: 'סוג כיתה בדו"ח',
                 teacherId: 'מורה אחראית',
                 teacherReferenceId: 'מורה אחראית',
-            }
+            },
         },
         known_absence: {
             name: 'חיסור מאושר |||| חיסורים מאושרים',
@@ -159,7 +161,7 @@ export default {
                 howManyLessons: 'מספר שיעורים',
                 displayName: 'שם לתעודה',
                 order: 'סדר',
-            }
+            },
         },
         student_klass: {
             name: 'רשומת שיוך תלמידות לכיתות |||| שיוך תלמידות לכיתות',
@@ -169,7 +171,7 @@ export default {
                 studentReferenceId: 'תלמידה',
                 klassId: 'כיתה',
                 klassReferenceId: 'כיתה',
-            }
+            },
         },
         student: {
             name: 'תלמידה |||| תלמידות',
@@ -180,7 +182,7 @@ export default {
                 phone: 'טלפון',
                 address: 'כתובת',
                 isActive: 'פעיל?',
-            }
+            },
         },
         student_by_year: {
             name: 'תלמידה |||| תלמידות',
@@ -188,7 +190,7 @@ export default {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
                 year: 'שנה',
-            }
+            },
         },
         teacher: {
             name: 'מורה |||| מורות',
@@ -198,8 +200,8 @@ export default {
                 phone: 'טלפון',
                 phone2: 'טלפון 2',
                 email: 'כתובת מייל',
-                displayName: 'שם לתעודה'
-            }
+                displayName: 'שם לתעודה',
+            },
         },
         transportation: {
             name: 'הסעה |||| הסעות',
@@ -208,7 +210,7 @@ export default {
                 key: 'שילוט',
                 departureTime: 'שעת יציאה',
                 description: 'תיאור נסיעה',
-            }
+            },
         },
         absence_type: {
             name: 'אירוע |||| אירועים',
@@ -219,65 +221,6 @@ export default {
                 quota: 'מכסה שנתית',
                 requiredLabels: 'שדות חובה לדיווח',
                 isFileRequired:'חובה לצרף קובץ',
-            }
-        },
-        text: {
-            name: 'הודעה |||| הודעות - טבלת אדמין',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                description: 'תיאור',
-                value: 'ערך',
-            }
-        },
-        text_by_user: {
-            name: 'הודעה |||| הודעות',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                description: 'תיאור',
-                value: 'ערך',
-            }
-        },
-        page: {
-            name: 'הסבר למשתמשים',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                description: 'כותרת',
-                value: 'תוכן',
-            }
-        },
-        user: {
-            name: 'משתמש |||| משתמשים',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                email: 'כתובת מייל',
-                password: 'סיסמא',
-                phoneNumber: 'מספר טלפון',
-                userInfo: 'מידע על המשתמש',
-                isPaid: 'האם שילם?',
-                paymentMethod: 'אופן התשלום',
-                mailAddressAlias: 'כתובת המייל ממנה יישלחו מיילים',
-                mailAddressTitle: 'שם כתובת המייל',
-                bccAddress: 'כתובת מייל לשליחת עותק',
-                paymentTrackId: 'תוכנית',
-                'additionalData.trialEndDate': 'תאריך חובת תשלום',
-                'additionalData.customTrialMessage': 'הודעה מקדימה חובת תשלום',
-                'additionalData.customTrialEndedMessage': 'הודעת סיום חובת תשלום',
-            }
-        },
-        yemot_call: {
-            name: 'שיחה |||| שיחות',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                phone: 'מאת',
-                'phone:$cont': 'מאת',
-                currentStep: 'שלב נוכחי',
-                hasError: 'שגיאה?',
-                errorMessage: 'הודעת שגיאה',
-                'errorMessage:$cont': 'הודעת שגיאה',
-                history: 'שלבים',
-                data: 'נתונים',
-                isOpen: 'פעיל?',
-                apiCallId: 'מזהה שיחה (ימות)',
             },
         },
         student_klass_report: {
@@ -294,54 +237,7 @@ export default {
                 'klassReferenceId3:$cont': 'התמחות',
                 klassReferenceIdNull: 'אחר',
                 'klassReferenceIdNull:$cont': 'אחר',
-            }
-        },
-        import_file: {
-            name: 'קבצים שהועלו',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                fileName: 'שם הקובץ',
-                fileSource: 'מקור הקובץ',
-                'metadata.lessonTopic': 'נושא השיעור',
-                'metadata.lessonStartTime': 'זמן תחילת השיעור',
-                'metadata.lessonEndTime': 'זמן סיום השיעור',
-                'metadata.signatureData': 'חתימה',
-                entityIds: 'רשומות',
-                entityName: 'סוג טבלה',
-                fullSuccess: 'הצלחה',
-                response: 'תגובה',
-            }
-        },
-        mail_address: {
-            name: 'כתובת מייל |||| כתובות מייל',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                alias: 'כתובת המייל',
-                entity: 'טבלת יעד',
-            }
-        },
-        audit_log: {
-            name: 'נתונים שהשתנו',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                entityId: 'מזהה שורה',
-                entityName: 'טבלה',
-                operation: 'פעולה',
-                entityData: 'המידע שהשתנה',
-                isReverted: 'שוחזר',
-            }
-        },
-        recieved_mail: {
-            name: 'מיילים שהתקבלו',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                from: 'מאת',
-                to: 'אל',
-                subject: 'כותרת',
-                body: 'תוכן',
-                entityName: 'טבלת יעד',
-                importFileIds: 'קבצים מצורפים',
-            }
+            },
         },
         'student_by_year/pivot?extra.pivot=StudentAttendance': {
             name: 'דוח נוכחות (פיבוט)',
@@ -350,11 +246,29 @@ export default {
                 tz: 'תז',
                 isActive: 'פעיל?',
                 'extra.klassId': 'כיתה',
-                'extra.lessonId': 'שיעור',
+                'extra.lessonIds': 'סנן לפי מקצועות',
                 'year:$cont': 'שנה',
                 'klassReferenceIds:$cont': 'כיתה',
                 'klassTypeReferenceIds:$cont': 'שיוך כיתה',
-            }
+            },
+        },
+        'student_by_year/pivot?extra.pivot=StudentAttendanceByKlass': {
+            name: 'נוכחות לפי כיתה (פיבוט)',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                tz: 'תז',
+                isActive: 'תלמידה פעילה',
+                'tz:$cont': 'תז',
+                'klassReferenceIds:$cont': 'תלמידות בכיתה',
+                'klassTypeReferenceIds:$cont': 'סוג כיתה',
+                'extra.klassReferenceIds': 'כיתות לדוח (עמודות)',
+                'extra.klassTypeReferenceIds': 'סוגי כיתות לדוח',
+                'extra.fromDate': 'תאריך דיווח אחרי',
+                'extra.toDate': 'תאריך דיווח לפני',
+                'extra.reportMonthReferenceId': 'תקופת דיווח',
+                'extra.semester': 'מחצית',
+                'extra.excludedLessonIds': 'הסר מקצועות מהדוח',
+            },
         },
         report_month: {
             name: 'תקופות דיווח',
@@ -363,7 +277,7 @@ export default {
                 startDate: 'תאריך התחלה',
                 endDate: 'תאריך סיום',
                 semester: 'מחצית',
-            }
+            },
         },
         teacher_report_status: {
             name: 'דיווחים למורה',
@@ -374,7 +288,7 @@ export default {
                 reportMonthReferenceId: 'תקופת דיווח',
                 reportedLessons: 'שיעורים שדווחו',
                 notReportedLessons: 'שיעורים שלא דווחו',
-            }
+            },
         },
         teacher_grade_report_status: {
             name: 'ציונים למורה',
@@ -385,7 +299,7 @@ export default {
                 reportMonthReferenceId: 'תקופת דיווח',
                 reportedLessons: 'שיעורים שדווחו',
                 notReportedLessons: 'שיעורים שלא דווחו',
-            }
+            },
         },
         student_percent_report: {
             name: 'דוח אחוזים כללי',
@@ -401,7 +315,7 @@ export default {
                 absPercents: 'אחוז חיסור',
                 attPercents: 'אחוז נוכחות',
                 gradeAvg: 'ציון ממוצע',
-            }
+            },
         },
         'student_percent_report/pivot?extra.pivot=PercentReportWithDates': {
             name: 'דוח אחוזים לתלמידה',
@@ -425,26 +339,7 @@ export default {
                 estimation: 'הערכה',
                 comments: 'הערה',
                 estimatedAbsPercents: 'אחוז חיסור משוער',
-            }
-        },
-        image: {
-            name: 'תמונה |||| תמונות',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                fileData: 'תמונה',
-                'fileData.src': 'תמונה',
-                imageTarget: 'יעד',
-            }
-        },
-        payment_track: {
-            name: 'מסלול תשלום |||| מסלולי תשלום',
-            fields: {
-                ...generalResourceFieldsTranslation,
-                description: 'תיאור',
-                monthlyPrice: 'מחיר חודשי',
-                annualPrice: 'מחיר שנתי',
-                studentNumberLimit: 'מספר תלמידות',
-            }
+            },
         },
         teacher_salary_report: {
             name: 'דוח שכר למורה',
@@ -456,19 +351,19 @@ export default {
                 'klass.klassTypeReferenceId': 'שיוך כיתה',
                 reportMonthReferenceId: 'תקופת דיווח',
                 howManyLessons: 'מספר שיעורים',
-            }
+            },
         },
         grade_name: {
             name: 'שם ציון |||| שמות ציונים',
             fields: {
                 ...generalResourceFieldsTranslation,
-            }
+            },
         },
         attendance_name: {
             name: 'שם נוכחות |||| שמות נוכחות',
             fields: {
                 ...generalResourceFieldsTranslation,
-            }
+            },
         },
         att_grade_effect: {
             name: 'קשר נוכחות ציון',
@@ -477,7 +372,7 @@ export default {
                 percents: 'אחוז נוכחות',
                 count: 'מספר חיסורים',
                 effect: 'השפעה',
-            }
+            },
         },
         grade_effect_by_user: {
             name: 'קשר נוכחות ציון מורחב',
@@ -485,7 +380,7 @@ export default {
                 ...generalResourceFieldsTranslation,
                 number: 'אחוז חיסור',
                 effect: 'השפעה',
-            }
+            },
         },
         abs_count_effect_by_user: {
             name: 'קשר נוכחות חיסור מורחב',
@@ -493,7 +388,7 @@ export default {
                 ...generalResourceFieldsTranslation,
                 number: 'מספר חיסורים',
                 effect: 'השפעה',
-            }
+            },
         },
         report_group: {
             name: 'קבוצת דיווח |||| קבוצות דיווח',
@@ -506,7 +401,7 @@ export default {
                 klassReferenceId: 'כיתה',
                 year: 'שנה',
                 signatureData: 'חתימה',
-            }
+            },
         },
         report_group_session: {
             name: 'מפגש דיווח |||| מפגשי דיווח',
@@ -518,7 +413,7 @@ export default {
                 startTime: 'שעת התחלה',
                 endTime: 'שעת סיום',
                 topic: 'נושא',
-            }
+            },
         },
-    }
+    },
 };

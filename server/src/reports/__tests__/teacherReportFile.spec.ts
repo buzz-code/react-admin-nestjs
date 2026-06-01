@@ -108,7 +108,7 @@ describe('teacherReportFile', () => {
         id: 1,
         name: 'Math',
         key: 123,
-        klassReferenceIds: ['1']
+        klassReferenceIds: ['1'],
       };
       const mockStudents = [
         {
@@ -140,7 +140,7 @@ describe('teacherReportFile', () => {
         id: 1,
         name: 'Math',
         key: 123,
-        klassReferenceIds: null
+        klassReferenceIds: null,
       };
 
       (mockUserRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 1, name: 'User 1' });
@@ -166,7 +166,7 @@ describe('teacherReportFile', () => {
         id: 1,
         name: 'Math',
         key: 123,
-        klassReferenceIds: ['1', '2']
+        klassReferenceIds: ['1', '2'],
       };
       const mockStudents = [
         {
@@ -211,7 +211,7 @@ describe('teacherReportFile', () => {
         id: 1,
         name: 'Math',
         key: 123,
-        klassReferenceIds: ['1']
+        klassReferenceIds: ['1'],
       };
       const mockStudents = [
         {
@@ -237,9 +237,7 @@ describe('teacherReportFile', () => {
       expect(result[0]).toMatchObject({
         fileTitle: 'קובץ נוכחות',
         headerRow: ['קוד כיתה', 'ת.ז.', 'שם תלמידה', 'איחורים', 'חיסורים', 'הערות'],
-        formattedData: [
-          ['A1', '123', 'Student 1'],
-        ],
+        formattedData: [['A1', '123', 'Student 1']],
         sheetName: 'January',
       });
     });
@@ -250,7 +248,7 @@ describe('teacherReportFile', () => {
         id: 1,
         name: 'Math',
         key: 123,
-        klassReferenceIds: ['1']
+        klassReferenceIds: ['1'],
       };
 
       (mockUserRepo.findOneBy as jest.Mock).mockResolvedValue({ id: 1, name: 'User 1' });
@@ -281,7 +279,7 @@ describe('teacherReportFile', () => {
         teacherReportStatus: { reportMonthName: 'January' } as TeacherReportStatus,
         headerRow: [],
         formattedData: [],
-        specialFields: []
+        specialFields: [],
       };
 
       const result = teacherReportFileModule.getReportName(mockData);

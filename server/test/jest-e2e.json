@@ -1,15 +1,28 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts", "tsx", "jsx"],
-  "rootDir": "..",
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts",
+    "tsx",
+    "jsx"
+  ],
+  "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)sx?$": "ts-jest"
   },
   "forceExit": true,
+  "detectOpenHandles": true,
+  "maxWorkers": 1,
   "moduleNameMapper": {
-    "^src/(.*)$": "<rootDir>/src/$1",
-    "^@shared/(.*)$": "<rootDir>/shared/$1"
+    "^src/(.*)$": "<rootDir>/../src/$1",
+    "^@shared/(.*)$": "<rootDir>/../shared/$1"
   },
-  "setupFiles": ["<rootDir>/test/setup-e2e.ts"]
+  "modulePaths": [
+    "<rootDir>/../"
+  ],
+  "setupFilesAfterEnv": [
+    "<rootDir>/setup-tests.ts"
+  ]
 }

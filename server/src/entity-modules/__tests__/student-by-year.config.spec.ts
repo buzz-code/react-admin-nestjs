@@ -1,5 +1,5 @@
 import config, { Utils } from '../student-by-year.config';
-import { StudentByYear } from "src/db/view-entities/StudentByYear.entity";
+import { StudentByYear } from 'src/db/view-entities/StudentByYear.entity';
 import { DataSource, EntityMetadata, Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
@@ -8,7 +8,7 @@ import { ParsedRequestParams } from '@dataui/crud-request';
 import { MailSendService } from '@shared/utils/mail/mail-send.service';
 
 jest.mock('@shared/utils/validation/max-count-by-user-limit.ts', () => ({
-  MaxCountByUserLimit: jest.fn().mockImplementation(() => jest.fn())
+  MaxCountByUserLimit: jest.fn().mockImplementation(() => jest.fn()),
 }));
 
 interface MockStudent extends StudentByYear {
@@ -18,7 +18,10 @@ interface MockStudent extends StudentByYear {
   unApprovedAbsences?: number;
   absencePercentage?: string;
   totalAbsencePercentage?: string;
+  absenceRatio?: number;
+  totalAbsenceRatio?: number;
   headers?: any[];
+  [key: string]: any;
 }
 
 describe('StudentByYear Config', () => {
@@ -35,44 +38,40 @@ describe('StudentByYear Config', () => {
         transaction: jest.fn((cb) => cb()),
       },
       metadata: {
-        columns: [
-          { propertyName: 'id' },
-          { propertyName: 'name' },
-          { propertyName: 'userId' }
-        ],
+        columns: [{ propertyName: 'id' }, { propertyName: 'name' }, { propertyName: 'userId' }],
         connection: { options: { type: 'mysql' } },
-        targetName: 'TestEntity'
+        targetName: 'TestEntity',
       },
       createQueryBuilder: jest.fn().mockReturnThis(),
       where: jest.fn().mockReturnThis(),
       andWhere: jest.fn().mockReturnThis(),
       getCount: jest.fn(),
-      save: jest.fn().mockImplementation(entity => Promise.resolve(entity))
+      save: jest.fn().mockImplementation((entity) => Promise.resolve(entity)),
     } as any;
 
     mockDataSource = {
       getRepository: jest.fn().mockReturnValue({
-        find: jest.fn().mockResolvedValue([])
-      })
+        find: jest.fn().mockResolvedValue([]),
+      }),
     };
 
     mockMailService = {
-      sendMail: jest.fn().mockResolvedValue(undefined)
+      sendMail: jest.fn().mockResolvedValue(undefined),
     };
 
     module = await Test.createTestingModule({
       providers: [
         {
           provide: DataSource,
-          useValue: mockDataSource
+          useValue: mockDataSource,
         },
         {
           provide: 'CONFIG',
-          useValue: config
+          useValue: config,
         },
         {
           provide: MailSendService,
-          useValue: mockMailService
+          useValue: mockMailService,
         },
         {
           provide: config.service,
@@ -80,9 +79,9 @@ describe('StudentByYear Config', () => {
             const service = new config.service(mockRepository, mockMailService as MailSendService);
             service.dataSource = mockDataSource as DataSource;
             return service;
-          }
-        }
-      ]
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<BaseEntityService<any>>(config.service);
@@ -111,7 +110,7 @@ describe('StudentByYear Config', () => {
           tz: '123',
           klassReferenceIds: ['1'],
           klassTypeReferenceIds: ['1'],
-          isActive: true
+          isActive: true,
         },
         {
           id: 2,
@@ -121,8 +120,8 @@ describe('StudentByYear Config', () => {
           tz: '456',
           klassReferenceIds: ['1'],
           klassTypeReferenceIds: ['1'],
-          isActive: true
-        }
+          isActive: true,
+        },
       ];
 
       const mockAttReports = [
@@ -131,45 +130,41 @@ describe('StudentByYear Config', () => {
           lessonReferenceId: 101,
           lesson: { name: 'Math' },
           absCount: 2,
-          howManyLessons: 10
+          howManyLessons: 10,
         },
         {
           studentReferenceId: 2,
           lessonReferenceId: 101,
           lesson: { name: 'Math' },
           absCount: 3,
-          howManyLessons: 10
-        }
+          howManyLessons: 10,
+        },
       ];
 
       const mockKnownAbsences = [
         {
           studentReferenceId: 1,
           absnceCount: 1,
-          isApproved: true
+          isApproved: true,
         },
         {
           studentReferenceId: 2,
           absnceCount: 2,
-          isApproved: true
-        }
+          isApproved: true,
+        },
       ];
 
-      (mockDataSource.getRepository as jest.Mock)
-        .mockImplementation((entity) => ({
-          find: jest.fn()
-            .mockImplementation(() => {
-              if (entity.name === 'AttReportWithReportMonth') {
-                return Promise.resolve(mockAttReports);
-              } else if (entity.name === 'KnownAbsenceWithReportMonth') {
-                return Promise.resolve(mockKnownAbsences);
-              }
-            })
-        }));
+      (mockDataSource.getRepository as jest.Mock).mockImplementation((entity) => ({
+        find: jest.fn().mockImplementation(() => {
+          if (entity.name === 'AttReportWithReportMonth') {
+            return Promise.resolve(mockAttReports);
+          } else if (entity.name === 'KnownAbsenceWithReportMonth') {
+            return Promise.resolve(mockKnownAbsences);
+          }
+        }),
+      }));
 
-      const filter = [
-        { field: 'year', value: '2023' }
-      ] as ParsedRequestParams<any>['filter'];
+      const filter = [{ field: 'year', value: '2023' }] as ParsedRequestParams<any>['filter'];
 
       // Access the protected method through type casting
       await (service as any).populatePivotData(
@@ -177,7 +172,7 @@ describe('StudentByYear Config', () => {
         mockStudents,
         { isCheckKlassType: false },
         filter,
-        {}
+        {},
       );
 
       // Verify the first student's data
@@ -192,7 +187,85 @@ describe('StudentByYear Config', () => {
       expect(mockStudents[0].headers).toBeDefined();
       expect(mockStudents[0].headers).toContainEqual({
         value: '101',
-        label: 'Math'
+        label: 'Math',
+      });
+    });
+
+    it('should round StudentAttendanceByKlass numeric results', async () => {
+      const mockStudents: MockStudent[] = [
+        {
+          id: 1,
+          userId: 100,
+          year: 2023,
+          name: 'Test 1',
+          tz: '123',
+          klassReferenceIds: ['1'],
+          klassTypeReferenceIds: ['1'],
+          isActive: true,
+        },
+      ];
+
+      const mockAttReports = [
+        {
+          studentReferenceId: 1,
+          klassReferenceId: 1,
+          absCount: 1,
+          howManyLessons: 3,
+        },
+      ];
+
+      const mockKnownAbsences = [
+        {
+          studentReferenceId: 1,
+          klassReferenceId: 1,
+          absnceCount: 0,
+          isApproved: true,
+        },
+      ];
+
+      const mockKlasses = [
+        {
+          id: 1,
+          name: 'כיתה א',
+        },
+      ];
+
+      (mockDataSource.getRepository as jest.Mock).mockImplementation((entity) => ({
+        find: jest.fn().mockImplementation(() => {
+          if (entity.name === 'AttReportWithReportMonth') {
+            return Promise.resolve(mockAttReports);
+          }
+          if (entity.name === 'KnownAbsenceWithReportMonth') {
+            return Promise.resolve(mockKnownAbsences);
+          }
+          if (entity.name === 'Klass') {
+            return Promise.resolve(mockKlasses);
+          }
+          return Promise.resolve([]);
+        }),
+      }));
+
+      const filter = [{ field: 'year', value: '2023' }] as ParsedRequestParams<any>['filter'];
+
+      await (service as any).populatePivotData(
+        'StudentAttendanceByKlass',
+        mockStudents,
+        { klassReferenceIds: ['1'] },
+        filter,
+        {},
+      );
+
+      expect(mockStudents[0].klass_1).toBe(0.3333);
+      expect(mockStudents[0].total).toBe(1);
+      expect(mockStudents[0].totalKnownAbsences).toBe(0);
+      expect(mockStudents[0].unApprovedAbsences).toBe(1);
+      expect(mockStudents[0].absenceRatio).toBe(0.3333);
+      expect(mockStudents[0].totalAbsenceRatio).toBe(0.3333);
+      expect(mockStudents[0].headers).toContainEqual({
+        value: 'klass_1',
+        label: 'כיתה א',
+        numFmt: '0.00%',
+        thresholds: expect.any(Array),
       });
     });
   });
@@ -221,18 +294,18 @@ describe('StudentByYear Config', () => {
     });
 
     describe('getKlassFilter', () => {
-      it('should return filter when both conditions are true', () => {
-        const result = Utils.getKlassFilter(true, 1);
+      it('should return filter when klassTypeReferenceId is provided', () => {
+        const result = Utils.getKlassFilter(1);
         expect(result).toEqual({ klassTypeReferenceId: 1 });
       });
 
-      it('should return undefined when isCheckKlassType is false', () => {
-        const result = Utils.getKlassFilter(false, 1);
+      it('should return undefined when klassTypeReferenceId is false', () => {
+        const result = Utils.getKlassFilter(false);
         expect(result).toBeUndefined();
       });
 
       it('should return undefined when klassTypeReferenceId is not provided', () => {
-        const result = Utils.getKlassFilter(true, null);
+        const result = Utils.getKlassFilter(null);
         expect(result).toBeUndefined();
       });
     });

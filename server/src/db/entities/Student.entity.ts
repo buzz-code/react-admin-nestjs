@@ -1,27 +1,20 @@
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { IHasUserId } from "@shared/base-entity/interface";
-import { User } from "src/db/entities/User.entity";
-import { IsOptional } from "class-validator";
-import { CrudValidationGroups } from "@dataui/crud";
-import { IsNotEmpty, IsUniqueCombination, MaxLength, IsBoolean } from "@shared/utils/validation/class-validator-he";
-import { StringType, BooleanType } from "@shared/utils/entity/class-transformer";
-import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { IHasUserId } from '@shared/base-entity/interface';
+import { User } from 'src/db/entities/User.entity';
+import { IsOptional } from 'class-validator';
+import { CrudValidationGroups } from '@dataui/crud';
+import { IsNotEmpty, IsUniqueCombination, MaxLength, IsBoolean } from '@shared/utils/validation/class-validator-he';
+import { StringType, BooleanType } from '@shared/utils/entity/class-transformer';
+import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 
-@Index("students_users_idx", ["userId"], {})
-@Index(["userId", "tz", "year"], { unique: true })
-@Entity("students")
+@Index('students_users_idx', ['userId'], {})
+@Index(['userId', 'tz', 'year'], { unique: true })
+@Entity('students')
 export class Student implements IHasUserId {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column("int", { name: "user_id" })
+  @Column('int', { name: 'user_id' })
   userId: number;
 
   @Column({ nullable: true })
@@ -32,38 +25,38 @@ export class Student implements IHasUserId {
   @StringType
   @IsUniqueCombination(['userId'], [Student, User], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @Column("varchar", { name: "tz", length: 10 })
+  @Column('varchar', { name: 'tz', length: 10 })
   tz: string;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @StringType
   @MaxLength(500, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @Column("varchar", { name: "name", length: 500 })
+  @Column('varchar', { name: 'name', length: 500 })
   name: string;
 
   @IsOptional({ always: true })
   @StringType
   @MaxLength(1000, { always: true })
-  @Column("varchar", { name: "comment", nullable: true, length: 1000 })
+  @Column('varchar', { name: 'comment', nullable: true, length: 1000 })
   comment: string;
 
   @IsOptional({ always: true })
   @StringType
   @MaxLength(1000, { always: true })
-  @Column("varchar", { name: "phone", nullable: true, length: 1000 })
+  @Column('varchar', { name: 'phone', nullable: true, length: 1000 })
   phone: string;
 
   @IsOptional({ always: true })
   @StringType
   @MaxLength(1000, { always: true })
-  @Column("varchar", { name: "address", nullable: true, length: 1000 })
+  @Column('varchar', { name: 'address', nullable: true, length: 1000 })
   address: string;
 
   @IsOptional({ always: true })
   @IsBoolean({ groups: [CrudValidationGroups.CREATE, CrudValidationGroups.UPDATE] })
   @BooleanType
-  @Column("boolean", { name: "is_active", default: true })
+  @Column('boolean', { name: 'is_active', default: true })
   isActive: boolean;
 
   @CreatedAtColumn()
@@ -73,9 +66,9 @@ export class Student implements IHasUserId {
   updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.students, {
-    onDelete: "NO ACTION",
-    onUpdate: "NO ACTION",
+    onDelete: 'NO ACTION',
+    onUpdate: 'NO ACTION',
   })
-  @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 }

@@ -1,12 +1,28 @@
-import { DateField, DateInput, DateTimeInput, NumberField, NumberInput, TextField, TextInput, ReferenceField, required, minValue, maxLength, SelectField } from 'react-admin';
+import {
+    DateField,
+    DateInput,
+    DateTimeInput,
+    NumberField,
+    NumberInput,
+    TextField,
+    TextInput,
+    ReferenceField,
+    required,
+    minValue,
+    maxLength
+} from 'react-admin';
 import { useIsLessonSignature, useIsTeacherView } from 'src/utils/appPermissions';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
-import { CommonReferenceInputFilter, filterByUserId, filterByUserIdAndYear } from '@shared/components/fields/CommonReferenceInputFilter';
+import {
+    CommonReferenceInputFilter,
+    filterByUserId,
+    filterByUserIdAndYear,
+} from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
-import { defaultYearFilter, yearChoices } from '@shared/utils/yearFilter';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
+import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 
@@ -14,13 +30,29 @@ const filters = [
     ...commonAdminFilters,
     <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
     <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
-    <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={filterByUserIdAndYear} />,
+    <CommonReferenceInputFilter
+        source="studentReferenceId"
+        reference="student_by_year"
+        dynamicFilter={filterByUserIdAndYear}
+    />,
     <TextInput source="studentBaseKlass.klassName:$cont" label="כיתת בסיס" />,
     <CommonReferenceInputFilter source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />,
     <CommonReferenceInputFilter source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />,
-    <CommonReferenceInputFilter source="klass.klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
-    <CommonReferenceInputFilter source="lessonReferenceId" reference="lesson" dynamicFilter={{ ...filterByUserIdAndYear, teacherReferenceId: 'teacherReferenceId', 'klassReferenceIds:$cont': 'klassReferenceId' }} />,
-    <CommonAutocompleteInput source="year" choices={yearChoices} alwaysOn />,
+    <CommonReferenceInputFilter
+        source="klass.klassTypeReferenceId"
+        reference="klass_type"
+        dynamicFilter={filterByUserId}
+    />,
+    <CommonReferenceInputFilter
+        source="lessonReferenceId"
+        reference="lesson"
+        dynamicFilter={{
+            ...filterByUserIdAndYear,
+            teacherReferenceId: 'teacherReferenceId',
+            'klassReferenceIds:$cont': 'klassReferenceId',
+        }}
+    />,
+    <CommonYearInputFilter />,
 ];
 
 const filterDefaultValues = {
@@ -34,20 +66,56 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <MultiReferenceField source="studentReferenceId" sortBy="student.name" optionalSource="studentTz" reference="student" optionalTarget="tz" />
+            <MultiReferenceField
+                source="studentReferenceId"
+                sortBy="student.name"
+                optionalSource="studentTz"
+                reference="student"
+                optionalTarget="tz"
+            />
             <TextField source="studentBaseKlass.klassName" />
-            <MultiReferenceField source="teacherReferenceId" sortBy="teacher.name" optionalSource="teacherId" reference="teacher" optionalTarget="tz" />
-            <MultiReferenceField source="klassReferenceId" sortBy="klass.name" optionalSource="klassId" reference="klass" optionalTarget="key" />
-            <MultiReferenceField source="klassReferenceId" label='resources.att_report.fields.klass.klassTypeReferenceId' sortable={false} optionalSource="klassId" reference="klass" optionalTarget="key" >
-                <MultiReferenceField source='klassTypeReferenceId' reference='klass_type' />
+            <MultiReferenceField
+                source="teacherReferenceId"
+                sortBy="teacher.name"
+                optionalSource="teacherId"
+                reference="teacher"
+                optionalTarget="tz"
+            />
+            <MultiReferenceField
+                source="klassReferenceId"
+                sortBy="klass.name"
+                optionalSource="klassId"
+                reference="klass"
+                optionalTarget="key"
+            />
+            <MultiReferenceField
+                source="klassReferenceId"
+                label="resources.att_report.fields.klass.klassTypeReferenceId"
+                sortable={false}
+                optionalSource="klassId"
+                reference="klass"
+                optionalTarget="key"
+            >
+                <MultiReferenceField source="klassTypeReferenceId" reference="klass_type" />
             </MultiReferenceField>
-            <MultiReferenceField source="lessonReferenceId" sortBy="lesson.name" optionalSource="lessonId" reference="lesson" optionalTarget="key" />
+            <MultiReferenceField
+                source="lessonReferenceId"
+                sortBy="lesson.name"
+                optionalSource="lessonId"
+                reference="lesson"
+                optionalTarget="key"
+            />
             {hasReportGroupPermission && (
-                <ReferenceField label="נושא" source="reportGroupSessionId" reference="report_group_session" link={false}>
+                <ReferenceField
+                    label="נושא"
+                    source="reportGroupSessionId"
+                    reference="report_group_session"
+                    link={false}
+                >
                     <TextField source="topic" />
                 </ReferenceField>
             )}
-            <SelectField source="year" choices={yearChoices} />
+            <CommonYearField />
             <DateField source="reportDate" />
             <CommonHebrewDateField source="reportDate" />
             <NumberField source="howManyLessons" />
@@ -59,33 +127,67 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
     );
-}
+};
 
 export const Inputs = ({ isCreate, isAdmin }) => {
     const isTeacher = useIsTeacherView();
 
-    return <>
-        {!isCreate && isAdmin && <TextInput source="id" disabled />}
-        {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-        <CommonReferenceInput source="studentReferenceId" reference="student_by_year" validate={required()} dynamicFilter={filterByUserIdAndYear} />
-        {!isTeacher && <CommonReferenceInput source="teacherReferenceId" reference="teacher" validate={required()} dynamicFilter={filterByUserId} />}
-        <CommonReferenceInput source="klassReferenceId" reference="klass" validate={required()} dynamicFilter={filterByUserIdAndYear} />
-        <CommonReferenceInput source="lessonReferenceId" reference="lesson" validate={required()} dynamicFilter={filterByUserIdAndYear} />
-        <DateInput source="reportDate" validate={required()} />
-        <NumberInput source="howManyLessons" defaultValue={1} validate={minValue(1)} />
-        <NumberInput source="absCount" defaultValue={0} />
-        {/* <NumberInput source="approvedAbsCount" defaultValue={0} /> */}
-        <TextInput source="comments" validate={maxLength(500)} />
-        <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
-        {/* <TextInput source="sheetName" validate={maxLength(100)} /> */}
-        {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
-        {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
-    </>
-}
+    return (
+        <>
+            {!isCreate && isAdmin && <TextInput source="id" disabled />}
+            {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
+            <CommonReferenceInput
+                source="studentReferenceId"
+                reference="student_by_year"
+                validate={required()}
+                dynamicFilter={filterByUserIdAndYear}
+            />
+            {!isTeacher && (
+                <CommonReferenceInput
+                    source="teacherReferenceId"
+                    reference="teacher"
+                    validate={required()}
+                    dynamicFilter={filterByUserId}
+                />
+            )}
+            <CommonReferenceInput
+                source="klassReferenceId"
+                reference="klass"
+                validate={required()}
+                dynamicFilter={filterByUserIdAndYear}
+            />
+            <CommonReferenceInput
+                source="lessonReferenceId"
+                reference="lesson"
+                validate={required()}
+                dynamicFilter={filterByUserIdAndYear}
+            />
+            <DateInput source="reportDate" validate={required()} />
+            <NumberInput source="howManyLessons" defaultValue={1} validate={minValue(1)} />
+            <NumberInput source="absCount" defaultValue={0} />
+            {/* <NumberInput source="approvedAbsCount" defaultValue={0} /> */}
+            <TextInput source="comments" validate={maxLength(500)} />
+            <CommonYearInput />
+            {/* <TextInput source="sheetName" validate={maxLength(100)} /> */}
+            {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
+            {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
+        </>
+    );
+};
 
 const importer = {
-    fields: ['studentTz', 'teacherId', 'klassId', 'lessonId', 'year', 'reportDate', 'howManyLessons', 'absCount', 'comments']
-}
+    fields: [
+        'studentTz',
+        'teacherId',
+        'klassId',
+        'lessonId',
+        'year',
+        'reportDate',
+        'howManyLessons',
+        'absCount',
+        'comments',
+    ],
+};
 
 const entity = {
     Datagrid,

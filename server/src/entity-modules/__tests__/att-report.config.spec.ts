@@ -23,10 +23,10 @@ describe('att-report.config', () => {
       // Test processReqForExport
       const mockReq = {
         options: {
-          query: { join: {} }
-        }
+          query: { join: {} },
+        },
       };
-      const mockInnerFunc = jest.fn(req => req);
+      const mockInnerFunc = jest.fn((req) => req);
 
       config.exporter.processReqForExport(mockReq as any, mockInnerFunc);
 
@@ -50,17 +50,22 @@ describe('att-report.config', () => {
         options: { query: { join: {} } },
         auth: {
           permissions: {
-            lessonSignature: true
-          }
-        }
+            lessonSignature: true,
+          },
+        },
       };
 
       config.exporter.processReqForExport(mockReqWithPermissions as any, mockInnerFunc);
       expect((mockReqWithPermissions.options.query.join as any).reportGroupSession).toEqual({ eager: true });
 
-      const headersWithPermission = config.exporter.getExportHeaders(['id', 'name', 'absCount'], mockReqWithPermissions as any);
+      const headersWithPermission = config.exporter.getExportHeaders(
+        ['id', 'name', 'absCount'],
+        mockReqWithPermissions as any,
+      );
       // Verify that the topic header exists when permission present
-      expect(headersWithPermission.find(h => typeof h === 'object' && h.value === 'reportGroupSession.topic')).toBeDefined();
+      expect(
+        headersWithPermission.find((h) => typeof h === 'object' && h.value === 'reportGroupSession.topic'),
+      ).toBeDefined();
     });
 
     it('should have proper import configuration', () => {
@@ -77,11 +82,11 @@ describe('att-report.config', () => {
     it('should calculate absCount with lateCount and default lateValue', () => {
       const report = {
         absCount: 2,
-        lateCount: 3
+        lateCount: 3,
       } as AttReport & { lateCount: number };
 
       const user = {
-        additionalData: {}
+        additionalData: {},
       } as User;
 
       calcAttLateCount(report, user);
@@ -94,11 +99,11 @@ describe('att-report.config', () => {
     it('should use custom lateValue from user data', () => {
       const report = {
         absCount: 2,
-        lateCount: 2
+        lateCount: 2,
       } as AttReport & { lateCount: number };
 
       const user = {
-        additionalData: { lateValue: 0.5 }
+        additionalData: { lateValue: 0.5 },
       } as User;
 
       calcAttLateCount(report, user);
@@ -110,11 +115,11 @@ describe('att-report.config', () => {
     it('should handle NaN values', () => {
       const report = {
         absCount: NaN,
-        lateCount: NaN
+        lateCount: NaN,
       } as AttReport & { lateCount: number };
 
       const user = {
-        additionalData: { lateValue: 0.5 }
+        additionalData: { lateValue: 0.5 },
       } as User;
 
       calcAttLateCount(report, user);

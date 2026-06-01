@@ -1,7 +1,6 @@
-import { Module } from "@nestjs/common";
+import { Module } from '@nestjs/common';
 import { BaseEntityModule } from '@shared/base-entity/base-entity.module';
-// TODO: move all shared configs to shared folder
-import userConfig from '@shared/entities/configs/user.config';
+import { createSharedEntitiesImports } from '@shared/entities/createSharedEntitiesImports';
 import attReportConfig from './entity-modules/att-report.config';
 import gradeConfig from './entity-modules/grade.config';
 import klassConfig from './entity-modules/klass.config';
@@ -11,100 +10,90 @@ import lessonConfig from './entity-modules/lesson.config';
 import studentKlassConfig from './entity-modules/student-klass.config';
 import studentConfig from './entity-modules/student.config';
 import teacherConfig from './entity-modules/teacher.config';
-import textConfig from '@shared/entities/configs/text.config';
 import studentKlassReportConfig from './entity-modules/student-klass-report.config';
 import { StudentBaseKlass } from './db/view-entities/StudentBaseKlass.entity';
 import { createAuditLogConfig } from '@shared/entities/configs/audit-log.config';
-import { YemotCall } from '@shared/entities/YemotCall.entity';
-import { TextByUser } from '@shared/view-entities/TextByUser.entity';
-import mailAddressConfig from '@shared/utils/mail/mail-address.config';
-import { RecievedMail } from '@shared/entities/RecievedMail.entity';
-import { Image } from "@shared/entities/Image.entity";
-import pageConfig from '@shared/entities/configs/page.config';
+import { registerEntityNameMap } from '@shared/entities/configs/import-file.config';
 import { ReportMonth } from './db/entities/ReportMonth.entity';
 import teacherReportStatusConfig from './entity-modules/teacher-report-status.config';
 import studentPercentReportConfig from './entity-modules/student-percent-report.config';
-import { AttReportAndGrade } from "./db/view-entities/AttReportAndGrade.entity";
-import { StudentGlobalReport } from "./db/view-entities/StudentGlobalReport.entity";
-import studentByYearConfig from "./entity-modules/student-by-year.config";
-import paymentTrackConfig from "@shared/entities/configs/payment-track.config";
-import teacherSalaryReportConfig from "./entity-modules/teacher-salary-report.config";
-import attReportWithReportMonthConfig from "./entity-modules/att-report-with-report-month.config";
-import { KnownAbsenceWithReportMonth } from "./db/view-entities/KnownAbsenceWithReportMonth.entity";
-import { GradeName } from "./db/entities/GradeName.entity";
-import { AttGradeEffect } from "./db/entities/AttGradeEffect";
-import teacherGradeReportStatusConfig from "./entity-modules/teacher-grade-report-status.config";
-import { GradeEffectByUser } from "src/db/view-entities/GradeEffectByUser.entity";
-import { AbsCountEffectByUser } from "src/db/view-entities/AbsCountEffectByUser.entity";
-import { LessonKlassName } from "./db/view-entities/LessonKlassName.entity";
-import importFileConfig from "@shared/entities/configs/import-file.config";
-import { StudentSpeciality } from "./db/view-entities/StudentSpeciality.entity";
-import { AttendanceName } from "./db/entities/AttendanceName.entity";
-import reportGroupConfig from "./entity-modules/report-group.config";
-import reportGroupSessionConfig from "./entity-modules/report-group-session.config";
-import transportationConfig from './entity-modules/transportation.config'; 
-import absenceTypeConfig from "./entity-modules/absenceType.config";
-import { Student } from "./db/entities/Student.entity";
-import { Teacher } from "./db/entities/Teacher.entity";
-import { registerEntityNameMap } from '@shared/entities/configs/import-file.config';
+import { AttReportAndGrade } from './db/view-entities/AttReportAndGrade.entity';
+import { StudentGlobalReport } from './db/view-entities/StudentGlobalReport.entity';
+import studentByYearConfig from './entity-modules/student-by-year.config';
+import teacherSalaryReportConfig from './entity-modules/teacher-salary-report.config';
+import attReportWithReportMonthConfig from './entity-modules/att-report-with-report-month.config';
+import { KnownAbsenceWithReportMonth } from './db/view-entities/KnownAbsenceWithReportMonth.entity';
+import { GradeName } from './db/entities/GradeName.entity';
+import { AttGradeEffect } from './db/entities/AttGradeEffect';
+import teacherGradeReportStatusConfig from './entity-modules/teacher-grade-report-status.config';
+import { GradeEffectByUser } from 'src/db/view-entities/GradeEffectByUser.entity';
+import { AbsCountEffectByUser } from 'src/db/view-entities/AbsCountEffectByUser.entity';
+import { LessonKlassName } from './db/view-entities/LessonKlassName.entity';
+import { StudentSpeciality } from './db/view-entities/StudentSpeciality.entity';
+import { AttendanceName } from './db/entities/AttendanceName.entity';
+import reportGroupConfig from './entity-modules/report-group.config';
+import reportGroupSessionConfig from './entity-modules/report-group-session.config';
+import transportationConfig from './entity-modules/transportation.config';
+import absenceTypeConfig from './entity-modules/absenceType.config';
+import uploadedFileConfig from '@shared/entities/configs/uploaded-file.config';
+import phoneTemplateConfig from '@shared/entities/configs/phone-template.config';
+import phoneCampaignConfig from '@shared/entities/configs/phone-campaign.config';
+import { Student } from './db/entities/Student.entity';
+import { Teacher } from './db/entities/Teacher.entity';
+import userConfig from '@shared/entities/configs/user.config';
 
 registerEntityNameMap({
-    att_report: 'נוכחות',
-    grade: 'ציונים',
-    klass: 'כיתות',
-    klass_type: 'שיוך כיתות',
-    known_absence: 'חיסורים מאושרים',
-    lesson: 'שיעורים',
-    student_klass: 'שיוך תלמידות לכיתות',
-    student: 'תלמידות',
-    teacher: 'מורות',
+  att_report: 'נוכחות',
+  grade: 'ציונים',
+  klass: 'כיתות',
+  klass_type: 'שיוך כיתות',
+  known_absence: 'חיסורים מאושרים',
+  lesson: 'שיעורים',
+  student_klass: 'שיוך תלמידות לכיתות',
+  student: 'תלמידות',
+  teacher: 'מורות',
+  uploaded_file: 'קבצים שהועלו',
 });
 
 @Module({
-    imports: [
-        BaseEntityModule.register(userConfig),
-        BaseEntityModule.register(attReportConfig),
-        BaseEntityModule.register(attReportWithReportMonthConfig),
-        BaseEntityModule.register(gradeConfig),
-        BaseEntityModule.register(klassConfig),
-        BaseEntityModule.register(klassTypeConfig),
-        BaseEntityModule.register(knownAbsenceConfig),
-        BaseEntityModule.register(lessonConfig),
-        BaseEntityModule.register(studentKlassConfig),
-        BaseEntityModule.register(studentConfig),
-        BaseEntityModule.register(teacherConfig),
-        BaseEntityModule.register(textConfig),
-        BaseEntityModule.register(studentKlassReportConfig),
-        BaseEntityModule.register({ entity: StudentBaseKlass }),
-        BaseEntityModule.register({ entity: StudentSpeciality }),
-        BaseEntityModule.register(createAuditLogConfig({ student: Student, teacher: Teacher })),
-        BaseEntityModule.register(importFileConfig),
-        BaseEntityModule.register(reportGroupConfig),
-        BaseEntityModule.register(reportGroupSessionConfig),
-        BaseEntityModule.register({ entity: YemotCall }),
-        BaseEntityModule.register(mailAddressConfig),
-        BaseEntityModule.register({ entity: RecievedMail }),
-        BaseEntityModule.register(pageConfig),
-        BaseEntityModule.register({ entity: ReportMonth }),
-        BaseEntityModule.register(teacherReportStatusConfig),
-        BaseEntityModule.register(teacherGradeReportStatusConfig),
-        BaseEntityModule.register({ entity: TextByUser }),
-        BaseEntityModule.register(studentPercentReportConfig),
-        BaseEntityModule.register({ entity: AttReportAndGrade }),
-        BaseEntityModule.register({ entity: StudentGlobalReport }),
-        BaseEntityModule.register({ entity: Image }),
-        BaseEntityModule.register(studentByYearConfig),
-        BaseEntityModule.register(paymentTrackConfig),
-        BaseEntityModule.register(teacherSalaryReportConfig),
-        BaseEntityModule.register({ entity: KnownAbsenceWithReportMonth }),
-        BaseEntityModule.register({ entity: GradeName }),
-        BaseEntityModule.register({ entity: AttendanceName }),
-        BaseEntityModule.register({ entity: AttGradeEffect }),
-        BaseEntityModule.register({ entity: GradeEffectByUser }),
-        BaseEntityModule.register({ entity: AbsCountEffectByUser }),
-        BaseEntityModule.register({ entity: LessonKlassName }),
-        BaseEntityModule.register(transportationConfig),
-        BaseEntityModule.register(absenceTypeConfig)
-    ]
+  imports: [
+    ...createSharedEntitiesImports(userConfig),
+    BaseEntityModule.register(attReportConfig),
+    BaseEntityModule.register(attReportWithReportMonthConfig),
+    BaseEntityModule.register(gradeConfig),
+    BaseEntityModule.register(klassConfig),
+    BaseEntityModule.register(klassTypeConfig),
+    BaseEntityModule.register(knownAbsenceConfig),
+    BaseEntityModule.register(lessonConfig),
+    BaseEntityModule.register(studentKlassConfig),
+    BaseEntityModule.register(studentConfig),
+    BaseEntityModule.register(teacherConfig),
+    BaseEntityModule.register(studentKlassReportConfig),
+    BaseEntityModule.register({ entity: StudentBaseKlass }),
+    BaseEntityModule.register({ entity: StudentSpeciality }),
+    BaseEntityModule.register(createAuditLogConfig({ student: Student, teacher: Teacher })),
+    BaseEntityModule.register(reportGroupConfig),
+    BaseEntityModule.register(reportGroupSessionConfig),
+    BaseEntityModule.register({ entity: ReportMonth }),
+    BaseEntityModule.register(teacherReportStatusConfig),
+    BaseEntityModule.register(teacherGradeReportStatusConfig),
+    BaseEntityModule.register(studentPercentReportConfig),
+    BaseEntityModule.register({ entity: AttReportAndGrade }),
+    BaseEntityModule.register({ entity: StudentGlobalReport }),
+    BaseEntityModule.register(studentByYearConfig),
+    BaseEntityModule.register(teacherSalaryReportConfig),
+    BaseEntityModule.register({ entity: KnownAbsenceWithReportMonth }),
+    BaseEntityModule.register({ entity: GradeName }),
+    BaseEntityModule.register({ entity: AttendanceName }),
+    BaseEntityModule.register({ entity: AttGradeEffect }),
+    BaseEntityModule.register({ entity: GradeEffectByUser }),
+    BaseEntityModule.register({ entity: AbsCountEffectByUser }),
+    BaseEntityModule.register({ entity: LessonKlassName }),
+    BaseEntityModule.register(transportationConfig),
+    BaseEntityModule.register(absenceTypeConfig),
+    BaseEntityModule.register(uploadedFileConfig),
+    BaseEntityModule.register(phoneTemplateConfig),
+    BaseEntityModule.register(phoneCampaignConfig),
+  ],
 })
-export class EntitiesModule { }
+export class EntitiesModule {}
