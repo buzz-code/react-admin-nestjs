@@ -162,7 +162,6 @@ const importer = {
         'studentTz',
         'klassId',
         'lessonId',
-        'absenceTypeId',
         'reportDate',
         'absnceCount',
         'absnceCode',
@@ -170,7 +169,6 @@ const importer = {
         'reason',
         'comment',
         'isApproved',
-        'fileData',
     ],
 };
 
