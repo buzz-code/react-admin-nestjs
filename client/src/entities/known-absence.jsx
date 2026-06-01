@@ -10,6 +10,9 @@ import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDat
 import { BulkApproveAbsences } from 'src/components/BulkApproveAbsences';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 
+import CommonFileField from '@shared/components/fields/CommonFileField';
+import { CommonFileDownloadButton } from '@shared/components/fields/CommonFilePreviewButton';
+
 const filters = [
     ...commonAdminFilters,
     <CommonReferenceInputFilter source="studentReferenceId" reference="student_by_year" dynamicFilter={filterByUserIdAndYear} />,
@@ -50,6 +53,8 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="senderName" />
             <TextField source="reason" />
             <TextField source="comment" />
+            <CommonFileField source="fileData" />
+            <CommonFileDownloadButton source="fileData" label="הורד קובץ" />
             <BooleanField source="isApproved" />
             <SelectField source="year" choices={yearChoices} />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
@@ -74,7 +79,8 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <TextInput source="senderName" validate={maxLength(100)} />
         <TextInput source="reason" validate={maxLength(500)} />
         <TextInput source="comment" validate={maxLength(500)} />
-        <BooleanInput source="isApproved" defaultValue={true} />
+        <CommonFileField source="fileData" />
+        <CommonFileDownloadButton source="fileData" label="הורד קובץ" />
         <CommonAutocompleteInput source="year" choices={yearChoices} defaultValue={defaultYearFilter.year} />
         {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
         {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
@@ -82,7 +88,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 }
 
 const importer = {
-    fields: ['studentTz', 'klassId', 'lessonId', 'absenceTypeId', 'reportDate', 'absnceCount', 'absnceCode', 'senderName', 'reason', 'comment', 'isApproved'],
+    fields: ['studentTz', 'klassId', 'lessonId', 'absenceTypeId', 'reportDate', 'absnceCount', 'absnceCode', 'senderName', 'reason', 'comment', 'isApproved', 'fileData'],
 }
 
 const additionalListActions = [

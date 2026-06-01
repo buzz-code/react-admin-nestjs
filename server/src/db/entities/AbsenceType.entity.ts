@@ -56,6 +56,10 @@ export class AbsenceType implements IHasUserId {
   })
   requiredLabels: string[] | null;
 
+  @IsOptional({ always: true })
+  @Column('boolean', { name: 'is_file_required', default: false })
+  isFileRequired: boolean;
+
   @CreatedAtColumn()
   createdAt: Date;
 

@@ -26,6 +26,7 @@ import { AbsenceType } from "./AbsenceType.entity";
 import { DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
 import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
+import { FileData } from "@shared/entities/Image.entity";
 
 @Index("known_users_idx", ["userId"], {})
 @Index(['studentReferenceId', 'year'])
@@ -146,6 +147,8 @@ export class KnownAbsence implements IHasUserId {
   @Column("int", { name: "absence_type_id", nullable: true })
   absenceTypeId: number | null;
 
+  @Column(() => FileData)
+  fileData: FileData;
 
   @CreatedAtColumn()
   createdAt: Date;

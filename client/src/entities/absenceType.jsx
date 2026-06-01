@@ -10,6 +10,8 @@ import {
     SelectField,
     ArrayInput,
     SimpleFormIterator,
+    BooleanInput,
+    BooleanField,
 } from "react-admin";
 import { CommonDatagrid } from "@shared/components/crudContainers/CommonList";
 import { getResourceComponents } from "@shared/components/crudContainers/CommonEntity";
@@ -38,9 +40,10 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
 
             <TextField source="name" />
             <TextField source="quota" />
+            <BooleanField source="isFileRequired" />
             <SelectField source="year" choices={yearChoices} />
 
-            <TextField source="requiredLabels"/>
+            <TextField source="requiredLabels" />
 
             {isAdmin && <DateField source="createdAt" disabled />}
             {isAdmin && <DateField source="updatedAt" disabled />}
@@ -53,8 +56,8 @@ const Inputs = ({ isCreate, isAdmin }) => {
     return (
         <>
             {!isCreate && isAdmin && <TextInput source="id" disabled />}
-            {isAdmin && ( <CommonReferenceInput source="userId" reference="user" validate={required()}/> )}
-            <TextInput source="name" validate={[required(), maxLength(100)]}/>
+            {isAdmin && (<CommonReferenceInput source="userId" reference="user" validate={required()} />)}
+            <TextInput source="name" validate={[required(), maxLength(100)]} />
             <NumberInput source="quota" step={1} validate={[required()]} />
             <CommonAutocompleteInput source="year" choices={yearChoices} validate={required()} defaultValue={defaultYearFilter.year} />
             <ArrayInput source="requiredLabels">
@@ -62,6 +65,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
                     <TextInput fullWidth />
                 </SimpleFormIterator>
             </ArrayInput>
+            <BooleanInput source="isFileRequired" />
 
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
@@ -72,7 +76,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = 'name';
 
 const importer = {
-    fields: ["name", "quota", "requiredLabels", "year"],
+    fields: ["name", "quota", "requiredLabels", "year", "isFileRequired"],
 };
 
 const entity = {

@@ -142,6 +142,7 @@ export default {
                 comment: 'הערה',
                 isApproved: 'מאושר',
                 absenceTypeId: 'סוג אירוע',
+                fileData: 'קובץ מצורף',
             }
         },
         lesson: {
@@ -217,6 +218,7 @@ export default {
                 name: 'שם האירוע',
                 quota: 'מכסה שנתית',
                 requiredLabels: 'שדות חובה לדיווח',
+                isFileRequired:'חובה לצרף קובץ',
             }
         },
         text: {
