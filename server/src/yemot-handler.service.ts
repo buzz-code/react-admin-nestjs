@@ -16,14 +16,14 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     await this.getUserByDidPhone();
     this.logger.log(`Processing call with ID: ${this.call.callId} from phone: ${this.call.phone}`);
     if (await this.isPastReportingDeadline()) {
-      await this.hangupWithMessage('המערכת סגורה. לא ניתן לדווח אחרי השעה תשע וחצי בבוקר. המשך יום טוב.');
+      await this.hangupWithMessageByKey('SYSTEM.CLOSED');
       return;
     }
     const student = await this.getStudentByInput();
     if (!student) return;
     const alreadyReported = await this.hasReportedToday(student.id);
     if (alreadyReported) {
-      await this.hangupWithMessage('כבר דיווחת היום, לא ניתן לדווח פעמיים.');
+      await this.hangupWithMessageByKey('STUDENT.ALREADY_REPORTED');
       return;
     }
     const transportation = await this.getTransportByInput();
@@ -31,9 +31,9 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const isValid = await this.isDepartureTimeValid(transportation);
     if (isValid) {
       await this.createAbsenceRecord(student, transportation);
-      await this.hangupWithMessage('דווח בהצלחה');
+      await this.hangupWithMessageByKey('SYSTEM.REPORT_SUCCESS');
     } else {
-      await this.hangupWithMessage('יצאת מאוחר מידי המשך יום טוב');
+      await this.hangupWithMessageByKey('SYSTEM.LATE_DEPARTURE');
     }
   }
   private isPastReportingDeadline(): boolean {
@@ -51,13 +51,13 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       student = await this.getStudentByTz();
 
       if (!student) {
-        await this.sendMessage('מספר תעודת הזהות לא תקין נסי שוב');
+        await this.sendMessageByKey('STUDENT.INVALID_TZ');
       }
     }
     return student;
   }
   private async getStudentByTz(): Promise<Student> {
-    const tz = await this.askForInput('הקישי מספר תעודת זהות');
+    const tz = await this.askForInputByKey('STUDENT.TZ_PROMPT');
     const student = await this.dataSource.getRepository(Student).findOneBy({
       userId: this.user.id,
       tz: tz,
@@ -91,7 +91,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       transportation = await this.getTransportByNum();
 
       if (!transportation) {
-        await this.sendMessage(' מספר הסעה לא תקין, נסי שוב');
+        await this.sendMessageByKey('TRANSPORT.INVALID_NUM');
       }
     }
 
@@ -99,7 +99,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   }
 
   private async getTransportByNum(): Promise<Transportation> {
-    const num = await this.askForInput('הקישי מספר הסעה');
+    const num = await this.askForInputByKey('TRANSPORT.NUM_PROMPT');
     const transportation = await this.dataSource.getRepository(Transportation).findOneBy({
       userId: this.user.id,
       key: Number(num),
@@ -107,20 +107,8 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     return transportation;
   }
 
-  private async isDepartureTimeValid(transportation): Promise<boolean> {
-    let valid: boolean | null = null;
-    while (valid === null) {
-      const message = `האם יצאת לדרך לפני השעה ${transportation.departureTime}? הקישי 1 - כן, 2 - לא`;
-      const userInput = await this.askForInput(message);
-      if (userInput === '1') {
-        valid = true;
-      } else if (userInput === '2') {
-        valid = false;
-      } else {
-        await this.sendMessage('הקשה לא תקינה, נא הקישי 1 או 2');
-      }
-    }
-    return valid;
+  private async isDepartureTimeValid(transportation: Transportation): Promise<boolean> {
+    return this.askConfirmation('TRANSPORT.DEPARTURE_CONFIRM', { departureTime: transportation.departureTime });
   }
 
   private async createAbsenceRecord(student: Student, transportation: Transportation) {
@@ -130,7 +118,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       studentReferenceId: student.id,
     });
     if (!studentKlass) {
-      await this.hangupWithMessage(' התלמידה אינה משויכת לכיתה.');
+      await this.hangupWithMessageByKey('STUDENT.NO_CLASS');
       return;
     }
     const newAbsence = absenceRepo.create({
