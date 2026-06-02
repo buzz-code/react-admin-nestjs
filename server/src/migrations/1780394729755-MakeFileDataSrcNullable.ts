@@ -9,9 +9,8 @@ export class MakeFileDataSrcNullable1780394729755 implements MigrationInterface 
         await queryRunner.query(`ALTER TABLE \`image\` MODIFY COLUMN \`fileDataTitle\` text NULL`);
         await queryRunner.query(`ALTER TABLE \`uploaded_files\` MODIFY COLUMN \`fileDataSrc\` mediumtext NULL`);
         await queryRunner.query(`ALTER TABLE \`uploaded_files\` MODIFY COLUMN \`fileDataTitle\` text NULL`);
-        // Add nullable fileData columns to known_absences
-        await queryRunner.query(`ALTER TABLE \`known_absences\` ADD COLUMN IF NOT EXISTS \`fileDataSrc\` mediumtext NULL`);
-        await queryRunner.query(`ALTER TABLE \`known_absences\` ADD COLUMN IF NOT EXISTS \`fileDataTitle\` text NULL`);
+        await queryRunner.query(`ALTER TABLE \`known_absences\` MODIFY COLUMN \`fileDataSrc\` mediumtext NULL`);
+        await queryRunner.query(`ALTER TABLE \`known_absences\` MODIFY COLUMN \`fileDataTitle\` text NULL`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
