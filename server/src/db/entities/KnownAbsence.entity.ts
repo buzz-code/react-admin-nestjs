@@ -177,6 +177,7 @@ export class KnownAbsence implements IHasUserId {
   @Column('int', { name: 'absence_type_id', nullable: true })
   absenceTypeId: number | null;
 
+  @IsOptional({ always: true })
   @Column(() => FileData)
   fileData: FileData;
 
