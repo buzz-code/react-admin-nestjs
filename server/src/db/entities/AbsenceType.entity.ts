@@ -28,13 +28,15 @@ export class AbsenceType implements IHasUserId {
   year: number;
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @StringType
   @MaxLength(100, { always: true })
   @Column('varchar', { name: 'name', length: 100 })
   name: string;
 
-  @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsNumber({ maxDecimalPlaces: 1 }, { always: true })
   @Min(0, { always: true })
   @NumberType
   @Column('decimal', { name: 'quota', precision: 5, scale: 1 })
