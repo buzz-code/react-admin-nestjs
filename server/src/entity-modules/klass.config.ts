@@ -6,7 +6,7 @@ import { CommonReportData } from '@shared/utils/report/types';
 import { IHeader } from '@shared/utils/exporter/types';
 import { Klass } from 'src/db/entities/Klass.entity';
 import klassAttendanceReportGenerator from 'src/reports/klassAttendanceReport';
-import { getAsDate, getAsNumberArray } from '@shared/utils/queryParam.util';
+import { getAsBoolean, getAsDate, getAsNumberArray } from '@shared/utils/queryParam.util';
 import { fixReferences } from '@shared/utils/entity/fixReference.util';
 
 class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
@@ -43,6 +43,7 @@ class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
     const startDate = getAsDate(req.parsed.extra.startDate);
     const endDate = getAsDate(req.parsed.extra.endDate);
     const lessonReferenceIds = getAsNumberArray(req.parsed.extra.lessonReferenceIds);
+    const groupByDate = getAsBoolean(req.parsed.extra.groupByDate);
 
     return getAsNumberArray(req.parsed.extra.ids)?.map((id) => ({
       userId,
@@ -50,6 +51,7 @@ class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
       startDate,
       endDate,
       lessonReferenceIds,
+      groupByDate,
     }));
   }
 }

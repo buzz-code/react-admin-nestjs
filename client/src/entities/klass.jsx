@@ -5,6 +5,7 @@ import {
     DateField,
     DateInput,
     DateTimeInput,
+    BooleanInput,
     NumberInput,
     required,
     maxLength
@@ -63,6 +64,7 @@ const additionalBulkButtons = [
             label="שיעורים"
             dynamicFilter={filterByUserIdAndYear}
         />
+        <BooleanInput source="groupByDate" label="קיבוץ לפי תאריך" defaultValue={true} />
     </BulkReportButton>,
     <BulkFixReferenceButton key="fixReferences" label="תיקון שיוך" />,
 ];

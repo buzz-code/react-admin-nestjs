@@ -22,6 +22,7 @@ export interface KlassAttendanceReportParams {
   startDate: Date; // ISO date string (required)
   endDate: Date; // ISO date string (required)
   lessonReferenceIds?: number[];
+  groupByDate?: boolean;
 }
 
 export interface KlassAttendanceReportData extends IDataToExcelReportGenerator {
@@ -36,6 +37,7 @@ export interface KlassAttendanceReportData extends IDataToExcelReportGenerator {
 
 interface SessionData {
   sessionId: number | null; // null for placeholder (no session that day)
+  sessionIds?: number[];
   date: Date;
   dayOfWeek: string;
   startTime: string;
@@ -52,38 +54,90 @@ interface StudentAttendanceData {
   attendanceMarks: string[]; // 'V', '±', 'X', '--' for each session
 }
 
+const buildSessionWhere = (
+  userId: number,
+  klassId: number,
+  lessonReferenceIds: number[] | undefined,
+  startDate: Date,
+  endDate: Date,
+): FindOptionsWhere<ReportGroupSession> => {
+  const sessionWhere: FindOptionsWhere<ReportGroupSession> = {
+    reportGroup: { userId, klassReferenceId: klassId },
+  };
+  if (lessonReferenceIds?.length > 0) {
+    (sessionWhere.reportGroup as FindOptionsWhere<ReportGroup>).lessonReferenceId = In(lessonReferenceIds);
+  }
+  sessionWhere.sessionDate = getReportDateFilter(startDate, endDate);
+  return sessionWhere;
+};
+
+const buildEmptySession = (date: Date): SessionData => ({
+  sessionId: null,
+  sessionIds: [],
+  date,
+  dayOfWeek: FORMATTING.getHebrewDayOfWeek(date),
+  startTime: '',
+  endTime: '',
+  topic: '',
+  lessonCount: 0,
+  teacherName: '',
+  signatureData: undefined,
+});
+
+const buildGroupedSession = (
+  date: Date,
+  dateSessions: ReportGroupSession[],
+  lessonCountsBySession: Record<number, number>,
+): SessionData => {
+  const sessionIdsForDay = dateSessions.map((s) => s.id);
+  const topics = getUniqueValues(dateSessions, (s) => s?.reportGroup?.lesson?.name).filter(Boolean);
+  const teachers = getUniqueValues(dateSessions, (s) => s?.reportGroup?.teacher?.name).filter(Boolean);
+
+  return {
+    sessionId: null,
+    sessionIds: sessionIdsForDay,
+    date,
+    dayOfWeek: FORMATTING.getHebrewDayOfWeek(date),
+    startTime: '',
+    endTime: '',
+    topic: topics.join(' + '),
+    lessonCount: sessionIdsForDay.reduce((sum, id) => sum + (lessonCountsBySession[id] || 0), 0),
+    teacherName: teachers.join(' + '),
+    signatureData: dateSessions.find((s) => s?.reportGroup?.signatureData)?.reportGroup?.signatureData,
+  };
+};
+
+const buildSingleSessions = (
+  date: Date,
+  dataSessions: ReportGroupSession[],
+  lessonCountsBySession: Record<number, number>,
+): SessionData[] =>
+  dataSessions.map((session) => ({
+    sessionId: session.id,
+    sessionIds: [session.id],
+    date,
+    dayOfWeek: FORMATTING.getHebrewDayOfWeek(date),
+    startTime: session.startTime || '',
+    endTime: session.endTime || '',
+    topic: session.reportGroup?.lesson?.name || '',
+    lessonCount: lessonCountsBySession[session.id] || 0,
+    teacherName: session.reportGroup?.teacher?.name || '',
+    signatureData: session.reportGroup?.signatureData,
+  }));
+
 const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAttendanceReportData> = async (
   params,
   dataSource,
 ): Promise<KlassAttendanceReportData> => {
   console.log('klass attendance report params:', params);
 
-  const { userId, klassId, startDate, endDate, lessonReferenceIds } = params;
-
-  // Build where conditions for sessions
-  const sessionWhere: FindOptionsWhere<ReportGroupSession> = {
-    reportGroup: {
-      userId,
-      klassReferenceId: klassId,
-    },
-  };
-
-  // Add lesson filtering if provided
-  if (lessonReferenceIds?.length > 0) {
-    (sessionWhere.reportGroup as FindOptionsWhere<ReportGroup>).lessonReferenceId = In(lessonReferenceIds);
-  }
-
-  // Add date filtering (both dates are required)
-  sessionWhere.sessionDate = getReportDateFilter(startDate, endDate);
+  const { userId, klassId, startDate, endDate, lessonReferenceIds, groupByDate } = params;
 
   // Fetch all data in parallel
+  const sessionWhere = buildSessionWhere(userId, klassId, lessonReferenceIds, startDate, endDate);
   const [user, klass, allSessions] = await Promise.all([
-    dataSource.getRepository(User).findOne({
-      where: { id: userId },
-    }),
-    dataSource.getRepository(Klass).findOne({
-      where: { id: klassId },
-    }),
+    dataSource.getRepository(User).findOne({ where: { id: userId } }),
+    dataSource.getRepository(Klass).findOne({ where: { id: klassId } }),
     dataSource.getRepository(ReportGroupSession).find({
       where: sessionWhere,
       relations: ['reportGroup', 'reportGroup.teacher', 'reportGroup.lesson'],
@@ -95,7 +149,6 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
     console.log('klass attendance report: klass not found', klassId);
     return null;
   }
-
   if (allSessions.length === 0) {
     console.log('klass attendance report: no sessions found for klass', klassId);
     return null;
@@ -109,41 +162,28 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
     order: { student: { name: 'ASC' } },
   });
 
-  // Group attendance reports by session to calculate lesson counts
+  // Group attendance reports
   const lessonCountsBySession = groupDataByKeysAndCalc(attReports, ['reportGroupSessionId'], (reports) =>
     Math.max(...reports.map((r) => r.howManyLessons || 0), 0),
   );
-
-  // Group attendance reports by student and session for easy lookup
   const reportsByStudentAndSession = groupDataByKeysAndCalc(
     attReports,
     ['studentReferenceId', 'reportGroupSessionId'],
     (reports) => reports[0],
   );
-
-  // Group sessions by date string for fast lookup
   const sessionsByDate = groupDataByKeyFn(
     allSessions.filter((s) => lessonCountsBySession[s.id]),
     (s) => formatDate(s.sessionDate),
   );
 
-  // Build sessions list: one entry per real session, placeholder for days with no data
+  // Build sessions list
   const sessions: SessionData[] = getDateRange(startDate, endDate).flatMap((date) => {
-    const dateSessions: (ReportGroupSession | null)[] = sessionsByDate[formatDate(date)] || [null];
-    return dateSessions.map((session) => ({
-      sessionId: session?.id ?? null,
-      date,
-      dayOfWeek: FORMATTING.getHebrewDayOfWeek(date),
-      startTime: session?.startTime || '',
-      endTime: session?.endTime || '',
-      topic: session?.reportGroup?.lesson?.name || '',
-      lessonCount: session ? lessonCountsBySession[session.id] : 0,
-      teacherName: session?.reportGroup?.teacher?.name || '',
-      signatureData: session?.reportGroup?.signatureData,
-    }));
+    const dateSessions = sessionsByDate[formatDate(date)] || [];
+    if (!dateSessions.length) return [buildEmptySession(date)];
+    return groupByDate ? [buildGroupedSession(date, dateSessions, lessonCountsBySession)] : buildSingleSessions(date, dateSessions, lessonCountsBySession);
   });
 
-  // Get unique students from attendance reports
+  // Build student data
   const uniqueStudentIds = getUniqueValues(attReports, (r) => r.studentReferenceId);
   const studentByIdMap = groupDataByKeysAndCalc(attReports, ['studentReferenceId'], (reports) => reports[0].student);
   const uniqueStudents = uniqueStudentIds
@@ -154,10 +194,14 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
   // Build student data with attendance marks (one mark per session column)
   const students: StudentAttendanceData[] = uniqueStudents.map((student) => {
     const attendanceMarks = sessions.map((session) => {
-      if (!session.sessionId) return '';
-      const key = `${student.id}_${session.sessionId}`;
-      const report = reportsByStudentAndSession[key];
-      return FORMATTING.getAttendanceMark(report);
+      if (!session.sessionIds?.length) return '';
+      const reports = session.sessionIds
+        .map((sessionId) => {
+          const key = `${student.id}_${sessionId}`;
+          return reportsByStudentAndSession[key];
+        })
+        .filter(Boolean);
+      return FORMATTING.getAttendanceMark(reports);
     });
 
     return {
@@ -519,14 +563,22 @@ const FORMATTING = {
     return days[date.getDay()];
   },
 
-  getAttendanceMark(report: AttReport | null | undefined): string {
-    if (!report) return '--'; // No report for this session
+  getAttendanceMark(reports: (AttReport | null | undefined)[]): string {
+    const existingReports = reports.filter(Boolean) as AttReport[];
+    if (!existingReports.length) return '--'; // No report for this session/day
 
-    const absPercent = report.howManyLessons > 0 ? report.absCount / report.howManyLessons : 0;
+    const marks = existingReports.map((report) => {
+      const absPercent = report.howManyLessons > 0 ? report.absCount / report.howManyLessons : 0;
 
-    if (absPercent === 0) return '3'; // נוכחות מלאה - Full attendance
-    if (absPercent < 1.0) return '1'; // איחור - Partial absence (late)
-    return '0'; // העדרות מלאה - Full absence
+      if (absPercent === 0) return '3'; // נוכחות מלאה - Full attendance
+      if (absPercent < 1.0) return '1'; // איחור - Partial absence (late)
+      return '0'; // העדרות מלאה - Full absence
+    });
+
+    // Day aggregation rule: show the most severe mark of the day.
+    if (marks.includes('0')) return '0';
+    if (marks.includes('1')) return '1';
+    return '3';
   },
 };
 
