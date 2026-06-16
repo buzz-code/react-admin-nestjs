@@ -756,7 +756,7 @@ const StudentRecordsTable: React.FC<StudentRecordsTableProps> = ({
         <tbody>
           {studentRecords.map((record, index) => (
             <tr key={index}>
-              <td style={cellStyle}>{record.student.name}</td>
+              <td style={cellStyle}>{record.student?.name ?? 'תלמידה לא ידועה'}</td>
               <td style={centerCellStyle}>
                 {record.data[entityConfig.valueField] ?? '-'}
               </td>
