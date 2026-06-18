@@ -25,7 +25,7 @@ import { Teacher } from "./Teacher.entity";
 import { AbsenceType } from "./AbsenceType.entity";
 import { BooleanType, DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
 import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
-import { CreatedAtColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
+import { CreatedAtColumn, DateColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
 import { FileData } from "@shared/entities/Image.entity";
 
 @Index("known_users_idx", ["userId"], {})
@@ -130,7 +130,7 @@ export class KnownAbsence implements IHasUserId {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Column('date', { name: 'report_date' })
+  @DateColumn({ name: 'report_date' })
   @DateType
   @IsDate({ always: true })
   reportDate: Date;

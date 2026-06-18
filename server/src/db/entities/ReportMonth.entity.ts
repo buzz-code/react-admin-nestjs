@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { IsDate, IsNotEmpty, IsUniqueDateRange, MaxLength } from '@shared/utils/validation/class-validator-he';
 import { DateType, StringType } from '@shared/utils/entity/class-transformer';
+import { DateColumn } from '@shared/utils/entity/column-types.util';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 
 export enum ReportMonthSemester {
@@ -47,7 +48,7 @@ export class ReportMonth {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Column()
+  @DateColumn()
   @DateType
   @IsDate({ always: true })
   @IsUniqueDateRange('startDate', 'endDate', [ReportMonth], { always: true })
@@ -56,7 +57,7 @@ export class ReportMonth {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @Column()
+  @DateColumn()
   @DateType
   @IsDate({ always: true })
   @IsUniqueDateRange('startDate', 'endDate', [ReportMonth], { always: true })
