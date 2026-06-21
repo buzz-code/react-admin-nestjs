@@ -1,18 +1,9 @@
 import { CrudValidationGroups } from '@dataui/crud';
 import { IsOptional } from 'class-validator';
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { IsDate, IsNotEmpty, IsUniqueDateRange, MaxLength } from '@shared/utils/validation/class-validator-he';
 import { DateType, StringType } from '@shared/utils/entity/class-transformer';
-import { DateColumn } from '@shared/utils/entity/column-types.util';
+import { CreatedAtColumn, DateColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 
 export enum ReportMonthSemester {
@@ -48,7 +39,7 @@ export class ReportMonth {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @DateColumn()
+  @DateColumn({ type: 'datetime' })
   @DateType
   @IsDate({ always: true })
   @IsUniqueDateRange('startDate', 'endDate', [ReportMonth], { always: true })
@@ -57,7 +48,7 @@ export class ReportMonth {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
-  @DateColumn()
+  @DateColumn({ type: 'datetime' })
   @DateType
   @IsDate({ always: true })
   @IsUniqueDateRange('startDate', 'endDate', [ReportMonth], { always: true })
@@ -73,9 +64,9 @@ export class ReportMonth {
   @Column({ nullable: true })
   year: number;
 
-  @CreateDateColumn()
+  @CreatedAtColumn({ name: 'createdAt' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdatedAtColumn({ name: 'updatedAt' })
   updatedAt: Date;
 }
