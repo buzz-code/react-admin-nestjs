@@ -177,4 +177,12 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
     expect(result.passed).toBe(true);
     expect(result.hungup).toBe(true);
   });
+
+  // ---- Stub tests for uncovered branches ----
+
+  it.skip('no class found — hangup with STUDENT.NO_CLASS', () => { });
+
+  it.skip('past deadline — exactly at 8:50, hangup with CLOSED', () => { });
+
+  it.skip('before deadline — at 8:49, continues to student input', () => { });
 });
