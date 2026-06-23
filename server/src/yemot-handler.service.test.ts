@@ -178,11 +178,63 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
     expect(result.hungup).toBe(true);
   });
 
-  // ---- Stub tests for uncovered branches ----
+  // ---- Previously skipped tests for uncovered branches ----
 
-  it.skip('no class found — hangup with STUDENT.NO_CLASS', () => { });
+  it('no class found — hangup with STUDENT.NO_CLASS', async () => {
+    jest.setSystemTime(israelTimeAt(7, 0));
 
-  it.skip('past deadline — exactly at 8:50, hangup with CLOSED', () => { });
+    const scenario = new YemotScenarioBuilder('No class found')
+      .seed('User', [baseUser])
+      .seed('Student', [{ id: 100, userId: 1, tz: '123456789', name: 'Test Student' }])
+      .seed('Transportation', [{ id: 10, userId: 1, key: 5, departureTime: '07:30' }])
+      .seed('Text', baseTexts)
+      .systemAsks(/enter.*id/i)
+      .userResponds('123456789')
+      .systemAsks(/transport/i)
+      .userResponds('5')
+      .systemAsks(/departure.*07:30/i)
+      .userResponds('1')
+      .systemHangsUp(/no class/i)
+      .build();
 
-  it.skip('before deadline — at 8:49, continues to student input', () => { });
+    const result = await runner.run(scenario);
+    expect(result.passed).toBe(true);
+    expect(result.hungup).toBe(true);
+  });
+
+  it('past deadline — exactly at 8:50, hangup with CLOSED', async () => {
+    jest.setSystemTime(israelTimeAt(8, 50));
+
+    const scenario = new YemotScenarioBuilder('Past deadline at 8:50')
+      .seed('User', [baseUser])
+      .seed('Text', baseTexts)
+      .systemHangsUp(/closed/i)
+      .build();
+
+    const result = await runner.run(scenario);
+    expect(result.passed).toBe(true);
+    expect(result.hungup).toBe(true);
+  });
+
+  it('before deadline — at 8:49, continues to student input', async () => {
+    jest.setSystemTime(israelTimeAt(8, 49));
+
+    const scenario = new YemotScenarioBuilder('Before deadline at 8:49')
+      .seed('User', [baseUser])
+      .seed('Student', [{ id: 100, userId: 1, tz: '123456789', name: 'Test Student' }])
+      .seed('Transportation', [{ id: 10, userId: 1, key: 5, departureTime: '07:30' }])
+      .seed('StudentKlass', [{ id: 50, userId: 1, studentReferenceId: 100, klassReferenceId: 200 }])
+      .seed('Text', baseTexts)
+      .systemAsks(/enter.*id/i)
+      .userResponds('123456789')
+      .systemAsks(/transport/i)
+      .userResponds('5')
+      .systemAsks(/departure.*07:30/i)
+      .userResponds('1')
+      .systemHangsUp(/success/i)
+      .build();
+
+    const result = await runner.run(scenario);
+    expect(result.passed).toBe(true);
+  });
 });
