@@ -7,6 +7,7 @@ import {
     DateTimeInput,
     BooleanInput,
     NumberInput,
+    NumberField,
     required,
     maxLength
 } from 'react-admin';
@@ -92,6 +93,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
                 optionalSource="teacherId"
                 optionalTarget="tz"
             />
+            <NumberField source="order" />
             <CommonYearField />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
@@ -115,6 +117,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
                 dynamicFilter={filterByUserId}
             />
             <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
+            <NumberInput source="order" helperText="מספר נמוך = מופיע קודם" />
             <CommonYearInput />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
@@ -125,7 +128,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['key', 'name', 'klassTypeId', 'teacherId', 'year', 'displayName'],
+    fields: ['key', 'name', 'klassTypeId', 'teacherId', 'year', 'displayName', 'order'],
 };
 
 const entity = {

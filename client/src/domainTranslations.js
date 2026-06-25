@@ -115,6 +115,7 @@ export default {
                 klassTypeReferenceId: 'שיוך כיתה',
                 teacherId: 'מורה',
                 teacherReferenceId: 'מורה',
+                order: 'סדר הצגה',
             },
         },
         klass_type: {

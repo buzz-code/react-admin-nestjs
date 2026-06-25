@@ -298,10 +298,7 @@ const ReportTableValueWithLineBreak = ({ value }) => {
 
 const reportDataWrapperStyle: React.CSSProperties = {
     paddingTop: '2rem',
-}
-const reportDataWrapperStyle2: React.CSSProperties = {
     pageBreakInside: 'avoid',
-    ...reportDataWrapperStyle,
 }
 const commonTableStyle: React.CSSProperties = {
     border: '1px solid black',
@@ -372,22 +369,25 @@ const ReportTableContent: React.FunctionComponent<ReportTableContentProps> = ({ 
             <ReportTableHeaderWrapper items={reportTableHeader} />
             <table style={tableStyle}>
                 {reportData.reports.length > 0 && <>
-                    <tr>
-                        <th style={rightAlignThStyle}>מקצוע</th>
-                        <th style={thStyle}>שם המורה</th>
-                        {reportParams.attendance && <th style={thStyle}>אחוז נוכחות</th>}
-                        {reportParams.grades && <th style={thStyle}>ציון</th>}
-                        {reportParams.debug && <th style={thStyle}>פירוט</th>}
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th style={rightAlignThStyle}>מקצוע</th>
+                            <th style={thStyle}>שם המורה</th>
+                            {reportParams.attendance && <th style={thStyle}>אחוז נוכחות</th>}
+                            {reportParams.grades && <th style={thStyle}>ציון</th>}
+                            {reportParams.debug && <th style={thStyle}>פירוט</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {!reportParams.minimalReport && reportData.reports.map((item, index) => (
+                            <ReportItem key={index} reportParams={reportParams} report={item}
+                                att_grade_effect={att_grade_effect} grade_names={grade_names} attendance_names={attendance_names} />
+                        ))}
 
-                    {!reportParams.minimalReport && reportData.reports.map((item, index) => (
-                        <ReportItem key={index} reportParams={reportParams} report={item}
-                            att_grade_effect={att_grade_effect} grade_names={grade_names} attendance_names={attendance_names} />
-                    ))}
-
-                    {!reportParams.hideAbsTotal && reportParams.attendance && (
-                        <ReportAbsTotal id={reportData.id} reports={reportData.reports} reportParams={reportParams} knownAbsMap={knownAbsMap} />
-                    )}
+                        {!reportParams.hideAbsTotal && reportParams.attendance && (
+                            <ReportAbsTotal id={reportData.id} reports={reportData.reports} reportParams={reportParams} knownAbsMap={knownAbsMap} />
+                        )}
+                    </tbody>
                 </>}
             </table>
         </div>
@@ -633,10 +633,13 @@ function groupReportsByKlass(reports: AppProps['reports'][number]['reports'], re
         const klasses: Record<number, ReportDataArrItem> = {};
         reports.forEach(item => {
             const name = formatDisplayName(item.klass);
+            const isBase = item.isBaseKlass ? 0 : 1;
+            const order = item.klass?.order ?? Number.MAX_SAFE_INTEGER;
+            const id = item.klass?.id ?? 0;
             klasses[name] ??= {
                 name: name,
                 id: item.klass.id,
-                order: item.isBaseKlass ? -1 : 1,
+                order: isBase * 1e15 + order * 1000 + id,
                 reports: [],
             };
             klasses[name].reports.push(item);

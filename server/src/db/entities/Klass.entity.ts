@@ -108,6 +108,12 @@ export class Klass implements IHasUserId {
   @Index('klasses_teacher_reference_id_idx')
   teacherReferenceId: number;
 
+  @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @Column('int', { name: 'order', nullable: true, default: null })
+  order: number | null;
+
   @CreatedAtColumn()
   createdAt: Date;
 
