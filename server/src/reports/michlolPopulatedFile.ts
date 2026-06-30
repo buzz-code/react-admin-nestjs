@@ -40,12 +40,10 @@ const getReportData: IGetReportDataFunction = async (
   }
 
   const [lesson, students] = await Promise.all([
-    dataSource
-      .getRepository(Lesson)
-      .findOne({
-        where: { userId: params.userId, key: lessonKey, year: getCurrentHebrewYear() },
-        select: { id: true, key: true, name: true, userId: true },
-      }),
+    dataSource.getRepository(Lesson).findOne({
+      where: { userId: params.userId, key: lessonKey, year: getCurrentHebrewYear() },
+      select: { id: true, key: true, name: true, userId: true },
+    }),
     dataSource
       .getRepository(Student)
       .find({ where: { userId: params.userId, tz: In(studentTzs) }, select: { id: true, tz: true } }),

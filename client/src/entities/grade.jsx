@@ -9,7 +9,7 @@ import {
     ReferenceField,
     required,
     maxLength,
-    NullableBooleanInput
+    NullableBooleanInput,
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';

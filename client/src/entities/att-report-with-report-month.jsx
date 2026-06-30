@@ -9,7 +9,7 @@ import {
     NumberInput,
     BooleanInput,
     NullableBooleanInput,
-    maxLength
+    maxLength,
 } from 'react-admin';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import HelpIcon from '@mui/icons-material/Help';
@@ -77,7 +77,13 @@ const filterDefaultValues = {
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     const additionalBulkButtons = [
-        <BulkActionButton label="שינוי כיתה" icon={<ClassIcon />} name="bulkChangeKlass" key="bulkChangeKlass" reloadOnEnd>
+        <BulkActionButton
+            label="שינוי כיתה"
+            icon={<ClassIcon />}
+            name="bulkChangeKlass"
+            key="bulkChangeKlass"
+            reloadOnEnd
+        >
             {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
             {isAdmin && <CommonYearInput />}
             <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />

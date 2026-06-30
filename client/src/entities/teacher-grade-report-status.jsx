@@ -5,7 +5,7 @@ import {
     required,
     BooleanInput,
     TextInput,
-    useGetList
+    useGetList,
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';

@@ -10,7 +10,7 @@ import {
     required,
     TextField,
     TextInput,
-    minValue
+    minValue,
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField, MultiReferenceArrayField } from '@shared/components/fields/CommonReferenceField';
