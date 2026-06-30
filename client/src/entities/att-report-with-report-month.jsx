@@ -14,6 +14,7 @@ import {
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import HelpIcon from '@mui/icons-material/Help';
 import ClassIcon from '@mui/icons-material/Class';
+import PersonIcon from '@mui/icons-material/Person';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -80,6 +81,17 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
             {isAdmin && <CommonYearInput />}
             <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />
+        </BulkActionButton>,
+        <BulkActionButton
+            label="שינוי מורה"
+            icon={<PersonIcon />}
+            name="bulkChangeTeacher"
+            key="bulkChangeTeacher"
+            reloadOnEnd
+        >
+            {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
+            {isAdmin && <CommonYearInput />}
+            <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
         </BulkActionButton>,
         <BulkActionButton label="הוספת חיסורים מאושרים" icon={<PlaylistRemoveIcon />} name="bulkKnownAbsences">
             <DateInput source="reportDate" resource="known_absence" />
