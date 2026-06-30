@@ -180,7 +180,9 @@ const getReportData: IGetReportDataFunction<KlassAttendanceReportParams, KlassAt
   const sessions: SessionData[] = getDateRange(startDate, endDate).flatMap((date) => {
     const dateSessions = sessionsByDate[formatDate(date)] || [];
     if (!dateSessions.length) return [buildEmptySession(date)];
-    return groupByDate ? [buildGroupedSession(date, dateSessions, lessonCountsBySession)] : buildSingleSessions(date, dateSessions, lessonCountsBySession);
+    return groupByDate
+      ? [buildGroupedSession(date, dateSessions, lessonCountsBySession)]
+      : buildSingleSessions(date, dateSessions, lessonCountsBySession);
   });
 
   // Build student data

@@ -104,7 +104,12 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
 
             {summaryHeaders.map((h) =>
                 PCT_SUMMARY_KEYS.has(h.value) ? (
-                    <ThresholdColorField key={h.value} source={h.value} label={h.label} thresholds={ABSENCE_THRESHOLDS} />
+                    <ThresholdColorField
+                        key={h.value}
+                        source={h.value}
+                        label={h.label}
+                        thresholds={ABSENCE_THRESHOLDS}
+                    />
                 ) : (
                     <TextField key={h.value} source={h.value} label={h.label} sortable={false} />
                 ),

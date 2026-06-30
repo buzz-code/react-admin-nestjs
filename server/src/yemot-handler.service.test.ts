@@ -7,13 +7,7 @@ import { YemotHandlerService } from './yemot-handler.service';
  */
 function israelTimeAt(hour: number, minute: number): Date {
   const now = new Date();
-  const utcMs = Date.UTC(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    hour - 3,
-    minute,
-  );
+  const utcMs = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), hour - 3, minute);
   return new Date(utcMs);
 }
 
@@ -110,16 +104,18 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
     const scenario = new YemotScenarioBuilder('Already reported')
       .seed('User', [baseUser])
       .seed('Student', [{ id: 100, userId: 1, tz: '123456789', name: 'Test Student' }])
-      .seed('KnownAbsence', [{
-        userId: 1,
-        studentReferenceId: 100,
-        studentTz: '123456789',
-        reportDate: today,
-        absnceCount: 1,
-        isApproved: true,
-        comment: 'test',
-        klassReferenceId: 200,
-      }])
+      .seed('KnownAbsence', [
+        {
+          userId: 1,
+          studentReferenceId: 100,
+          studentTz: '123456789',
+          reportDate: today,
+          absnceCount: 1,
+          isApproved: true,
+          comment: 'test',
+          klassReferenceId: 200,
+        },
+      ])
       .seed('Text', baseTexts)
       .systemAsks(/enter.*id/i)
       .userResponds('123456789')

@@ -84,12 +84,10 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
 
     switch (pivotName) {
       case 'PercentReportWithDates': {
-        const pivotData = await this.dataSource
-          .getRepository(AttReportAndGrade)
-          .find({
-            where: getReportDataFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate),
-            order: { reportDate: 'ASC' },
-          });
+        const pivotData = await this.dataSource.getRepository(AttReportAndGrade).find({
+          where: getReportDataFilterBySprAndDates(sprIds, extra?.fromDate, extra?.toDate),
+          order: { reportDate: 'ASC' },
+        });
         const pivotDataMap = groupDataByKeys(pivotData, [
           'studentReferenceId',
           'teacherReferenceId',

@@ -1,11 +1,4 @@
-import {
-    DateInput,
-    NumberField,
-    TextField,
-    ReferenceField,
-    useRecordContext,
-    TextInput
-} from 'react-admin';
+import { DateInput, NumberField, TextField, ReferenceField, useRecordContext, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
