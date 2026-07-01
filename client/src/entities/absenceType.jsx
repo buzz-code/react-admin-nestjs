@@ -21,11 +21,7 @@ import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 
-const filters = [
-    ...commonAdminFilters,
-    <CommonYearInputFilter />,
-    <TextInput source="name:$cont" />,
-];
+const filters = [...commonAdminFilters, <CommonYearInputFilter />, <TextInput source="name:$cont" />];
 
 const filterDefaultValues = {
     year: defaultYearFilter.year,

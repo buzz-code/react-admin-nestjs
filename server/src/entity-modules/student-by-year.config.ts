@@ -175,10 +175,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
     if (!selectedKlassIds?.length) return;
 
     const data = list as StudentByYear[];
-    const studentMap: Record<number, IDynamicStudentPivot> = data.reduce(
-      (a, b) => ({ ...a, [b.id]: b }),
-      {},
-    );
+    const studentMap: Record<number, IDynamicStudentPivot> = data.reduce((a, b) => ({ ...a, [b.id]: b }), {});
     const klassTypeReferenceIds = getAsNumberArray(extra.klassTypeReferenceIds);
     const excludedLessonIds = getAsNumberArray(extra?.excludedLessonIds);
 
@@ -212,9 +209,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
     const selectedKlasses = await this.dataSource.getRepository(Klass).find({
       where: { id: In(selectedKlassIds) },
     });
-    const klassNameMap: Record<number, string> = Object.fromEntries(
-      selectedKlasses.map((k) => [k.id, k.name]),
-    );
+    const klassNameMap: Record<number, string> = Object.fromEntries(selectedKlasses.map((k) => [k.id, k.name]));
     selectedKlassIds.forEach((kid) => {
       const key = `klass_${kid}`;
       headers[key] = {

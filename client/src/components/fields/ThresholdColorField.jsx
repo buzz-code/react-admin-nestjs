@@ -4,13 +4,7 @@ import { getColorForValue } from '@shared/utils/thresholdUtil';
 
 const defaultFormat = (v) => `${(v * 100).toFixed(1)}%`;
 
-const ThresholdColorField = ({
-    source,
-    label,
-    thresholds = [],
-    format = defaultFormat,
-    sortable = false,
-}) => (
+const ThresholdColorField = ({ source, label, thresholds = [], format = defaultFormat, sortable = false }) => (
     <FunctionField
         source={source}
         label={label}

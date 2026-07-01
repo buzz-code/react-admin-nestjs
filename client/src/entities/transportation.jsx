@@ -6,7 +6,7 @@ import {
     TextField,
     TextInput,
     NumberInput,
-    maxLength
+    maxLength,
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';

@@ -8,27 +8,27 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { IHasUserId } from "@shared/base-entity/interface";
-import { User } from "src/db/entities/User.entity";
-import { findOneAndAssignReferenceId, getDataSource } from "@shared/utils/entity/foreignKey.util";
-import { Student } from "./Student.entity";
-import { IsOptional, ValidateIf } from "class-validator";
-import { CrudValidationGroups } from "@dataui/crud";
-import { IsBoolean, IsDate, IsNotEmpty, IsNumber, MaxLength } from "@shared/utils/validation/class-validator-he";
-import { fillDefaultYearValue } from "@shared/utils/entity/year.util";
-import { fillDefaultReportDateValue } from "@shared/utils/entity/deafultValues.util";
-import { Klass } from "./Klass.entity";
-import { Lesson } from "./Lesson.entity";
-import { KlassType } from "./KlassType.entity";
-import { Teacher } from "./Teacher.entity";
-import { AbsenceType } from "./AbsenceType.entity";
-import { BooleanType, DateType, NumberType, StringType } from "@shared/utils/entity/class-transformer";
-import { LessonKlassName } from "../view-entities/LessonKlassName.entity";
-import { CreatedAtColumn, DateColumn, UpdatedAtColumn } from "@shared/utils/entity/column-types.util";
-import { FileData } from "@shared/entities/Image.entity";
+} from 'typeorm';
+import { IHasUserId } from '@shared/base-entity/interface';
+import { User } from 'src/db/entities/User.entity';
+import { findOneAndAssignReferenceId, getDataSource } from '@shared/utils/entity/foreignKey.util';
+import { Student } from './Student.entity';
+import { IsOptional, ValidateIf } from 'class-validator';
+import { CrudValidationGroups } from '@dataui/crud';
+import { IsBoolean, IsDate, IsNotEmpty, IsNumber, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
+import { fillDefaultReportDateValue } from '@shared/utils/entity/deafultValues.util';
+import { Klass } from './Klass.entity';
+import { Lesson } from './Lesson.entity';
+import { KlassType } from './KlassType.entity';
+import { Teacher } from './Teacher.entity';
+import { AbsenceType } from './AbsenceType.entity';
+import { BooleanType, DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
+import { LessonKlassName } from '../view-entities/LessonKlassName.entity';
+import { CreatedAtColumn, DateColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
+import { FileData } from '@shared/entities/Image.entity';
 
-@Index("known_users_idx", ["userId"], {})
+@Index('known_users_idx', ['userId'], {})
 @Index(['studentReferenceId', 'year'])
 @Index('known_absences_lookup_idx', ['userId', 'year', 'isApproved', 'studentReferenceId'])
 @Entity('known_absences')

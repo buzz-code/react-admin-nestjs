@@ -9,7 +9,7 @@ import {
     ReferenceField,
     required,
     minValue,
-    maxLength
+    maxLength,
 } from 'react-admin';
 import { useIsLessonSignature, useIsTeacherView } from 'src/utils/appPermissions';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
