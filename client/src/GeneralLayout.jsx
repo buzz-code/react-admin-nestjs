@@ -19,6 +19,7 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 
 import BaseLayout from '@shared/components/layout/Layout';
 import BaseDashboard from '@shared/components/views/Dashboard';
+import ChatWidget from './components/ChatWidget';
 import {
     isInLessonReport,
     isScannerUpload,
@@ -164,6 +165,7 @@ const menuGroups = [
 export const Layout = ({ children }) => (
     <BaseLayout customMenuItems={customMenuItems} menuGroups={menuGroups}>
         {children}
+        <ChatWidget />
     </BaseLayout>
 );
 

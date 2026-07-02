@@ -48,6 +48,7 @@ WORKDIR /app2
 COPY --from=builder /app/package*.json .
 COPY --from=builder /app/yarn.lock .
 COPY --from=builder /app/dist/ ./dist/
+COPY --from=builder /app/llm-wiki/ ./llm-wiki/
 
 RUN yarn install --production --frozen-lockfile
 
