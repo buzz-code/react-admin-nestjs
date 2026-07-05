@@ -31,7 +31,8 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
     downComment: getAsBoolean(reqExtra.downComment),
     lastGrade: getAsBoolean(reqExtra.lastGrade),
     debug: getAsBoolean(reqExtra.debug),
-    attendanceLessThan: getAttPercentLessThanParam(reqExtra.attendanceLessThan),
+    attendanceLessThan: getPercentLessThanParam(reqExtra.attendanceLessThan),
+    gradesLessThan: getPercentLessThanParam(reqExtra.gradesLessThan),
   };
   console.log('student report card extra params: ', extraParams);
   const params = getAsArray(reqExtra.ids)?.map((id) => ({
@@ -45,11 +46,11 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
   };
 }
 
-function getAttPercentLessThanParam(attendanceLessThanStr: string): number {
-  if (attendanceLessThanStr) {
-    const attLessThanNum = parseInt(attendanceLessThanStr);
-    if (!isNaN(attLessThanNum)) {
-      return attLessThanNum / 100;
+function getPercentLessThanParam(lessThanStr: string): number {
+  if (lessThanStr) {
+    const lessThanNum = parseInt(lessThanStr);
+    if (!isNaN(lessThanNum)) {
+      return lessThanNum / 100;
     }
   }
   return undefined;

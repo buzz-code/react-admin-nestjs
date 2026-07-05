@@ -498,6 +498,7 @@ export interface IReportParams {
     lastGrade?: boolean;
     debug?: boolean;
     attendanceLessThan?: number;
+    gradesLessThan?: number;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
     const reportDate = getReportDateFilter(dateFromString(params.startDate), dateFromString(params.endDate));
@@ -613,6 +614,9 @@ function getReports(
 function filterReports(reports: IExtenedStudentPercentReport[], reportParams: IReportParams): AppProps['reports'][number]['reports'] {
     return reports.filter(report => {
         if (reportParams.attendanceLessThan && (report.attPercents >= reportParams.attendanceLessThan)) {
+            return false;
+        }
+        if (reportParams.gradesLessThan && (report.gradeAvg >= reportParams.gradesLessThan)) {
             return false;
         }
         return !(

@@ -40,6 +40,11 @@ export default ({ defaultRequestValues }) => {
             <CommonReferenceInput source="klassTypeReferenceId" reference="klass_type" label="שיוך כיתה" />
             <TextInput source="personalNote" label="הערה לתלמידה" defaultValue="" />
             <NumberInput source="attendanceLessThan" label="הצג רק שורות עם נוכחות נמוכה מ (%)" />
+            <NumberInput
+                source="gradesLessThan"
+                label="הצג רק שורות עם ציון נמוך מ (%)"
+                helperText="הסינון מתבצע לפי הציון המקורי, לפני התאמה לפי אחוזי נוכחות"
+            />
         </BulkReportButton>
     );
 };
