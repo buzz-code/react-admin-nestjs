@@ -1,9 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { BaseYemotHandlerService } from '@shared/utils/yemot/v2/yemot-router.service';
+import { hasPermission } from '@shared/utils/permissionsUtil';
+import { getCurrentHebrewYear } from '@shared/utils/entity/year.util';
 import { Student } from './db/entities/Student.entity';
 import { Transportation } from './db/entities/Transportation.entity';
 import { KnownAbsence } from './db/entities/KnownAbsence.entity';
 import { StudentKlass } from './db/entities/StudentKlass.entity';
+import { Teacher } from './db/entities/Teacher.entity';
+import { Klass } from './db/entities/Klass.entity';
+import { AttReport } from './db/entities/AttReport.entity';
+import { ReportGroup } from './db/entities/ReportGroup.entity';
+import { ReportGroupSession } from './db/entities/ReportGroupSession.entity';
 import { Between } from 'typeorm';
 /**
  * Yemot Handler Service for processing incoming Yemot calls
@@ -15,6 +22,14 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   override async processCall(): Promise<void> {
     await this.getUserByDidPhone();
     this.logger.log(`Processing call with ID: ${this.call.callId} from phone: ${this.call.phone}`);
+    if (hasPermission(this.user, 'seminarAttendanceYemot')) {
+      await this.processSeminarAttendanceCall();
+    } else {
+      await this.processTransportationCall();
+    }
+  }
+
+  private async processTransportationCall(): Promise<void> {
     if (await this.isPastReportingDeadline()) {
       await this.hangupWithMessageByKey('SYSTEM.CLOSED');
       return;
@@ -36,6 +51,149 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       await this.hangupWithMessageByKey('SYSTEM.LATE_DEPARTURE');
     }
   }
+
+  private async processSeminarAttendanceCall(): Promise<void> {
+    const teacher = await this.getTeacherByPhone();
+    if (!teacher) return;
+
+    const klass = await this.getKlassByInput();
+
+    const alreadyReported = await this.hasReportedTodayForKlass(klass.id);
+    if (alreadyReported) {
+      await this.hangupWithMessageByKey('SEMINAR.ALREADY_REPORTED');
+      return;
+    }
+
+    const roster = await this.getKlassRoster(klass.id);
+    if (roster.length === 0) {
+      await this.hangupWithMessageByKey('SEMINAR.NO_STUDENTS_IN_KLASS');
+      return;
+    }
+
+    const absentStudentReferenceIds = await this.collectAbsentStudentIds();
+    await this.saveSeminarAttendance(teacher, klass, roster, absentStudentReferenceIds);
+    await this.hangupWithMessageByKey('SYSTEM.REPORT_SUCCESS');
+  }
+
+  private async getTeacherByPhone(): Promise<Teacher | null> {
+    const teacher = await this.dataSource.getRepository(Teacher).findOne({
+      where: [
+        { userId: this.user.id, phone: this.call.phone },
+        { userId: this.user.id, phone2: this.call.phone },
+      ],
+    });
+    if (!teacher) {
+      await this.hangupWithMessageByKey('TEACHER.PHONE_NOT_RECOGNIZED');
+      return null;
+    }
+    return teacher;
+  }
+
+  private async getKlassByInput(): Promise<Klass> {
+    let klass: Klass = null;
+    while (!klass) {
+      const key = await this.askForInputByKey('SEMINAR.KLASS_PROMPT');
+      klass = await this.dataSource.getRepository(Klass).findOneBy({
+        userId: this.user.id,
+        key: Number(key),
+        year: getCurrentHebrewYear(),
+      });
+      if (!klass) {
+        await this.sendMessageByKey('SEMINAR.INVALID_KLASS');
+      }
+    }
+    return klass;
+  }
+
+  private async hasReportedTodayForKlass(klassReferenceId: number): Promise<boolean> {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const existingReport = await this.dataSource.getRepository(AttReport).findOne({
+      where: {
+        userId: this.user.id,
+        klassReferenceId,
+        reportDate: Between(startOfDay, endOfDay),
+      },
+    });
+    return !!existingReport;
+  }
+
+  private async getKlassRoster(klassReferenceId: number): Promise<StudentKlass[]> {
+    return this.dataSource.getRepository(StudentKlass).find({
+      where: {
+        userId: this.user.id,
+        klassReferenceId,
+        year: getCurrentHebrewYear(),
+      },
+    });
+  }
+
+  private async collectAbsentStudentIds(): Promise<Set<number>> {
+    const absentStudentReferenceIds = new Set<number>();
+    let input = await this.askForInputByKey('SEMINAR.ABSENT_STUDENT_PROMPT');
+    while (input !== '0') {
+      const student = await this.dataSource.getRepository(Student).findOneBy({
+        userId: this.user.id,
+        studentNumber: input,
+      });
+      if (!student) {
+        await this.sendMessageByKey('SEMINAR.INVALID_STUDENT_NUM');
+      } else {
+        absentStudentReferenceIds.add(student.id);
+      }
+      input = await this.askForInputByKey('SEMINAR.ABSENT_STUDENT_PROMPT');
+    }
+    return absentStudentReferenceIds;
+  }
+
+  private async saveSeminarAttendance(
+    teacher: Teacher,
+    klass: Klass,
+    roster: StudentKlass[],
+    absentStudentReferenceIds: Set<number>,
+  ): Promise<void> {
+    const reportDate = new Date();
+    let reportGroupSessionId: number | undefined;
+
+    if (hasPermission(this.user, 'lessonSignature')) {
+      const reportGroup = await this.dataSource.getRepository(ReportGroup).save({
+        userId: this.user.id,
+        name: `נוכחות סמינר - ${klass.name}`,
+        topic: 'נוכחות סמינר',
+        teacherReferenceId: teacher.id,
+        klassReferenceId: klass.id,
+        year: getCurrentHebrewYear(),
+      });
+
+      const reportGroupSession = await this.dataSource.getRepository(ReportGroupSession).save({
+        userId: this.user.id,
+        reportGroupId: reportGroup.id,
+        sessionDate: reportDate,
+        startTime: reportDate.toLocaleTimeString('en-GB', { timeZone: 'Asia/Jerusalem', hour12: false }),
+      });
+
+      reportGroupSessionId = reportGroupSession.id;
+    }
+
+    const attReportRepo = this.dataSource.getRepository(AttReport);
+    const rows = roster.map((studentKlass) =>
+      attReportRepo.create({
+        userId: this.user.id,
+        studentReferenceId: studentKlass.studentReferenceId,
+        teacherReferenceId: teacher.id,
+        klassReferenceId: klass.id,
+        reportGroupSessionId,
+        reportDate,
+        absCount: absentStudentReferenceIds.has(studentKlass.studentReferenceId) ? 1 : 0,
+      }),
+    );
+    await attReportRepo.save(rows);
+  }
+
   private isPastReportingDeadline(): boolean {
     const now = new Date();
     const israelTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
