@@ -105,9 +105,12 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     return klass;
   }
 
+  private getIsraelDateString(date: Date): string {
+    return date.toLocaleDateString('en-CA', { timeZone: 'Asia/Jerusalem' });
+  }
+
   private async hasReportedTodayForKlass(klassReferenceId: number): Promise<boolean> {
-    const today = new Date();
-    const todayDateOnly = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const todayDateOnly = this.getIsraelDateString(new Date());
 
     const existingReport = await this.dataSource.getRepository(AttReport).findOne({
       where: {
@@ -153,42 +156,47 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     roster: StudentKlass[],
     absentStudentReferenceIds: Set<number>,
   ): Promise<void> {
-    const reportDate = new Date();
-    let reportGroupSessionId: number | undefined;
+    const now = new Date();
+    const reportDate = this.getIsraelDateString(now) as unknown as Date;
+    const callTime = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Jerusalem', hour12: false });
 
-    if (hasPermission(this.user, 'lessonSignature')) {
-      const reportGroup = await this.dataSource.getRepository(ReportGroup).save({
-        userId: this.user.id,
-        name: `נוכחות סמינר - ${klass.name}`,
-        topic: 'נוכחות סמינר',
-        teacherReferenceId: teacher.id,
-        klassReferenceId: klass.id,
-        year: getCurrentHebrewYear(),
-      });
+    await this.dataSource.transaction(async (manager) => {
+      let reportGroupSessionId: number | undefined;
 
-      const reportGroupSession = await this.dataSource.getRepository(ReportGroupSession).save({
-        userId: this.user.id,
-        reportGroupId: reportGroup.id,
-        sessionDate: reportDate,
-        startTime: reportDate.toLocaleTimeString('en-GB', { timeZone: 'Asia/Jerusalem', hour12: false }),
-      });
+      if (hasPermission(this.user, 'lessonSignature')) {
+        const reportGroup = await manager.getRepository(ReportGroup).save({
+          userId: this.user.id,
+          name: `נוכחות סמינר - ${klass.name}`,
+          topic: 'נוכחות סמינר',
+          teacherReferenceId: teacher.id,
+          klassReferenceId: klass.id,
+          year: getCurrentHebrewYear(),
+        });
 
-      reportGroupSessionId = reportGroupSession.id;
-    }
+        const reportGroupSession = await manager.getRepository(ReportGroupSession).save({
+          userId: this.user.id,
+          reportGroupId: reportGroup.id,
+          sessionDate: reportDate,
+          startTime: callTime,
+        });
 
-    const attReportRepo = this.dataSource.getRepository(AttReport);
-    const rows = roster.map((studentKlass) =>
-      attReportRepo.create({
-        userId: this.user.id,
-        studentReferenceId: studentKlass.studentReferenceId,
-        teacherReferenceId: teacher.id,
-        klassReferenceId: klass.id,
-        reportGroupSessionId,
-        reportDate,
-        absCount: absentStudentReferenceIds.has(studentKlass.studentReferenceId) ? 1 : 0,
-      }),
-    );
-    await attReportRepo.save(rows);
+        reportGroupSessionId = reportGroupSession.id;
+      }
+
+      const attReportRepo = manager.getRepository(AttReport);
+      const rows = roster.map((studentKlass) =>
+        attReportRepo.create({
+          userId: this.user.id,
+          studentReferenceId: studentKlass.studentReferenceId,
+          teacherReferenceId: teacher.id,
+          klassReferenceId: klass.id,
+          reportGroupSessionId,
+          reportDate,
+          absCount: absentStudentReferenceIds.has(studentKlass.studentReferenceId) ? 1 : 0,
+        }),
+      );
+      await attReportRepo.save(rows);
+    });
   }
 
   private isPastReportingDeadline(): boolean {
