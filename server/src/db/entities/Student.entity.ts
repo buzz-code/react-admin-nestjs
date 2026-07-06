@@ -9,6 +9,7 @@ import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-ty
 
 @Index('students_users_idx', ['userId'], {})
 @Index(['userId', 'tz', 'year'], { unique: true })
+@Index(['userId', 'studentNumber', 'year'], { unique: true })
 @Entity('students')
 export class Student implements IHasUserId {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
@@ -27,6 +28,13 @@ export class Student implements IHasUserId {
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column('varchar', { name: 'tz', length: 10 })
   tz: string;
+
+  @IsOptional({ always: true })
+  @MaxLength(20, { always: true })
+  @StringType
+  @IsUniqueCombination(['userId'], [Student, User], { always: true })
+  @Column('varchar', { name: 'student_number', nullable: true, length: 20 })
+  studentNumber: string;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @StringType

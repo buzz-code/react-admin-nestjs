@@ -1,4 +1,5 @@
 import { YemotScenarioBuilder, YemotScenarioRunner, useFakeDateOnly } from '@shared/utils/yemot/testing';
+import { getCurrentHebrewYear } from '@shared/utils/entity/year.util';
 import { YemotHandlerService } from './yemot-handler.service';
 
 /**
@@ -232,5 +233,226 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
 
     const result = await runner.run(scenario);
     expect(result.passed).toBe(true);
+  });
+
+  describe('seminar attendance flow', () => {
+    const seminarTexts = [
+      { userId: 0, name: 'TEACHER.PHONE_NOT_RECOGNIZED', description: '', value: 'Teacher phone not recognized' },
+      { userId: 0, name: 'SEMINAR.KLASS_PROMPT', description: '', value: 'Enter klass number' },
+      { userId: 0, name: 'SEMINAR.INVALID_KLASS', description: '', value: 'Invalid klass, try again' },
+      { userId: 0, name: 'SEMINAR.ALREADY_REPORTED', description: '', value: 'Already reported for this klass today' },
+      { userId: 0, name: 'SEMINAR.ABSENT_STUDENT_PROMPT', description: '', value: 'Enter absent student number, or 0 to finish' },
+      { userId: 0, name: 'SEMINAR.INVALID_STUDENT_NUM', description: '', value: 'Invalid student number, try again' },
+      { userId: 0, name: 'SEMINAR.NO_STUDENTS_IN_KLASS', description: '', value: 'No students found for this klass' },
+    ];
+    const allTexts = [...baseTexts, ...seminarTexts];
+
+    const seminarUser = (permissions: Record<string, boolean>) => ({ ...baseUser, permissions });
+    const teacher = { id: 1, userId: 1, tz: '900000001', name: 'Teacher One', phone: '0501234567' };
+    const roster = () => [
+      { id: 101, userId: 1, tz: '300000001', name: 'Student A', studentNumber: '11' },
+      { id: 102, userId: 1, tz: '300000002', name: 'Student B', studentNumber: '12' },
+      { id: 103, userId: 1, tz: '300000003', name: 'Student C', studentNumber: '13' },
+    ];
+    const studentKlasses = (klassReferenceId: number, year: number) => [
+      { id: 501, userId: 1, studentReferenceId: 101, klassReferenceId, year },
+      { id: 502, userId: 1, studentReferenceId: 102, klassReferenceId, year },
+      { id: 503, userId: 1, studentReferenceId: 103, klassReferenceId, year },
+    ];
+
+    it('happy path with lessonSignature permission — creates a ReportGroup/Session and AttReport rows', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 200, userId: 1, key: 7, name: 'Klass Seven', year };
+
+      const scenario = new YemotScenarioBuilder('Seminar happy path with report group')
+        .seed('User', [seminarUser({ seminarAttendanceYemot: true, lessonSignature: true })])
+        .seed('Teacher', [teacher])
+        .seed('Klass', [klass])
+        .seed('Student', roster())
+        .seed('StudentKlass', studentKlasses(200, year))
+        .seed('Text', allTexts)
+        .seed('AttReport', [])
+        .seed('ReportGroup', [])
+        .seed('ReportGroupSession', [])
+        .systemAsks(/enter klass number/i)
+        .userResponds('7')
+        .systemAsks(/enter absent student number/i)
+        .userResponds('11')
+        .systemAsks(/enter absent student number/i)
+        .userResponds('0')
+        .systemHangsUp(/success/i)
+        .build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+
+      expect(result.saved['AttReport']).toHaveLength(3);
+      expect(result.saved['ReportGroup']).toHaveLength(1);
+      expect(result.saved['ReportGroupSession']).toHaveLength(1);
+
+      const session = result.saved['ReportGroupSession'][0];
+      expect(session.startTime).toBeTruthy();
+
+      const byStudent = Object.fromEntries(
+        result.saved['AttReport'].map((r: any) => [r.studentReferenceId, r]),
+      );
+      expect(byStudent[101].absCount).toBe(1);
+      expect(byStudent[102].absCount).toBe(0);
+      expect(byStudent[103].absCount).toBe(0);
+      for (const report of result.saved['AttReport']) {
+        expect(report.reportGroupSessionId).toBe(session.id);
+      }
+    });
+
+    it('happy path without lessonSignature permission — saves AttReport rows without a report group', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 210, userId: 1, key: 8, name: 'Klass Eight', year };
+
+      const scenario = new YemotScenarioBuilder('Seminar happy path without report group')
+        .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
+        .seed('Teacher', [teacher])
+        .seed('Klass', [klass])
+        .seed('Student', roster())
+        .seed('StudentKlass', studentKlasses(210, year))
+        .seed('Text', allTexts)
+        .seed('AttReport', [])
+        .seed('ReportGroup', [])
+        .seed('ReportGroupSession', [])
+        .systemAsks(/enter klass number/i)
+        .userResponds('8')
+        .systemAsks(/enter absent student number/i)
+        .userResponds('11')
+        .systemAsks(/enter absent student number/i)
+        .userResponds('0')
+        .systemHangsUp(/success/i)
+        .build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+
+      expect(result.saved['AttReport']).toHaveLength(3);
+      expect(result.saved['ReportGroup']).toHaveLength(0);
+      expect(result.saved['ReportGroupSession']).toHaveLength(0);
+      for (const report of result.saved['AttReport']) {
+        expect(report.reportGroupSessionId).toBeFalsy();
+      }
+    });
+
+    it('teacher phone not recognized — hangup with TEACHER.PHONE_NOT_RECOGNIZED', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+
+      const scenario = new YemotScenarioBuilder('Seminar unrecognized teacher phone')
+        .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
+        .seed('Text', allTexts)
+        .systemHangsUp(/not recognized/i)
+        .build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+    });
+
+    it('invalid klass number — error message then retry with valid klass', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 220, userId: 1, key: 9, name: 'Klass Nine', year };
+
+      const scenario = new YemotScenarioBuilder('Seminar invalid klass retry')
+        .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
+        .seed('Teacher', [teacher])
+        .seed('Klass', [klass])
+        .seed('Student', roster())
+        .seed('StudentKlass', studentKlasses(220, year))
+        .seed('Text', allTexts)
+        .systemAsks(/enter klass number/i)
+        .userResponds('99')
+        .systemSends(/invalid klass/i)
+        .systemAsks(/enter klass number/i)
+        .userResponds('9')
+        .systemAsks(/enter absent student number/i)
+        .userResponds('0')
+        .systemHangsUp(/success/i)
+        .build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+    });
+
+    it('invalid student number — error message then retry with valid student number', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 230, userId: 1, key: 10, name: 'Klass Ten', year };
+
+      const scenario = new YemotScenarioBuilder('Seminar invalid student number retry')
+        .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
+        .seed('Teacher', [teacher])
+        .seed('Klass', [klass])
+        .seed('Student', roster())
+        .seed('StudentKlass', studentKlasses(230, year))
+        .seed('Text', allTexts)
+        .systemAsks(/enter klass number/i)
+        .userResponds('10')
+        .systemAsks(/enter absent student number/i)
+        .userResponds('999')
+        .systemSends(/invalid student number/i)
+        .systemAsks(/enter absent student number/i)
+        .userResponds('11')
+        .systemAsks(/enter absent student number/i)
+        .userResponds('0')
+        .systemHangsUp(/success/i)
+        .build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+    });
+
+    it('already reported today for this klass — hangup with SEMINAR.ALREADY_REPORTED', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 240, userId: 1, key: 11, name: 'Klass Eleven', year };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const scenario = new YemotScenarioBuilder('Seminar already reported for klass')
+        .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
+        .seed('Teacher', [teacher])
+        .seed('Klass', [klass])
+        .seed('AttReport', [
+          { id: 900, userId: 1, studentReferenceId: 101, klassReferenceId: 240, reportDate: today, absCount: 0 },
+        ])
+        .seed('Text', allTexts)
+        .systemAsks(/enter klass number/i)
+        .userResponds('11')
+        .systemHangsUp(/already reported/i)
+        .build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+    });
+
+    it('no students in klass — hangup with SEMINAR.NO_STUDENTS_IN_KLASS', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 250, userId: 1, key: 12, name: 'Klass Twelve', year };
+
+      const scenario = new YemotScenarioBuilder('Seminar no students in klass')
+        .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
+        .seed('Teacher', [teacher])
+        .seed('Klass', [klass])
+        .seed('Text', allTexts)
+        .systemAsks(/enter klass number/i)
+        .userResponds('12')
+        .systemHangsUp(/no students/i)
+        .build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+    });
   });
 });
