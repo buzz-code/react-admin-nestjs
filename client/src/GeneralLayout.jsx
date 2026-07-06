@@ -19,6 +19,7 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 
 import BaseLayout from '@shared/components/layout/Layout';
 import BaseDashboard from '@shared/components/views/Dashboard';
+import { isYemotSimulator } from '@shared/utils/permissionsUtil';
 import {
     isInLessonReport,
     isScannerUpload,
@@ -47,10 +48,9 @@ const customMenuItems = [
                 leftIcon={<ImportContactsIcon />}
             />
         ),
-    // admin-only
-    ({ isAdmin, permissions }) =>
+    ({ permissions }) =>
         isStandardView(permissions) &&
-        isAdmin && (
+        isYemotSimulator(permissions) && (
             <MenuItemLink key="yemot-simulator" to="/yemot-simulator" primaryText="סימולטור" leftIcon={<CallIcon />} />
         ),
     // permission-based items: show only when not restricted
