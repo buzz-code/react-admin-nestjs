@@ -106,17 +106,14 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   }
 
   private async hasReportedTodayForKlass(klassReferenceId: number): Promise<boolean> {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    const today = new Date();
+    const todayDateOnly = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     const existingReport = await this.dataSource.getRepository(AttReport).findOne({
       where: {
         userId: this.user.id,
         klassReferenceId,
-        reportDate: Between(startOfDay, endOfDay),
+        reportDate: todayDateOnly as unknown as Date,
       },
     });
     return !!existingReport;
