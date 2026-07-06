@@ -179,6 +179,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
+                studentNumber: 'מספר תלמידה',
                 comment: 'הערה',
                 phone: 'טלפון',
                 address: 'כתובת',
