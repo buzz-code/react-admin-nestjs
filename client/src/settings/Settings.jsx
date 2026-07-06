@@ -19,6 +19,7 @@ import { ReportStylesInput } from './ReportStylesInput';
 import { GeneralSettingsInput } from './GeneralSettingsInput';
 import { ReportCardSettingsInput } from './ReportCardSettingsInput';
 import { YemotSettingsInput } from '@shared/components/phone/YemotSettingsInput';
+import { PhoneSettingsInput } from '@shared/components/phone/PhoneSettingsInput';
 
 const SettingsToolbar = () => (
     <Toolbar>
@@ -39,11 +40,13 @@ export default function Settings() {
         dashboardItems: getDashboardItems(identity),
         reportStyles: getReportStyles(identity),
         reportCardSettings: getReportCardSettings(identity),
+        phoneNumber: identity?.phoneNumber ?? '',
     };
 
-    const handleSave = async (values) => {
+    const handleSave = async ({ phoneNumber, ...values }) => {
         try {
             await dataProvider.updateSettings({ data: values });
+            await dataProvider.updateProfile({ data: { phoneNumber } });
             await authProvider.getIdentity(true);
             notify('ההגדרות נשמרו בהצלחה', { type: 'info' });
             navigate('/');
@@ -63,6 +66,7 @@ export default function Settings() {
                         <DashboardItemsInput />
                         <ReportStylesInput />
                         <ReportCardSettingsInput />
+                        <PhoneSettingsInput />
                         <YemotSettingsInput />
                     </SimpleForm>
                 </ResourceContextProvider>

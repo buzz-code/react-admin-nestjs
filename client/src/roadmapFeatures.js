@@ -20,6 +20,7 @@ export default [
     { html: 'הצגת ציון אחרון במקום ממוצע', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת סינון לפי ציון נמוך מ בתעודה', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת אפשרות לדיווח נוכחות סמינר בטלפון', status: 'בוצע', statusColor: 'success' },
+    { html: 'הוספת אפשרות לעדכון מספר טלפון בהגדרות', status: 'בוצע', statusColor: 'success' },
 
     // { html: 'הגדרת תקופת זמן לפי תאריכים', status: 'בקרוב', statusColor: 'warning' },
     // { html: 'הגדרת תקופת זמן לפי יום בשבוע', status: 'בוצע', statusColor: 'success' },
