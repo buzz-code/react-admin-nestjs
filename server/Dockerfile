@@ -1,4 +1,4 @@
-FROM node:16-alpine as development
+FROM node:20-alpine as development
 
 RUN apk add --no-cache \
     udev \
@@ -18,7 +18,7 @@ WORKDIR /app
 CMD ["yarn", "start:dev"]
 
 
-FROM node:16-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -33,7 +33,7 @@ COPY . .
 RUN yarn build
 
 
-FROM node:16-alpine as production
+FROM node:20-alpine as production
 
 ENV NODE_ENV production
 
