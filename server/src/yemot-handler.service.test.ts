@@ -435,6 +435,78 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       expect(result.hungup).toBe(true);
     });
 
+    it('schedule match found — auto-detects lesson/klass, skips manual klass prompt, sets lessonReferenceId', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 260, userId: 1, key: 13, name: 'Klass Thirteen', year };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const scenario = new YemotScenarioBuilder('Seminar auto-detected schedule')
+        .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
+        .seed('Teacher', [teacher])
+        .seed('Klass', [klass])
+        .seed('LessonSchedule', [
+          {
+            userId: 1,
+            year,
+            teacherReferenceId: teacher.id,
+            klassReferenceId: 260,
+            lessonReferenceId: 700,
+            scheduleDate: today,
+            startTime: '07:00',
+          },
+        ])
+        .seed('Student', roster())
+        .seed('StudentKlass', studentKlasses(260, year))
+        .seed('Text', allTexts)
+        .seed('AttReport', [])
+        .systemAsks(/enter absent student number/i)
+        .userResponds('0')
+        .systemHangsUp(/success/i)
+        .build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+
+      expect(result.saved['AttReport']).toHaveLength(3);
+      for (const report of result.saved['AttReport']) {
+        expect(report.klassReferenceId).toBe(260);
+        expect(report.lessonReferenceId).toBe(700);
+      }
+    });
+
+    it('no schedule for teacher today — falls back to manual klass entry with no lessonReferenceId', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 270, userId: 1, key: 14, name: 'Klass Fourteen', year };
+
+      const scenario = new YemotScenarioBuilder('Seminar no schedule fallback')
+        .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
+        .seed('Teacher', [teacher])
+        .seed('Klass', [klass])
+        .seed('Student', roster())
+        .seed('StudentKlass', studentKlasses(270, year))
+        .seed('Text', allTexts)
+        .seed('AttReport', [])
+        .systemAsks(/enter klass number/i)
+        .userResponds('14')
+        .systemAsks(/enter absent student number/i)
+        .userResponds('0')
+        .systemHangsUp(/success/i)
+        .build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+
+      expect(result.saved['AttReport']).toHaveLength(3);
+      for (const report of result.saved['AttReport']) {
+        expect(report.lessonReferenceId).toBeFalsy();
+      }
+    });
+
     it('no students in klass — hangup with SEMINAR.NO_STUDENTS_IN_KLASS', async () => {
       jest.setSystemTime(israelTimeAt(7, 0));
       const year = getCurrentHebrewYear();

@@ -7,6 +7,7 @@ import klassConfig from './entity-modules/klass.config';
 import klassTypeConfig from './entity-modules/klass-type.config';
 import knownAbsenceConfig from './entity-modules/known-absence.config';
 import lessonConfig from './entity-modules/lesson.config';
+import lessonScheduleConfig from './entity-modules/lesson-schedule.config';
 import studentKlassConfig from './entity-modules/student-klass.config';
 import studentConfig from './entity-modules/student.config';
 import teacherConfig from './entity-modules/teacher.config';
@@ -49,6 +50,7 @@ registerEntityNameMap({
   klass_type: 'שיוך כיתות',
   known_absence: 'חיסורים מאושרים',
   lesson: 'שיעורים',
+  lesson_schedule: 'מערכת שעות מורות',
   student_klass: 'שיוך תלמידות לכיתות',
   student: 'תלמידות',
   teacher: 'מורות',
@@ -65,6 +67,7 @@ registerEntityNameMap({
     BaseEntityModule.register(klassTypeConfig),
     BaseEntityModule.register(knownAbsenceConfig),
     BaseEntityModule.register(lessonConfig),
+    BaseEntityModule.register(lessonScheduleConfig),
     BaseEntityModule.register(studentKlassConfig),
     BaseEntityModule.register(studentConfig),
     BaseEntityModule.register(teacherConfig),
