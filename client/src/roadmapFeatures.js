@@ -22,6 +22,7 @@ export default [
     { html: 'הוספת אפשרות לדיווח נוכחות סמינר בטלפון', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת אפשרות לעדכון מספר טלפון בהגדרות', status: 'בוצע', statusColor: 'success' },
     { html: 'העלאת קובץ אקסל של מערכת שעות וזיהוי אוטומטי של השיעור בדיווח נוכחות בטלפון', status: 'בוצע', statusColor: 'success' },
+    { html: 'אפשרות לבחור בין "וגם" ל"או" בין סינון נוכחות וציון בתעודה', status: 'בוצע', statusColor: 'success' },
 
     // { html: 'הגדרת תקופת זמן לפי תאריכים', status: 'בקרוב', statusColor: 'warning' },
     // { html: 'הגדרת תקופת זמן לפי יום בשבוע', status: 'בוצע', statusColor: 'success' },
