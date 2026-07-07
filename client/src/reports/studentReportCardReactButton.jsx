@@ -1,4 +1,4 @@
-import { TextInput, DateInput, NumberInput } from 'react-admin';
+import { TextInput, DateInput, NumberInput, BooleanInput } from 'react-admin';
 import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { CommonYearInput } from '@shared/components/fields/CommonYear';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
@@ -44,6 +44,10 @@ export default ({ defaultRequestValues }) => {
                 source="gradesLessThan"
                 label="הצג רק שורות עם ציון נמוך מ (%)"
                 helperText="הסינון מתבצע לפי הציון המקורי, לפני התאמה לפי אחוזי נוכחות"
+            />
+            <BooleanInput
+                source="limitFilterUseOr"
+                label="כאשר שני הסינונים הקודמים מלאים, הצג שורה כשמתקיים לפחות אחד מהם (במקום שניהם יחד)"
             />
         </BulkReportButton>
     );
