@@ -112,7 +112,6 @@ const entity = {
     Representation,
     filters,
     filterDefaultValues,
-    importer: false,
     additionalListActions,
 };
 
