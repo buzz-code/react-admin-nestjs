@@ -60,7 +60,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     if (!teacher) return;
 
     const schedule = await this.getScheduleForTeacherNow(teacher);
-    let klass: Klass;
+    let klass: Klass = null;
     let lessonReferenceId: number | undefined;
     if (schedule) {
       klass = await this.dataSource.getRepository(Klass).findOneBy({ id: schedule.klassReferenceId });
