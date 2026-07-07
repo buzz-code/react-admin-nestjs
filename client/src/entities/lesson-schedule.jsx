@@ -33,13 +33,11 @@ const filters = [
     />,
     <CommonReferenceInputFilter
         source="klassReferenceId"
-        label="התמחות"
         reference="klass"
         dynamicFilter={filterByUserIdAndYear}
     />,
     <CommonReferenceInputFilter
         source="lessonReferenceId"
-        label="שיעור"
         reference="lesson"
         dynamicFilter={filterByUserIdAndYear}
     />,
@@ -56,13 +54,13 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}
-            <TextField source="organizationalYear" label="שנה אירגונית" />
-            <TextField source="startTime" label="משעה" />
-            <DateField source="scheduleDate" label="תאריך" />
-            <ReferenceField source="klassReferenceId" reference="klass" label="התמחות" />
-            <ReferenceField source="lessonReferenceId" reference="lesson" label="שיעור" />
-            <TextField source="groupNumber" label="קבוצה" />
-            <ReferenceField source="teacherReferenceId" reference="teacher" sortBy="teacher.name" label="מורה" />
+            <TextField source="organizationalYear" />
+            <TextField source="startTime" />
+            <DateField source="scheduleDate" />
+            <ReferenceField source="klassReferenceId" reference="klass" />
+            <ReferenceField source="lessonReferenceId" reference="lesson" />
+            <TextField source="groupNumber" />
+            <ReferenceField source="teacherReferenceId" reference="teacher" sortBy="teacher.name" />
             <CommonYearField />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
@@ -75,28 +73,25 @@ const Inputs = ({ isCreate, isAdmin }) => {
         <>
             {!isCreate && isAdmin && <TextInput source="id" disabled />}
             {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
-            <TextInput source="organizationalYear" label="שנה אירגונית" />
-            <CommonTimeInput source="startTime" label="משעה" />
-            <DateInput source="scheduleDate" label="תאריך" validate={required()} />
+            <TextInput source="organizationalYear" />
+            <CommonTimeInput source="startTime" />
+            <DateInput source="scheduleDate" validate={required()} />
             <CommonReferenceInput
                 source="klassReferenceId"
                 reference="klass"
-                label="התמחות"
                 dynamicFilter={filterByUserIdAndYear}
                 validate={required()}
             />
             <CommonReferenceInput
                 source="lessonReferenceId"
                 reference="lesson"
-                label="שיעור"
                 dynamicFilter={filterByUserIdAndYear}
                 validate={required()}
             />
-            <NumberInput source="groupNumber" label="קבוצה" />
+            <NumberInput source="groupNumber" />
             <CommonReferenceInput
                 source="teacherReferenceId"
                 reference="teacher"
-                label="מורה"
                 dynamicFilter={filterByUserId}
                 validate={required()}
             />
