@@ -164,6 +164,22 @@ export default {
                 order: 'סדר',
             },
         },
+        lesson_schedule: {
+            name: 'מערכת שעות |||| מערכת שעות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                organizationalYear: 'שנה אירגונית',
+                startTime: 'משעה',
+                scheduleDate: 'תאריך',
+                klassId: 'התמחות',
+                klassReferenceId: 'התמחות',
+                lessonId: 'שיעור',
+                lessonReferenceId: 'שיעור',
+                groupNumber: 'קבוצה',
+                teacherId: 'מורה',
+                teacherReferenceId: 'מורה',
+            },
+        },
         student_klass: {
             name: 'רשומת שיוך תלמידות לכיתות |||| שיוך תלמידות לכיתות',
             fields: {

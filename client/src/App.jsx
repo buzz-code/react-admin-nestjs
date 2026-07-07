@@ -26,6 +26,7 @@ import klass from 'src/entities/klass';
 import klassType from 'src/entities/klass-type';
 import knownAbsence from 'src/entities/known-absence';
 import lesson from 'src/entities/lesson';
+import lessonSchedule from 'src/entities/lesson-schedule';
 import studentKlass from 'src/entities/student-klass';
 import student from 'src/entities/student';
 import teacher from 'src/entities/teacher';
@@ -59,6 +60,7 @@ import {
     isTeacherView,
     isTransportation,
     isAbsenceType,
+    isLessonSchedule,
     isStudentView,
     isStudentAttendanceByKlass,
 } from 'src/utils/appPermissions';
@@ -70,6 +72,7 @@ import ApprovedAbsencesUpload from 'src/components/ApprovedAbsencesUpload';
 import BadgeIcon from '@mui/icons-material/Badge';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import SchoolIcon from '@mui/icons-material/School';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 import PortraitIcon from '@mui/icons-material/Portrait';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
@@ -157,6 +160,14 @@ const App = () => (
                     <Resource name="klass_type" {...klassType} options={{ menuGroup: 'data' }} icon={CategoryIcon} />
                     <Resource name="klass" {...klass} options={{ menuGroup: 'data' }} icon={SupervisedUserCircleIcon} />
                     <Resource name="lesson" {...lesson} options={{ menuGroup: 'data' }} icon={SchoolIcon} />
+                    {isLessonSchedule(permissions) && (
+                        <Resource
+                            name="lesson_schedule"
+                            {...lessonSchedule}
+                            options={{ menuGroup: 'data' }}
+                            icon={EventNoteIcon}
+                        />
+                    )}
                     <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
                         <Route path="student-attendance" element={<StudentAttendanceList />} />
                         {isStudentAttendanceByKlass(permissions) && (

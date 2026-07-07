@@ -11,7 +11,10 @@ import { Klass } from './db/entities/Klass.entity';
 import { AttReport } from './db/entities/AttReport.entity';
 import { ReportGroup } from './db/entities/ReportGroup.entity';
 import { ReportGroupSession } from './db/entities/ReportGroupSession.entity';
+import { LessonSchedule } from './db/entities/LessonSchedule.entity';
 import { Between } from 'typeorm';
+
+const SCHEDULE_MATCH_TOLERANCE_MINUTES = 90;
 /**
  * Yemot Handler Service for processing incoming Yemot calls
  * Currently returns a maintenance mode message
@@ -56,7 +59,16 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const teacher = await this.getTeacherByPhone();
     if (!teacher) return;
 
-    const klass = await this.getKlassByInput();
+    const schedule = await this.getScheduleForTeacherNow(teacher);
+    let klass: Klass;
+    let lessonReferenceId: number | undefined;
+    if (schedule) {
+      klass = await this.dataSource.getRepository(Klass).findOneBy({ id: schedule.klassReferenceId });
+      lessonReferenceId = schedule.lessonReferenceId;
+    }
+    if (!klass) {
+      klass = await this.getKlassByInput();
+    }
 
     const alreadyReported = await this.hasReportedTodayForKlass(klass.id);
     if (alreadyReported) {
@@ -71,8 +83,43 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     }
 
     const absentStudentReferenceIds = await this.collectAbsentStudentIds();
-    await this.saveSeminarAttendance(teacher, klass, roster, absentStudentReferenceIds);
+    await this.saveSeminarAttendance(teacher, klass, roster, absentStudentReferenceIds, lessonReferenceId);
     await this.hangupWithMessageByKey('SYSTEM.REPORT_SUCCESS');
+  }
+
+  private async getScheduleForTeacherNow(teacher: Teacher): Promise<LessonSchedule | null> {
+    const todayDateOnly = this.getIsraelDateString(new Date());
+    const schedules = await this.dataSource.getRepository(LessonSchedule).find({
+      where: {
+        userId: this.user.id,
+        teacherReferenceId: teacher.id,
+        scheduleDate: todayDateOnly as unknown as Date,
+      },
+    });
+    if (schedules.length === 0) return null;
+
+    const nowMinutes = this.getIsraelMinutesSinceMidnight(new Date());
+    let closest: LessonSchedule | null = null;
+    let closestDiff = Infinity;
+    for (const schedule of schedules) {
+      if (!schedule.startTime) continue;
+      const diff = Math.abs(this.timeStringToMinutes(schedule.startTime) - nowMinutes);
+      if (diff < closestDiff) {
+        closestDiff = diff;
+        closest = schedule;
+      }
+    }
+    return closestDiff <= SCHEDULE_MATCH_TOLERANCE_MINUTES ? closest : null;
+  }
+
+  private getIsraelMinutesSinceMidnight(date: Date): number {
+    const timeString = date.toLocaleTimeString('en-GB', { timeZone: 'Asia/Jerusalem', hour12: false });
+    return this.timeStringToMinutes(timeString);
+  }
+
+  private timeStringToMinutes(time: string): number {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
   }
 
   private async getTeacherByPhone(): Promise<Teacher | null> {
@@ -155,6 +202,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     klass: Klass,
     roster: StudentKlass[],
     absentStudentReferenceIds: Set<number>,
+    lessonReferenceId?: number,
   ): Promise<void> {
     const now = new Date();
     const reportDate = this.getIsraelDateString(now) as unknown as Date;
@@ -190,6 +238,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
           studentReferenceId: studentKlass.studentReferenceId,
           teacherReferenceId: teacher.id,
           klassReferenceId: klass.id,
+          lessonReferenceId,
           reportGroupSessionId,
           reportDate,
           absCount: absentStudentReferenceIds.has(studentKlass.studentReferenceId) ? 1 : 0,
