@@ -15,6 +15,7 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import HelpIcon from '@mui/icons-material/Help';
 import ClassIcon from '@mui/icons-material/Class';
 import PersonIcon from '@mui/icons-material/Person';
+import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -118,6 +119,22 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             />
         ),
         <BulkFixReferenceButton key="fixReferences" />,
+        <BulkActionButton
+            label="מחיקת נוכחות מחוץ לכיתה"
+            icon={<GroupRemoveIcon />}
+            name="deleteOutsideKlass"
+            key="deleteOutsideKlass"
+            reloadOnEnd
+        >
+            <CommonReferenceInput
+                source="klassReferenceId"
+                reference="klass"
+                label="כיתה לשמירה"
+                dynamicFilter={filterByUserIdAndYear}
+                validate={required()}
+            />
+            <DateInput source="reportDate" label="תאריך" validate={required()} />
+        </BulkActionButton>,
     ];
     const hasReportGroupPermission = useIsLessonSignature();
     return (

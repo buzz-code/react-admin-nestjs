@@ -2,6 +2,7 @@ import config from '../att-report-with-report-month.config';
 import { AttReportWithReportMonth } from 'src/db/view-entities/AttReportWithReportMonth.entity';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { AttReport } from 'src/db/entities/AttReport.entity';
+import { StudentKlass } from 'src/db/entities/StudentKlass.entity';
 
 // Mock BaseEntityService
 const mockBaseCreateOne = jest.fn().mockResolvedValue({ id: 1 });
@@ -120,6 +121,66 @@ describe('att-report-with-report-month.config', () => {
 
       expect(mockDataSource.getRepository).toHaveBeenCalledWith(AttReport);
       expect(mockBaseCreateMany).toHaveBeenCalledWith(req, dto);
+    });
+  });
+
+  describe('doAction - deleteOutsideKlass', () => {
+    let service: any;
+    let mockAttReportRepo: any;
+    let mockStudentKlassRepo: any;
+
+    beforeEach(() => {
+      mockAttReportRepo = { findBy: jest.fn(), delete: jest.fn() };
+      mockStudentKlassRepo = { findBy: jest.fn() };
+      const mockDataSource = {
+        getRepository: jest.fn((entity) => (entity === StudentKlass ? mockStudentKlassRepo : mockAttReportRepo)),
+      };
+
+      const ServiceClass = config.service as any;
+      service = new ServiceClass(mockAttReportRepo, {});
+      service.dataSource = mockDataSource;
+    });
+
+    const callAction = (extra: any) => service.doAction({ parsed: { extra: { action: 'deleteOutsideKlass', ...extra } } }, {});
+
+    it('returns a message when no ids are selected', async () => {
+      const result = await callAction({ klassReferenceId: '1', reportDate: '2024-05-01' });
+      expect(result).toBe('לא נבחרו רשומות');
+      expect(mockAttReportRepo.findBy).not.toHaveBeenCalled();
+    });
+
+    it('returns a message when no klass is chosen', async () => {
+      const result = await callAction({ ids: '1,2', reportDate: '2024-05-01' });
+      expect(result).toBe('לא נבחרה כיתה');
+    });
+
+    it('returns a message when no date is chosen', async () => {
+      const result = await callAction({ ids: '1,2', klassReferenceId: '1' });
+      expect(result).toBe('לא נבחר תאריך');
+    });
+
+    it('deletes reports only for students not linked to the chosen klass', async () => {
+      mockAttReportRepo.findBy.mockResolvedValue([
+        { id: 1, studentReferenceId: 101, year: 2024 },
+        { id: 2, studentReferenceId: 102, year: 2024 },
+        { id: 3, studentReferenceId: 103, year: 2024 },
+      ]);
+      mockStudentKlassRepo.findBy.mockResolvedValue([{ studentReferenceId: 101, year: 2024 }]);
+
+      const result = await callAction({ ids: '1,2,3', klassReferenceId: '5', reportDate: '2024-05-01' });
+
+      expect(mockAttReportRepo.delete).toHaveBeenCalledWith([2, 3]);
+      expect(result).toBe('נמחקו 2 רשומות נוכחות עבור תלמידות שאינן משויכות לכיתה שנבחרה');
+    });
+
+    it('deletes nothing when every selected student is in the klass', async () => {
+      mockAttReportRepo.findBy.mockResolvedValue([{ id: 1, studentReferenceId: 101, year: 2024 }]);
+      mockStudentKlassRepo.findBy.mockResolvedValue([{ studentReferenceId: 101, year: 2024 }]);
+
+      const result = await callAction({ ids: '1', klassReferenceId: '5', reportDate: '2024-05-01' });
+
+      expect(mockAttReportRepo.delete).not.toHaveBeenCalled();
+      expect(result).toBe('כל התלמידות שנבחרו משויכות לכיתה, לא נמחקה אף רשומה');
     });
   });
 });

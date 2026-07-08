@@ -6,6 +6,7 @@ import { AttReportWithReportMonth } from 'src/db/view-entities/AttReportWithRepo
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { AttReport } from 'src/db/entities/AttReport.entity';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
+import { StudentKlass } from 'src/db/entities/StudentKlass.entity';
 import { validateBulk } from '@shared/base-entity/base-entity.util';
 import { fixReferences } from '@shared/utils/entity/fixReference.util';
 import { getHebrewDateFormatter } from '@shared/utils/formatting/formatter.util';
@@ -124,6 +125,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
         return this.fixStudentReferenceV2(req.parsed.extra);
       case 'fixReferences':
         return this.fixReferences(req.parsed.extra);
+      case 'deleteOutsideKlass':
+        return this.deleteOutsideKlass(req.parsed.extra);
     }
     return super.doAction(req, body);
   }
@@ -200,6 +203,32 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
       lessonId: 'lessonReferenceId',
     };
     return fixReferences(this.dataSource.getRepository(AttReport), ids, referenceFields);
+  }
+
+  private async deleteOutsideKlass(extra: any): Promise<string> {
+    const ids = getAsNumberArray(extra.ids);
+    if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
+    const klassReferenceId = getAsNumber(extra.klassReferenceId);
+    if (!klassReferenceId) return 'לא נבחרה כיתה';
+    const reportDate = getAsDate(extra.reportDate);
+    if (!reportDate) return 'לא נבחר תאריך';
+
+    const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids), reportDate });
+    if (reports.length === 0) return 'לא נמצאו רשומות מתאימות לתאריך שנבחר';
+
+    const studentIds = reports.map((report) => report.studentReferenceId).filter(Boolean);
+    const studentKlasses = await this.dataSource
+      .getRepository(StudentKlass)
+      .findBy({ studentReferenceId: In(studentIds), klassReferenceId });
+    const studentYearsInKlass = new Set(studentKlasses.map((sk) => `${sk.studentReferenceId}_${sk.year}`));
+
+    const idsToDelete = reports
+      .filter((report) => !studentYearsInKlass.has(`${report.studentReferenceId}_${report.year}`))
+      .map((report) => report.id);
+    if (idsToDelete.length === 0) return 'כל התלמידות שנבחרו משויכות לכיתה, לא נמחקה אף רשומה';
+
+    await this.dataSource.getRepository(AttReport).delete(idsToDelete);
+    return `נמחקו ${idsToDelete.length} רשומות נוכחות עבור תלמידות שאינן משויכות לכיתה שנבחרה`;
   }
 }
 
