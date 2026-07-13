@@ -6,6 +6,7 @@ import {
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
 import {
+    AccessDenied,
     BooleanField,
     ReferenceField,
     TextField,
@@ -22,6 +23,7 @@ import CommonReferenceArrayInput from '@shared/components/fields/CommonReference
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 import ThresholdColorField from 'src/components/fields/ThresholdColorField';
 import { ABSENCE_THRESHOLDS } from 'src/utils/absenceThresholds';
+import { useIsStudentAttendanceByKlass } from 'src/utils/appPermissions';
 
 const filters = [
     adminUserFilter,
@@ -126,4 +128,14 @@ const entity = {
     configurable: false,
 };
 
-export default getResourceComponents(entity).list;
+const List = getResourceComponents(entity).list;
+
+const StudentAttendanceByKlassList = (props) => {
+    const hasPermission = useIsStudentAttendanceByKlass();
+    if (!hasPermission) {
+        return <AccessDenied />;
+    }
+    return <List {...props} />;
+};
+
+export default StudentAttendanceByKlassList;

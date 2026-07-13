@@ -61,7 +61,6 @@ import {
     isAbsenceType,
     isLessonSchedule,
     isStudentView,
-    isStudentAttendanceByKlass,
 } from 'src/utils/appPermissions';
 import ScannerUpload from '@shared/components/views/ScannerUpload';
 import InLessonReport from 'src/reports/InLessonReport';
@@ -168,9 +167,7 @@ const App = () => (
                     )}
                     <Resource name="student" {...student} options={{ menuGroup: 'data' }} icon={PortraitIcon}>
                         <Route path="student-attendance" element={<StudentAttendanceList />} />
-                        {isStudentAttendanceByKlass(permissions) && (
-                            <Route path="student-attendance-by-klass" element={<StudentAttendanceByKlassList />} />
-                        )}
+                        <Route path="student-attendance-by-klass" element={<StudentAttendanceByKlassList />} />
                     </Resource>
                     <Resource
                         name="student_klass"
