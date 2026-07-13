@@ -46,7 +46,9 @@ export default function Settings() {
     const handleSave = async ({ phoneNumber, ...values }) => {
         try {
             await dataProvider.updateSettings({ data: values });
-            await dataProvider.updateProfile({ data: { phoneNumber } });
+            if (phoneNumber !== (identity?.phoneNumber ?? '')) {
+                await dataProvider.updateProfile({ data: { phoneNumber } });
+            }
             await authProvider.getIdentity(true);
             notify('ההגדרות נשמרו בהצלחה', { type: 'info' });
             navigate('/');
