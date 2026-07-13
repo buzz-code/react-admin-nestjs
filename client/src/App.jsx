@@ -92,6 +92,29 @@ import CelebrationIcon from '@mui/icons-material/Celebration';
 
 const themeOptions = { primary: blue[700], secondary: purple[500] };
 
+const homeContent = {
+    appTitle: 'נוכחות',
+    tagline: 'מערכת דיגיטלית לניהול נוכחות מורות ותלמידות, דוחות וציונים - לבתי ספר וסמינרים',
+    description:
+        'נוכחות היא מערכת ניהול מקיפה לבתי ספר וסמינרים, המרכזת את דיווח הנוכחות של מורות ותלמידות, ' +
+        'ניהול ציונים, כיתות ומערכת שעות - במקום אחד, עם דוחות ברורים לצוות ולהנהלה.',
+    features: [
+        {
+            title: 'דיווח נוכחות פשוט',
+            text: 'דיווח נוכחות למורות ולתלמידות דרך האתר או בטלפון, עם זיהוי אוטומטי של השיעור.',
+        },
+        {
+            title: 'דוחות וייצוא נתונים',
+            text: 'דוחות נוכחות, ציונים וחיסורים מאושרים, עם אפשרות סינון וייצוא לאקסל.',
+        },
+        {
+            title: 'ניהול כיתות וציונים',
+            text: 'ניהול כיתות, שיוך תלמידות, מערכת שעות וטופס ציונים - הכל במערכת אחת.',
+        },
+    ],
+    ctaLabel: 'כניסה למערכת',
+};
+
 const App = () => (
     <AdminAppShell
         title="נוכחות"
@@ -99,6 +122,7 @@ const App = () => (
         domainTranslations={domainTranslations}
         dashboard={RootDashboard}
         layout={Layout}
+        homeContent={homeContent}
     >
         {(permissions) => {
             const onlyInLesson = isOnlyInLessonReport(permissions) && !isAdmin(permissions);
