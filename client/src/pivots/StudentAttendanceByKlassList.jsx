@@ -6,6 +6,7 @@ import {
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
 import {
+    AccessDenied,
     BooleanField,
     ReferenceField,
     TextField,
@@ -132,7 +133,7 @@ const List = getResourceComponents(entity).list;
 const StudentAttendanceByKlassList = (props) => {
     const hasPermission = useIsStudentAttendanceByKlass();
     if (!hasPermission) {
-        return null;
+        return <AccessDenied />;
     }
     return <List {...props} />;
 };

@@ -26,6 +26,7 @@ import {
     isOnlyInLessonReport,
     isTeacherView,
     isStudentView,
+    isStudentAttendanceByKlass,
 } from './utils/appPermissions';
 import { useDashboardItems } from './settings/settingsUtil';
 
@@ -132,7 +133,8 @@ const menuGroups = [
                         />
                     ),
                 ({ permissions }) =>
-                    !isTeacherView(permissions) && (
+                    !isTeacherView(permissions) &&
+                    isStudentAttendanceByKlass(permissions) && (
                         <MenuItemLink
                             key="student-attendance-by-klass"
                             to="/student/student-attendance-by-klass"
