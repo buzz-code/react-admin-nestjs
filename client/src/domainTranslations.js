@@ -19,7 +19,7 @@ export default {
                 'dashboardItems.resource': 'מקור נתונים',
                 'dashboardItems.resourceHelperText': 'בחר את מקור הנתונים שברצונך להציג',
                 'dashboardItems.yearFilterType': 'סוג סינון שנה',
-                'dashboardItems.filter': 'פילטר נוסף בפורמט JSON (אופציונלי, ללא שנה)',
+                'dashboardItems.filter': 'סינון מותאם אישית (מתקדם)',
                 'dashboardItems.title': 'כותרת',
                 reportStyles: 'הגדרות עיצוב תעודה',
                 'reportStyles.type': 'סוג טקסט',

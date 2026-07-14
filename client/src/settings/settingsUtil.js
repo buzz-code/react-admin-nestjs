@@ -65,6 +65,5 @@ export function getDefaultReportCardSettings() {
         forceGrades: false,
         downComment: false,
         lastGrade: true,
-        debug: true,
     };
 }

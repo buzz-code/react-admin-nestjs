@@ -13,6 +13,7 @@ import {
 } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { getDefaultPageSize } from '@shared/utils/settingsUtil';
+import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 import { getLateValue, getDashboardItems, getReportStyles, getReportCardSettings } from './settingsUtil';
 import { DashboardItemsInput } from './DashboardItemsInput';
 import { ReportStylesInput } from './ReportStylesInput';
@@ -65,11 +66,17 @@ export default function Settings() {
                 <ResourceContextProvider value="settings">
                     <SimpleForm onSubmit={handleSave} defaultValues={defaultValues} toolbar={<SettingsToolbar />}>
                         <GeneralSettingsInput />
-                        <DashboardItemsInput />
+                        <PhoneSettingsInput />
                         <ReportStylesInput />
                         <ReportCardSettingsInput />
-                        <PhoneSettingsInput />
-                        <YemotSettingsInput />
+                        <CommonSettingsAccordion
+                            id="advanced-settings"
+                            title="הגדרות מתקדמות"
+                            subtitle="כרטיסי לוח מחוונים וחיבור Yemot - להגדרה על ידי מנהל המערכת"
+                        >
+                            <DashboardItemsInput />
+                            <YemotSettingsInput />
+                        </CommonSettingsAccordion>
                     </SimpleForm>
                 </ResourceContextProvider>
             </CardContent>
