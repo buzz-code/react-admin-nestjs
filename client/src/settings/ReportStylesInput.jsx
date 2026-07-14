@@ -1,5 +1,7 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import RestartAltIcon from '@mui/icons-material/RestartAltOutlined';
+import { useFormContext } from 'react-hook-form';
 import { BooleanInput, NumberInput } from 'react-admin';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
@@ -24,6 +26,35 @@ const fontOptions = [
     { id: 'Georgia', name: 'Georgia' },
 ].sort((a, b) => a.name.localeCompare(b.name));
 
+// The grey placeholder text showing each default is easy to miss, so this
+// gives users a one-click way to actually fill the blank fields with those
+// same defaults instead of just eyeballing the placeholder.
+const LoadDefaultsButton = () => {
+    const { getValues, setValue } = useFormContext();
+
+    const handleClick = () => {
+        REPORT_STYLE_TYPES.forEach(({ id }, index) => {
+            const defaults = REPORT_STYLE_DEFAULTS[id];
+            const current = getValues(`reportStyles.${index}`) || {};
+            if (!current.fontFamily && defaults.fontFamily) {
+                setValue(`reportStyles.${index}.fontFamily`, defaults.fontFamily, { shouldDirty: true });
+            }
+            if (!current.fontSize && defaults.fontSize) {
+                setValue(`reportStyles.${index}.fontSize`, defaults.fontSize, { shouldDirty: true });
+            }
+            if (!current.isBold && defaults.isBold) {
+                setValue(`reportStyles.${index}.isBold`, true, { shouldDirty: true });
+            }
+        });
+    };
+
+    return (
+        <Button size="small" startIcon={<RestartAltIcon fontSize="small" />} onClick={handleClick}>
+            טען ערכי ברירת מחדל
+        </Button>
+    );
+};
+
 export function ReportStylesInput() {
     return (
         <CommonSettingsAccordion
@@ -31,6 +62,9 @@ export function ReportStylesInput() {
             title="הגדרות עיצוב תעודה"
             subtitle="גופן וגודל לכל חלק בתעודה - שדה ריק משתמש בברירת המחדל המוצגת כטקסט אפור"
         >
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                <LoadDefaultsButton />
+            </Box>
             <Table size="small">
                 <TableHead>
                     <TableRow>
@@ -59,13 +93,14 @@ export function ReportStylesInput() {
                                     TextFieldProps={{ placeholder: REPORT_STYLE_DEFAULTS[id].fontFamily || 'ברירת מחדל' }}
                                 />
                             </TableCell>
-                            <TableCell sx={{ width: 80 }}>
+                            <TableCell sx={{ width: 100 }}>
                                 <NumberInput
                                     source={`reportStyles.${index}.fontSize`}
                                     label={false}
                                     helperText={false}
                                     sx={{ margin: 0 }}
                                     placeholder={String(REPORT_STYLE_DEFAULTS[id].fontSize)}
+                                    inputProps={{ style: { textAlign: 'center' } }}
                                 />
                             </TableCell>
                             <TableCell align="center" sx={{ width: 60 }}>

@@ -61,10 +61,10 @@ export const REPORT_STYLE_TYPES = [
 // defaultReportStyles in server/src/reports/studentReportCardReact.tsx, so
 // keep the two in sync if that file's defaults ever change.
 export const REPORT_STYLE_DEFAULTS = {
-    titlePrimary: { fontSize: 18 },
-    titleSecondary: { fontSize: 16 },
-    titleThird: { fontSize: 16 },
-    tableHeader: { fontSize: 16 },
+    titlePrimary: { fontSize: 18, isBold: true },
+    titleSecondary: { fontSize: 16, isBold: true },
+    titleThird: { fontSize: 16, isBold: true },
+    tableHeader: { fontSize: 16, isBold: true },
     tableCell: { fontSize: 16 },
     document: { fontFamily: 'Roboto', fontSize: 12 },
 };
