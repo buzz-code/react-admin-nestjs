@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { BooleanInput, NumberInput } from 'react-admin';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
@@ -31,39 +31,51 @@ export function ReportStylesInput() {
             title="הגדרות עיצוב תעודה"
             subtitle="גופן וגודל לכל חלק בתעודה"
         >
-            {REPORT_STYLE_TYPES.map(({ id, label }, index) => (
-                <Box
-                    key={id}
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        gap: 2,
-                        py: 1.5,
-                        borderBottom: index < REPORT_STYLE_TYPES.length - 1 ? '1px solid' : 'none',
-                        borderColor: 'divider',
-                    }}
-                >
-                    <Typography variant="body2" fontWeight={600} sx={{ width: 170, flexShrink: 0 }}>
-                        {label}
-                    </Typography>
-                    <CommonAutocompleteInput
-                        source={`reportStyles.${index}.fontFamily`}
-                        choices={fontOptions}
-                        label="גופן"
-                        helperText={false}
-                        sx={{ minWidth: 200, margin: 0 }}
-                    />
-                    <NumberInput
-                        source={`reportStyles.${index}.fontSize`}
-                        label="גודל"
-                        helperText={false}
-                        sx={{ width: 90, margin: 0 }}
-                    />
-                    <BooleanInput source={`reportStyles.${index}.isBold`} label="מודגש" helperText={false} />
-                    <BooleanInput source={`reportStyles.${index}.isItalic`} label="נטוי" helperText={false} />
-                </Box>
-            ))}
+            <Table size="small">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>חלק בתעודה</TableCell>
+                        <TableCell>גופן</TableCell>
+                        <TableCell>גודל</TableCell>
+                        <TableCell align="center">מודגש</TableCell>
+                        <TableCell align="center">נטוי</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {REPORT_STYLE_TYPES.map(({ id, label }, index) => (
+                        <TableRow key={id}>
+                            <TableCell>
+                                <Typography variant="body2" fontWeight={600}>
+                                    {label}
+                                </Typography>
+                            </TableCell>
+                            <TableCell sx={{ minWidth: 180 }}>
+                                <CommonAutocompleteInput
+                                    source={`reportStyles.${index}.fontFamily`}
+                                    choices={fontOptions}
+                                    label={false}
+                                    helperText={false}
+                                    sx={{ margin: 0 }}
+                                />
+                            </TableCell>
+                            <TableCell sx={{ width: 80 }}>
+                                <NumberInput
+                                    source={`reportStyles.${index}.fontSize`}
+                                    label={false}
+                                    helperText={false}
+                                    sx={{ margin: 0 }}
+                                />
+                            </TableCell>
+                            <TableCell align="center" sx={{ width: 60 }}>
+                                <BooleanInput source={`reportStyles.${index}.isBold`} label={false} helperText={false} sx={{ margin: 0 }} />
+                            </TableCell>
+                            <TableCell align="center" sx={{ width: 60 }}>
+                                <BooleanInput source={`reportStyles.${index}.isItalic`} label={false} helperText={false} sx={{ margin: 0 }} />
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
         </CommonSettingsAccordion>
     );
 }
