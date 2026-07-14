@@ -13,6 +13,8 @@ services:
                 caddy.reverse_proxy.health_uri: '/'
                 caddy.reverse_proxy.health_interval: 5s
                 caddy.reverse_proxy.health_timeout: 5s
+                caddy.reverse_proxy.lb_try_duration: 5s
+                caddy.reverse_proxy.lb_retries: 3
             placement:
                 constraints:
                     - node.labels.codeserver != true
@@ -33,7 +35,7 @@ services:
             test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
             interval: 30s
             timeout: 10s
-            start_period: 30s
+            start_period: 60s
             retries: 3
         environment:
             PORT: 80
