@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@m
 import { BooleanInput, NumberInput } from 'react-admin';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
-import { REPORT_STYLE_TYPES } from './settingsUtil';
+import { REPORT_STYLE_TYPES, REPORT_STYLE_DEFAULTS } from './settingsUtil';
 
 // Common Google Fonts list
 const fontOptions = [
@@ -29,7 +29,7 @@ export function ReportStylesInput() {
         <CommonSettingsAccordion
             id="report-styles"
             title="הגדרות עיצוב תעודה"
-            subtitle="גופן וגודל לכל חלק בתעודה"
+            subtitle="גופן וגודל לכל חלק בתעודה - שדה ריק משתמש בברירת המחדל המוצגת כטקסט אפור"
         >
             <Table size="small">
                 <TableHead>
@@ -56,6 +56,7 @@ export function ReportStylesInput() {
                                     label={false}
                                     helperText={false}
                                     sx={{ margin: 0 }}
+                                    TextFieldProps={{ placeholder: REPORT_STYLE_DEFAULTS[id].fontFamily || 'ברירת מחדל' }}
                                 />
                             </TableCell>
                             <TableCell sx={{ width: 80 }}>
@@ -64,6 +65,7 @@ export function ReportStylesInput() {
                                     label={false}
                                     helperText={false}
                                     sx={{ margin: 0 }}
+                                    placeholder={String(REPORT_STYLE_DEFAULTS[id].fontSize)}
                                 />
                             </TableCell>
                             <TableCell align="center" sx={{ width: 60 }}>

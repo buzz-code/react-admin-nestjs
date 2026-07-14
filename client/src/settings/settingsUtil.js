@@ -57,6 +57,18 @@ export const REPORT_STYLE_TYPES = [
     { id: 'document', label: 'טקסט כללי' },
 ];
 
+// What the report actually renders with when a field is left blank - mirrors
+// defaultReportStyles in server/src/reports/studentReportCardReact.tsx, so
+// keep the two in sync if that file's defaults ever change.
+export const REPORT_STYLE_DEFAULTS = {
+    titlePrimary: { fontSize: 18 },
+    titleSecondary: { fontSize: 16 },
+    titleThird: { fontSize: 16 },
+    tableHeader: { fontSize: 16 },
+    tableCell: { fontSize: 16 },
+    document: { fontFamily: 'Roboto', fontSize: 12 },
+};
+
 // Existing users may have 0-6 style entries, saved in whatever order they
 // were added in - re-map them onto the fixed 6 slots by `type` so a form
 // field bound to `reportStyles.<index>` always edits the right slot.
