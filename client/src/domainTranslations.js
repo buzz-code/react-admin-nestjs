@@ -15,7 +15,7 @@ export default {
             fields: {
                 defaultPageSize: 'מספר שורות בטבלה',
                 lateValue: 'שווי איחור',
-                dashboardItems: 'הגדרות לוח מחוונים',
+                dashboardItems: 'הגדרות תמונת מצב',
                 'dashboardItems.resource': 'מקור נתונים',
                 'dashboardItems.resourceHelperText': 'בחר את מקור הנתונים שברצונך להציג',
                 'dashboardItems.yearFilterType': 'סוג סינון שנה',

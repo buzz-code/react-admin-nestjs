@@ -33,11 +33,11 @@ export function DashboardItemsInput() {
     return (
         <CommonSettingsAccordion
             id="dashboard-items"
-            title="הגדרות לוח מחוונים"
+            title="הגדרות תמונת מצב"
             subtitle="כרטיסי נתונים שנוספו מתוך רשימות - ניתן לשנות שם, לסדר ולהסיר"
         >
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                כדי להוסיף כרטיס חדש, סננו כל רשימה כרצונכם ולחצו על "הוסף ללוח מחוונים" בסרגל הכלים
+                כדי להוסיף כרטיס חדש, סננו כל רשימה כרצונכם ולחצו על "הוסף לתמונת מצב" בסרגל הכלים
                 שלה.
             </Typography>
             <ArrayInput source="dashboardItems" label={false}>
