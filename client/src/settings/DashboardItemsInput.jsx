@@ -1,54 +1,49 @@
 import React from 'react';
-import { ArrayInput, SimpleFormIterator, required, TextInput } from 'react-admin';
+import { Box, Chip, Typography } from '@mui/material';
+import { useWatch } from 'react-hook-form';
+import { ArrayInput, SimpleFormIterator, TextInput, useGetResourceLabel, useSimpleFormIteratorItem } from 'react-admin';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
-import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
-import { CommonEntityNameInput } from '@shared/components/fields/CommonEntityNameInput';
-import { CommonJsonInput } from '@shared/components/fields/CommonJsonItem';
+
+// resource/yearFilterType/filter used to be hand-typed here, including a raw
+// JSON filter field - nobody actually used it, and yearFilterType's "regular
+// vs extended" choice meant nothing without reading the query code. Cards are
+// created from a list's own filter UI instead (see AddToDashboardButton),
+// which already produces valid resource+filter values. This is management
+// only: rename, reorder, remove.
+//
+// SimpleForm here has no `record`, so SimpleFormIterator rows carry no
+// RecordContext - read each row's live values via its form path instead.
+const DashboardItemSummary = () => {
+    const { index } = useSimpleFormIteratorItem();
+    const record = useWatch({ name: `dashboardItems.${index}` });
+    const getResourceLabel = useGetResourceLabel();
+    if (!record?.resource) return null;
+    const hasYearFilter = record.yearFilterType && record.yearFilterType !== 'none';
+    const hasExtraFilter = record.filter && Object.keys(record.filter).length > 0;
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+            <Chip size="small" label={getResourceLabel(record.resource, 2)} />
+            {hasYearFilter && <Chip size="small" variant="outlined" label="מסונן לפי שנה" />}
+            {hasExtraFilter && <Chip size="small" variant="outlined" label="עם סינון נוסף" />}
+        </Box>
+    );
+};
 
 export function DashboardItemsInput() {
     return (
         <CommonSettingsAccordion
             id="dashboard-items"
             title="הגדרות לוח מחוונים"
-            subtitle="אילו כרטיסי נתונים יוצגו בלוח הבקרה"
+            subtitle="כרטיסי נתונים שנוספו מתוך רשימות - ניתן לשנות שם, לסדר ולהסיר"
         >
-            <ArrayInput source="dashboardItems">
-                <SimpleFormIterator>
-                    <TextInput source="title" fullWidth />
-                    <CommonEntityNameInput
-                        source="resource"
-                        allowedEntities={[
-                            'att_report_with_report_month',
-                            'grade',
-                            'known_absence',
-                            'student_klass_report',
-                            'teacher_report_status',
-                            'teacher_grade_report_status',
-                            'student_percent_report',
-                            'student_by_year',
-                            'teacher',
-                            'klass',
-                            'lesson',
-                        ]}
-                        helperText="בחר את מקור הנתונים שברצונך להציג"
-                        fullWidth
-                        validate={required()}
-                    />
-                    <CommonAutocompleteInput
-                        source="yearFilterType"
-                        choices={[
-                            { id: 'none', name: 'ללא סינון שנה' },
-                            { id: 'year', name: 'סינון שנה רגיל' },
-                            { id: 'year:$cont', name: 'סינון שנה מורחב' },
-                        ]}
-                        defaultValue="year"
-                        fullWidth
-                        disableClearable
-                    />
-                    <CommonJsonInput
-                        source="filter"
-                        helperText="קוד JSON לסינון נתונים נוסף, מעבר לשנה. דרוש רק במקרים מיוחדים."
-                    />
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                כדי להוסיף כרטיס חדש, סננו כל רשימה כרצונכם ולחצו על "הוסף ללוח מחוונים" בסרגל הכלים
+                שלה.
+            </Typography>
+            <ArrayInput source="dashboardItems" label={false}>
+                <SimpleFormIterator disableAdd>
+                    <DashboardItemSummary />
+                    <TextInput source="title" label="כותרת" fullWidth helperText={false} />
                 </SimpleFormIterator>
             </ArrayInput>
         </CommonSettingsAccordion>

@@ -1,7 +1,9 @@
 import React from 'react';
-import { ArrayInput, BooleanInput, NumberInput, SimpleFormIterator, required } from 'react-admin';
+import { Box, Typography } from '@mui/material';
+import { BooleanInput, NumberInput } from 'react-admin';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { REPORT_STYLE_TYPES } from './settingsUtil';
 
 // Common Google Fonts list
 const fontOptions = [
@@ -27,29 +29,41 @@ export function ReportStylesInput() {
         <CommonSettingsAccordion
             id="report-styles"
             title="הגדרות עיצוב תעודה"
-            subtitle="גופנים, גדלים ועיצוב טקסט בתעודה"
+            subtitle="גופן וגודל לכל חלק בתעודה"
         >
-            <ArrayInput source="reportStyles">
-                <SimpleFormIterator>
+            {REPORT_STYLE_TYPES.map(({ id, label }, index) => (
+                <Box
+                    key={id}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        gap: 2,
+                        py: 1.5,
+                        borderBottom: index < REPORT_STYLE_TYPES.length - 1 ? '1px solid' : 'none',
+                        borderColor: 'divider',
+                    }}
+                >
+                    <Typography variant="body2" fontWeight={600} sx={{ width: 170, flexShrink: 0 }}>
+                        {label}
+                    </Typography>
                     <CommonAutocompleteInput
-                        source="type"
-                        choices={[
-                            { id: 'document', name: 'טקסט כללי' },
-                            { id: 'tableHeader', name: 'כותרת טבלה' },
-                            { id: 'tableCell', name: 'תא טבלה' },
-                            { id: 'titlePrimary', name: 'כותרת ראשית' },
-                            { id: 'titleSecondary', name: 'כותרת משנית (תאריכים)' },
-                            { id: 'titleThird', name: 'כותרת שלישית' },
-                        ]}
-                        fullWidth
-                        validate={required()}
+                        source={`reportStyles.${index}.fontFamily`}
+                        choices={fontOptions}
+                        label="גופן"
+                        helperText={false}
+                        sx={{ minWidth: 200, margin: 0 }}
                     />
-                    <CommonAutocompleteInput source="fontFamily" choices={fontOptions} fullWidth />
-                    <NumberInput source="fontSize" fullWidth />
-                    <BooleanInput source="isBold" />
-                    <BooleanInput source="isItalic" />
-                </SimpleFormIterator>
-            </ArrayInput>
+                    <NumberInput
+                        source={`reportStyles.${index}.fontSize`}
+                        label="גודל"
+                        helperText={false}
+                        sx={{ width: 90, margin: 0 }}
+                    />
+                    <BooleanInput source={`reportStyles.${index}.isBold`} label="מודגש" helperText={false} />
+                    <BooleanInput source={`reportStyles.${index}.isItalic`} label="נטוי" helperText={false} />
+                </Box>
+            ))}
         </CommonSettingsAccordion>
     );
 }

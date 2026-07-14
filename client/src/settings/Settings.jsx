@@ -14,7 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { getDefaultPageSize } from '@shared/utils/settingsUtil';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
-import { getLateValue, getDashboardItems, getReportStyles, getReportCardSettings } from './settingsUtil';
+import { getLateValue, getDashboardItems, getReportStyles, getReportCardSettings, normalizeReportStyles } from './settingsUtil';
 import { DashboardItemsInput } from './DashboardItemsInput';
 import { ReportStylesInput } from './ReportStylesInput';
 import { GeneralSettingsInput } from './GeneralSettingsInput';
@@ -39,7 +39,7 @@ export default function Settings() {
         defaultPageSize: getDefaultPageSize(identity),
         lateValue: getLateValue(identity),
         dashboardItems: getDashboardItems(identity),
-        reportStyles: getReportStyles(identity),
+        reportStyles: normalizeReportStyles(getReportStyles(identity)),
         reportCardSettings: getReportCardSettings(identity),
         phoneNumber: identity?.phoneNumber ?? '',
     };
@@ -72,7 +72,7 @@ export default function Settings() {
                         <CommonSettingsAccordion
                             id="advanced-settings"
                             title="הגדרות מתקדמות"
-                            subtitle="כרטיסי לוח מחוונים וחיבור Yemot - להגדרה על ידי מנהל המערכת"
+                            subtitle="ניהול כרטיסי לוח מחוונים וחיבור Yemot"
                         >
                             <DashboardItemsInput />
                             <YemotSettingsInput />

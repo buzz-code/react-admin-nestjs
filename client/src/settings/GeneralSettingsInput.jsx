@@ -20,7 +20,12 @@ export function GeneralSettingsInput() {
                 disableClearable
                 validate={required()}
             />
-            <NumberInput source="lateValue" fullWidth validate={required()} />
+            <NumberInput
+                source="lateValue"
+                fullWidth
+                validate={required()}
+                helperText="המשקל של איחור אחד בחישוב החיסורים. לדוגמה, 0.3 אומר שכל איחור נספר כ-0.3 מחיסור (כלומר, כ-3-4 איחורים שווים לחיסור אחד)"
+            />
         </CommonSettingsAccordion>
     );
 }
