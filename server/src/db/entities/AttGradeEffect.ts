@@ -1,6 +1,6 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
-import { IsOptional } from 'class-validator';
+import { IsOptional, ValidateIf } from 'class-validator';
 import { IsNotEmpty, IsNumber } from '@shared/utils/validation/class-validator-he';
 import { CrudValidationGroups } from '@dataui/crud';
 import { NumberType } from '@shared/utils/entity/class-transformer';
@@ -27,12 +27,21 @@ export class AttGradeEffect implements IHasUserId {
   @Column({ nullable: true })
   count: number;
 
+  @ValidateIf((item: AttGradeEffect) => !Boolean(item.effectPercent), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
-  @Column()
+  @Column({ nullable: true })
   effect: number;
+
+  @ValidateIf((item: AttGradeEffect) => !Boolean(item.effect), { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @Column({ nullable: true })
+  effectPercent: number;
 
   @CreatedAtColumn()
   createdAt: Date;

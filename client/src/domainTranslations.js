@@ -375,6 +375,8 @@ export default {
             name: 'שם ציון |||| שמות ציונים',
             fields: {
                 ...generalResourceFieldsTranslation,
+                klassTypeId: 'שיוך כיתה',
+                klassTypeReferenceId: 'שיוך כיתה',
             },
         },
         attendance_name: {
@@ -390,6 +392,7 @@ export default {
                 percents: 'אחוז נוכחות',
                 count: 'מספר חיסורים',
                 effect: 'השפעה',
+                effectPercent: 'השפעה באחוזים',
             },
         },
         grade_effect_by_user: {
@@ -398,6 +401,7 @@ export default {
                 ...generalResourceFieldsTranslation,
                 number: 'אחוז חיסור',
                 effect: 'השפעה',
+                effectPercent: 'השפעה באחוזים',
             },
         },
         abs_count_effect_by_user: {
@@ -406,6 +410,7 @@ export default {
                 ...generalResourceFieldsTranslation,
                 number: 'מספר חיסורים',
                 effect: 'השפעה',
+                effectPercent: 'השפעה באחוזים',
             },
         },
         report_group: {

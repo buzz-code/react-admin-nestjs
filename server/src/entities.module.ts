@@ -24,7 +24,7 @@ import studentByYearConfig from './entity-modules/student-by-year.config';
 import teacherSalaryReportConfig from './entity-modules/teacher-salary-report.config';
 import attReportWithReportMonthConfig from './entity-modules/att-report-with-report-month.config';
 import { KnownAbsenceWithReportMonth } from './db/view-entities/KnownAbsenceWithReportMonth.entity';
-import { GradeName } from './db/entities/GradeName.entity';
+import gradeNameConfig from './entity-modules/grade-name.config';
 import { AttGradeEffect } from './db/entities/AttGradeEffect';
 import teacherGradeReportStatusConfig from './entity-modules/teacher-grade-report-status.config';
 import { GradeEffectByUser } from 'src/db/view-entities/GradeEffectByUser.entity';
@@ -86,7 +86,7 @@ registerEntityNameMap({
     BaseEntityModule.register(studentByYearConfig),
     BaseEntityModule.register(teacherSalaryReportConfig),
     BaseEntityModule.register({ entity: KnownAbsenceWithReportMonth }),
-    BaseEntityModule.register({ entity: GradeName }),
+    BaseEntityModule.register(gradeNameConfig),
     BaseEntityModule.register({ entity: AttendanceName }),
     BaseEntityModule.register({ entity: AttGradeEffect }),
     BaseEntityModule.register({ entity: GradeEffectByUser }),

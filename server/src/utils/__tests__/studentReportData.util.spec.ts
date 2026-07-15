@@ -292,21 +292,40 @@ describe('studentReportData.util', () => {
     ];
 
     it('should return correct grade display with grade names', () => {
-      expect(getDisplayGrade(0.95, 0, mockGradeNames)).toBe('A');
-      expect(getDisplayGrade(0.85, 0, mockGradeNames)).toBe('B');
-      expect(getDisplayGrade(0.75, 0, mockGradeNames)).toBe('C');
-      expect(getDisplayGrade(0.65, 0, mockGradeNames)).toBe('65%');
+      expect(getDisplayGrade(0.95, { effect: 0, effectPercent: 0 }, mockGradeNames)).toBe('A');
+      expect(getDisplayGrade(0.85, { effect: 0, effectPercent: 0 }, mockGradeNames)).toBe('B');
+      expect(getDisplayGrade(0.75, { effect: 0, effectPercent: 0 }, mockGradeNames)).toBe('C');
+      expect(getDisplayGrade(0.65, { effect: 0, effectPercent: 0 }, mockGradeNames)).toBe('65%');
     });
 
     it('should handle grade effects', () => {
-      expect(getDisplayGrade(0.85, 10, mockGradeNames)).toBe('A');
-      expect(getDisplayGrade(0.75, -10, mockGradeNames)).toBe('65%');
+      expect(getDisplayGrade(0.85, { effect: 10, effectPercent: 0 }, mockGradeNames)).toBe('A');
+      expect(getDisplayGrade(0.75, { effect: -10, effectPercent: 0 }, mockGradeNames)).toBe('65%');
+    });
+
+    it('should handle percent-based grade effects by multiplying instead of adding', () => {
+      // 80 * 90% = 72, below the 80 threshold for 'B', so it falls through to 'C' (70) instead
+      expect(getDisplayGrade(0.8, { effect: 0, effectPercent: 90 }, mockGradeNames)).toBe('C');
+      // 100 * 90% = 90, matches the 90 threshold for 'A'
+      expect(getDisplayGrade(1, { effect: 0, effectPercent: 90 }, mockGradeNames)).toBe('A');
     });
 
     it('should handle edge cases', () => {
-      expect(getDisplayGrade(0, 0, mockGradeNames)).toBe('');
-      expect(getDisplayGrade(null, 0, mockGradeNames)).toBe('');
+      expect(getDisplayGrade(0, { effect: 0, effectPercent: 0 }, mockGradeNames)).toBe('');
+      expect(getDisplayGrade(null, { effect: 0, effectPercent: 0 }, mockGradeNames)).toBe('');
       expect(getDisplayGrade(0.85)).toBe('85%');
+    });
+
+    it('should apply klass-type-specific grade names only for the matching klass type', () => {
+      const gradeNamesWithKlassType: GradeName[] = [
+        { key: 90, name: 'מצטיינת', klassTypeReferenceId: 1 } as GradeName,
+        { key: 90, name: 'A' } as GradeName,
+        { key: 80, name: 'B' } as GradeName,
+      ];
+
+      expect(getDisplayGrade(0.95, { effect: 0, effectPercent: 0 }, gradeNamesWithKlassType, 1)).toBe('מצטיינת');
+      expect(getDisplayGrade(0.95, { effect: 0, effectPercent: 0 }, gradeNamesWithKlassType, 2)).toBe('A');
+      expect(getDisplayGrade(0.95, { effect: 0, effectPercent: 0 }, gradeNamesWithKlassType)).toBe('A');
     });
   });
 
@@ -319,23 +338,30 @@ describe('studentReportData.util', () => {
 
     it('should return correct effect based on attendance percentage', () => {
       // Effects are returned for the first matching rule where percents <= actualPercents
-      expect(getGradeEffect(mockEffects, 0.95, 1)).toBe(5); // 95% matches first rule (90%)
-      expect(getGradeEffect(mockEffects, 0.85, 1)).toBe(5); // 85% matches first rule (90%)
-      expect(getGradeEffect(mockEffects, 0.75, 1)).toBe(5); // 75% still matches first rule (90%)
-      expect(getGradeEffect(mockEffects, 0.65, 1)).toBe(5); // 65% still matches first rule (90%)
+      expect(getGradeEffect(mockEffects, 0.95, 1)).toEqual({ effect: 5, effectPercent: 0 }); // 95% matches first rule (90%)
+      expect(getGradeEffect(mockEffects, 0.85, 1)).toEqual({ effect: 5, effectPercent: 0 }); // 85% matches first rule (90%)
+      expect(getGradeEffect(mockEffects, 0.75, 1)).toEqual({ effect: 5, effectPercent: 0 }); // 75% still matches first rule (90%)
+      expect(getGradeEffect(mockEffects, 0.65, 1)).toEqual({ effect: 5, effectPercent: 0 }); // 65% still matches first rule (90%)
+    });
+
+    it('should return the percent-based effect when the matching rule uses effectPercent', () => {
+      const effectsWithPercent: AttGradeEffect[] = [
+        { percents: 90, count: 2, effect: null, effectPercent: 90 } as AttGradeEffect,
+      ];
+      expect(getGradeEffect(effectsWithPercent, 0.95, 1)).toEqual({ effect: 0, effectPercent: 90 });
     });
 
     it('should return correct effect based on absence count', () => {
       // Effects are returned for the first matching rule where count >= absCount
-      expect(getGradeEffect(mockEffects, 0.6, 1)).toBe(5); // matches first rule (count 2)
-      expect(getGradeEffect(mockEffects, 0.6, 2)).toBe(5); // exactly matches first rule count
-      expect(getGradeEffect(mockEffects, 0.6, 3)).toBe(0); // matches second rule (count 3)
-      expect(getGradeEffect(mockEffects, 0.6, 4)).toBe(-5); // matches third rule (count 4)
+      expect(getGradeEffect(mockEffects, 0.6, 1)).toEqual({ effect: 5, effectPercent: 0 }); // matches first rule (count 2)
+      expect(getGradeEffect(mockEffects, 0.6, 2)).toEqual({ effect: 5, effectPercent: 0 }); // exactly matches first rule count
+      expect(getGradeEffect(mockEffects, 0.6, 3)).toEqual({ effect: 0, effectPercent: 0 }); // matches second rule (count 3)
+      expect(getGradeEffect(mockEffects, 0.6, 4)).toEqual({ effect: -5, effectPercent: 0 }); // matches third rule (count 4)
     });
 
     it('should handle null or empty effects array', () => {
-      expect(getGradeEffect(null, 0.95, 1)).toBe(0);
-      expect(getGradeEffect([], 0.95, 1)).toBe(0);
+      expect(getGradeEffect(null, 0.95, 1)).toEqual({ effect: 0, effectPercent: 0 });
+      expect(getGradeEffect([], 0.95, 1)).toEqual({ effect: 0, effectPercent: 0 });
     });
   });
 });
