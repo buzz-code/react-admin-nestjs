@@ -9,7 +9,7 @@ import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-ty
 
 @Index('students_users_idx', ['userId'], {})
 @Index(['userId', 'tz', 'year'], { unique: true })
-@Index(['userId', 'studentNumber', 'year'], { unique: true })
+@Index('students_user_student_number_year_unique', ['userId', 'studentNumber', 'year'], { unique: true })
 @Entity('students')
 export class Student implements IHasUserId {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
