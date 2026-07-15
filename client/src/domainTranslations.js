@@ -17,6 +17,7 @@ export default {
                 lateValue: 'שווי איחור',
                 phoneNumber: 'מספר טלפון',
                 yemotApiKey: 'מפתח API של Yemot',
+                managerPhone: 'טלפון מנהלת',
                 dashboardItems: 'הגדרות תמונת מצב',
                 reportStyles: 'הגדרות עיצוב תעודה',
                 reportCardSettings: 'הגדרות ברירת מחדל לתעודה',
@@ -297,6 +298,15 @@ export default {
                 reportMonthReferenceId: 'תקופת דיווח',
                 reportedLessons: 'שיעורים שדווחו',
                 notReportedLessons: 'שיעורים שלא דווחו',
+            },
+        },
+        teacher_phone_call_today: {
+            name: 'שיחות טלפון של מורות היום',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                teacherName: 'מורה',
+                callTime: 'שעת שיחה',
+                status: 'סטטוס',
             },
         },
         teacher_grade_report_status: {
