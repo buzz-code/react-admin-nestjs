@@ -44,8 +44,11 @@ const Inputs = ({ isCreate, isAdmin }) => {
             {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
             <NumberInput source="percents" />
             <NumberInput source="count" />
-            <NumberInput source="effect" helperText="נקודות להוספה/הפחתה מהציון (למלא effect או effectPercent)" />
-            <NumberInput source="effectPercent" helperText="אחוז מהציון המקורי, למשל 90 (למלא effect או effectPercent)" />
+            <NumberInput source="effect" helperText="נקודות להוספה/הפחתה מהציון (יש למלא שדה זה או את שדה ההשפעה באחוזים)" />
+            <NumberInput
+                source="effectPercent"
+                helperText="אחוז מהציון המקורי, בין 1 ל-100 (יש למלא שדה זה או את שדה ההשפעה)"
+            />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
         </>
