@@ -1,8 +1,11 @@
 import React from 'react';
-import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ArrayInput, BooleanInput, NumberInput, SimpleFormIterator, required } from 'react-admin';
+import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import RestartAltIcon from '@mui/icons-material/RestartAltOutlined';
+import { useFormContext } from 'react-hook-form';
+import { BooleanInput, NumberInput } from 'react-admin';
+import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
+import { REPORT_STYLE_TYPES, REPORT_STYLE_DEFAULTS } from './settingsUtil';
 
 // Common Google Fonts list
 const fontOptions = [
@@ -23,39 +26,93 @@ const fontOptions = [
     { id: 'Georgia', name: 'Georgia' },
 ].sort((a, b) => a.name.localeCompare(b.name));
 
+// The grey placeholder text showing each default is easy to miss, so this
+// gives users a one-click way to actually fill the blank fields with those
+// same defaults instead of just eyeballing the placeholder.
+const LoadDefaultsButton = () => {
+    const { getValues, setValue } = useFormContext();
+
+    const handleClick = () => {
+        REPORT_STYLE_TYPES.forEach(({ id }, index) => {
+            const defaults = REPORT_STYLE_DEFAULTS[id];
+            const current = getValues(`reportStyles.${index}`) || {};
+            if (!current.fontFamily && defaults.fontFamily) {
+                setValue(`reportStyles.${index}.fontFamily`, defaults.fontFamily, { shouldDirty: true });
+            }
+            if (!current.fontSize && defaults.fontSize) {
+                setValue(`reportStyles.${index}.fontSize`, defaults.fontSize, { shouldDirty: true });
+            }
+            if (!current.isBold && defaults.isBold) {
+                setValue(`reportStyles.${index}.isBold`, true, { shouldDirty: true });
+            }
+        });
+    };
+
+    return (
+        <Button size="small" startIcon={<RestartAltIcon fontSize="small" />} onClick={handleClick}>
+            טען ערכי ברירת מחדל
+        </Button>
+    );
+};
+
 export function ReportStylesInput() {
     return (
-        <Accordion sx={{ width: '100%' }}>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="report-styles-content"
-                id="report-styles-header"
-            >
-                <Typography variant="h6">הגדרות עיצוב תעודה</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <ArrayInput source="reportStyles">
-                    <SimpleFormIterator>
-                        <CommonAutocompleteInput
-                            source="type"
-                            choices={[
-                                { id: 'document', name: 'טקסט כללי' },
-                                { id: 'tableHeader', name: 'כותרת טבלה' },
-                                { id: 'tableCell', name: 'תא טבלה' },
-                                { id: 'titlePrimary', name: 'כותרת ראשית' },
-                                { id: 'titleSecondary', name: 'כותרת משנית (תאריכים)' },
-                                { id: 'titleThird', name: 'כותרת שלישית' },
-                            ]}
-                            fullWidth
-                            validate={required()}
-                        />
-                        <CommonAutocompleteInput source="fontFamily" choices={fontOptions} fullWidth />
-                        <NumberInput source="fontSize" fullWidth />
-                        <BooleanInput source="isBold" />
-                        <BooleanInput source="isItalic" />
-                    </SimpleFormIterator>
-                </ArrayInput>
-            </AccordionDetails>
-        </Accordion>
+        <CommonSettingsAccordion
+            id="report-styles"
+            title="הגדרות עיצוב תעודה"
+            subtitle="גופן וגודל לכל חלק בתעודה - שדה ריק משתמש בברירת המחדל המוצגת כטקסט אפור"
+        >
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                <LoadDefaultsButton />
+            </Box>
+            <Table size="small">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>חלק בתעודה</TableCell>
+                        <TableCell>גופן</TableCell>
+                        <TableCell>גודל</TableCell>
+                        <TableCell align="center">מודגש</TableCell>
+                        <TableCell align="center">נטוי</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {REPORT_STYLE_TYPES.map(({ id, label }, index) => (
+                        <TableRow key={id}>
+                            <TableCell>
+                                <Typography variant="body2" fontWeight={600}>
+                                    {label}
+                                </Typography>
+                            </TableCell>
+                            <TableCell sx={{ minWidth: 180 }}>
+                                <CommonAutocompleteInput
+                                    source={`reportStyles.${index}.fontFamily`}
+                                    choices={fontOptions}
+                                    label={false}
+                                    helperText={false}
+                                    sx={{ margin: 0 }}
+                                    TextFieldProps={{ placeholder: REPORT_STYLE_DEFAULTS[id].fontFamily || 'ברירת מחדל' }}
+                                />
+                            </TableCell>
+                            <TableCell sx={{ width: 100 }}>
+                                <NumberInput
+                                    source={`reportStyles.${index}.fontSize`}
+                                    label={false}
+                                    helperText={false}
+                                    sx={{ margin: 0 }}
+                                    placeholder={String(REPORT_STYLE_DEFAULTS[id].fontSize)}
+                                    inputProps={{ style: { textAlign: 'center' } }}
+                                />
+                            </TableCell>
+                            <TableCell align="center" sx={{ width: 60 }}>
+                                <BooleanInput source={`reportStyles.${index}.isBold`} label={false} helperText={false} sx={{ margin: 0 }} />
+                            </TableCell>
+                            <TableCell align="center" sx={{ width: 60 }}>
+                                <BooleanInput source={`reportStyles.${index}.isItalic`} label={false} helperText={false} sx={{ margin: 0 }} />
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </CommonSettingsAccordion>
     );
 }

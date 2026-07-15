@@ -13,8 +13,9 @@ import {
 } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { getDefaultPageSize } from '@shared/utils/settingsUtil';
-import { getLateValue, getDashboardItems, getReportStyles, getReportCardSettings } from './settingsUtil';
-import { DashboardItemsInput } from './DashboardItemsInput';
+import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
+import { DashboardItemsInput } from '@shared/components/settings/DashboardItemsInput';
+import { getLateValue, getDashboardItems, getReportStyles, getReportCardSettings, normalizeReportStyles } from './settingsUtil';
 import { ReportStylesInput } from './ReportStylesInput';
 import { GeneralSettingsInput } from './GeneralSettingsInput';
 import { ReportCardSettingsInput } from './ReportCardSettingsInput';
@@ -38,7 +39,7 @@ export default function Settings() {
         defaultPageSize: getDefaultPageSize(identity),
         lateValue: getLateValue(identity),
         dashboardItems: getDashboardItems(identity),
-        reportStyles: getReportStyles(identity),
+        reportStyles: normalizeReportStyles(getReportStyles(identity)),
         reportCardSettings: getReportCardSettings(identity),
         phoneNumber: identity?.phoneNumber ?? '',
     };
@@ -46,7 +47,9 @@ export default function Settings() {
     const handleSave = async ({ phoneNumber, ...values }) => {
         try {
             await dataProvider.updateSettings({ data: values });
-            await dataProvider.updateProfile({ data: { phoneNumber } });
+            if (phoneNumber !== (identity?.phoneNumber ?? '')) {
+                await dataProvider.updateProfile({ data: { phoneNumber } });
+            }
             await authProvider.getIdentity(true);
             notify('ההגדרות נשמרו בהצלחה', { type: 'info' });
             navigate('/');
@@ -63,11 +66,17 @@ export default function Settings() {
                 <ResourceContextProvider value="settings">
                     <SimpleForm onSubmit={handleSave} defaultValues={defaultValues} toolbar={<SettingsToolbar />}>
                         <GeneralSettingsInput />
-                        <DashboardItemsInput />
+                        <PhoneSettingsInput />
                         <ReportStylesInput />
                         <ReportCardSettingsInput />
-                        <PhoneSettingsInput />
-                        <YemotSettingsInput />
+                        <CommonSettingsAccordion
+                            id="advanced-settings"
+                            title="הגדרות מתקדמות"
+                            subtitle="ניהול כרטיסי תמונת מצב וחיבור Yemot"
+                        >
+                            <DashboardItemsInput />
+                            <YemotSettingsInput />
+                        </CommonSettingsAccordion>
                     </SimpleForm>
                 </ResourceContextProvider>
             </CardContent>

@@ -1,36 +1,64 @@
 import React from 'react';
-import { Typography, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box } from '@mui/material';
 import { BooleanInput, Link } from 'react-admin';
+import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 
 export function ReportCardSettingsInput() {
     return (
-        <Accordion sx={{ width: '100%' }}>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="report-card-settings-content"
-                id="report-card-settings-header"
-            >
-                <Typography variant="h6">הגדרות ברירת מחדל לתעודה</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <Box sx={{ mb: 2 }}>
-                    <Link to="/image" target="_blank">
-                        להגדרת תמונות
-                    </Link>
-                </Box>
-                <BooleanInput source="reportCardSettings.attendance" defaultChecked />
-                <BooleanInput source="reportCardSettings.grades" defaultChecked />
-                <BooleanInput source="reportCardSettings.showStudentTz" defaultChecked />
-                <BooleanInput source="reportCardSettings.groupByKlass" />
-                <BooleanInput source="reportCardSettings.hideAbsTotal" />
-                <BooleanInput source="reportCardSettings.minimalReport" />
-                <BooleanInput source="reportCardSettings.forceAtt" />
-                <BooleanInput source="reportCardSettings.forceGrades" />
-                <BooleanInput source="reportCardSettings.downComment" />
-                <BooleanInput source="reportCardSettings.lastGrade" defaultChecked />
-                <BooleanInput source="reportCardSettings.debug" defaultChecked />
-            </AccordionDetails>
-        </Accordion>
+        <CommonSettingsAccordion
+            id="report-card-settings"
+            title="הגדרות ברירת מחדל לתעודה"
+            subtitle="אילו נתונים יופיעו בתעודה כברירת מחדל"
+        >
+            <Box sx={{ mb: 2 }}>
+                <Link to="/image" target="_blank">
+                    להגדרת תמונות
+                </Link>
+            </Box>
+            <BooleanInput
+                source="reportCardSettings.attendance"
+                defaultChecked
+                helperText="הצג את נתוני הנוכחות בתעודה"
+            />
+            <BooleanInput
+                source="reportCardSettings.grades"
+                defaultChecked
+                helperText="הצג את הציונים בתעודה"
+            />
+            <BooleanInput
+                source="reportCardSettings.showStudentTz"
+                defaultChecked
+                helperText="הצג את מספר תעודת הזהות של התלמידה בתעודה"
+            />
+            <BooleanInput
+                source="reportCardSettings.groupByKlass"
+                helperText="קבץ את השורות בתעודה לפי כיתה"
+            />
+            <BooleanInput
+                source="reportCardSettings.hideAbsTotal"
+                helperText="הסתר את שורת סיכום החיסורים הכללי בתחתית התעודה"
+            />
+            <BooleanInput
+                source="reportCardSettings.minimalReport"
+                helperText="הצג רק את שורת הסיכום, ללא פירוט לפי שיעור"
+            />
+            <BooleanInput
+                source="reportCardSettings.forceAtt"
+                helperText="הצג בתעודה רק שיעורים שיש בהם נתוני נוכחות"
+            />
+            <BooleanInput
+                source="reportCardSettings.forceGrades"
+                helperText="הצג בתעודה רק שיעורים שיש בהם ציון"
+            />
+            <BooleanInput
+                source="reportCardSettings.downComment"
+                helperText="הצג הערה חופשית מתחת לשם התלמידה בתעודה"
+            />
+            <BooleanInput
+                source="reportCardSettings.lastGrade"
+                defaultChecked
+                helperText="הצג את הציון האחרון שנרשם, במקום ממוצע ציונים"
+            />
+        </CommonSettingsAccordion>
     );
 }
