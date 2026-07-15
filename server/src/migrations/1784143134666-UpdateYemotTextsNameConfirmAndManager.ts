@@ -1,6 +1,7 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from "typeorm"
 
-export class UpdateYemotTextsNameConfirmAndManager1784200000000 implements MigrationInterface {
+export class UpdateYemotTextsNameConfirmAndManager1784143134666 implements MigrationInterface {
+
     public async up(queryRunner: QueryRunner): Promise<void> {
         const texts = [
             { name: 'SEMINAR.CONFIRM_STUDENT_NAME', text: 'התלמידה {studentName}. {yes} {no}' },

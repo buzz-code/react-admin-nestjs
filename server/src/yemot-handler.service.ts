@@ -55,10 +55,15 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const teacherIds = [...new Set(schedules.map((schedule) => schedule.teacherReferenceId))];
     const teachers = await this.dataSource.getRepository(Teacher).findBy({ userId: this.user.id, id: In(teacherIds) });
 
-    const reports = await this.dataSource.getRepository(AttReport).find({
-      where: { userId: this.user.id, reportDate: todayDateOnly as unknown as Date, teacherReferenceId: In(teacherIds) },
-    });
-    const reportedTeacherIds = new Set(reports.map((report) => report.teacherReferenceId));
+    const reportedRows = await this.dataSource
+      .getRepository(AttReport)
+      .createQueryBuilder('att_report')
+      .select('DISTINCT att_report.teacherReferenceId', 'teacherReferenceId')
+      .where('att_report.userId = :userId', { userId: this.user.id })
+      .andWhere('att_report.reportDate = :reportDate', { reportDate: todayDateOnly })
+      .andWhere('att_report.teacherReferenceId IN (:...teacherIds)', { teacherIds })
+      .getRawMany<{ teacherReferenceId: number }>();
+    const reportedTeacherIds = new Set(reportedRows.map((row) => row.teacherReferenceId));
 
     const reportedNames = teachers.filter((teacher) => reportedTeacherIds.has(teacher.id)).map((teacher) => teacher.name);
     const notReportedNames = teachers.filter((teacher) => !reportedTeacherIds.has(teacher.id)).map((teacher) => teacher.name);
