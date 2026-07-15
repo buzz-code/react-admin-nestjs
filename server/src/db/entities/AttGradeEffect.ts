@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
 import { IsOptional, ValidateIf } from 'class-validator';
-import { IsNotEmpty, IsNumber, Min, Max } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, Min } from '@shared/utils/validation/class-validator-he';
 import { CrudValidationGroups } from '@dataui/crud';
 import { NumberType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
@@ -43,7 +43,6 @@ export class AttGradeEffect implements IHasUserId {
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Min(1, { always: true })
-  @Max(100, { always: true })
   @Column({ nullable: true })
   effectPercent: number;
 

@@ -47,7 +47,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <NumberInput source="effect" helperText="נקודות להוספה/הפחתה מהציון (יש למלא שדה זה או את שדה ההשפעה באחוזים)" />
             <NumberInput
                 source="effectPercent"
-                helperText="אחוז מהציון המקורי, בין 1 ל-100 (יש למלא שדה זה או את שדה ההשפעה)"
+                helperText="אחוז מהציון המקורי, גדול מ-0 (יש למלא שדה זה או את שדה ההשפעה)"
             />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
