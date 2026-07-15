@@ -203,7 +203,17 @@ export function getRelevantGrade(isLastGrade: boolean, gradeAvg: number, lastGra
   return gradeAvg;
 }
 
-export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNames: GradeName[] = []) {
+export interface IGradeEffect {
+  effect: number;
+  effectPercent: number;
+}
+
+export function getDisplayGrade(
+  grade: number,
+  gradeEffect: IGradeEffect = { effect: 0, effectPercent: 0 },
+  gradeNames: GradeName[] = [],
+  klassTypeReferenceId?: number,
+) {
   // if (grade === 0) return '0%';
   if (!grade) return '';
 
@@ -212,14 +222,13 @@ export function getDisplayGrade(grade: number, gradeEffect: number = 0, gradeNam
     console.warn('getDisplayGrade: grade is not a number', grade, typeof grade);
     grade = parseFloat(grade);
   }
-  if (gradeEffect && typeof gradeEffect !== 'number') {
-    console.warn('getDisplayGrade: gradeEffect is not a number', gradeEffect, typeof gradeEffect);
-    gradeEffect = parseFloat(gradeEffect);
-  }
   // ========== end of investigation ==========
 
   var finalGrade = getFinalGrade(grade * 100, gradeEffect);
-  var matchingGradeName = findByThreshold(finalGrade, gradeNames, 'key', 'name');
+  var relevantGradeNames = gradeNames.filter(
+    (item) => !item.klassTypeReferenceId || item.klassTypeReferenceId === klassTypeReferenceId,
+  );
+  var matchingGradeName = findByThreshold(finalGrade, relevantGradeNames, 'key', 'name');
   var displayGrade = matchingGradeName ?? Math.round(finalGrade) + '%';
   return displayGrade;
 }
@@ -232,13 +241,21 @@ export function getDisplayAttendance(attPercents: number, attendanceNames: Atten
   return displayAttendance;
 }
 
-function getFinalGrade(grade: number, gradeEffect: number) {
+function getFinalGrade(grade: number, gradeEffect: IGradeEffect) {
   var isOriginalGrade = grade > 100 || grade == 0;
-  var finalGrade = isOriginalGrade ? grade : keepBetween(grade + gradeEffect, 0, 100);
-  return finalGrade;
+  if (isOriginalGrade) return grade;
+  if (gradeEffect?.effectPercent) {
+    return keepBetween(grade * (gradeEffect.effectPercent / 100), 0, 100);
+  }
+  return keepBetween(grade + (gradeEffect?.effect ?? 0), 0, 100);
 }
 
-export function getGradeEffect(attGradeEffect: AttGradeEffect[], attPercents: number, absCount: number) {
+export function getGradeEffect(
+  attGradeEffect: AttGradeEffect[],
+  attPercents: number,
+  absCount: number,
+): IGradeEffect {
   const actualPercents = attPercents * 100;
-  return attGradeEffect?.find((item) => item.percents <= actualPercents || item.count >= absCount)?.effect ?? 0;
+  const match = attGradeEffect?.find((item) => item.percents <= actualPercents || item.count >= absCount);
+  return { effect: match?.effect ?? 0, effectPercent: match?.effectPercent ?? 0 };
 }

@@ -22,4 +22,7 @@ export class GradeEffectByUser implements IHasUserId, IGradeEffectByUser {
 
   @ViewColumn()
   effect: number;
+
+  @ViewColumn()
+  effectPercent: number;
 }

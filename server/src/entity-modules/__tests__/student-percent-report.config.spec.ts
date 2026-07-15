@@ -217,6 +217,7 @@ describe('StudentPercentReportConfig', () => {
       {
         id: '1_0',
         effect: -5,
+        effectPercent: null,
       },
     ];
 

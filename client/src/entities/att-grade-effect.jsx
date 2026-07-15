@@ -18,6 +18,7 @@ const filters = [
     <NumberInput source="percents" />,
     <NumberInput source="count" />,
     <NumberInput source="effect" />,
+    <NumberInput source="effectPercent" />,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
@@ -29,6 +30,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="percents" />
             <TextField source="count" />
             <TextField source="effect" />
+            <TextField source="effectPercent" />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -42,7 +44,11 @@ const Inputs = ({ isCreate, isAdmin }) => {
             {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
             <NumberInput source="percents" />
             <NumberInput source="count" />
-            <NumberInput source="effect" validate={required()} />
+            <NumberInput source="effect" helperText="נקודות להוספה/הפחתה מהציון (יש למלא שדה זה או את שדה ההשפעה באחוזים)" />
+            <NumberInput
+                source="effectPercent"
+                helperText="אחוז מהציון המקורי, גדול מ-0 (יש למלא שדה זה או את שדה ההשפעה)"
+            />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
         </>
@@ -50,7 +56,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 };
 
 const importer = {
-    fields: ['percents', 'count', 'effect'],
+    fields: ['percents', 'count', 'effect', 'effectPercent'],
 };
 
 const entity = {

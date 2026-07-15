@@ -22,4 +22,7 @@ export class AbsCountEffectByUser implements IHasUserId, IAbsCountEffectByUser {
 
   @ViewColumn()
   effect: number;
+
+  @ViewColumn()
+  effectPercent: number;
 }

@@ -10,7 +10,7 @@ School attendance management system: teachers, students, classes, attendance rep
 - **Shared submodules**: `client/shared` -> `nra-client`, `server/shared` -> `nra-server`
 
 Initialize before first use: `git submodule update --init --recursive`
-Never modify code in `client/shared` or `server/shared` directly — those are separate repos.
+Avoid modifying code in `client/shared` or `server/shared` directly when possible — they're separate repos used by other projects. Prefer keeping changes local to this repo. If a change genuinely belongs in the shared code, it's fine to edit it there and go through the normal commit/push flow for that repo.
 
 ## Testing
 

@@ -404,11 +404,11 @@ interface ReportItemProps {
 const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, report, att_grade_effect, grade_names, attendance_names }) => {
     var unApprovedAbsCount = getUnknownAbsCount(report.absCount, report.approvedAbsCount);
     var gradeEffect = getGradeEffect(att_grade_effect, report.attPercents, unApprovedAbsCount);
-    var displayGrade = getDisplayGrade(report.gradeAvg, gradeEffect, grade_names);
+    var displayGrade = getDisplayGrade(report.gradeAvg, gradeEffect, grade_names, report.klass?.klassTypeReferenceId);
     const debugDetails = `
         חיסורים: ${report.absCount}, מאושרים: ${report.approvedAbsCount}, שיעורים: ${report.lessonsCount},
         אחוז נוכחות: ${Math.round(report.attPercents * 100)} אחוז חיסור: ${Math.round(report.absPercents * 100)},
-        ציון: ${report.gradeAvg ? report.gradeAvg * 100 : '-'}, השפעה: ${gradeEffect}, ציון סופי: ${displayGrade}
+        ציון: ${report.gradeAvg ? report.gradeAvg * 100 : '-'}, השפעה: ${gradeEffect.effectPercent ? gradeEffect.effectPercent + '%' : gradeEffect.effect}, ציון סופי: ${displayGrade}
     `;
 
     const { fullCellStyle, rightAlignFullCellStyle, emptyCellStyle } = useCellStyles();

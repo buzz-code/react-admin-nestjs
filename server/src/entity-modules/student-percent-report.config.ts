@@ -20,6 +20,7 @@ import {
   getDisplayAttendance,
   getUnknownAbsCount,
   getRelevantGrade,
+  IGradeEffect,
 } from 'src/utils/studentReportData.util';
 import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from 'src/utils/studentReportData.util';
 import { DataSource, In } from 'typeorm';
@@ -156,15 +157,18 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
           .find({ where: { userId: getUserIdFromUser(auth) }, order: { key: 'DESC' } });
 
         Object.values(sprMap).forEach((item) => {
+          const gradeEffect = gradeEffectsMap[getGradeEffectId(item)];
+          const absCountEffect = absCountEffectsMap[getAbsCountEffectId(item)];
           item.debug = {
             absCountEffectId: getAbsCountEffectId(item),
             gradeEffectId: getGradeEffectId(item),
-            absCountEffect: absCountEffectsMap[getAbsCountEffectId(item)],
-            gradeEffect: gradeEffectsMap[getGradeEffectId(item)],
+            absCountEffect,
+            gradeEffect,
           };
-          item.attGradeEffect =
-            gradeEffectsMap[getGradeEffectId(item)] || absCountEffectsMap[getAbsCountEffectId(item)];
-          item.finalGrade = getDisplayGrade(item.gradeAvg, item.attGradeEffect, gradeNames);
+          const attGradeEffect: IGradeEffect =
+            gradeEffect?.effect || gradeEffect?.effectPercent ? gradeEffect : absCountEffect;
+          item.attGradeEffect = attGradeEffect?.effectPercent || attGradeEffect?.effect || 0;
+          item.finalGrade = getDisplayGrade(item.gradeAvg, attGradeEffect, gradeNames, item.klass?.klassTypeReferenceId);
           item.finalAttendance = getDisplayAttendance(item.attPercents, attendanceNames);
         });
 
@@ -202,16 +206,24 @@ function getGradeEffectId(item: StudentPercentReportWithDates): string {
   return `${item.userId}_${Math.floor(item.attPercents * 100)}`;
 }
 
-function fetchAttGradeEffect(dataSource: DataSource, viewEntity: any, ids: string[]): Promise<Record<string, number>> {
+function fetchAttGradeEffect(
+  dataSource: DataSource,
+  viewEntity: any,
+  ids: string[],
+): Promise<Record<string, IGradeEffect>> {
   return dataSource
     .getRepository(viewEntity)
     .find({
       where: {
         id: In(ids),
       },
-      select: ['id', 'effect'],
+      select: ['id', 'effect', 'effectPercent'],
     })
-    .then((arr) => Object.fromEntries(arr.map((item) => [item.id, Number(item.effect)])));
+    .then((arr) =>
+      Object.fromEntries(
+        arr.map((item) => [item.id, { effect: Number(item.effect), effectPercent: Number(item.effectPercent) }]),
+      ),
+    );
 }
 
 export default getConfig();

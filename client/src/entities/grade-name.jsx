@@ -9,12 +9,19 @@ import {
     maxLength,
 } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
+import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { CommonRepresentation } from '@shared/components/CommonRepresentation';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
+import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
-const filters = [adminUserFilter, <NumberInput source="key" />, <TextInput source="name:$cont" alwaysOn />];
+const filters = [
+    adminUserFilter,
+    <NumberInput source="key" />,
+    <TextInput source="name:$cont" alwaysOn />,
+    <CommonReferenceInputFilter source="klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />,
+];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
@@ -24,6 +31,13 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <ReferenceField source="userId" reference="user" />}
             <TextField source="key" />
             <TextField source="name" />
+            <MultiReferenceField
+                source="klassTypeReferenceId"
+                sortBy="klassType.name"
+                reference="klass_type"
+                optionalSource="klassTypeId"
+                optionalTarget="key"
+            />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
         </CommonDatagrid>
@@ -37,6 +51,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
             {isAdmin && <CommonReferenceInput source="userId" reference="user" validate={required()} />}
             <NumberInput source="key" validate={required()} />
             <TextInput source="name" validate={[maxLength(500)]} />
+            <CommonReferenceInput source="klassTypeReferenceId" reference="klass_type" dynamicFilter={filterByUserId} />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
         </>
@@ -46,7 +61,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['key', 'name'],
+    fields: ['key', 'name', 'klassTypeId'],
 };
 
 const entity = {
