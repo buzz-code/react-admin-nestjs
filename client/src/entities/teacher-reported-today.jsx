@@ -1,5 +1,5 @@
 import { DateInput, ReferenceField, RecordContextProvider, useListContext } from 'react-admin';
-import { Box, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
+import { Box, Card, CardContent, Chip, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
@@ -40,7 +40,7 @@ const TeacherReportCards = ({ isAdmin }) => {
     const groups = groupByTeacherAndDate(data || []);
 
     return (
-        <Stack spacing={2} sx={{ padding: 2 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 2, padding: 2 }}>
             {groups.map((group) => (
                 <RecordContextProvider key={group.id} value={group}>
                     <Card variant="outlined">
@@ -66,7 +66,7 @@ const TeacherReportCards = ({ isAdmin }) => {
                     </Card>
                 </RecordContextProvider>
             ))}
-        </Stack>
+        </Box>
     );
 };
 
