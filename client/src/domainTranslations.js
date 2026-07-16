@@ -307,6 +307,9 @@ export default {
                 teacherReferenceId: 'מורה',
                 teacherName: 'מורה',
                 reportDate: 'תאריך דיווח',
+                lessonReferenceId: 'שיעור',
+                lessonName: 'שיעור',
+                reportHour: 'שעת דיווח',
             },
         },
         teacher_grade_report_status: {
