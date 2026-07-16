@@ -305,10 +305,8 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 teacherReferenceId: 'מורה',
-                teacherName: 'מורה',
                 reportDate: 'תאריך דיווח',
                 lessonReferenceId: 'שיעור',
-                lessonName: 'שיעור',
                 reportHour: 'שעת דיווח',
             },
         },

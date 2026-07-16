@@ -1,5 +1,5 @@
-import { DateInput, ReferenceField, RecordContextProvider, useListContext } from 'react-admin';
-import { Box, Card, CardContent, Chip, Typography } from '@mui/material';
+import { ChipField, DateInput, ReferenceField, RecordContextProvider, TextField, useListContext } from 'react-admin';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
@@ -20,16 +20,16 @@ const formatDate = (value) => (value ? new Date(value).toLocaleDateString('he-IL
 const formatHour = (value) => (value ? new Date(value).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }) : '');
 
 // The view has one row per teacher+lesson+date; group rows sharing the same
-// teacher+date into a single card, collecting their lesson names.
+// teacher+date into a single card, collecting their lesson rows.
 function groupByTeacherAndDate(rows) {
     const groups = new Map();
     rows.forEach((row) => {
         const key = `${row.userId}_${row.teacherReferenceId}_${row.reportDate}`;
         if (!groups.has(key)) {
-            groups.set(key, { ...row, lessonNames: [] });
+            groups.set(key, { ...row, lessonRows: [] });
         }
-        if (row.lessonName) {
-            groups.get(key).lessonNames.push(row.lessonName);
+        if (row.lessonReferenceId) {
+            groups.get(key).lessonRows.push(row);
         }
     });
     return [...groups.values()];
@@ -46,7 +46,11 @@ const TeacherReportCards = ({ isAdmin }) => {
                     <Card variant="outlined">
                         <CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
-                                <Typography variant="h6">{group.teacherName}</Typography>
+                                <Typography variant="h6">
+                                    <ReferenceField source="teacherReferenceId" reference="teacher">
+                                        <TextField source="name" />
+                                    </ReferenceField>
+                                </Typography>
                                 <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
                                     {isAdmin && <ReferenceField source="userId" reference="user" />}
                                     <Typography variant="body2" color="text.secondary">{formatDate(group.reportDate)}</Typography>
@@ -54,9 +58,13 @@ const TeacherReportCards = ({ isAdmin }) => {
                                 </Box>
                             </Box>
                             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', marginTop: 1.5 }}>
-                                {group.lessonNames.length > 0 ? (
-                                    group.lessonNames.map((name) => (
-                                        <Chip key={name} label={name} size="small" color="primary" variant="outlined" />
+                                {group.lessonRows.length > 0 ? (
+                                    group.lessonRows.map((row) => (
+                                        <RecordContextProvider key={row.id} value={row}>
+                                            <ReferenceField source="lessonReferenceId" reference="lesson">
+                                                <ChipField source="name" size="small" color="primary" variant="outlined" />
+                                            </ReferenceField>
+                                        </RecordContextProvider>
                                     ))
                                 ) : (
                                     <Typography variant="body2" color="text.secondary">ללא שיוך שיעור</Typography>
