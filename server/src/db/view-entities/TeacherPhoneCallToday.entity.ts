@@ -20,8 +20,7 @@ import { Teacher } from '../entities/Teacher.entity';
         Teacher,
         'teacher',
         '(teacher.phone = yemot_call.phone OR teacher.phone2 = yemot_call.phone) AND teacher.userId = yemot_call.userId',
-      )
-      .where('DATE(yemot_call.createdAt) = CURDATE()'),
+      ),
 })
 export class TeacherPhoneCallToday implements IHasUserId {
   @Column()
