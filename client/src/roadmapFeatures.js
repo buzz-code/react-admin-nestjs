@@ -26,7 +26,7 @@ export default [
     { html: 'הוספת דף בית פומבי המסביר את המערכת', status: 'בוצע', statusColor: 'success' },
     { html: 'הקראת שם התלמידה ואישור לפני שמירת חיסור בדיווח נוכחות בטלפון', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת אפשרות למנהלת להתקשר ולשמוע אילו מורות דיווחו נוכחות היום', status: 'בוצע', statusColor: 'success' },
-    { html: 'הוספת דוח יומי המציג אילו מורות התקשרו לדווח נוכחות בטלפון', status: 'בוצע', statusColor: 'success' },
+    { html: 'הוספת דוח המציג אילו מורות דיווחו נוכחות בתאריך נבחר', status: 'בוצע', statusColor: 'success' },
 
     // { html: 'הגדרת תקופת זמן לפי תאריכים', status: 'בקרוב', statusColor: 'warning' },
     // { html: 'הגדרת תקופת זמן לפי יום בשבוע', status: 'בוצע', statusColor: 'success' },

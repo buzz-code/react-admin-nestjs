@@ -47,7 +47,7 @@ import attendanceName from 'src/entities/attendance-name';
 import attGradeEffect from './entities/att-grade-effect';
 import reportGroup from './entities/report-group';
 import reportGroupSession from './entities/report-group-session';
-import teacherPhoneCallToday from './entities/teacher-phone-call-today';
+import teacherReportedToday from './entities/teacher-reported-today';
 import Settings from 'src/settings/Settings';
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
@@ -92,7 +92,7 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtmOutlined';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBusOutlined';
 import CelebrationIcon from '@mui/icons-material/CelebrationOutlined';
-import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalkOutlined';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedInOutlined';
 
 const themeOptions = { primary: blue[700], secondary: purple[500] };
 
@@ -223,10 +223,10 @@ const App = () => (
                     />
                     {isSeminarAttendanceYemot(permissions) && (
                         <Resource
-                            name="teacher_phone_call_today"
-                            {...teacherPhoneCallToday}
+                            name="teacher_reported_today"
+                            {...teacherReportedToday}
                             options={{ menuGroup: 'report' }}
-                            icon={PhoneInTalkIcon}
+                            icon={AssignmentTurnedInIcon}
                         />
                     )}
                     <Resource

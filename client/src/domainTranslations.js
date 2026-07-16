@@ -300,13 +300,13 @@ export default {
                 notReportedLessons: 'שיעורים שלא דווחו',
             },
         },
-        teacher_phone_call_today: {
-            name: 'שיחות טלפון של מורות היום',
+        teacher_reported_today: {
+            name: 'מורות שדיווחו נוכחות',
             fields: {
                 ...generalResourceFieldsTranslation,
+                teacherReferenceId: 'מורה',
                 teacherName: 'מורה',
-                callTime: 'שעת שיחה',
-                status: 'סטטוס',
+                reportDate: 'תאריך דיווח',
             },
         },
         teacher_grade_report_status: {
