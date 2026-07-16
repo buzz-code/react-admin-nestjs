@@ -210,6 +210,7 @@ export default {
                 phone2: 'טלפון 2',
                 email: 'כתובת מייל',
                 displayName: 'שם לתעודה',
+                comment: 'הערה',
             },
         },
         transportation: {
