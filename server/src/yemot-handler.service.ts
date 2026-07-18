@@ -12,7 +12,7 @@ import { AttReport } from './db/entities/AttReport.entity';
 import { ReportGroup } from './db/entities/ReportGroup.entity';
 import { ReportGroupSession } from './db/entities/ReportGroupSession.entity';
 import { LessonSchedule } from './db/entities/LessonSchedule.entity';
-import { Between } from 'typeorm';
+import { Between, In } from 'typeorm';
 
 const SCHEDULE_MATCH_TOLERANCE_MINUTES = 90;
 /**
@@ -26,10 +26,52 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     await this.getUserByDidPhone();
     this.logger.log(`Processing call with ID: ${this.call.callId} from phone: ${this.call.phone}`);
     if (hasPermission(this.user, 'seminarAttendanceYemot')) {
-      await this.processSeminarAttendanceCall();
+      if (this.isManagerCall()) {
+        await this.processManagerReportCall();
+      } else {
+        await this.processSeminarAttendanceCall();
+      }
     } else {
       await this.processTransportationCall();
     }
+  }
+
+  private isManagerCall(): boolean {
+    const managerPhone = this.user.additionalData?.managerPhone;
+    return Boolean(managerPhone) && managerPhone === this.call.phone;
+  }
+
+  private async processManagerReportCall(): Promise<void> {
+    const todayDateOnly = this.getIsraelDateString(new Date());
+
+    const schedules = await this.dataSource.getRepository(LessonSchedule).find({
+      where: { userId: this.user.id, scheduleDate: todayDateOnly as unknown as Date },
+    });
+    if (schedules.length === 0) {
+      await this.hangupWithMessageByKey('MANAGER.NO_SCHEDULE_TODAY');
+      return;
+    }
+
+    const teacherIds = [...new Set(schedules.map((schedule) => schedule.teacherReferenceId))];
+    const teachers = await this.dataSource.getRepository(Teacher).findBy({ userId: this.user.id, id: In(teacherIds) });
+
+    const reportedRows = await this.dataSource
+      .getRepository(AttReport)
+      .createQueryBuilder('att_report')
+      .select('DISTINCT att_report.teacherReferenceId', 'teacherReferenceId')
+      .where('att_report.userId = :userId', { userId: this.user.id })
+      .andWhere('att_report.reportDate = :reportDate', { reportDate: todayDateOnly })
+      .andWhere('att_report.teacherReferenceId IN (:...teacherIds)', { teacherIds })
+      .getRawMany<{ teacherReferenceId: number }>();
+    const reportedTeacherIds = new Set(reportedRows.map((row) => row.teacherReferenceId));
+
+    const reportedNames = teachers.filter((teacher) => reportedTeacherIds.has(teacher.id)).map((teacher) => teacher.name);
+    const notReportedNames = teachers.filter((teacher) => !reportedTeacherIds.has(teacher.id)).map((teacher) => teacher.name);
+
+    await this.hangupWithMessageByKey('MANAGER.REPORT_STATUS_TODAY', {
+      reportedList: reportedNames.length ? reportedNames.join(', ') : 'אין',
+      notReportedList: notReportedNames.length ? notReportedNames.join(', ') : 'כולן',
+    });
   }
 
   private async processTransportationCall(): Promise<void> {
@@ -190,7 +232,12 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       if (!student) {
         await this.sendMessageByKey('SEMINAR.INVALID_STUDENT_NUM');
       } else {
-        absentStudentReferenceIds.add(student.id);
+        const nameConfirmed = await this.askConfirmation('SEMINAR.CONFIRM_STUDENT_NAME', { studentName: student.name });
+        if (nameConfirmed) {
+          absentStudentReferenceIds.add(student.id);
+        } else {
+          await this.sendMessageByKey('SEMINAR.STUDENT_NAME_REJECTED');
+        }
       }
       input = await this.askForInputByKey('SEMINAR.ABSENT_STUDENT_PROMPT');
     }

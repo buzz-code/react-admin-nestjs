@@ -12,6 +12,64 @@ function israelTimeAt(hour: number, minute: number): Date {
   return new Date(utcMs);
 }
 
+// ---- Reusable scenario-step helpers (each mutates and returns the same builder) ----
+
+function respondToTz(builder: YemotScenarioBuilder, tz: string): YemotScenarioBuilder {
+  return builder.systemAsks(/enter.*id/i).userResponds(tz);
+}
+
+function rejectTz(builder: YemotScenarioBuilder, tz: string): YemotScenarioBuilder {
+  return builder.systemAsks(/enter.*id/i).userResponds(tz).systemSends(/not found|invalid/i);
+}
+
+function respondToTransport(builder: YemotScenarioBuilder, num: string): YemotScenarioBuilder {
+  return builder.systemAsks(/transport/i).userResponds(num);
+}
+
+function rejectTransport(builder: YemotScenarioBuilder, num: string): YemotScenarioBuilder {
+  return builder.systemAsks(/transport/i).userResponds(num).systemSends(/invalid|try again/i);
+}
+
+function confirmDeparture(builder: YemotScenarioBuilder, confirm: boolean): YemotScenarioBuilder {
+  return builder.systemAsks(/departure.*07:30/i).userResponds(confirm ? '1' : '2');
+}
+
+function askForKlass(builder: YemotScenarioBuilder, klassKey: string): YemotScenarioBuilder {
+  return builder.systemAsks(/enter klass number/i).userResponds(klassKey);
+}
+
+function rejectKlass(builder: YemotScenarioBuilder, klassKey: string): YemotScenarioBuilder {
+  return builder.systemAsks(/enter klass number/i).userResponds(klassKey).systemSends(/invalid klass/i);
+}
+
+function reportAbsentStudent(builder: YemotScenarioBuilder, studentNumber: string): YemotScenarioBuilder {
+  return builder
+    .systemAsks(/enter absent student number/i)
+    .userResponds(studentNumber)
+    .systemAsks(/confirm student/i)
+    .userResponds('1');
+}
+
+function rejectAbsentStudentName(builder: YemotScenarioBuilder, studentNumber: string): YemotScenarioBuilder {
+  return builder
+    .systemAsks(/enter absent student number/i)
+    .userResponds(studentNumber)
+    .systemAsks(/confirm student/i)
+    .userResponds('2')
+    .systemSends(/name rejected/i);
+}
+
+function rejectStudentNumber(builder: YemotScenarioBuilder, studentNumber: string): YemotScenarioBuilder {
+  return builder
+    .systemAsks(/enter absent student number/i)
+    .userResponds(studentNumber)
+    .systemSends(/invalid student number/i);
+}
+
+function finishAbsentStudentEntry(builder: YemotScenarioBuilder): YemotScenarioBuilder {
+  return builder.systemAsks(/enter absent student number/i).userResponds('0');
+}
+
 describe('YemotHandlerService — react-admin-nestjs', () => {
   const runner = new YemotScenarioRunner(YemotHandlerService as any);
 
@@ -52,20 +110,16 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
   it('happy path — valid TZ, valid transport, confirmed departure', async () => {
     jest.setSystemTime(israelTimeAt(7, 0));
 
-    const scenario = new YemotScenarioBuilder('Transport happy path')
+    const builder = new YemotScenarioBuilder('Transport happy path')
       .seed('User', [baseUser])
       .seed('Student', [{ id: 100, userId: 1, tz: '123456789', name: 'Test Student' }])
       .seed('Transportation', [{ id: 10, userId: 1, key: 5, departureTime: '07:30' }])
       .seed('StudentKlass', [{ id: 50, userId: 1, studentReferenceId: 100, klassReferenceId: 200 }])
-      .seed('Text', baseTexts)
-      .systemAsks(/enter.*id/i)
-      .userResponds('123456789')
-      .systemAsks(/transport/i)
-      .userResponds('5')
-      .systemAsks(/departure.*07:30/i)
-      .userResponds('1')
-      .systemHangsUp(/success/i)
-      .build();
+      .seed('Text', baseTexts);
+    respondToTz(builder, '123456789');
+    respondToTransport(builder, '5');
+    confirmDeparture(builder, true);
+    const scenario = builder.systemHangsUp(/success/i).build();
 
     const result = await runner.run(scenario);
     expect(result.passed).toBe(true);
@@ -75,23 +129,17 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
   it('invalid TZ — error message then retry with valid TZ', async () => {
     jest.setSystemTime(israelTimeAt(7, 0));
 
-    const scenario = new YemotScenarioBuilder('Invalid TZ retry')
+    const builder = new YemotScenarioBuilder('Invalid TZ retry')
       .seed('User', [baseUser])
       .seed('Student', [{ id: 100, userId: 1, tz: '123456789', name: 'Test Student' }])
       .seed('Transportation', [{ id: 10, userId: 1, key: 5, departureTime: '07:30' }])
       .seed('StudentKlass', [{ id: 50, userId: 1, studentReferenceId: 100, klassReferenceId: 200 }])
-      .seed('Text', baseTexts)
-      .systemAsks(/enter.*id/i)
-      .userResponds('999')
-      .systemSends(/not found|invalid/i)
-      .systemAsks(/enter.*id/i)
-      .userResponds('123456789')
-      .systemAsks(/transport/i)
-      .userResponds('5')
-      .systemAsks(/departure.*07:30/i)
-      .userResponds('1')
-      .systemHangsUp(/success/i)
-      .build();
+      .seed('Text', baseTexts);
+    rejectTz(builder, '999');
+    respondToTz(builder, '123456789');
+    respondToTransport(builder, '5');
+    confirmDeparture(builder, true);
+    const scenario = builder.systemHangsUp(/success/i).build();
 
     const result = await runner.run(scenario);
     expect(result.passed).toBe(true);
@@ -102,7 +150,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const scenario = new YemotScenarioBuilder('Already reported')
+    const builder = new YemotScenarioBuilder('Already reported')
       .seed('User', [baseUser])
       .seed('Student', [{ id: 100, userId: 1, tz: '123456789', name: 'Test Student' }])
       .seed('KnownAbsence', [
@@ -117,11 +165,9 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
           klassReferenceId: 200,
         },
       ])
-      .seed('Text', baseTexts)
-      .systemAsks(/enter.*id/i)
-      .userResponds('123456789')
-      .systemHangsUp(/already reported/i)
-      .build();
+      .seed('Text', baseTexts);
+    respondToTz(builder, '123456789');
+    const scenario = builder.systemHangsUp(/already reported/i).build();
 
     const result = await runner.run(scenario);
     expect(result.passed).toBe(true);
@@ -131,23 +177,17 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
   it('invalid transport — error message then retry with valid transport', async () => {
     jest.setSystemTime(israelTimeAt(7, 0));
 
-    const scenario = new YemotScenarioBuilder('Invalid transport retry')
+    const builder = new YemotScenarioBuilder('Invalid transport retry')
       .seed('User', [baseUser])
       .seed('Student', [{ id: 100, userId: 1, tz: '123456789', name: 'Test Student' }])
       .seed('Transportation', [{ id: 10, userId: 1, key: 5, departureTime: '07:30' }])
       .seed('StudentKlass', [{ id: 50, userId: 1, studentReferenceId: 100, klassReferenceId: 200 }])
-      .seed('Text', baseTexts)
-      .systemAsks(/enter.*id/i)
-      .userResponds('123456789')
-      .systemAsks(/transport/i)
-      .userResponds('99')
-      .systemSends(/invalid|try again/i)
-      .systemAsks(/transport/i)
-      .userResponds('5')
-      .systemAsks(/departure.*07:30/i)
-      .userResponds('1')
-      .systemHangsUp(/success/i)
-      .build();
+      .seed('Text', baseTexts);
+    respondToTz(builder, '123456789');
+    rejectTransport(builder, '99');
+    respondToTransport(builder, '5');
+    confirmDeparture(builder, true);
+    const scenario = builder.systemHangsUp(/success/i).build();
 
     const result = await runner.run(scenario);
     expect(result.passed).toBe(true);
@@ -156,19 +196,15 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
   it('late departure — user says no to confirmation, hangup with LATE_DEPARTURE', async () => {
     jest.setSystemTime(israelTimeAt(7, 0));
 
-    const scenario = new YemotScenarioBuilder('Late departure')
+    const builder = new YemotScenarioBuilder('Late departure')
       .seed('User', [baseUser])
       .seed('Student', [{ id: 100, userId: 1, tz: '123456789', name: 'Test Student' }])
       .seed('Transportation', [{ id: 10, userId: 1, key: 5, departureTime: '07:30' }])
-      .seed('Text', baseTexts)
-      .systemAsks(/enter.*id/i)
-      .userResponds('123456789')
-      .systemAsks(/transport/i)
-      .userResponds('5')
-      .systemAsks(/departure.*07:30/i)
-      .userResponds('2')
-      .systemHangsUp(/departure time passed/i)
-      .build();
+      .seed('Text', baseTexts);
+    respondToTz(builder, '123456789');
+    respondToTransport(builder, '5');
+    confirmDeparture(builder, false);
+    const scenario = builder.systemHangsUp(/departure time passed/i).build();
 
     const result = await runner.run(scenario);
     expect(result.passed).toBe(true);
@@ -180,19 +216,15 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
   it('no class found — hangup with STUDENT.NO_CLASS', async () => {
     jest.setSystemTime(israelTimeAt(7, 0));
 
-    const scenario = new YemotScenarioBuilder('No class found')
+    const builder = new YemotScenarioBuilder('No class found')
       .seed('User', [baseUser])
       .seed('Student', [{ id: 100, userId: 1, tz: '123456789', name: 'Test Student' }])
       .seed('Transportation', [{ id: 10, userId: 1, key: 5, departureTime: '07:30' }])
-      .seed('Text', baseTexts)
-      .systemAsks(/enter.*id/i)
-      .userResponds('123456789')
-      .systemAsks(/transport/i)
-      .userResponds('5')
-      .systemAsks(/departure.*07:30/i)
-      .userResponds('1')
-      .systemHangsUp(/no class/i)
-      .build();
+      .seed('Text', baseTexts);
+    respondToTz(builder, '123456789');
+    respondToTransport(builder, '5');
+    confirmDeparture(builder, true);
+    const scenario = builder.systemHangsUp(/no class/i).build();
 
     const result = await runner.run(scenario);
     expect(result.passed).toBe(true);
@@ -216,20 +248,16 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
   it('before deadline — at 8:49, continues to student input', async () => {
     jest.setSystemTime(israelTimeAt(8, 49));
 
-    const scenario = new YemotScenarioBuilder('Before deadline at 8:49')
+    const builder = new YemotScenarioBuilder('Before deadline at 8:49')
       .seed('User', [baseUser])
       .seed('Student', [{ id: 100, userId: 1, tz: '123456789', name: 'Test Student' }])
       .seed('Transportation', [{ id: 10, userId: 1, key: 5, departureTime: '07:30' }])
       .seed('StudentKlass', [{ id: 50, userId: 1, studentReferenceId: 100, klassReferenceId: 200 }])
-      .seed('Text', baseTexts)
-      .systemAsks(/enter.*id/i)
-      .userResponds('123456789')
-      .systemAsks(/transport/i)
-      .userResponds('5')
-      .systemAsks(/departure.*07:30/i)
-      .userResponds('1')
-      .systemHangsUp(/success/i)
-      .build();
+      .seed('Text', baseTexts);
+    respondToTz(builder, '123456789');
+    respondToTransport(builder, '5');
+    confirmDeparture(builder, true);
+    const scenario = builder.systemHangsUp(/success/i).build();
 
     const result = await runner.run(scenario);
     expect(result.passed).toBe(true);
@@ -244,6 +272,8 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       { userId: 0, name: 'SEMINAR.ABSENT_STUDENT_PROMPT', description: '', value: 'Enter absent student number, or 0 to finish' },
       { userId: 0, name: 'SEMINAR.INVALID_STUDENT_NUM', description: '', value: 'Invalid student number, try again' },
       { userId: 0, name: 'SEMINAR.NO_STUDENTS_IN_KLASS', description: '', value: 'No students found for this klass' },
+      { userId: 0, name: 'SEMINAR.CONFIRM_STUDENT_NAME', description: '', value: 'Confirm student {studentName}' },
+      { userId: 0, name: 'SEMINAR.STUDENT_NAME_REJECTED', description: '', value: 'Name rejected, try again' },
     ];
     const allTexts = [...baseTexts, ...seminarTexts];
 
@@ -265,7 +295,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const year = getCurrentHebrewYear();
       const klass = { id: 200, userId: 1, key: 7, name: 'Klass Seven', year };
 
-      const scenario = new YemotScenarioBuilder('Seminar happy path with report group')
+      const builder = new YemotScenarioBuilder('Seminar happy path with report group')
         .seed('User', [seminarUser({ seminarAttendanceYemot: true, lessonSignature: true })])
         .seed('Teacher', [teacher])
         .seed('Klass', [klass])
@@ -274,15 +304,11 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('Text', allTexts)
         .seed('AttReport', [])
         .seed('ReportGroup', [])
-        .seed('ReportGroupSession', [])
-        .systemAsks(/enter klass number/i)
-        .userResponds('7')
-        .systemAsks(/enter absent student number/i)
-        .userResponds('11')
-        .systemAsks(/enter absent student number/i)
-        .userResponds('0')
-        .systemHangsUp(/success/i)
-        .build();
+        .seed('ReportGroupSession', []);
+      askForKlass(builder, '7');
+      reportAbsentStudent(builder, '11');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
 
       const result = await runner.run(scenario);
       expect(result.passed).toBe(true);
@@ -311,7 +337,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const year = getCurrentHebrewYear();
       const klass = { id: 210, userId: 1, key: 8, name: 'Klass Eight', year };
 
-      const scenario = new YemotScenarioBuilder('Seminar happy path without report group')
+      const builder = new YemotScenarioBuilder('Seminar happy path without report group')
         .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
         .seed('Teacher', [teacher])
         .seed('Klass', [klass])
@@ -320,15 +346,11 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('Text', allTexts)
         .seed('AttReport', [])
         .seed('ReportGroup', [])
-        .seed('ReportGroupSession', [])
-        .systemAsks(/enter klass number/i)
-        .userResponds('8')
-        .systemAsks(/enter absent student number/i)
-        .userResponds('11')
-        .systemAsks(/enter absent student number/i)
-        .userResponds('0')
-        .systemHangsUp(/success/i)
-        .build();
+        .seed('ReportGroupSession', []);
+      askForKlass(builder, '8');
+      reportAbsentStudent(builder, '11');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
 
       const result = await runner.run(scenario);
       expect(result.passed).toBe(true);
@@ -361,22 +383,17 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const year = getCurrentHebrewYear();
       const klass = { id: 220, userId: 1, key: 9, name: 'Klass Nine', year };
 
-      const scenario = new YemotScenarioBuilder('Seminar invalid klass retry')
+      const builder = new YemotScenarioBuilder('Seminar invalid klass retry')
         .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
         .seed('Teacher', [teacher])
         .seed('Klass', [klass])
         .seed('Student', roster())
         .seed('StudentKlass', studentKlasses(220, year))
-        .seed('Text', allTexts)
-        .systemAsks(/enter klass number/i)
-        .userResponds('99')
-        .systemSends(/invalid klass/i)
-        .systemAsks(/enter klass number/i)
-        .userResponds('9')
-        .systemAsks(/enter absent student number/i)
-        .userResponds('0')
-        .systemHangsUp(/success/i)
-        .build();
+        .seed('Text', allTexts);
+      rejectKlass(builder, '99');
+      askForKlass(builder, '9');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
 
       const result = await runner.run(scenario);
       expect(result.passed).toBe(true);
@@ -387,27 +404,49 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const year = getCurrentHebrewYear();
       const klass = { id: 230, userId: 1, key: 10, name: 'Klass Ten', year };
 
-      const scenario = new YemotScenarioBuilder('Seminar invalid student number retry')
+      const builder = new YemotScenarioBuilder('Seminar invalid student number retry')
         .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
         .seed('Teacher', [teacher])
         .seed('Klass', [klass])
         .seed('Student', roster())
         .seed('StudentKlass', studentKlasses(230, year))
-        .seed('Text', allTexts)
-        .systemAsks(/enter klass number/i)
-        .userResponds('10')
-        .systemAsks(/enter absent student number/i)
-        .userResponds('999')
-        .systemSends(/invalid student number/i)
-        .systemAsks(/enter absent student number/i)
-        .userResponds('11')
-        .systemAsks(/enter absent student number/i)
-        .userResponds('0')
-        .systemHangsUp(/success/i)
-        .build();
+        .seed('Text', allTexts);
+      askForKlass(builder, '10');
+      rejectStudentNumber(builder, '999');
+      reportAbsentStudent(builder, '11');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
 
       const result = await runner.run(scenario);
       expect(result.passed).toBe(true);
+    });
+
+    it('name confirmation rejected — retries the student number prompt', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 235, userId: 1, key: 15, name: 'Klass Fifteen', year };
+
+      const builder = new YemotScenarioBuilder('Seminar name confirmation rejected')
+        .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
+        .seed('Teacher', [teacher])
+        .seed('Klass', [klass])
+        .seed('Student', roster())
+        .seed('StudentKlass', studentKlasses(235, year))
+        .seed('Text', allTexts)
+        .seed('AttReport', []);
+      askForKlass(builder, '15');
+      rejectAbsentStudentName(builder, '11');
+      reportAbsentStudent(builder, '12');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+
+      const byStudent = Object.fromEntries(result.saved['AttReport'].map((r: any) => [r.studentReferenceId, r]));
+      expect(byStudent[101].absCount).toBe(0);
+      expect(byStudent[102].absCount).toBe(1);
     });
 
     it('already reported today for this klass — hangup with SEMINAR.ALREADY_REPORTED', async () => {
@@ -417,18 +456,16 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      const scenario = new YemotScenarioBuilder('Seminar already reported for klass')
+      const builder = new YemotScenarioBuilder('Seminar already reported for klass')
         .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
         .seed('Teacher', [teacher])
         .seed('Klass', [klass])
         .seed('AttReport', [
           { id: 900, userId: 1, studentReferenceId: 101, klassReferenceId: 240, reportDate: today, absCount: 0 },
         ])
-        .seed('Text', allTexts)
-        .systemAsks(/enter klass number/i)
-        .userResponds('11')
-        .systemHangsUp(/already reported/i)
-        .build();
+        .seed('Text', allTexts);
+      askForKlass(builder, '11');
+      const scenario = builder.systemHangsUp(/already reported/i).build();
 
       const result = await runner.run(scenario);
       expect(result.passed).toBe(true);
@@ -442,7 +479,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      const scenario = new YemotScenarioBuilder('Seminar auto-detected schedule')
+      const builder = new YemotScenarioBuilder('Seminar auto-detected schedule')
         .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
         .seed('Teacher', [teacher])
         .seed('Klass', [klass])
@@ -460,11 +497,9 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('Student', roster())
         .seed('StudentKlass', studentKlasses(260, year))
         .seed('Text', allTexts)
-        .seed('AttReport', [])
-        .systemAsks(/enter absent student number/i)
-        .userResponds('0')
-        .systemHangsUp(/success/i)
-        .build();
+        .seed('AttReport', []);
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
 
       const result = await runner.run(scenario);
       expect(result.passed).toBe(true);
@@ -482,20 +517,17 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const year = getCurrentHebrewYear();
       const klass = { id: 270, userId: 1, key: 14, name: 'Klass Fourteen', year };
 
-      const scenario = new YemotScenarioBuilder('Seminar no schedule fallback')
+      const builder = new YemotScenarioBuilder('Seminar no schedule fallback')
         .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
         .seed('Teacher', [teacher])
         .seed('Klass', [klass])
         .seed('Student', roster())
         .seed('StudentKlass', studentKlasses(270, year))
         .seed('Text', allTexts)
-        .seed('AttReport', [])
-        .systemAsks(/enter klass number/i)
-        .userResponds('14')
-        .systemAsks(/enter absent student number/i)
-        .userResponds('0')
-        .systemHangsUp(/success/i)
-        .build();
+        .seed('AttReport', []);
+      askForKlass(builder, '14');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
 
       const result = await runner.run(scenario);
       expect(result.passed).toBe(true);
@@ -512,14 +544,88 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const year = getCurrentHebrewYear();
       const klass = { id: 250, userId: 1, key: 12, name: 'Klass Twelve', year };
 
-      const scenario = new YemotScenarioBuilder('Seminar no students in klass')
+      const builder = new YemotScenarioBuilder('Seminar no students in klass')
         .seed('User', [seminarUser({ seminarAttendanceYemot: true })])
         .seed('Teacher', [teacher])
         .seed('Klass', [klass])
-        .seed('Text', allTexts)
-        .systemAsks(/enter klass number/i)
-        .userResponds('12')
-        .systemHangsUp(/no students/i)
+        .seed('Text', allTexts);
+      askForKlass(builder, '12');
+      const scenario = builder.systemHangsUp(/no students/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+    });
+  });
+
+  describe('manager report call', () => {
+    const managerTexts = [
+      { userId: 0, name: 'MANAGER.NO_SCHEDULE_TODAY', description: '', value: 'No teachers scheduled today' },
+      {
+        userId: 0,
+        name: 'MANAGER.REPORT_STATUS_TODAY',
+        description: '',
+        value: 'Reported: {reportedList}. Not reported: {notReportedList}.',
+      },
+    ];
+    const managerAllTexts = [...baseTexts, ...managerTexts];
+    const managerUser = (managerPhone: string) => ({
+      ...baseUser,
+      permissions: { seminarAttendanceYemot: true },
+      additionalData: { managerPhone },
+    });
+
+    it('reports which teachers reported today and which did not', async () => {
+      jest.setSystemTime(israelTimeAt(10, 0));
+      const year = getCurrentHebrewYear();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const scenario = new YemotScenarioBuilder('Manager report status')
+        .seed('User', [managerUser('0501234567')])
+        .seed('Teacher', [
+          { id: 1, userId: 1, tz: '900000001', name: 'Teacher A', phone: '0509999999' },
+          { id: 2, userId: 1, tz: '900000002', name: 'Teacher B', phone: '0508888888' },
+        ])
+        .seed('LessonSchedule', [
+          {
+            userId: 1,
+            year,
+            teacherReferenceId: 1,
+            klassReferenceId: 200,
+            lessonReferenceId: 700,
+            scheduleDate: today,
+            startTime: '08:00',
+          },
+          {
+            userId: 1,
+            year,
+            teacherReferenceId: 2,
+            klassReferenceId: 201,
+            lessonReferenceId: 701,
+            scheduleDate: today,
+            startTime: '09:00',
+          },
+        ])
+        .seed('AttReport', [
+          { id: 900, userId: 1, teacherReferenceId: 1, klassReferenceId: 200, reportDate: today, absCount: 0 },
+        ])
+        .seed('Text', managerAllTexts)
+        .systemHangsUp(/Teacher A.*Teacher B/s)
+        .build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+    });
+
+    it('no lesson schedules today — hangup with MANAGER.NO_SCHEDULE_TODAY', async () => {
+      jest.setSystemTime(israelTimeAt(10, 0));
+
+      const scenario = new YemotScenarioBuilder('Manager no schedule today')
+        .seed('User', [managerUser('0501234567')])
+        .seed('Text', managerAllTexts)
+        .systemHangsUp(/no teachers scheduled/i)
         .build();
 
       const result = await runner.run(scenario);

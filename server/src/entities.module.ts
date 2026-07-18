@@ -42,6 +42,7 @@ import phoneCampaignConfig from '@shared/entities/configs/phone-campaign.config'
 import { Student } from './db/entities/Student.entity';
 import { Teacher } from './db/entities/Teacher.entity';
 import userConfig from '@shared/entities/configs/user.config';
+import { TeacherReportedToday } from './db/view-entities/TeacherReportedToday.entity';
 
 registerEntityNameMap({
   att_report: 'נוכחות',
@@ -97,6 +98,7 @@ registerEntityNameMap({
     BaseEntityModule.register(uploadedFileConfig),
     BaseEntityModule.register(phoneTemplateConfig),
     BaseEntityModule.register(phoneCampaignConfig),
+    BaseEntityModule.register({ entity: TeacherReportedToday }),
   ],
 })
 export class EntitiesModule {}
