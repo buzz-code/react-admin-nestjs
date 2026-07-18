@@ -67,7 +67,7 @@ export default function Settings() {
                 <ResourceContextProvider value="settings">
                     <SimpleForm onSubmit={handleSave} defaultValues={defaultValues} toolbar={<SettingsToolbar />}>
                         <GeneralSettingsInput />
-                        <PhoneSettingsInput subtitle="מספר הטלפון שלך, לזיהוי שיחות נכנסות למערכת" />
+                        <PhoneSettingsInput />
                         <ReportStylesInput />
                         <ReportCardSettingsInput />
                         <CommonSettingsAccordion
