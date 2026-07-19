@@ -133,12 +133,32 @@ const App: React.FunctionComponent<AppProps> = (props) => {
     );
 };
 
+const headerContainerStyle: React.CSSProperties = {
+    paddingBottom: '1rem',
+}
+const headerImageWrapperStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    width: '100%',
+}
+const placeHolderHeaderImageWrapperStyle: React.CSSProperties = {
+    width: '100%',
+    visibility: 'hidden',
+}
 const headerImageStyle: React.CSSProperties = {
     width: '95%',
     margin: '0 2.5%',
 }
 const Header = ({ image }: { image: Image }) => image && (
-    <img src={image.fileData.src} style={headerImageStyle} />
+    <div style={headerContainerStyle}>
+        <div style={placeHolderHeaderImageWrapperStyle}>
+            <img src={image.fileData.src} style={headerImageStyle} />
+        </div>
+        <div style={headerImageWrapperStyle}>
+            <img src={image.fileData.src} style={headerImageStyle} />
+        </div>
+    </div>
 );
 
 const footerContainerStyle: React.CSSProperties = {
