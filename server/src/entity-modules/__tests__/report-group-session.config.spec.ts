@@ -5,7 +5,7 @@ import config from '../report-group-session.config';
 createEntityConfigTests('ReportGroupSessionConfig', config, {
   entity: ReportGroupSession,
   expectedJoins: {
-    reportGroup: { eager: false },
+    reportGroup: { eager: false, exclude: ['signatureData'] },
     attReports: { eager: false },
     grades: { eager: false },
   },

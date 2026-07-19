@@ -97,7 +97,7 @@ function getConfig(): BaseEntityModuleOptions {
     service: ReportGroupSessionService,
     query: {
       join: {
-        reportGroup: { eager: false },
+        reportGroup: { eager: false, exclude: ['signatureData'] },
         attReports: { eager: false },
         grades: { eager: false },
       },
