@@ -2,7 +2,7 @@ import * as React from 'react';
 import { In } from 'typeorm';
 import { User } from 'src/db/entities/User.entity';
 import { convertToReactStyle, ReportStyles } from '@shared/utils/report/react-user-styles/reportStyles';
-import { wrapWithStyles, useStyles, useFontLinks } from '@shared/utils/report/react-user-styles/StylesContext';
+import { wrapWithStyles, useStyles, useFontFaceCss } from '@shared/utils/report/react-user-styles/StylesContext';
 import { Student } from 'src/db/entities/Student.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
@@ -107,11 +107,11 @@ const appTableStyle: React.CSSProperties = {
 }
 const App: React.FunctionComponent<AppProps> = (props) => {
     const { appStyle } = useAppStyles();
-    const fontLinks = useFontLinks();
+    const fontFaceCss = useFontFaceCss();
 
     return (
         <div dir='rtl' style={appStyle}>
-            {fontLinks.map((link, index) => (<link key={index} rel='stylesheet' href={link} />))}
+            <style>{fontFaceCss}</style>
             <table style={appTableStyle}>
                 <thead><tr><th>
                     <Header image={props.images.reportLogo} />
