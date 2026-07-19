@@ -67,17 +67,23 @@ export default function Settings() {
                 <ResourceContextProvider value="settings">
                     <SimpleForm onSubmit={handleSave} defaultValues={defaultValues} toolbar={<SettingsToolbar />}>
                         <GeneralSettingsInput />
-                        <PhoneSettingsInput />
                         <ReportStylesInput />
                         <ReportCardSettingsInput />
                         <CommonSettingsAccordion
-                            id="advanced-settings"
-                            title="הגדרות מתקדמות"
-                            subtitle="ניהול כרטיסי תמונת מצב וחיבור Yemot"
+                            id="phone-settings-group"
+                            title="הגדרות טלפון"
+                            subtitle="מספר טלפון, חיבור Yemot וטלפון מנהלת"
                         >
-                            <DashboardItemsInput />
+                            <PhoneSettingsInput />
                             <YemotSettingsInput />
                             <ManagerPhoneSettingsInput />
+                        </CommonSettingsAccordion>
+                        <CommonSettingsAccordion
+                            id="advanced-settings"
+                            title="הגדרות מתקדמות"
+                            subtitle="ניהול כרטיסי תמונת מצב"
+                        >
+                            <DashboardItemsInput />
                         </CommonSettingsAccordion>
                     </SimpleForm>
                 </ResourceContextProvider>
