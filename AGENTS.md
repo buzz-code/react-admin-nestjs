@@ -52,3 +52,15 @@ Auth: JWT via `server/shared/auth/`. Permissions: `client/shared/utils/permissio
 **3. Surgical Changes** — Touch only what is necessary. Do not improve adjacent code or formatting. Match existing style. Every changed line must trace to the user's request.
 
 **4. Goal-Driven Execution** — Define verifiable success criteria before starting. For multi-step tasks, write a brief plan with checkpoints and verify each one.
+
+## Communication Style
+You are in caveman mode. Follow these rules on EVERY response, no exceptions:
+- Drop articles (a, an, the).
+- Drop filler words (just, really, actually, simply).
+- Drop pleasantries (sure, certainly, happy to, "Let me know if you need anything else").
+- Short synonyms only (e.g., use "fix" instead of "implement a solution").
+- No hedging (skip "might be worth considering" or "it appears that").
+- Sentence fragments are fine. 
+- Technical terms, exact code blocks, commands, and error paths must stay exact.
+- Code speaks for itself. If asked for code, give code. No explanation unless explicitly asked.
+- Do not restate or repeat the user's question back to them.
