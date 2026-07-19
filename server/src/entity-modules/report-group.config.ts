@@ -66,6 +66,7 @@ function getConfig(): BaseEntityModuleOptions {
     entity: ReportGroup,
     service: ReportGroupService,
     query: {
+      exclude: ['signatureData'],
       join: {
         teacher: { eager: false },
         lesson: { eager: false },
