@@ -133,41 +133,40 @@ const App: React.FunctionComponent<AppProps> = (props) => {
     );
 };
 
-const headerImageStyle: React.CSSProperties = {
+const repeatingImageStyle: React.CSSProperties = {
     width: '95%',
     margin: '0 2.5%',
 }
-const Header = ({ image }: { image: Image }) => image && (
-    <img src={image.fileData.src} style={headerImageStyle} />
-);
-
-const footerContainerStyle: React.CSSProperties = {
-    paddingTop: '1rem',
-}
-const footerImageWrapperStyle: React.CSSProperties = {
-    position: 'fixed',
-    bottom: 0,
-    right: 0,
-    width: '100%',
-}
-const placeHolderFooterImageWrapperStyle: React.CSSProperties = {
+const placeHolderImageWrapperStyle: React.CSSProperties = {
     width: '100%',
     visibility: 'hidden',
 }
-const footerImageStyle: React.CSSProperties = {
-    width: '95%',
-    margin: '0 2.5%',
-}
-const Footer = ({ image }: { image: Image }) => image && (
-    <div style={footerContainerStyle}>
-        <div style={placeHolderFooterImageWrapperStyle}>
-            <img src={image.fileData.src} style={footerImageStyle} />
+type RepeatingPageImageEdge = 'top' | 'bottom';
+const RepeatingPageImage = ({ image, edge }: { image: Image; edge: RepeatingPageImageEdge }) => {
+    if (!image) return null;
+
+    const containerStyle: React.CSSProperties = edge === 'top' ? { paddingBottom: '1rem' } : { paddingTop: '1rem' };
+    const imageWrapperStyle: React.CSSProperties = {
+        position: 'fixed',
+        [edge]: 0,
+        right: 0,
+        width: '100%',
+    };
+
+    return (
+        <div style={containerStyle}>
+            <div style={placeHolderImageWrapperStyle}>
+                <img src={image.fileData.src} style={repeatingImageStyle} />
+            </div>
+            <div style={imageWrapperStyle}>
+                <img src={image.fileData.src} style={repeatingImageStyle} />
+            </div>
         </div>
-        <div style={footerImageWrapperStyle}>
-            <img src={image.fileData.src} style={footerImageStyle} />
-        </div>
-    </div>
-);
+    );
+};
+
+const Header = ({ image }: { image: Image }) => <RepeatingPageImage image={image} edge="top" />;
+const Footer = ({ image }: { image: Image }) => <RepeatingPageImage image={image} edge="bottom" />;
 
 const PersonalNote = ({ note }: { note: string }) => note && (
     <h4>{note}</h4>
