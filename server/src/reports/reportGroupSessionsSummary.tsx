@@ -8,7 +8,7 @@ import { formatDate, formatDisplayName } from '@shared/utils/formatting/formatte
 import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { ReactToPdfReportGenerator } from '@shared/utils/report/react-to-pdf.generator';
 import { convertToReactStyle, ReportStyles } from '@shared/utils/report/react-user-styles/reportStyles';
-import { wrapWithStyles, useStyles, useFontFaceCss } from '@shared/utils/report/react-user-styles/StylesContext';
+import { wrapWithStyles, useStyles, useFontLinks } from '@shared/utils/report/react-user-styles/StylesContext';
 
 // Define report element types for styling
 enum ReportElementType {
@@ -152,14 +152,14 @@ interface HtmlDocumentProps {
 }
 
 const HtmlDocument: React.FC<HtmlDocumentProps> = ({ title, children }) => {
-  const fontFaceCss = useFontFaceCss();
-
+  const fontLinks = useFontLinks();
+  
   return (
     <html dir="rtl">
       <head>
         <meta charSet="UTF-8" />
         <title>{title}</title>
-        <style>{fontFaceCss}</style>
+        {fontLinks.map((link, index) => (<link key={index} rel='stylesheet' href={link} />))}
         <style>{`
           * { box-sizing: border-box; }
           body { margin: 20px; direction: rtl; }

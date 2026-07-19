@@ -10,7 +10,7 @@ import { Teacher } from 'src/db/entities/Teacher.entity';
 import { Lesson } from 'src/db/entities/Lesson.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { convertToReactStyle, ReportStyles } from '@shared/utils/report/react-user-styles/reportStyles';
-import { wrapWithStyles, useStyles, useFontFaceCss } from '@shared/utils/report/react-user-styles/StylesContext';
+import { wrapWithStyles, useStyles, useFontLinks } from '@shared/utils/report/react-user-styles/StylesContext';
 import { IGetReportDataFunction } from '@shared/utils/report/report.generators';
 import { ReactToPdfReportGenerator } from '@shared/utils/report/react-to-pdf.generator';
 import { formatTime } from '@shared/utils/formatting/formatter.util';
@@ -370,7 +370,7 @@ interface HtmlDocumentProps {
 }
 
 const HtmlDocument: React.FC<HtmlDocumentProps> = ({ title, children }) => {
-  const fontFaceCss = useFontFaceCss();
+  const fontLinks = useFontLinks();
 
   const containerStyle: React.CSSProperties = {
     ...convertToReactStyle(useStyles(ReportElementType.DOCUMENT)),
@@ -383,7 +383,7 @@ const HtmlDocument: React.FC<HtmlDocumentProps> = ({ title, children }) => {
       <head>
         <meta charSet="utf-8" />
         <title>{title}</title>
-        <style>{fontFaceCss}</style>
+        {fontLinks.map((link, index) => (<link key={index} rel='stylesheet' href={link} />))}
       </head>
       <body>
         <div style={containerStyle}>
