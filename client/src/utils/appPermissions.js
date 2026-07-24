@@ -16,6 +16,7 @@ export const appPermissions = {
     studentAttendanceByKlass: 'studentAttendanceByKlass',
     seminarAttendanceYemot: 'seminarAttendanceYemot',
     lessonSchedule: 'lessonSchedule',
+    perDateLessonCount: 'perDateLessonCount',
 };
 
 export const isScannerUpload = (permissions) => hasPermissionLogic(permissions, appPermissions.scannerUpload);
@@ -71,3 +72,7 @@ export const useIsSeminarAttendanceYemot = () => useHasPermission(appPermissions
 export const isLessonSchedule = (permissions) =>
     isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.lessonSchedule);
 export const useIsLessonSchedule = () => useHasPermission(appPermissions.lessonSchedule);
+
+export const isPerDateLessonCount = (permissions) =>
+    isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.perDateLessonCount);
+export const useIsPerDateLessonCount = () => useHasPermission(appPermissions.perDateLessonCount);

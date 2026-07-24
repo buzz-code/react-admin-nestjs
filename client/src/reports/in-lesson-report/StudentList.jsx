@@ -24,7 +24,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { CommonSliderInput } from '../../../shared/components/fields/CommonSliderInput';
 import { ReportContext } from './context';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
-import { useIsLessonSignature } from 'src/utils/appPermissions';
+import { useIsLessonSignature, useIsPerDateLessonCount } from 'src/utils/appPermissions';
 
 export const getDefaultReportDate = () => new Date().toISOString().split('T')[0];
 
@@ -32,6 +32,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
     const { gradeMode, isShowLate, students } = useContext(ReportContext);
     const record = useRecordContext();
     const hasLessonSignaturePermission = useIsLessonSignature();
+    const hasPerDateLessonCountPermission = useIsPerDateLessonCount();
     const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
     const columns = useMemo(() => {
@@ -75,11 +76,11 @@ export const StudentList = ({ reportDates, setReportDates }) => {
     );
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
             <Table stickyHeader size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell>
+                        <TableCell sx={{ position: 'sticky', left: 0, zIndex: 3 }}>
                             <Button onClick={addReportDate}>הוסף תאריך חדש</Button>
                         </TableCell>
                         {reportDates.map((date, index) => (
@@ -110,6 +111,16 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                     )}
                                 </div>
 
+                                {!gradeMode && hasPerDateLessonCountPermission && (
+                                    <NumberInput
+                                        source={`lessonDetails[${index}].howManyLessons`}
+                                        label="מספר שיעורים לתאריך זה"
+                                        helperText="ריק = לפי מספר השיעורים המשותף למעלה"
+                                        validate={[minValue(0), maxValue(1_000_000)]}
+                                        fullWidth
+                                    />
+                                )}
+
                                 {hasLessonSignaturePermission && (
                                     <>
                                         <CommonTimeInput
@@ -135,7 +146,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                         ))}
                     </TableRow>
                     <TableRow>
-                        <TableCell>
+                        <TableCell sx={{ position: 'sticky', left: 0, zIndex: 3 }}>
                             <Text>שם התלמידה</Text>
                         </TableCell>
                         {reportDates.map((date, index) =>
@@ -153,7 +164,14 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                             .filter((student) => student.student)
                             .map((student) => (
                                 <TableRow key={student.student.id}>
-                                    <TableCell>
+                                    <TableCell
+                                        sx={{
+                                            position: 'sticky',
+                                            left: 0,
+                                            zIndex: 1,
+                                            backgroundColor: 'background.paper',
+                                        }}
+                                    >
                                         <Text>{student.student.name}</Text>
                                     </TableCell>
                                     {reportDates.map((date, index) => (
@@ -162,7 +180,11 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                             index={index}
                                             columns={columns}
                                             studentId={student.student.id}
-                                            lessonCount={record.howManyLessons}
+                                            lessonCount={
+                                                (hasPerDateLessonCountPermission &&
+                                                    record.lessonDetails?.[index]?.howManyLessons) ||
+                                                record.howManyLessons
+                                            }
                                         />
                                     ))}
                                 </TableRow>

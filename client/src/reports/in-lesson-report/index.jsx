@@ -100,7 +100,7 @@ export const InLessonReport = ({
                         newEntry.grade = rest[studentId]?.[`grade_${index}`] ?? 0;
                         newEntry.comments = rest[studentId]?.[`comments_${index}`] ?? '';
                     } else {
-                        newEntry.howManyLessons = howManyLessons;
+                        newEntry.howManyLessons = lessonDetails?.[index]?.howManyLessons ?? howManyLessons;
                         newEntry.absCount = round(
                             (rest[studentId]?.[`absence_${index}`] ?? 0) +
                                 (rest[studentId]?.[`late_${index}`] ?? 0) * lateValue,
