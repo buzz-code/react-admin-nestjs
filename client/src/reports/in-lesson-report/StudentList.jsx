@@ -80,7 +80,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
             <Table stickyHeader size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell sx={{ position: 'sticky', left: 0, zIndex: 3 }}>
+                        <TableCell sx={{ position: 'sticky', insetInlineStart: 0, zIndex: 3 }}>
                             <Button onClick={addReportDate}>הוסף תאריך חדש</Button>
                         </TableCell>
                         {reportDates.map((date, index) => (
@@ -146,7 +146,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                         ))}
                     </TableRow>
                     <TableRow>
-                        <TableCell sx={{ position: 'sticky', left: 0, zIndex: 3 }}>
+                        <TableCell sx={{ position: 'sticky', insetInlineStart: 0, zIndex: 3 }}>
                             <Text>שם התלמידה</Text>
                         </TableCell>
                         {reportDates.map((date, index) =>
@@ -167,7 +167,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                                     <TableCell
                                         sx={{
                                             position: 'sticky',
-                                            left: 0,
+                                            insetInlineStart: 0,
                                             zIndex: 1,
                                             backgroundColor: 'background.paper',
                                         }}
