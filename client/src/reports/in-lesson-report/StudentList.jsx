@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo, useRef, useState, useLayoutEffect } from 'react';
 import {
     NumberInput,
     DateInput,
@@ -34,6 +34,24 @@ export const StudentList = ({ reportDates, setReportDates }) => {
     const hasLessonSignaturePermission = useIsLessonSignature();
     const hasPerDateLessonCountPermission = useIsPerDateLessonCount();
     const today = useMemo(() => new Date().toISOString().split('T')[0], []);
+
+    // The date/lesson-info header row has variable height (permission-gated fields,
+    // date wrapping), so the column-labels row below it needs its sticky `top` measured
+    // at runtime - a static offset would drift out of sync and the two rows would overlap.
+    const firstHeaderRowRef = useRef(null);
+    const [firstHeaderRowHeight, setFirstHeaderRowHeight] = useState(0);
+
+    useLayoutEffect(() => {
+        const node = firstHeaderRowRef.current;
+        if (!node || typeof ResizeObserver === 'undefined') {
+            return undefined;
+        }
+        const updateHeight = () => setFirstHeaderRowHeight(node.getBoundingClientRect().height);
+        updateHeight();
+        const observer = new ResizeObserver(updateHeight);
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, []);
 
     const columns = useMemo(() => {
         const cols = [];
@@ -79,7 +97,7 @@ export const StudentList = ({ reportDates, setReportDates }) => {
         <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
             <Table stickyHeader size="small">
                 <TableHead>
-                    <TableRow>
+                    <TableRow ref={firstHeaderRowRef}>
                         <TableCell sx={{ position: 'sticky', insetInlineStart: 0, zIndex: 3 }}>
                             <Button onClick={addReportDate}>הוסף תאריך חדש</Button>
                         </TableCell>
@@ -146,12 +164,14 @@ export const StudentList = ({ reportDates, setReportDates }) => {
                         ))}
                     </TableRow>
                     <TableRow>
-                        <TableCell sx={{ position: 'sticky', insetInlineStart: 0, zIndex: 3 }}>
+                        <TableCell
+                            sx={{ position: 'sticky', top: firstHeaderRowHeight, insetInlineStart: 0, zIndex: 3 }}
+                        >
                             <Text>שם התלמידה</Text>
                         </TableCell>
                         {reportDates.map((date, index) =>
                             columns.map((column) => (
-                                <TableCell key={`header-${index}-${column.id}`}>
+                                <TableCell key={`header-${index}-${column.id}`} sx={{ top: firstHeaderRowHeight }}>
                                     <Text>{column.label}</Text>
                                 </TableCell>
                             )),
