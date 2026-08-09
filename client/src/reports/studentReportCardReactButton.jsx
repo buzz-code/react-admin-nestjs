@@ -37,6 +37,11 @@ export default ({ defaultRequestValues }) => {
                 reference="lesson"
                 label="שיעורים שלא ייכללו בתעודה"
             />
+            <CommonReferenceArrayInput
+                source="denyKlassReferenceIds"
+                reference="klass"
+                label="כיתות שלא ייכללו בתעודה"
+            />
             <CommonReferenceInput source="klassTypeReferenceId" reference="klass_type" label="שיוך כיתה" />
             <TextInput source="personalNote" label="הערה לתלמידה" defaultValue="" />
             <NumberInput source="attendanceLessThan" label="הצג רק שורות עם נוכחות נמוכה מ (%)" />

@@ -41,8 +41,6 @@ const filterDefaultValues = {
 };
 
 const additionalBulkButtons = [
-    // <BulkReportButton label='תעודה לתלמידה' icon={<NoteAltIcon />}
-    //     key='studentReportCard' name='studentReportCard' filename='תעודה' />,
     <StudentReportCardReactButton key="studentReportCardReact" defaultRequestValues={filterDefaultValues} />,
     <BulkActionButton
         label="סימון פעיל/לא פעיל"

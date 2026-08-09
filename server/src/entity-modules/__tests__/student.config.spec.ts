@@ -56,7 +56,6 @@ describe('StudentConfig', () => {
     // Properly type the service to include reportsDict
     let service: BaseEntityService<Student> & {
       reportsDict: {
-        studentReportCard: BulkToPdfReportGenerator;
         studentReportCardReact: BulkToPdfReportGenerator;
       };
     };
@@ -121,14 +120,13 @@ describe('StudentConfig', () => {
 
     it('should initialize reports dictionary', () => {
       expect(service.reportsDict).toEqual({
-        studentReportCard: expect.any(BulkToPdfReportGenerator),
         studentReportCardReact: expect.any(BulkToPdfReportGenerator),
       });
     });
 
     describe('getReportData', () => {
       const mockUserId = '123';
-      const mockExtra = { report: 'studentReportCard', someOption: 'value' };
+      const mockExtra = { report: 'studentReportCardReact', someOption: 'value' };
       const mockReq = {
         auth: { someAuth: true },
         parsed: {
