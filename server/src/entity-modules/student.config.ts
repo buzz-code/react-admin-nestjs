@@ -5,7 +5,6 @@ import { IHeader } from '@shared/utils/exporter/types';
 import { getHebrewBooleanFormatter } from '@shared/utils/formatting/formatter.util';
 import { Student } from 'src/db/entities/Student.entity';
 import { CommonReportData } from '@shared/utils/report/types';
-import studentReportCard from '../reports/studentReportCard';
 import { BulkToPdfReportGenerator } from '@shared/utils/report/bulk-to-pdf.generator';
 import studentReportCardReact from 'src/reports/studentReportCardReact';
 import { getUserIdFromUser } from '@shared/auth/auth.util';
@@ -34,7 +33,6 @@ function getConfig(): BaseEntityModuleOptions {
 
 class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
   reportsDict = {
-    studentReportCard: new BulkToPdfReportGenerator(studentReportCard),
     studentReportCardReact: new BulkToPdfReportGenerator(studentReportCardReact),
   };
   async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {

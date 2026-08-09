@@ -171,29 +171,6 @@ describe('StudentKlassConfig', () => {
     });
 
     describe('getReportData', () => {
-      it('should handle studentReportCard report type', async () => {
-        const req = {
-          ...createMockCrudRequest({
-            report: 'studentReportCard',
-            ids: '1,2,3',
-          }),
-          auth: { id: 1 },
-        };
-
-        mockRepository.find.mockResolvedValueOnce([
-          createMockStudentKlass({ studentReferenceId: 101 }),
-          createMockStudentKlass({ studentReferenceId: 102 }),
-          createMockStudentKlass({ studentReferenceId: 103 }),
-        ]);
-
-        await service.getReportData(req);
-
-        expect(mockRepository.find).toHaveBeenCalledWith({
-          where: { id: In([1, 2, 3]) },
-          select: { studentReferenceId: true },
-        });
-      });
-
       it('should handle studentReportCardReact report type', async () => {
         const req = {
           ...createMockCrudRequest({

@@ -128,8 +128,7 @@
 
 ### Reports
 - `/server/src/reports/reportGenerator.ts` - Report generation functionality
-- `/server/src/reports/studentReportCard.ts` - Student report card generation
-- `/server/src/reports/studentReportCardReact.tsx` - React version of student report cards
+- `/server/src/reports/studentReportCardReact.tsx` - Student report card generation
 - `/server/src/reports/teacherReportFile.ts` - Teacher report file generation
 - `/server/src/reports/michlolPopulatedFile.ts` - Michlol populated file generation
 

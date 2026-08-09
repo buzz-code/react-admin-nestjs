@@ -99,6 +99,7 @@ export function getReportsFilterForReportCard(
   globalLessonIdsStr: string,
   denyLessonIdStr: string,
   klassIds?: number[],
+  denyKlassIdStr?: string,
 ): FindOptionsWhere<AttReportAndGrade>[] {
   const denyLessonIds = getAsArray(denyLessonIdStr);
   const lessonFilter: FindOperator<number> = denyLessonIds?.length ? Not(In(denyLessonIds)) : undefined;
@@ -109,8 +110,12 @@ export function getReportsFilterForReportCard(
   };
   const globalLessonIds = getAsArray(globalLessonIdsStr);
 
+  const denyKlassIds = getAsArray(denyKlassIdStr);
   if (klassIds?.length) {
-    commonFilter.klassReferenceId = In(klassIds);
+    const filteredKlassIds = denyKlassIds?.length ? klassIds.filter((id) => !denyKlassIds.includes(String(id))) : klassIds;
+    commonFilter.klassReferenceId = In(filteredKlassIds);
+  } else if (denyKlassIds?.length) {
+    commonFilter.klassReferenceId = Not(In(denyKlassIds));
   }
 
   if (reportDateFilter && globalLessonIds?.length) {

@@ -200,6 +200,26 @@ describe('studentReportData.util', () => {
         lessonReferenceId: undefined,
       });
     });
+
+    it('should exclude deny klass ids when no klass type filter is given', () => {
+      const result = getReportsFilterForReportCard(123, 2024, null, undefined, undefined, undefined, '4,5');
+
+      expect(result[0]).toMatchObject({
+        studentReferenceId: 123,
+        year: 2024,
+        klassReferenceId: Not(In(['4', '5'])),
+      });
+    });
+
+    it('should exclude deny klass ids from the klass type filter', () => {
+      const result = getReportsFilterForReportCard(123, 2024, null, undefined, undefined, [4, 5, 6], '5');
+
+      expect(result[0]).toMatchObject({
+        studentReferenceId: 123,
+        year: 2024,
+        klassReferenceId: In([4, 6]),
+      });
+    });
   });
 
   describe('calcReportsData', () => {

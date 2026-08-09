@@ -18,6 +18,7 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
     endDate: getAsString(reqExtra.endDate),
     globalLessonReferenceIds: getAsString(reqExtra.globalLessonReferenceIds),
     denyLessonReferenceIds: getAsString(reqExtra.denyLessonReferenceIds),
+    denyKlassReferenceIds: getAsString(reqExtra.denyKlassReferenceIds),
     klassTypeReferenceId: getAsString(reqExtra.klassTypeReferenceId),
     attendance: getAsBoolean(reqExtra.attendance),
     grades: getAsBoolean(reqExtra.grades),

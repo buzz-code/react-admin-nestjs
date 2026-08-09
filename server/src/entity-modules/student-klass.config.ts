@@ -8,7 +8,6 @@ import { BulkToPdfReportGenerator } from '@shared/utils/report/bulk-to-pdf.gener
 import { CommonReportData } from '@shared/utils/report/types';
 import { StudentKlass } from 'src/db/entities/StudentKlass.entity';
 import { generateStudentReportCard } from 'src/reports/reportGenerator';
-import studentReportCard from 'src/reports/studentReportCard';
 import studentReportCardReact from 'src/reports/studentReportCardReact';
 import { fixReferences } from '@shared/utils/entity/fixReference.util';
 import { getAsNumberArray } from '@shared/utils/queryParam.util';
@@ -45,7 +44,6 @@ function getConfig(): BaseEntityModuleOptions {
 
 class StudentKlassService<T extends Entity | StudentKlass> extends BaseEntityService<T> {
   reportsDict = {
-    studentReportCard: new BulkToPdfReportGenerator(studentReportCard),
     studentReportCardReact: new BulkToPdfReportGenerator(studentReportCardReact),
   };
   async getReportData(req: CrudRequest<any, any>): Promise<CommonReportData> {
