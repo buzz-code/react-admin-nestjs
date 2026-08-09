@@ -92,6 +92,17 @@ export function getKnownAbsenceFilterBySprAndDates(
   }));
 }
 
+// builds an inclusion/exclusion filter for a reference id column: excludes denyIdsStr,
+// intersected with includeIds when given (used for klass ids, which also have a klassType inclusion list)
+function getDenyIdsFilter(denyIdsStr: string, includeIds?: number[]): FindOperator<number> {
+  const denyIds = getAsArray(denyIdsStr);
+  if (includeIds?.length) {
+    const filteredIds = denyIds?.length ? includeIds.filter((id) => !denyIds.includes(String(id))) : includeIds;
+    return In(filteredIds);
+  }
+  return denyIds?.length ? Not(In(denyIds)) : undefined;
+}
+
 export function getReportsFilterForReportCard(
   studentId: number,
   year: number,
@@ -101,22 +112,13 @@ export function getReportsFilterForReportCard(
   klassIds?: number[],
   denyKlassIdStr?: string,
 ): FindOptionsWhere<AttReportAndGrade>[] {
-  const denyLessonIds = getAsArray(denyLessonIdStr);
-  const lessonFilter: FindOperator<number> = denyLessonIds?.length ? Not(In(denyLessonIds)) : undefined;
   const commonFilter: FindOptionsWhere<AttReportAndGrade> = {
     studentReferenceId: studentId,
     year,
-    lessonReferenceId: lessonFilter,
+    lessonReferenceId: getDenyIdsFilter(denyLessonIdStr),
+    klassReferenceId: getDenyIdsFilter(denyKlassIdStr, klassIds),
   };
   const globalLessonIds = getAsArray(globalLessonIdsStr);
-
-  const denyKlassIds = getAsArray(denyKlassIdStr);
-  if (klassIds?.length) {
-    const filteredKlassIds = denyKlassIds?.length ? klassIds.filter((id) => !denyKlassIds.includes(String(id))) : klassIds;
-    commonFilter.klassReferenceId = In(filteredKlassIds);
-  } else if (denyKlassIds?.length) {
-    commonFilter.klassReferenceId = Not(In(denyKlassIds));
-  }
 
   if (reportDateFilter && globalLessonIds?.length) {
     return [
