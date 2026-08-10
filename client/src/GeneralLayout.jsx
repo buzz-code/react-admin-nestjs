@@ -16,6 +16,7 @@ import PercentIcon from '@mui/icons-material/PercentOutlined';
 import FileUploadIcon from '@mui/icons-material/FileUploadOutlined';
 import ViewListIcon from '@mui/icons-material/ViewListOutlined';
 import GridOnIcon from '@mui/icons-material/GridOnOutlined';
+import ContactMailIcon from '@mui/icons-material/ContactMailOutlined';
 
 import BaseLayout from '@shared/components/layout/Layout';
 import BaseDashboard from '@shared/components/views/Dashboard';
@@ -100,6 +101,10 @@ const customMenuItems = [
     ({ permissions }) =>
         isStandardView(permissions) && (
             <MenuItemLink key="settings" to="/settings" primaryText="הגדרות משתמש" leftIcon={<SettingsIcon />} />
+        ),
+    ({ permissions }) =>
+        isStandardView(permissions) && (
+            <MenuItemLink key="contact" to="/contact" primaryText="צור קשר" leftIcon={<ContactMailIcon />} />
         ),
 ];
 
