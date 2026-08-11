@@ -9,6 +9,9 @@ jobs:
   prepare:
     name: Prepare changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       client: ${{ steps.changes.outputs.client }}
       server: ${{ steps.changes.outputs.server }}
