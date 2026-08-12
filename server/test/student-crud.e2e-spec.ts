@@ -1,48 +1,26 @@
 import '@shared/config/crud.config';
-import * as cookieParser from 'cookie-parser';
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { createTestApp, TestAppHelper } from '@shared/utils/testing/e2e/test-app.helper';
+import { HttpTestUtils, registerAndAuthenticate, asList } from '@shared/utils/testing/e2e/test-utils';
 import { AppModule } from 'src/app.module';
-import { HttpTestUtils } from '@shared/utils/testing/e2e/test-utils';
-
-// The CRUD list endpoint returns a plain array by default, or a paginated
-// { data: [...] } object once pagination kicks in (e.g. a page/limit query param).
-// Normalize so list assertions below don't depend on which shape came back.
-const asList = (body: any): any[] => (Array.isArray(body) ? body : body.data);
 
 describe('student CRUD (e2e)', () => {
-  let app: INestApplication;
-  let dataSource: DataSource;
+  let testApp: TestAppHelper;
   let httpUtils: HttpTestUtils;
   let cookie: string;
-  let moduleFixture: TestingModule;
 
   beforeAll(async () => {
-    moduleFixture = await Test.createTestingModule({ imports: [AppModule] }).compile();
-    app = moduleFixture.createNestApplication();
-    app.use(cookieParser());
-    await app.init();
-    dataSource = moduleFixture.get(DataSource);
+    testApp = createTestApp(AppModule);
+    const app = await testApp.initializeApp();
     httpUtils = new HttpTestUtils(app);
-
-    const registerRes = await httpUtils
-      .post('/auth/register', { username: 'e2e_student_user', password: 'TestPass_123', name: 'E2E' })
-      .expect(200);
-    const setCookieHeader = registerRes.headers['set-cookie'];
-    const authCookie = setCookieHeader?.[0]?.match(/Authentication=[^;]+/)?.[0];
-    if (!authCookie) {
-      throw new Error(`Expected an Authentication cookie from /auth/register, got Set-Cookie: ${JSON.stringify(setCookieHeader)}`);
-    }
-    cookie = authCookie;
+    cookie = await registerAndAuthenticate(httpUtils, {
+      username: 'e2e_student_user',
+      password: 'TestPass_123',
+      name: 'E2E',
+    });
   });
 
   afterAll(async () => {
-    if (dataSource?.isInitialized) {
-      await dataSource.destroy();
-    }
-    await app?.close();
-    await moduleFixture?.close();
+    await testApp?.cleanup();
   });
 
   it('runs a full create -> list -> update -> delete lifecycle over real HTTP', async () => {
