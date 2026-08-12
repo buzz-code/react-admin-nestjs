@@ -20,7 +20,7 @@ describe('student CRUD (e2e)', () => {
   });
 
   afterAll(async () => {
-    await testApp.cleanup();
+    await testApp?.cleanup();
   });
 
   it('runs a full create -> list -> update -> delete lifecycle over real HTTP', async () => {
