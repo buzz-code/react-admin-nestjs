@@ -1,24 +1,5 @@
-import { test, expect, request } from '@playwright/test';
-
-const API_BASE_URL = process.env.E2E_API_URL || 'http://localhost:3001';
-
-// Registers a fresh test user directly against the API (same endpoint and
-// pattern already proven in server/test/*.e2e-spec.ts) rather than relying on
-// seeded DB fixtures, whose password hashes aren't real bcrypt hashes of any
-// known password.
-async function registerTestUser() {
-  const apiContext = await request.newContext();
-  const username = `pw_e2e_user_${Date.now()}`;
-  const password = 'TestPass_123';
-  const res = await apiContext.post(`${API_BASE_URL}/auth/register`, {
-    data: { username, password, name: 'Playwright E2E' },
-  });
-  if (!res.ok()) {
-    throw new Error(`Failed to register test user: ${res.status()} ${await res.text()}`);
-  }
-  await apiContext.dispose();
-  return { username, password };
-}
+import { test, expect } from '@playwright/test';
+import { registerTestUser } from './helpers';
 
 test('login redirects to a working dashboard', async ({ page }) => {
   const { username, password } = await registerTestUser();

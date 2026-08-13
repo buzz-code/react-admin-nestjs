@@ -1,18 +1,23 @@
-# Browser E2E (Playwright) — pilot
+# Browser E2E (Playwright)
 
 Real-browser tests, driving the actual client + server + a real database — not
-mocks, not jsdom. This is a pilot covering one flow (login → dashboard) to
-prove the pattern before deciding whether/how far to extend it. Not wired
-into CI yet — that's a separate decision (see the repo's `TEST_COVERAGE_TODO.md`
-in `multi-repo-codespace`, Phase 6).
+mocks, not jsdom. Deliberately narrow: three flows chosen for what only a real
+browser + server + database can catch, not for breadth (the jsdom-based
+`entities.test.js` smoke tests already cover every resource page cheaply —
+see "What this catches that jsdom smoke tests don't" below). Wired into CI
+as the `e2e-tests` job in `.github/workflows/run-tests.yml`, which stands up
+a real MySQL service container, runs migrations, boots server + client, then
+runs this suite against them.
 
 ## Why Playwright
 
-This environment ships a pre-installed Chromium at `$PLAYWRIGHT_BROWSERS_PATH`
+This environment ships a pre-installed Chromium under `$PLAYWRIGHT_BROWSERS_PATH`
 (`/opt/pw-browsers`), so there's no browser download step. `playwright.config.ts`
-points `launchOptions.executablePath` at it directly rather than relying on
+points `launchOptions.executablePath` at `/opt/pw-browsers/chromium` (a stable
+symlink to the current versioned build) directly, rather than relying on
 `@playwright/test`'s own revision-matched download, which avoids a network
-fetch that may not even be reachable in a sandboxed environment.
+fetch that may not even be reachable in a sandboxed environment. Override with
+`PLAYWRIGHT_CHROMIUM_PATH` if your environment installs it elsewhere.
 
 ## Prerequisites: a live stack
 
@@ -65,17 +70,35 @@ E2E_BASE_URL=... E2E_API_URL=... yarn test  # against a different stack
 
 ## What's covered
 
-- `tests/login-dashboard.spec.ts` — registers a fresh user via the API (same
-  pattern as `server/test/*-crud.e2e-spec.ts`, not seeded DB fixtures — the
-  checkpoint dump's password hashes aren't real bcrypt hashes of any known
-  password), logs in through the actual UI form, and confirms the dashboard
-  loads (sidebar renders, no leftover login form, no error page).
+All three specs share `tests/helpers.ts`'s `registerTestUser()` — registers a
+fresh user via the API (same pattern as `server/test/*-crud.e2e-spec.ts`, not
+seeded DB fixtures — the checkpoint dump's password hashes aren't real bcrypt
+hashes of any known password) — and `loginThroughUi()`, which logs that user
+in through the actual UI form.
+
+- `tests/login-dashboard.spec.ts` — confirms the dashboard loads after login
+  (sidebar renders, no leftover login form, no error page).
+- `tests/crud-roundtrip.spec.ts` — creates, edits, and deletes a `klass_type`
+  through the real UI, checking after each step that the change actually
+  round-tripped through the server and database (not just that the request
+  didn't throw). `klass_type` is used because, as a non-admin user, it only
+  needs two plain fields (no reference-picker dropdown to drive).
+- `tests/export-download.spec.ts` — downloads a real Excel export and checks
+  the file is non-empty. Exporting is gated on the user's `isPaid` flag, which
+  nothing in the app itself can set for a fresh registration, so
+  `tests/helpers.ts`'s `markUserAsPaid()` reaches directly into the database —
+  setup for the flow under test, same reasoning as `registerTestUser()`
+  reaching around the UI via the API.
 
 ## What this catches that jsdom smoke tests don't
 
-Real browser rendering, real CORS/cookie/auth wiring end to end, and an
-actual multi-page flow (form submit → redirect → authenticated data fetch →
-render) against a live server and database. The jsdom-based `entities.test.js`
-smoke tests (client, mocked `dataProvider`) are cheaper and catch a different,
-larger class of bug (any resource crashing on mount) — see that file's
-comments for the trade-off between the two.
+Real browser rendering, real CORS/cookie/auth wiring end to end, an actual
+multi-page flow (form submit → redirect → authenticated data fetch →
+render), a create/edit/delete that really persists through the server and
+database instead of a mocked `dataProvider`, and a real server-generated
+file (the export test) — none of which a jsdom test with a mocked
+`dataProvider` can exercise, since there's no real server or file on the
+other end of the call. `entities.test.js`'s smoke tests are cheaper and
+catch a different, much larger class of bug (any resource crashing on
+mount) across every resource in the app — see that file's comments for the
+trade-off between the two.

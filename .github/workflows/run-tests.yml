@@ -79,3 +79,104 @@ jobs:
           # fine in isolation.
           NODE_OPTIONS: --max-old-space-size=4096
 
+  e2e-tests:
+    name: Run browser E2E tests
+    runs-on: ubuntu-latest
+    needs: prepare
+    if: ${{ needs.prepare.outputs.client == 'true' || needs.prepare.outputs.server == 'true' }}
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: mysql_database
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_USER: mysql_user
+      MYSQL_PASSWORD: mysql_password
+      MYSQL_DATABASE: mysql_database
+      JWT_SECRET: jwt_secret
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # data.sql (the run-without-docker checkpoint dump) both creates the
+      # schema/seed data and grants mysql_user its privileges, but assumes
+      # the account itself already exists — the docker-based setup creates
+      # it via the image's own MYSQL_USER/MYSQL_PASSWORD env vars, which the
+      # plain `mysql:` service image doesn't expose the same way.
+      - name: Set up database
+        run: |
+          mysql -h127.0.0.1 -uroot -proot -e "
+            CREATE USER IF NOT EXISTS 'mysql_user'@'%' IDENTIFIED BY 'mysql_password';
+            GRANT ALL PRIVILEGES ON mysql_database.* TO 'mysql_user'@'%';
+            FLUSH PRIVILEGES;
+          "
+          mysql -h127.0.0.1 -uroot -proot mysql_database < db/data.sql
+
+      - name: Install server deps, run pending migrations
+        working-directory: ./server
+        run: |
+          yarn
+          NODE_ENV=development yarn typeorm:run
+
+      # Backgrounded within this step, with the wait loop right after it in
+      # the same step: the workflow can't move on to the next step until
+      # this one is confirmed answering requests — a later step starting
+      # before this one is truly ready would just fail on connection-refused
+      # instead of waiting for it.
+      - name: Start server
+        working-directory: ./server
+        run: |
+          NODE_ENV=development PORT=3001 yarn start:dev > /tmp/server.log 2>&1 &
+          ready=false
+          for i in $(seq 1 60); do
+            # Any HTTP response (even a 400 from an empty body) means the
+            # server is up; curl's own exit code only tells us the TCP
+            # connection was refused or not.
+            code=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:3001/auth/register -H "Content-Type: application/json" -d '{}')
+            if [ -n "$code" ] && [ "$code" != "000" ]; then ready=true; break; fi
+            sleep 1
+          done
+          if [ "$ready" != "true" ]; then
+            echo "Server did not become ready:"; cat /tmp/server.log; exit 1
+          fi
+
+      - name: Install client deps, start client
+        working-directory: ./client
+        run: |
+          yarn
+          yarn start > /tmp/client.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://localhost:3000 && break
+            sleep 1
+          done
+          curl -sf -o /dev/null http://localhost:3000 || (echo "Client did not become ready:"; cat /tmp/client.log; exit 1)
+
+      - name: Install E2E deps
+        working-directory: ./e2e
+        run: yarn
+
+      - name: Run E2E tests
+        working-directory: ./e2e
+        run: yarn test
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: e2e/test-results/
+          retention-days: 7
+
