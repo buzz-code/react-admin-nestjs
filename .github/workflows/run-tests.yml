@@ -172,7 +172,13 @@ jobs:
 
       - name: Install E2E deps
         working-directory: ./e2e
-        run: yarn
+        run: |
+          yarn
+          # playwright.config.ts prefers a pre-installed Chromium at
+          # $PLAYWRIGHT_CHROMIUM_PATH (present in some dev sandboxes) but
+          # falls back to Playwright's own managed browser when that path
+          # doesn't exist — which is always the case on this runner.
+          npx playwright install --with-deps chromium
 
       - name: Run E2E tests
         working-directory: ./e2e

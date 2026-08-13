@@ -9,15 +9,23 @@ as the `e2e-tests` job in `.github/workflows/run-tests.yml`, which stands up
 a real MySQL service container, runs migrations, boots server + client, then
 runs this suite against them.
 
-## Why Playwright
+## Why Playwright, and which browser it launches
 
-This environment ships a pre-installed Chromium under `$PLAYWRIGHT_BROWSERS_PATH`
-(`/opt/pw-browsers`), so there's no browser download step. `playwright.config.ts`
-points `launchOptions.executablePath` at `/opt/pw-browsers/chromium` (a stable
-symlink to the current versioned build) directly, rather than relying on
-`@playwright/test`'s own revision-matched download, which avoids a network
-fetch that may not even be reachable in a sandboxed environment. Override with
-`PLAYWRIGHT_CHROMIUM_PATH` if your environment installs it elsewhere.
+Some dev sandboxes this pilot runs in ship a pre-installed Chromium under
+`$PLAYWRIGHT_BROWSERS_PATH` (`/opt/pw-browsers`), so there's no download step
+there — `playwright.config.ts` points `launchOptions.executablePath` at
+`/opt/pw-browsers/chromium` (a stable symlink to the current versioned
+build) when that path exists, which avoids both a network fetch that may
+not be reachable in a sandbox and a redundant download of a browser that's
+already there. Override with `PLAYWRIGHT_CHROMIUM_PATH` if your environment
+installs it elsewhere.
+
+CI (and most other environments) doesn't have that path — there,
+`executablePath` is left unset and Playwright falls back to its own managed
+browser, installed by the `Install E2E deps` step's `npx playwright install
+--with-deps chromium`. Run that same command locally first if your
+environment has neither a pre-installed Chromium nor one Playwright has
+already downloaded.
 
 ## Prerequisites: a live stack
 
