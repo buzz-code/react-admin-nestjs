@@ -71,4 +71,11 @@ jobs:
           cache-dependency-path: client/yarn.lock
       - run: yarn
       - run: yarn test
+        env:
+          # entities.test.js renders the full admin app ~140 times in one
+          # process (every resource's List/Create/Edit page); the default
+          # heap limit is tight enough on CI runners that later tests in the
+          # same run degrade/fail from GC pressure even though they pass
+          # fine in isolation.
+          NODE_OPTIONS: --max-old-space-size=4096
 
