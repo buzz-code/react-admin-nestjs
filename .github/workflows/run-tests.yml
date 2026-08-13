@@ -145,8 +145,13 @@ jobs:
           for i in $(seq 1 60); do
             # Any HTTP response (even a 400 from an empty body) means the
             # server is up; curl's own exit code only tells us the TCP
-            # connection was refused or not.
-            code=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:3001/auth/register -H "Content-Type: application/json" -d '{}')
+            # connection was refused or not. GitHub Actions runs this script
+            # under `bash -e`, and `code=$(curl ...)` is a plain assignment
+            # (not exempt the way `curl ... && break` is) — so on the very
+            # first, expected-to-fail attempt curl's connection-refused exit
+            # code aborted the whole step before the retry loop ran at all.
+            # `|| true` neutralizes that; emptiness is still checked below.
+            code=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:3001/auth/register -H "Content-Type: application/json" -d '{}' || true)
             if [ -n "$code" ] && [ "$code" != "000" ]; then ready=true; break; fi
             sleep 1
           done
