@@ -12,34 +12,55 @@ function israelTimeAt(hour: number, minute: number): Date {
   return new Date(utcMs);
 }
 
-// ---- Reusable scenario-step helpers (each mutates and returns the same builder) ----
+// ---- Prompts reused across scenario steps ----
+
+const TZ_PROMPT = /enter.*id/i;
+const TRANSPORT_PROMPT = /transport/i;
+const DEPARTURE_PROMPT = /departure.*07:30/i;
+const KLASS_PROMPT = /enter klass number/i;
+const ABSENT_STUDENT_PROMPT = /enter absent student number/i;
+const CONFIRM_STUDENT_PROMPT = /confirm student/i;
+
+// ---- Generic scenario-step primitives — every step below is one of these ----
+
+function ask(builder: YemotScenarioBuilder, prompt: RegExp, response: string): YemotScenarioBuilder {
+  return builder.systemAsks(prompt).userResponds(response);
+}
+
+function askThenReject(builder: YemotScenarioBuilder, prompt: RegExp, response: string, errorMessage: RegExp): YemotScenarioBuilder {
+  return ask(builder, prompt, response).systemSends(errorMessage);
+}
+
+// ---- Transport-call steps ----
 
 function respondToTz(builder: YemotScenarioBuilder, tz: string): YemotScenarioBuilder {
-  return builder.systemAsks(/enter.*id/i).userResponds(tz);
+  return ask(builder, TZ_PROMPT, tz);
 }
 
 function rejectTz(builder: YemotScenarioBuilder, tz: string): YemotScenarioBuilder {
-  return builder.systemAsks(/enter.*id/i).userResponds(tz).systemSends(/not found|invalid/i);
+  return askThenReject(builder, TZ_PROMPT, tz, /not found|invalid/i);
 }
 
 function respondToTransport(builder: YemotScenarioBuilder, num: string): YemotScenarioBuilder {
-  return builder.systemAsks(/transport/i).userResponds(num);
+  return ask(builder, TRANSPORT_PROMPT, num);
 }
 
 function rejectTransport(builder: YemotScenarioBuilder, num: string): YemotScenarioBuilder {
-  return builder.systemAsks(/transport/i).userResponds(num).systemSends(/invalid|try again/i);
+  return askThenReject(builder, TRANSPORT_PROMPT, num, /invalid|try again/i);
 }
 
 function confirmDeparture(builder: YemotScenarioBuilder, confirm: boolean): YemotScenarioBuilder {
-  return builder.systemAsks(/departure.*07:30/i).userResponds(confirm ? '1' : '2');
+  return ask(builder, DEPARTURE_PROMPT, confirm ? '1' : '2');
 }
 
+// ---- Seminar-attendance steps ----
+
 function askForKlass(builder: YemotScenarioBuilder, klassKey: string): YemotScenarioBuilder {
-  return builder.systemAsks(/enter klass number/i).userResponds(klassKey);
+  return ask(builder, KLASS_PROMPT, klassKey);
 }
 
 function rejectKlass(builder: YemotScenarioBuilder, klassKey: string): YemotScenarioBuilder {
-  return askForKlass(builder, klassKey).systemSends(/invalid klass/i);
+  return askThenReject(builder, KLASS_PROMPT, klassKey, /invalid klass/i);
 }
 
 function welcomesTeacher(builder: YemotScenarioBuilder): YemotScenarioBuilder {
@@ -56,32 +77,18 @@ function startsSeminarCall(builder: YemotScenarioBuilder, klassKey: string): Yem
   return entersKlass(welcomesTeacher(builder), klassKey);
 }
 
-function reportAbsentStudent(builder: YemotScenarioBuilder, studentNumber: string): YemotScenarioBuilder {
-  return builder
-    .systemAsks(/enter absent student number/i)
-    .userResponds(studentNumber)
-    .systemAsks(/confirm student/i)
-    .userResponds('1');
-}
-
-function rejectAbsentStudentName(builder: YemotScenarioBuilder, studentNumber: string): YemotScenarioBuilder {
-  return builder
-    .systemAsks(/enter absent student number/i)
-    .userResponds(studentNumber)
-    .systemAsks(/confirm student/i)
-    .userResponds('2')
-    .systemSends(/name rejected/i);
+// Enters a student number, then answers the name-confirmation prompt yes/no.
+function confirmsStudentName(builder: YemotScenarioBuilder, studentNumber: string, accept: boolean): YemotScenarioBuilder {
+  const answered = ask(ask(builder, ABSENT_STUDENT_PROMPT, studentNumber), CONFIRM_STUDENT_PROMPT, accept ? '1' : '2');
+  return accept ? answered : answered.systemSends(/name rejected/i);
 }
 
 function rejectStudentNumber(builder: YemotScenarioBuilder, studentNumber: string): YemotScenarioBuilder {
-  return builder
-    .systemAsks(/enter absent student number/i)
-    .userResponds(studentNumber)
-    .systemSends(/invalid student number/i);
+  return askThenReject(builder, ABSENT_STUDENT_PROMPT, studentNumber, /invalid student number/i);
 }
 
 function finishAbsentStudentEntry(builder: YemotScenarioBuilder): YemotScenarioBuilder {
-  return builder.systemAsks(/enter absent student number/i).userResponds('0');
+  return ask(builder, ABSENT_STUDENT_PROMPT, '0');
 }
 
 describe('YemotHandlerService — react-admin-nestjs', () => {
@@ -334,7 +341,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('ReportGroup', [])
         .seed('ReportGroupSession', []);
       startsSeminarCall(builder, '7');
-      reportAbsentStudent(builder, '11');
+      confirmsStudentName(builder, '11', true);
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -371,7 +378,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('ReportGroup', [])
         .seed('ReportGroupSession', []);
       startsSeminarCall(builder, '8');
-      reportAbsentStudent(builder, '11');
+      confirmsStudentName(builder, '11', true);
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -425,7 +432,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const builder = seminarBuilder('Seminar invalid student number retry', klass);
       startsSeminarCall(builder, '10');
       rejectStudentNumber(builder, '999');
-      reportAbsentStudent(builder, '11');
+      confirmsStudentName(builder, '11', true);
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -440,8 +447,8 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
 
       const builder = seminarBuilder('Seminar name confirmation rejected', klass).seed('AttReport', []);
       startsSeminarCall(builder, '15');
-      rejectAbsentStudentName(builder, '11');
-      reportAbsentStudent(builder, '12');
+      confirmsStudentName(builder, '11', false);
+      confirmsStudentName(builder, '12', true);
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
