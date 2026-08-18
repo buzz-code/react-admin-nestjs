@@ -42,6 +42,20 @@ function rejectKlass(builder: YemotScenarioBuilder, klassKey: string): YemotScen
   return builder.systemAsks(/enter klass number/i).userResponds(klassKey).systemSends(/invalid klass/i);
 }
 
+function welcomesTeacher(builder: YemotScenarioBuilder): YemotScenarioBuilder {
+  return builder.systemSends(/hello teacher/i);
+}
+
+// Manual klass entry (askForKlass) followed by the system's spoken confirmation.
+function entersKlass(builder: YemotScenarioBuilder, klassKey: string): YemotScenarioBuilder {
+  return askForKlass(builder, klassKey).systemSends(/confirmed klass/i);
+}
+
+// Teacher greeting + manual klass entry — the common opening of a seminar call.
+function startsSeminarCall(builder: YemotScenarioBuilder, klassKey: string): YemotScenarioBuilder {
+  return entersKlass(welcomesTeacher(builder), klassKey);
+}
+
 function reportAbsentStudent(builder: YemotScenarioBuilder, studentNumber: string): YemotScenarioBuilder {
   return builder
     .systemAsks(/enter absent student number/i)
@@ -274,6 +288,8 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       { userId: 0, name: 'SEMINAR.NO_STUDENTS_IN_KLASS', description: '', value: 'No students found for this klass' },
       { userId: 0, name: 'SEMINAR.CONFIRM_STUDENT_NAME', description: '', value: 'Confirm student {studentName}' },
       { userId: 0, name: 'SEMINAR.STUDENT_NAME_REJECTED', description: '', value: 'Name rejected, try again' },
+      { userId: 0, name: 'SEMINAR.WELCOME', description: '', value: 'Hello teacher {teacherName}' },
+      { userId: 0, name: 'SEMINAR.KLASS_CONFIRMED', description: '', value: 'Confirmed klass {klassName}' },
     ];
     const allTexts = [...baseTexts, ...seminarTexts];
 
@@ -305,7 +321,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('AttReport', [])
         .seed('ReportGroup', [])
         .seed('ReportGroupSession', []);
-      askForKlass(builder, '7');
+      startsSeminarCall(builder, '7');
       reportAbsentStudent(builder, '11');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
@@ -329,6 +345,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       expect(byStudent[103].absCount).toBe(0);
       for (const report of result.saved['AttReport']) {
         expect(report.reportGroupSessionId).toBe(session.id);
+        expect(report.howManyLessons).toBe(1);
       }
     });
 
@@ -347,7 +364,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('AttReport', [])
         .seed('ReportGroup', [])
         .seed('ReportGroupSession', []);
-      askForKlass(builder, '8');
+      startsSeminarCall(builder, '8');
       reportAbsentStudent(builder, '11');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
@@ -390,8 +407,9 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('Student', roster())
         .seed('StudentKlass', studentKlasses(220, year))
         .seed('Text', allTexts);
+      welcomesTeacher(builder);
       rejectKlass(builder, '99');
-      askForKlass(builder, '9');
+      entersKlass(builder, '9');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -411,7 +429,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('Student', roster())
         .seed('StudentKlass', studentKlasses(230, year))
         .seed('Text', allTexts);
-      askForKlass(builder, '10');
+      startsSeminarCall(builder, '10');
       rejectStudentNumber(builder, '999');
       reportAbsentStudent(builder, '11');
       finishAbsentStudentEntry(builder);
@@ -434,7 +452,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('StudentKlass', studentKlasses(235, year))
         .seed('Text', allTexts)
         .seed('AttReport', []);
-      askForKlass(builder, '15');
+      startsSeminarCall(builder, '15');
       rejectAbsentStudentName(builder, '11');
       reportAbsentStudent(builder, '12');
       finishAbsentStudentEntry(builder);
@@ -464,7 +482,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
           { id: 900, userId: 1, studentReferenceId: 101, klassReferenceId: 240, reportDate: today, absCount: 0 },
         ])
         .seed('Text', allTexts);
-      askForKlass(builder, '11');
+      startsSeminarCall(builder, '11');
       const scenario = builder.systemHangsUp(/already reported/i).build();
 
       const result = await runner.run(scenario);
@@ -498,6 +516,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('StudentKlass', studentKlasses(260, year))
         .seed('Text', allTexts)
         .seed('AttReport', []);
+      welcomesTeacher(builder);
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -525,7 +544,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('StudentKlass', studentKlasses(270, year))
         .seed('Text', allTexts)
         .seed('AttReport', []);
-      askForKlass(builder, '14');
+      startsSeminarCall(builder, '14');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -549,7 +568,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('Teacher', [teacher])
         .seed('Klass', [klass])
         .seed('Text', allTexts);
-      askForKlass(builder, '12');
+      startsSeminarCall(builder, '12');
       const scenario = builder.systemHangsUp(/no students/i).build();
 
       const result = await runner.run(scenario);
