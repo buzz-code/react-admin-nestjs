@@ -100,6 +100,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   private async processSeminarAttendanceCall(): Promise<void> {
     const teacher = await this.getTeacherByPhone();
     if (!teacher) return;
+    await this.sendMessageByKey('SEMINAR.WELCOME', { teacherName: teacher.name });
 
     const schedule = await this.getScheduleForTeacherNow(teacher);
     let klass: Klass = null;
@@ -191,6 +192,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
         await this.sendMessageByKey('SEMINAR.INVALID_KLASS');
       }
     }
+    await this.sendMessageByKey('SEMINAR.KLASS_CONFIRMED', { klassName: klass.name });
     return klass;
   }
 
@@ -288,6 +290,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
           lessonReferenceId,
           reportGroupSessionId,
           reportDate,
+          howManyLessons: 1,
           absCount: absentStudentReferenceIds.has(studentKlass.studentReferenceId) ? 1 : 0,
         }),
       );
