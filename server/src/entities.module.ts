@@ -43,6 +43,8 @@ import { Student } from './db/entities/Student.entity';
 import { Teacher } from './db/entities/Teacher.entity';
 import userConfig from '@shared/entities/configs/user.config';
 import { TeacherReportedToday } from './db/view-entities/TeacherReportedToday.entity';
+import scheduleConfig from './entity-modules/schedule.config';
+import jobConfig from './entity-modules/job.config';
 
 registerEntityNameMap({
   att_report: 'נוכחות',
@@ -56,6 +58,8 @@ registerEntityNameMap({
   student: 'תלמידות',
   teacher: 'מורות',
   uploaded_file: 'קבצים שהועלו',
+  schedule: 'תזמון משימות',
+  job: 'יומן משימות',
 });
 
 @Module({
@@ -99,6 +103,8 @@ registerEntityNameMap({
     BaseEntityModule.register(phoneTemplateConfig),
     BaseEntityModule.register(phoneCampaignConfig),
     BaseEntityModule.register({ entity: TeacherReportedToday }),
+    BaseEntityModule.register(scheduleConfig),
+    BaseEntityModule.register(jobConfig),
   ],
 })
 export class EntitiesModule {}

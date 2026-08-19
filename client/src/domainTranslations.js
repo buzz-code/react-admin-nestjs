@@ -441,5 +441,15 @@ export default {
                 topic: 'נושא',
             },
         },
+        schedule: {
+            ...sharedEntityTranslations.schedule,
+            fields: {
+                ...sharedEntityTranslations.schedule.fields,
+                'payload.klassReferenceId': 'כיתה לשמירה',
+                'payload.lessonReferenceId': 'שיעור לניקוי',
+                'payload.targetWeekday': 'יום בשבוע',
+                'payload.lookbackWeeks': 'שבועות אחורה',
+            },
+        },
     },
 };

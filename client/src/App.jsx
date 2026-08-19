@@ -48,6 +48,8 @@ import attGradeEffect from './entities/att-grade-effect';
 import reportGroup from './entities/report-group';
 import reportGroupSession from './entities/report-group-session';
 import teacherReportedToday from './entities/teacher-reported-today';
+import schedule from './entities/schedule';
+import job from '@shared/components/common-entities/job';
 import Settings from 'src/settings/Settings';
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
@@ -93,6 +95,8 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsOutlin
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBusOutlined';
 import CelebrationIcon from '@mui/icons-material/CelebrationOutlined';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedInOutlined';
+import EventRepeatIcon from '@mui/icons-material/EventRepeatOutlined';
+import WorkHistoryIcon from '@mui/icons-material/WorkHistoryOutlined';
 
 const themeOptions = { primary: blue[700], secondary: purple[500] };
 
@@ -306,6 +310,18 @@ const App = () => (
                         icon={AdminPanelSettingsIcon}
                     />
                     {CommonAdminResources({ permissions })}
+
+                    {isAdmin(permissions) && (
+                        <>
+                            <Resource
+                                name="schedule"
+                                {...schedule}
+                                options={{ menuGroup: 'admin' }}
+                                icon={EventRepeatIcon}
+                            />
+                            <Resource name="job" {...job} options={{ menuGroup: 'admin' }} icon={WorkHistoryIcon} />
+                        </>
+                    )}
 
                     {isLessonSignature(permissions) && (
                         <>
