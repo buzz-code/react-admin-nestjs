@@ -29,6 +29,7 @@ export default [
     { html: 'הוספת דוח המציג אילו מורות דיווחו נוכחות בתאריך נבחר', status: 'בוצע', statusColor: 'success' },
     { html: 'הוספת דף "צור קשר" לשליחת פנייה עם קבצים מצורפים', status: 'בוצע', statusColor: 'success' },
     { html: 'תשתית משימות רקע: ייצוא נתונים אסינכרוני, תזמונים קבועים וניטור משימות', status: 'בוצע', statusColor: 'success' },
+    { html: 'ניקוי אוטומטי של נוכחות שיעור נבחר, לפי כיתה/מסלול לשמירה, בכל מוצאי שבת', status: 'בוצע', statusColor: 'success' },
 
     // { html: 'הגדרת תקופת זמן לפי תאריכים', status: 'בקרוב', statusColor: 'warning' },
     // { html: 'הגדרת תקופת זמן לפי יום בשבוע', status: 'בוצע', statusColor: 'success' },

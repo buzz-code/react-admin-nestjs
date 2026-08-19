@@ -398,6 +398,21 @@ export default {
                 effectPercent: 'השפעה באחוזים',
             },
         },
+        attendance_cleanup_rule: {
+            name: 'כלל ניקוי נוכחות |||| כללי ניקוי נוכחות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                name: 'שם הכלל',
+                lessonReferenceId: 'שיעור לניקוי',
+                klassReferenceId: 'כיתה/מסלול לשמירה',
+                dayOfWeek: 'יום בשבוע',
+                weeksBack: 'שבועות אחורה',
+                active: 'פעיל?',
+            },
+            actions: {
+                runNow: 'הרץ עכשיו',
+            },
+        },
         grade_effect_by_user: {
             name: 'קשר נוכחות ציון מורחב',
             fields: {
