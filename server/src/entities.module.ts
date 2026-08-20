@@ -39,6 +39,7 @@ import absenceTypeConfig from './entity-modules/absenceType.config';
 import uploadedFileConfig from '@shared/entities/configs/uploaded-file.config';
 import phoneTemplateConfig from '@shared/entities/configs/phone-template.config';
 import phoneCampaignConfig from '@shared/entities/configs/phone-campaign.config';
+import attendanceCleanupRuleConfig from './entity-modules/attendance-cleanup-rule.config';
 import { Student } from './db/entities/Student.entity';
 import { Teacher } from './db/entities/Teacher.entity';
 import userConfig from '@shared/entities/configs/user.config';
@@ -99,6 +100,7 @@ registerEntityNameMap({
     BaseEntityModule.register(phoneTemplateConfig),
     BaseEntityModule.register(phoneCampaignConfig),
     BaseEntityModule.register({ entity: TeacherReportedToday }),
+    BaseEntityModule.register(attendanceCleanupRuleConfig),
   ],
 })
 export class EntitiesModule {}

@@ -48,6 +48,7 @@ import attGradeEffect from './entities/att-grade-effect';
 import reportGroup from './entities/report-group';
 import reportGroupSession from './entities/report-group-session';
 import teacherReportedToday from './entities/teacher-reported-today';
+import attendanceCleanupRule from './entities/attendance-cleanup-rule';
 import Settings from 'src/settings/Settings';
 
 import StudentAttendanceList from 'src/pivots/StudentAttendanceList';
@@ -93,6 +94,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsOutlin
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBusOutlined';
 import CelebrationIcon from '@mui/icons-material/CelebrationOutlined';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedInOutlined';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServicesOutlined';
 
 const themeOptions = { primary: blue[700], secondary: purple[500] };
 
@@ -284,6 +286,14 @@ const App = () => (
                         options={{ menuGroup: 'settings' }}
                         icon={CalculateIcon}
                     />
+                    {isAdmin(permissions) && (
+                        <Resource
+                            name="attendance_cleanup_rule"
+                            {...attendanceCleanupRule}
+                            options={{ menuGroup: 'settings' }}
+                            icon={CleaningServicesIcon}
+                        />
+                    )}
                     <Resource
                         name="student_by_year"
                         {...(isAdmin(permissions) ? resourceEntityGuesser : {})}
