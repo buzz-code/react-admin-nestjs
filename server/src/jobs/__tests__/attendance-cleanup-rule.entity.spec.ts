@@ -8,7 +8,7 @@ jest.mock('@shared/utils/entity/foreignKey.util', () => ({
   }),
 }));
 
-import { AttendanceCleanupRule } from '../AttendanceCleanupRule.entity';
+import { AttendanceCleanupRule } from 'src/db/entities/AttendanceCleanupRule.entity';
 
 describe('AttendanceCleanupRule.fillFields', () => {
   beforeEach(() => {
