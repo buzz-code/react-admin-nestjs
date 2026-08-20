@@ -15,4 +15,6 @@ const options = {
     apiVersion: 'v1',
 };
 
-connectToOpenobserve(options);
+if (!isDevMode) {
+    connectToOpenobserve(options);
+}
