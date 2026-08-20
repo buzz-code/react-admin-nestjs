@@ -3,6 +3,8 @@ import {
     BooleanInput,
     DateField,
     FunctionField,
+    maxValue,
+    minValue,
     NumberField,
     NumberInput,
     ReferenceField,
@@ -79,7 +81,15 @@ const Inputs = ({ isCreate, isAdmin }) => {
                 helperText="הכיתה/מסלול שישמר - הנוכחות תימחק לכל שאר הכיתות"
             />
             <SelectInput source="dayOfWeek" choices={dayOfWeekChoices} validate={required()} />
-            <NumberInput source="weeksBack" defaultValue={2} validate={required()} helperText="כמה שבועות אחורה לנקות בכל הרצה" />
+            <NumberInput
+                source="weeksBack"
+                defaultValue={2}
+                min={1}
+                max={52}
+                step={1}
+                validate={[required(), minValue(1), maxValue(52)]}
+                helperText="כמה שבועות אחורה לנקות בכל הרצה (1-52)"
+            />
             <BooleanInput source="active" defaultValue={true} />
         </>
     );
