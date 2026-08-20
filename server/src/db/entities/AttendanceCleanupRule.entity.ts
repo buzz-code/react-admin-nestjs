@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
 import { BooleanIntColumn } from '@shared/utils/entity/column-types.util';
-import { getDataSource } from '@shared/utils/entity/foreignKey.util';
+import { findOneAndAssignKey, getDataSource } from '@shared/utils/entity/foreignKey.util';
 import { IsOptional } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
 import { IsNotEmpty, IsNumber, MaxLength, Max, Min } from '@shared/utils/validation/class-validator-he';
@@ -48,18 +48,8 @@ export class AttendanceCleanupRule implements IHasUserId {
     try {
       dataSource = await getDataSource([Lesson, Klass, User]);
 
-      if (this.lessonReferenceId) {
-        const lesson = await dataSource
-          .getRepository(Lesson)
-          .findOne({ where: { id: this.lessonReferenceId, userId: this.userId } });
-        this.lessonId = lesson?.key ?? this.lessonId;
-      }
-      if (this.klassReferenceId) {
-        const klass = await dataSource
-          .getRepository(Klass)
-          .findOne({ where: { id: this.klassReferenceId, userId: this.userId } });
-        this.klassId = klass?.key ?? this.klassId;
-      }
+      this.lessonId = await findOneAndAssignKey(dataSource, Lesson, this.userId, this.lessonReferenceId, this.lessonId);
+      this.klassId = await findOneAndAssignKey(dataSource, Klass, this.userId, this.klassReferenceId, this.klassId);
     } finally {
       dataSource?.destroy();
     }

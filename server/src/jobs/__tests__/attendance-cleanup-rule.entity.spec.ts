@@ -1,7 +1,11 @@
 const mockDestroy = jest.fn();
 const mockGetRepository = jest.fn();
 
+// Only getDataSource is mocked (to avoid a real DB connection); findOneAndAssignKey
+// runs for real against the mocked dataSource, so this also covers the entity's
+// wiring into that shared helper (itself separately unit-tested in nra-server).
 jest.mock('@shared/utils/entity/foreignKey.util', () => ({
+  ...jest.requireActual('@shared/utils/entity/foreignKey.util'),
   getDataSource: jest.fn().mockResolvedValue({
     getRepository: (...args: any[]) => mockGetRepository(...args),
     destroy: mockDestroy,
