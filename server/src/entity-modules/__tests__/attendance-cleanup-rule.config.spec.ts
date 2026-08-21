@@ -1,4 +1,5 @@
 import { CrudRequest } from '@dataui/crud';
+import { ADMIN_FILTER, NO_DATA_FILTER } from '@shared/auth/crud-auth.filter';
 import { AttendanceCleanupRule } from 'src/db/entities/AttendanceCleanupRule.entity';
 import attendanceCleanupRuleConfig from '../attendance-cleanup-rule.config';
 
@@ -12,6 +13,28 @@ describe('AttendanceCleanupRuleConfig', () => {
       }),
     );
     expect(attendanceCleanupRuleConfig.service).toBeDefined();
+  });
+
+  describe('crudAuth', () => {
+    it('grants access to a user with the attendanceCleanupRules permission', () => {
+      const user = { permissions: { attendanceCleanupRules: true } };
+      expect(attendanceCleanupRuleConfig.crudAuth.filter(user)).toEqual(ADMIN_FILTER);
+    });
+
+    it('grants access to an admin regardless of the dedicated permission', () => {
+      const user = { permissions: { admin: true } };
+      expect(attendanceCleanupRuleConfig.crudAuth.filter(user)).toEqual(ADMIN_FILTER);
+    });
+
+    it('denies a user lacking the permission (no rows, not a 403)', () => {
+      const user = { permissions: {} };
+      expect(attendanceCleanupRuleConfig.crudAuth.filter(user)).toEqual(NO_DATA_FILTER);
+    });
+
+    it('denies a user with no permissions object at all', () => {
+      const user = {};
+      expect(attendanceCleanupRuleConfig.crudAuth.filter(user)).toEqual(NO_DATA_FILTER);
+    });
   });
 
   describe('doAction: runNow', () => {

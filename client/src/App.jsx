@@ -65,6 +65,7 @@ import {
     isLessonSchedule,
     isStudentView,
     isSeminarAttendanceYemot,
+    isAttendanceCleanupRules,
 } from 'src/utils/appPermissions';
 import ScannerUpload from '@shared/components/views/ScannerUpload';
 import InLessonReport from 'src/reports/InLessonReport';
@@ -286,7 +287,7 @@ const App = () => (
                         options={{ menuGroup: 'settings' }}
                         icon={CalculateIcon}
                     />
-                    {isAdmin(permissions) && (
+                    {isAttendanceCleanupRules(permissions) && (
                         <Resource
                             name="attendance_cleanup_rule"
                             {...attendanceCleanupRule}
