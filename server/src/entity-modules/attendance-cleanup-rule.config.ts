@@ -1,6 +1,7 @@
 import { CrudRequest } from '@dataui/crud';
 import { Repository } from 'typeorm';
 import { getUserIdFromUser } from '@shared/auth/auth.util';
+import { CrudAuthWithPermissionsFilter } from '@shared/auth/crud-auth.filter';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { BaseEntityModuleOptions, Entity, InjectEntityRepository } from '@shared/base-entity/interface';
 import { MailSendService } from '@shared/utils/mail/mail-send.service';
@@ -34,6 +35,7 @@ class AttendanceCleanupRuleService<T extends Entity | AttendanceCleanupRule> ext
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: AttendanceCleanupRule,
+    crudAuth: CrudAuthWithPermissionsFilter(permissions => permissions?.attendanceCleanupRules),
     query: {
       join: {
         lesson: { eager: false },
