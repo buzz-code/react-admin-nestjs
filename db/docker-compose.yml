@@ -1,0 +1,44 @@
+version: "3"
+
+# Standalone MySQL + phpMyAdmin, meant to be deployed on its own (not
+# bundled into an app's stack) and shared across every app that needs it.
+# Each app gets its own database + dedicated user created on this one
+# server (see README below) and reaches it over the `dokploy-network`
+# external network.
+services:
+    database:
+        container_name: database
+        restart: unless-stopped
+        build:
+            context: .
+        cap_add:
+            - SYS_NICE
+        command: --mysql-native-password=ON
+        environment:
+            MYSQL_DATABASE: $MYSQL_DATABASE
+            MYSQL_USER: $MYSQL_USER
+            MYSQL_PASSWORD: $MYSQL_PASSWORD
+            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+        volumes:
+            - "db_data:/var/lib/mysql"
+        networks:
+            - dokploy-network
+
+    phpmyadmin:
+        container_name: php-myadmin
+        restart: unless-stopped
+        depends_on:
+            - database
+        image: phpmyadmin
+        environment:
+            PMA_HOST: database
+            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+        networks:
+            - dokploy-network
+
+volumes:
+    db_data:
+
+networks:
+    dokploy-network:
+        external: true
