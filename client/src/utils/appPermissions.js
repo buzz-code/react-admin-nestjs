@@ -1,4 +1,4 @@
-import { useHasPermission, hasPermissionLogic, isAdmin } from '@shared/utils/permissionsUtil';
+import { useHasPermission, hasPermissionLogic, isAdmin, useIsAdmin } from '@shared/utils/permissionsUtil';
 
 export const appPermissions = {
     scannerUpload: 'scannerUpload',
@@ -80,4 +80,4 @@ export const useIsPerDateLessonCount = () => useHasPermission(appPermissions.per
 
 export const isAttendanceCleanupRules = (permissions) =>
     isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.attendanceCleanupRules);
-export const useIsAttendanceCleanupRules = () => useHasPermission(appPermissions.attendanceCleanupRules);
+export const useIsAttendanceCleanupRules = () => useHasPermission(appPermissions.attendanceCleanupRules) || useIsAdmin();
