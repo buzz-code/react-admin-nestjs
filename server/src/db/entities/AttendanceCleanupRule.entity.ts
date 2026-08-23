@@ -19,7 +19,10 @@ import { StringType, NumberType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 import { Lesson } from './Lesson.entity';
 import { Klass } from './Klass.entity';
+import { KlassType } from './KlassType.entity';
+import { Teacher } from './Teacher.entity';
 import { User } from './User.entity';
+import { LessonKlassName } from '../view-entities/LessonKlassName.entity';
 
 /**
  * A recurring attendance-cleanup rule: on `dayOfWeek`, delete att_reports for
@@ -46,7 +49,7 @@ export class AttendanceCleanupRule implements IHasUserId {
   async fillFields() {
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([Lesson, Klass, User]);
+      dataSource = await getDataSource([Lesson, Klass, KlassType, Teacher, User, LessonKlassName]);
 
       this.lessonId = await findOneAndAssignKey(dataSource, Lesson, this.userId, this.lessonReferenceId, this.lessonId);
       this.klassId = await findOneAndAssignKey(dataSource, Klass, this.userId, this.klassReferenceId, this.klassId);
