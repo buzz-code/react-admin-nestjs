@@ -7,7 +7,7 @@ import { TeacherSelector } from './TeacherSelector';
 import { MainReport } from './MainReport';
 import { round } from '@shared/utils/numericUtil';
 import { useLateValue } from 'src/settings/settingsUtil';
-import { getCurrentHebrewYear } from '@shared/utils/yearFilter';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { getDefaultReportDate } from './StudentList';
 
 export const InLessonReport = ({
@@ -84,6 +84,7 @@ export const InLessonReport = ({
                 teacherReferenceId: lesson.teacherReferenceId,
                 klassReferenceId: lesson.klassReferenceIds[0],
                 lessonReferenceId: lesson.id,
+                year: defaultYearFilter.year,
             };
 
             reportDates.forEach((reportDate, index) => {
