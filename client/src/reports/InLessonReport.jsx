@@ -9,7 +9,7 @@ import {
     useIsLessonSignature,
 } from '../utils/appPermissions';
 import { InLessonReport } from './in-lesson-report';
-import { getCurrentHebrewYear } from '@shared/utils/yearFilter';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { useObjectStore } from 'src/utils/storeUtil';
 
 const entityConfig = [
@@ -73,7 +73,7 @@ export default ({ gradeMode = false }) => {
                     teacherReferenceId: lesson.teacherReferenceId,
                     lessonReferenceId: lesson.id,
                     klassReferenceId: lesson.klassReferenceIds[0],
-                    year: getCurrentHebrewYear(),
+                    year: defaultYearFilter.year,
                 };
 
                 const reportGroupResponse = await dataProvider.create('report_group', {
