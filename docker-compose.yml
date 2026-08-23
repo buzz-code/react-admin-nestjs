@@ -63,7 +63,7 @@ services:
             SMTP_PASSWORD: $SMTP_PASSWORD
             MAINTENANCE_MODE: $MAINTENANCE_MODE
             MAINTENANCE_MESSAGE: $MAINTENANCE_MESSAGE
-            WORKER_ENABLED: $WORKER_ENABLED
+            WORKER_ENABLED: ${WORKER_ENABLED:-true}
         depends_on:
             - database
         labels:
