@@ -35,7 +35,7 @@ describe('AttendanceCleanupRuleConfig', () => {
   });
 
   describe('doAction: runNow', () => {
-    function makeService(rules: Partial<AttendanceCleanupRule>[]) {
+    function makeService() {
       const ServiceClass = attendanceCleanupRuleConfig.service as any;
       const mockRepository = {
         target: AttendanceCleanupRule,
@@ -45,35 +45,44 @@ describe('AttendanceCleanupRuleConfig', () => {
           connection: { options: { type: 'mysql' } },
           targetName: 'AttendanceCleanupRule',
         },
-        find: jest.fn().mockResolvedValue(rules),
       } as any;
       const jobService = { enqueue: jest.fn().mockResolvedValue({ id: 42 }) };
       const service = new ServiceClass(mockRepository, {} as any, jobService);
-      return { service, mockRepository, jobService };
+      return { service, jobService };
     }
 
-    it('applies crudAuth to the id lookup, so a non-admin can only run their own rules', async () => {
-      // The mocked find simulates the DB applying { userId: 7 } - a non-owned id in the
-      // selection simply doesn't come back, instead of being trusted from the request.
-      const { service, mockRepository, jobService } = makeService([{ id: 1, userId: 7 }]);
+    function makeReq(ids: string, rules: Partial<AttendanceCleanupRule>[]) {
+      // getManyByIds is what actually applies crudAuth's filter (via createBuilder) - it's
+      // mocked here rather than re-testing that plumbing, which base-entity.service.spec.ts
+      // already covers directly.
       const req = {
-        auth: { id: 7, permissions: {} },
-        parsed: { extra: { action: 'runNow', ids: '1,2' } }, // 2 belongs to another user
+        auth: { id: -1, permissions: { admin: true } },
+        parsed: { extra: { action: 'runNow', ids } },
+        options: {},
       } as unknown as CrudRequest;
+      return req;
+    }
 
-      await service.doAction(req, {});
+    it("enqueues a job scoped to the resolved rules' own userId", async () => {
+      const { service, jobService } = makeService();
+      jest.spyOn(service, 'getManyByIds').mockResolvedValue([
+        { id: 1, userId: 38 },
+        { id: 2, userId: 38 },
+      ] as any);
+      const req = makeReq('1,2', []);
 
-      expect(mockRepository.find).toHaveBeenCalledWith({ where: { id: expect.anything(), userId: 7 } });
+      const message = await service.doAction(req, {});
+
+      expect(service.getManyByIds).toHaveBeenCalledWith(req, [1, 2]);
       expect(jobService.enqueue).toHaveBeenCalledTimes(1);
-      expect(jobService.enqueue).toHaveBeenCalledWith(7, 'attendance-cleanup-sweep', { ruleIds: [1] });
+      expect(jobService.enqueue).toHaveBeenCalledWith(38, 'attendance-cleanup-sweep', { ruleIds: [1, 2] });
+      expect(message).toContain('42');
     });
 
     it('enqueues nothing when none of the selected ids resolve for this caller', async () => {
-      const { service, jobService } = makeService([]);
-      const req = {
-        auth: { id: 7, permissions: {} },
-        parsed: { extra: { action: 'runNow', ids: '99' } }, // owned by someone else
-      } as unknown as CrudRequest;
+      const { service, jobService } = makeService();
+      jest.spyOn(service, 'getManyByIds').mockResolvedValue([]);
+      const req = makeReq('99', []); // e.g. owned by someone else, filtered out by crudAuth
 
       const message = await service.doAction(req, {});
 
@@ -81,27 +90,23 @@ describe('AttendanceCleanupRuleConfig', () => {
       expect(message).toContain('0');
     });
 
-    it('enqueues one job per distinct owner when an admin selects rules across users', async () => {
-      const { service, mockRepository, jobService } = makeService([
+    it('enqueues one job per distinct owner when the resolved rules span multiple users', async () => {
+      const { service, jobService } = makeService();
+      jest.spyOn(service, 'getManyByIds').mockResolvedValue([
         { id: 1, userId: 38 },
         { id: 2, userId: 39 },
-      ]);
-      const req = {
-        auth: { id: -1, permissions: { admin: true } },
-        parsed: { extra: { action: 'runNow', ids: '1,2' } },
-      } as unknown as CrudRequest;
+      ] as any);
+      const req = makeReq('1,2', []);
 
-      const message = await service.doAction(req, {});
+      await service.doAction(req, {});
 
-      expect(mockRepository.find).toHaveBeenCalledWith({ where: { id: expect.anything() } }); // no userId - admin sees all
       expect(jobService.enqueue).toHaveBeenCalledTimes(2);
       expect(jobService.enqueue).toHaveBeenCalledWith(38, 'attendance-cleanup-sweep', { ruleIds: [1] });
       expect(jobService.enqueue).toHaveBeenCalledWith(39, 'attendance-cleanup-sweep', { ruleIds: [2] });
-      expect(message).toContain('42');
     });
 
     it('falls through to the base doAction for unknown actions', async () => {
-      const { service } = makeService([]);
+      const { service } = makeService();
       const req = {
         auth: { id: 7 },
         parsed: { extra: { action: 'somethingElse' } },

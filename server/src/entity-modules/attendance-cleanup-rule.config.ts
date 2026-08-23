@@ -1,5 +1,5 @@
 import { CrudRequest } from '@dataui/crud';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CrudAuthFilter } from '@shared/auth/crud-auth.filter';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { BaseEntityModuleOptions, Entity, InjectEntityRepository } from '@shared/base-entity/interface';
@@ -8,18 +8,13 @@ import { JobService } from '@shared/utils/jobs/job.service';
 import { getAsNumberArray } from '@shared/utils/queryParam.util';
 import { AttendanceCleanupRule } from 'src/db/entities/AttendanceCleanupRule.entity';
 
-// Same auth as most entities: admin sees everything, everyone else sees only their own
-// rows. The attendanceCleanupRules permission only controls whether the client shows the
-// resource - it must not grant cross-tenant data visibility.
-const crudAuth = CrudAuthFilter;
-
 class AttendanceCleanupRuleService<T extends Entity | AttendanceCleanupRule> extends BaseEntityService<T> {
   constructor(
-    @InjectEntityRepository private readonly ruleRepo: Repository<T>,
+    @InjectEntityRepository repo: Repository<T>,
     mailSendService: MailSendService,
     private readonly jobService: JobService,
   ) {
-    super(ruleRepo, mailSendService);
+    super(repo, mailSendService);
   }
 
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
@@ -27,15 +22,12 @@ class AttendanceCleanupRuleService<T extends Entity | AttendanceCleanupRule> ext
     switch (extra.action) {
       case 'runNow': {
         const ruleIds = getAsNumberArray(extra.ids) ?? [];
-        // doAction is a custom route - it does NOT go through @dataui/crud's normal
-        // query building, so crudAuth's filter has to be applied to this lookup
-        // explicitly or a caller could pass any rule id regardless of ownership.
-        const authFilter = crudAuth.filter(req.auth);
-        const rules = (await this.ruleRepo.find({
-          where: { id: In(ruleIds), ...authFilter } as any,
-        })) as unknown as AttendanceCleanupRule[];
-        // Admin's authFilter is {} (sees everyone), so a selection can still span
-        // multiple owners - scope each enqueued job to its own rule subset.
+        // getManyByIds applies crudAuth's filter (already merged into req.parsed.search
+        // by CrudRequestInterceptor) - a non-owned id in the selection simply doesn't
+        // come back, instead of being trusted from the request.
+        const rules = (await this.getManyByIds(req, ruleIds)) as unknown as AttendanceCleanupRule[];
+        // Admin sees everyone, so a selection can still span multiple owners - scope
+        // each enqueued job to its own rule subset.
         const userIds = [...new Set(rules.map((rule) => rule.userId))];
         const jobs = await Promise.all(
           userIds.map((userId) =>
@@ -54,7 +46,10 @@ class AttendanceCleanupRuleService<T extends Entity | AttendanceCleanupRule> ext
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: AttendanceCleanupRule,
-    crudAuth,
+    // Same auth as most entities: admin sees everything, everyone else sees only their
+    // own rows. The attendanceCleanupRules permission only controls whether the client
+    // shows the resource - it must not grant cross-tenant data visibility.
+    crudAuth: CrudAuthFilter,
     query: {
       join: {
         lesson: { eager: false },
