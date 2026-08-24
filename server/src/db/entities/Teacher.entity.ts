@@ -12,6 +12,7 @@ import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-ty
 @Index('teachers_user_id_tz_idx', ['userId', 'tz'])
 @Index('teachers_user_id_phone_idx', ['userId', 'phone'])
 @Index('teachers_user_id_phone2_idx', ['userId', 'phone2'])
+@Index('teachers_user_id_number_idx', ['userId', 'number'])
 @Entity('teachers')
 export class Teacher implements IHasUserId {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
@@ -49,6 +50,12 @@ export class Teacher implements IHasUserId {
   @MaxLength(10, { always: true })
   @Column('varchar', { name: 'phone2', nullable: true, length: 10 })
   phone2: string | null;
+
+  @IsOptional({ always: true })
+  @StringType
+  @MaxLength(10, { always: true })
+  @Column('varchar', { name: 'number', nullable: true, length: 10 })
+  number: string | null;
 
   @IsOptional({ always: true })
   @StringType

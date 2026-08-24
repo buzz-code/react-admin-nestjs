@@ -31,6 +31,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="tz" />
             <TextField source="name" />
             <TextField source="displayName" />
+            <TextField source="number" />
             <TextField source="phone" />
             <TextField source="phone2" />
             <EmailField source="email" />
@@ -50,6 +51,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <TextInput source="tz" validate={[required(), maxLength(10), unique()]} />
             <TextInput source="name" validate={[required(), maxLength(500)]} />
             <TextInput source="displayName" validate={maxLength(500)} />
+            <TextInput source="number" validate={[maxLength(10), unique()]} />
             <TextInput source="phone" validate={maxLength(10)} />
             <TextInput source="phone2" validate={maxLength(10)} />
             <TextInput source="email" validate={maxLength(500)} />
@@ -63,7 +65,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['tz', 'name', 'phone', 'phone2', 'email', 'comment', 'displayName'],
+    fields: ['tz', 'name', 'number', 'phone', 'phone2', 'email', 'comment', 'displayName'],
 };
 
 const entity = {
