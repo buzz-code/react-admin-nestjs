@@ -1,4 +1,4 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
 import { User } from 'src/db/entities/User.entity';
 import { IsOptional } from 'class-validator';
@@ -15,6 +15,12 @@ import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-ty
 @Index('teachers_user_id_number_unique', ['userId', 'number'], { unique: true })
 @Entity('teachers')
 export class Teacher implements IHasUserId {
+  @BeforeInsert()
+  @BeforeUpdate()
+  normalizeNumber() {
+    if (this.number === '') this.number = null;
+  }
+
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 

@@ -30,6 +30,8 @@ export class Klass implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
   async fillFields() {
+    if (this.phone === '') this.phone = null;
+
     let dataSource: DataSource;
     try {
       fillDefaultYearValue(this);
