@@ -108,6 +108,7 @@ export default {
                 teacherId: 'מורה',
                 teacherReferenceId: 'מורה',
                 order: 'סדר הצגה',
+                phone: 'טלפון',
             },
         },
         klass_type: {
@@ -207,6 +208,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
+                number: 'מספר מורה',
                 phone: 'טלפון',
                 phone2: 'טלפון 2',
                 email: 'כתובת מייל',

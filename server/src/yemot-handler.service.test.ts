@@ -116,11 +116,6 @@ function entersKlass(builder: YemotScenarioBuilder, klassKey: string): YemotScen
   return ask(builder, KLASS_PROMPT, klassKey).systemSends(/confirmed klass/i);
 }
 
-// Teacher greeting + manual klass entry — the common opening of a seminar call.
-function startsSeminarCall(builder: YemotScenarioBuilder, klassKey: string): YemotScenarioBuilder {
-  return entersKlass(welcomesTeacher(builder), klassKey);
-}
-
 // Enters a student number, then answers the name-confirmation prompt yes/no.
 function confirmsStudentName(builder: YemotScenarioBuilder, studentNumber: string, accept: boolean): YemotScenarioBuilder {
   const answered = ask(ask(builder, ABSENT_STUDENT_PROMPT, studentNumber), CONFIRM_STUDENT_PROMPT, accept ? '1' : '2');
@@ -274,7 +269,6 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
 
   describe('seminar attendance flow', () => {
     const seminarTexts = [
-      { userId: 0, name: 'TEACHER.PHONE_NOT_RECOGNIZED', description: '', value: 'Teacher phone not recognized' },
       { userId: 0, name: 'SEMINAR.KLASS_PROMPT', description: '', value: 'Enter klass number' },
       { userId: 0, name: 'SEMINAR.INVALID_KLASS', description: '', value: 'Invalid klass, try again' },
       { userId: 0, name: 'SEMINAR.ALREADY_REPORTED', description: '', value: 'Already reported for this klass today' },
@@ -285,10 +279,14 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       { userId: 0, name: 'SEMINAR.STUDENT_NAME_REJECTED', description: '', value: 'Name rejected, try again' },
       { userId: 0, name: 'SEMINAR.WELCOME', description: '', value: 'Hello teacher {teacherName}' },
       { userId: 0, name: 'SEMINAR.KLASS_CONFIRMED', description: '', value: 'Confirmed klass {klassName}' },
+      { userId: 0, name: 'SEMINAR.TEACHER_CODE_PROMPT', description: '', value: 'Enter teacher code for {klassName}' },
+      { userId: 0, name: 'SEMINAR.INVALID_TEACHER_CODE', description: '', value: 'Invalid teacher code, try again' },
     ];
     const allTexts = [...baseTexts, ...seminarTexts];
 
-    const teacher = { id: 1, userId: 1, tz: '900000001', name: 'Teacher One', phone: '0501234567' };
+    const TEACHER_CODE_PROMPT = /enter teacher code/i;
+
+    const teacher = { id: 1, userId: 1, tz: '900000001', name: 'Teacher One', number: '1' };
     const roster = () => [
       { id: 101, userId: 1, tz: '300000001', name: 'Student A', studentNumber: '11' },
       { id: 102, userId: 1, tz: '300000002', name: 'Student B', studentNumber: '12' },
@@ -300,8 +298,8 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       { id: 503, userId: 1, studentReferenceId: 103, klassReferenceId, year },
     ];
 
-    // Shared teacher-call setup: recognized teacher (phone matches the mock caller) + seminar
-    // Text set. Pass `teachers: []` for the unrecognized-phone case.
+    // Shared teacher-call setup: seeds the teacher (identified by keyed-in code, not caller
+    // phone) + seminar text set.
     function teacherSetup(
       name: string,
       opts: { permissions?: Record<string, boolean>; teachers?: any[]; extraSeeds?: Record<string, any[]> } = {},
@@ -310,7 +308,9 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       return baseSetup(name, { user: { ...baseUser, permissions }, teachers, texts: allTexts, extraSeeds });
     }
 
-    // teacherSetup + a Klass + full student roster — the common seminar-call opening.
+    // teacherSetup + a Klass + full student roster — the common seminar-call opening. Pass a
+    // `phone` on the klass fixture to have it auto-resolve from the (fixed) mock caller number
+    // '0501234567'; omit it to exercise the manual-klass-entry fallback.
     function seminarBuilder(
       name: string,
       klass: { id: number; year: number },
@@ -320,6 +320,16 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         permissions,
         extraSeeds: { Klass: [klass], Student: roster(), StudentKlass: studentKlasses(klass.id, klass.year) },
       });
+    }
+
+    function entersTeacherCode(builder: YemotScenarioBuilder, code: string): YemotScenarioBuilder {
+      return ask(builder, TEACHER_CODE_PROMPT, code);
+    }
+
+    // Manual klass entry (klass phone unrecognized/absent), then teacher code, ending with the
+    // system's welcome — the common opening for a call that doesn't auto-resolve by phone.
+    function startsSeminarCall(builder: YemotScenarioBuilder, klassKey: string, teacherCode: string): YemotScenarioBuilder {
+      return welcomesTeacher(entersTeacherCode(entersKlass(builder, klassKey), teacherCode));
     }
 
     it('happy path with lessonSignature permission — creates a ReportGroup/Session and AttReport rows', async () => {
@@ -334,7 +344,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('AttReport', [])
         .seed('ReportGroup', [])
         .seed('ReportGroupSession', []);
-      startsSeminarCall(builder, '7');
+      startsSeminarCall(builder, '7', '1');
       confirmsStudentName(builder, '11', true);
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
@@ -371,7 +381,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('AttReport', [])
         .seed('ReportGroup', [])
         .seed('ReportGroupSession', []);
-      startsSeminarCall(builder, '8');
+      startsSeminarCall(builder, '8', '1');
       confirmsStudentName(builder, '11', true);
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
@@ -388,16 +398,64 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       }
     });
 
-    it('teacher phone not recognized — hangup with TEACHER.PHONE_NOT_RECOGNIZED', async () => {
+    it('klass phone recognized — resolves klass automatically, skips manual klass prompt', async () => {
       jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 280, userId: 1, key: 16, name: 'Klass Sixteen', year, phone: '0501234567' };
 
-      const scenario = teacherSetup('Seminar unrecognized teacher phone', { teachers: [] })
-        .systemHangsUp(/not recognized/i)
-        .build();
+      const builder = seminarBuilder('Seminar klass phone recognized', klass).seed('AttReport', []);
+      entersTeacherCode(builder, '1');
+      welcomesTeacher(builder);
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
 
       const result = await runner.run(scenario);
       expect(result.passed).toBe(true);
       expect(result.hungup).toBe(true);
+      expect(result.saved['AttReport']).toHaveLength(3);
+    });
+
+    it('star during teacher code — switches to manual klass selection', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const phoneKlass = { id: 281, userId: 1, key: 17, name: 'Klass Seventeen', year, phone: '0501234567' };
+      const manualKlass = { id: 282, userId: 1, key: 18, name: 'Klass Eighteen', year };
+
+      const builder = teacherSetup('Seminar star escape to manual klass', {
+        extraSeeds: {
+          Klass: [phoneKlass, manualKlass],
+          Student: roster(),
+          StudentKlass: studentKlasses(282, year),
+        },
+      }).seed('AttReport', []);
+      ask(builder, TEACHER_CODE_PROMPT, '*');
+      entersKlass(builder, '18');
+      entersTeacherCode(builder, '1');
+      welcomesTeacher(builder);
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+      expect(result.saved['AttReport']).toHaveLength(3);
+    });
+
+    it('invalid teacher code — error message then retry with valid code', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 283, userId: 1, key: 19, name: 'Klass Nineteen', year };
+
+      const builder = seminarBuilder('Seminar invalid teacher code retry', klass).seed('AttReport', []);
+      entersKlass(builder, '19');
+      askThenReject(builder, TEACHER_CODE_PROMPT, '99', /invalid teacher code/i);
+      entersTeacherCode(builder, '1');
+      welcomesTeacher(builder);
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
     });
 
     it('invalid klass number — error message then retry with valid klass', async () => {
@@ -406,9 +464,10 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const klass = { id: 220, userId: 1, key: 9, name: 'Klass Nine', year };
 
       const builder = seminarBuilder('Seminar invalid klass retry', klass);
-      welcomesTeacher(builder);
       askThenReject(builder, KLASS_PROMPT, '99', /invalid klass/i);
       entersKlass(builder, '9');
+      entersTeacherCode(builder, '1');
+      welcomesTeacher(builder);
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -422,7 +481,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const klass = { id: 230, userId: 1, key: 10, name: 'Klass Ten', year };
 
       const builder = seminarBuilder('Seminar invalid student number retry', klass);
-      startsSeminarCall(builder, '10');
+      startsSeminarCall(builder, '10', '1');
       askThenReject(builder, ABSENT_STUDENT_PROMPT, '999', /invalid student number/i);
       confirmsStudentName(builder, '11', true);
       finishAbsentStudentEntry(builder);
@@ -438,7 +497,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const klass = { id: 235, userId: 1, key: 15, name: 'Klass Fifteen', year };
 
       const builder = seminarBuilder('Seminar name confirmation rejected', klass).seed('AttReport', []);
-      startsSeminarCall(builder, '15');
+      startsSeminarCall(builder, '15', '1');
       confirmsStudentName(builder, '11', false);
       confirmsStudentName(builder, '12', true);
       finishAbsentStudentEntry(builder);
@@ -468,7 +527,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
           ],
         },
       });
-      startsSeminarCall(builder, '11');
+      startsSeminarCall(builder, '11', '1');
       const scenario = builder.systemHangsUp(/already reported/i).build();
 
       const result = await runner.run(scenario);
@@ -476,14 +535,14 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       expect(result.hungup).toBe(true);
     });
 
-    it('schedule match found — auto-detects lesson/klass, skips manual klass prompt, sets lessonReferenceId', async () => {
+    it('schedule matches teacher and resolved klass — sets lessonReferenceId', async () => {
       jest.setSystemTime(israelTimeAt(7, 0));
       const year = getCurrentHebrewYear();
       const klass = { id: 260, userId: 1, key: 13, name: 'Klass Thirteen', year };
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      const builder = seminarBuilder('Seminar auto-detected schedule', klass)
+      const builder = seminarBuilder('Seminar schedule match sets lessonReferenceId', klass)
         .seed('LessonSchedule', [
           {
             userId: 1,
@@ -496,7 +555,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
           },
         ])
         .seed('AttReport', []);
-      welcomesTeacher(builder);
+      startsSeminarCall(builder, '13', '1');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -511,13 +570,47 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       }
     });
 
-    it('no schedule for teacher today — falls back to manual klass entry with no lessonReferenceId', async () => {
+    it('schedule matches teacher but not the resolved klass — lessonReferenceId stays unset', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 284, userId: 1, key: 20, name: 'Klass Twenty', year };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const builder = seminarBuilder('Seminar schedule for different klass', klass)
+        .seed('LessonSchedule', [
+          {
+            userId: 1,
+            year,
+            teacherReferenceId: teacher.id,
+            klassReferenceId: 9999,
+            lessonReferenceId: 701,
+            scheduleDate: today,
+            startTime: '07:00',
+          },
+        ])
+        .seed('AttReport', []);
+      startsSeminarCall(builder, '20', '1');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+
+      expect(result.saved['AttReport']).toHaveLength(3);
+      for (const report of result.saved['AttReport']) {
+        expect(report.lessonReferenceId).toBeFalsy();
+      }
+    });
+
+    it('no schedule for teacher today — no lessonReferenceId', async () => {
       jest.setSystemTime(israelTimeAt(7, 0));
       const year = getCurrentHebrewYear();
       const klass = { id: 270, userId: 1, key: 14, name: 'Klass Fourteen', year };
 
-      const builder = seminarBuilder('Seminar no schedule fallback', klass).seed('AttReport', []);
-      startsSeminarCall(builder, '14');
+      const builder = seminarBuilder('Seminar no schedule', klass).seed('AttReport', []);
+      startsSeminarCall(builder, '14', '1');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -537,7 +630,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const klass = { id: 250, userId: 1, key: 12, name: 'Klass Twelve', year };
 
       const builder = teacherSetup('Seminar no students in klass', { extraSeeds: { Klass: [klass] } });
-      startsSeminarCall(builder, '12');
+      startsSeminarCall(builder, '12', '1');
       const scenario = builder.systemHangsUp(/no students/i).build();
 
       const result = await runner.run(scenario);

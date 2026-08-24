@@ -98,20 +98,23 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   }
 
   private async processSeminarAttendanceCall(): Promise<void> {
-    const teacher = await this.getTeacherByPhone();
-    if (!teacher) return;
+    let klass = await this.getKlassByPhone();
+    let teacher: Teacher = null;
+    while (!teacher) {
+      if (!klass) {
+        klass = await this.getKlassByInput();
+      }
+      const result = await this.getTeacherOrEscape(klass);
+      if (result === 'ESCAPE') {
+        klass = null;
+        continue;
+      }
+      teacher = result;
+    }
     await this.sendMessageByKey('SEMINAR.WELCOME', { teacherName: teacher.name });
 
     const schedule = await this.getScheduleForTeacherNow(teacher);
-    let klass: Klass = null;
-    let lessonReferenceId: number | undefined;
-    if (schedule) {
-      klass = await this.dataSource.getRepository(Klass).findOneBy({ id: schedule.klassReferenceId });
-      lessonReferenceId = schedule.lessonReferenceId;
-    }
-    if (!klass) {
-      klass = await this.getKlassByInput();
-    }
+    const lessonReferenceId = schedule?.klassReferenceId === klass.id ? schedule.lessonReferenceId : undefined;
 
     const alreadyReported = await this.hasReportedTodayForKlass(klass.id);
     if (alreadyReported) {
@@ -165,18 +168,22 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     return hours * 60 + minutes;
   }
 
-  private async getTeacherByPhone(): Promise<Teacher | null> {
-    const teacher = await this.dataSource.getRepository(Teacher).findOne({
-      where: [
-        { userId: this.user.id, phone: this.call.phone },
-        { userId: this.user.id, phone2: this.call.phone },
-      ],
+  private async getKlassByPhone(): Promise<Klass> {
+    return this.dataSource.getRepository(Klass).findOneBy({
+      userId: this.user.id,
+      phone: this.call.phone,
+      year: getCurrentHebrewYear(),
     });
-    if (!teacher) {
-      await this.hangupWithMessageByKey('TEACHER.PHONE_NOT_RECOGNIZED');
-      return null;
+  }
+
+  private async getTeacherOrEscape(klass: Klass): Promise<Teacher | 'ESCAPE'> {
+    while (true) {
+      const input = await this.askForInputByKey('SEMINAR.TEACHER_CODE_PROMPT', { klassName: klass.name });
+      if (input === '*') return 'ESCAPE';
+      const teacher = await this.dataSource.getRepository(Teacher).findOneBy({ userId: this.user.id, number: input });
+      if (teacher) return teacher;
+      await this.sendMessageByKey('SEMINAR.INVALID_TEACHER_CODE');
     }
-    return teacher;
   }
 
   private async getKlassByInput(): Promise<Klass> {
