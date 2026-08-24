@@ -10,7 +10,7 @@ export class AddKlassPhoneAndTeacherNumber1787300000000 implements MigrationInte
         `);
         await queryRunner.query(`
             ALTER TABLE \`klasses\`
-            ADD INDEX \`klasses_user_id_phone_idx\` (\`user_id\`, \`phone\`)
+            ADD UNIQUE INDEX \`klasses_user_id_phone_year_unique\` (\`user_id\`, \`phone\`, \`year\`)
         `);
         await queryRunner.query(`
             ALTER TABLE \`teachers\`
@@ -18,19 +18,19 @@ export class AddKlassPhoneAndTeacherNumber1787300000000 implements MigrationInte
         `);
         await queryRunner.query(`
             ALTER TABLE \`teachers\`
-            ADD INDEX \`teachers_user_id_number_idx\` (\`user_id\`, \`number\`)
+            ADD UNIQUE INDEX \`teachers_user_id_number_unique\` (\`user_id\`, \`number\`)
         `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-            ALTER TABLE \`teachers\` DROP INDEX \`teachers_user_id_number_idx\`
+            ALTER TABLE \`teachers\` DROP INDEX \`teachers_user_id_number_unique\`
         `);
         await queryRunner.query(`
             ALTER TABLE \`teachers\` DROP COLUMN \`number\`
         `);
         await queryRunner.query(`
-            ALTER TABLE \`klasses\` DROP INDEX \`klasses_user_id_phone_idx\`
+            ALTER TABLE \`klasses\` DROP INDEX \`klasses_user_id_phone_year_unique\`
         `);
         await queryRunner.query(`
             ALTER TABLE \`klasses\` DROP COLUMN \`phone\`

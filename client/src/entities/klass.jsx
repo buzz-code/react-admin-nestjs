@@ -111,7 +111,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <NumberInput source="key" validate={[required(), unique()]} />
             <TextInput source="name" validate={[required(), maxLength(500)]} />
             <TextInput source="displayName" validate={[maxLength(500)]} />
-            <TextInput source="phone" validate={[maxLength(20)]} />
+            <TextInput source="phone" validate={[maxLength(20), unique()]} />
             <CommonReferenceInput
                 source="klassTypeReferenceId"
                 reference="klass_type"
