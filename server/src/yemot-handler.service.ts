@@ -104,6 +104,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       if (!klass) {
         klass = await this.getKlassByInput();
       }
+      await this.sendMessageByKey('SEMINAR.KLASS_CONFIRMED', { klassName: klass.name });
       const result = await this.getTeacherOrEscape(klass);
       if (result === 'ESCAPE') {
         klass = null;
@@ -199,7 +200,6 @@ export class YemotHandlerService extends BaseYemotHandlerService {
         await this.sendMessageByKey('SEMINAR.INVALID_KLASS');
       }
     }
-    await this.sendMessageByKey('SEMINAR.KLASS_CONFIRMED', { klassName: klass.name });
     return klass;
   }
 

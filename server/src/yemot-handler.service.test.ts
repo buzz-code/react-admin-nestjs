@@ -279,7 +279,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       { userId: 0, name: 'SEMINAR.STUDENT_NAME_REJECTED', description: '', value: 'Name rejected, try again' },
       { userId: 0, name: 'SEMINAR.WELCOME', description: '', value: 'Hello teacher {teacherName}' },
       { userId: 0, name: 'SEMINAR.KLASS_CONFIRMED', description: '', value: 'Confirmed klass {klassName}' },
-      { userId: 0, name: 'SEMINAR.TEACHER_CODE_PROMPT', description: '', value: 'Enter teacher code for {klassName}' },
+      { userId: 0, name: 'SEMINAR.TEACHER_CODE_PROMPT', description: '', value: 'Enter teacher code' },
       { userId: 0, name: 'SEMINAR.INVALID_TEACHER_CODE', description: '', value: 'Invalid teacher code, try again' },
     ];
     const allTexts = [...baseTexts, ...seminarTexts];
@@ -404,6 +404,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const klass = { id: 280, userId: 1, key: 16, name: 'Klass Sixteen', year, phone: '0501234567' };
 
       const builder = seminarBuilder('Seminar klass phone recognized', klass).seed('AttReport', []);
+      builder.systemSends(/confirmed klass/i);
       entersTeacherCode(builder, '1');
       welcomesTeacher(builder);
       finishAbsentStudentEntry(builder);
@@ -428,6 +429,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
           StudentKlass: studentKlasses(282, year),
         },
       }).seed('AttReport', []);
+      builder.systemSends(/confirmed klass/i);
       ask(builder, TEACHER_CODE_PROMPT, '*');
       entersKlass(builder, '18');
       entersTeacherCode(builder, '1');
