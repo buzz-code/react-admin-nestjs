@@ -70,6 +70,16 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
                 reference="klass"
                 optionalTarget="key"
             />
+            <MultiReferenceField
+                label="מספר תלמידה"
+                source="studentReferenceId"
+                sortBy="student.studentNumber"
+                optionalSource="studentTz"
+                reference="student"
+                optionalTarget="tz"
+            >
+                <TextField source="studentNumber" />
+            </MultiReferenceField>
             <CommonYearField />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
