@@ -105,7 +105,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
         klass = await this.getKlassByInput();
       }
       await this.sendMessageByKey('SEMINAR.KLASS_CONFIRMED', { klassName: klass.name });
-      const result = await this.getTeacherOrEscape();
+      const result = await this.getTeacherOrEscape(klass);
       if (result === 'ESCAPE') {
         klass = null;
         continue;
@@ -177,9 +177,9 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     });
   }
 
-  private async getTeacherOrEscape(): Promise<Teacher | 'ESCAPE'> {
+  private async getTeacherOrEscape(klass: Klass): Promise<Teacher | 'ESCAPE'> {
     while (true) {
-      const input = await this.askForInputByKey('SEMINAR.TEACHER_CODE_PROMPT');
+      const input = await this.askForInputByKey('SEMINAR.TEACHER_CODE_PROMPT', { klassName: klass.name });
       if (input === '*') return 'ESCAPE';
       const teacher = await this.dataSource.getRepository(Teacher).findOneBy({ userId: this.user.id, number: input });
       if (teacher) return teacher;
