@@ -304,7 +304,12 @@ const BUILDING = {
   // Build table header section: rows + special fields + borders
   buildTableHeaderSection(sessions: SessionData[]) {
     const dayRow = ['יום בשבוע', ...sessions.map((s) => s.dayOfWeek)];
-    const dateRow = ['תאריך', ...sessions.map((s) => `${s.date.getDate()}/${s.date.getMonth() + 1}`)];
+    const dateRow = [
+      'תאריך',
+      ...sessions.map(
+        (s) => `${s.date.getDate().toString().padStart(2, '0')}-${(s.date.getMonth() + 1).toString().padStart(2, '0')}`,
+      ),
+    ];
     // const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
     // const topicRow = ['שיעור', ...sessions.map(s => s.topic)];
     // const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
