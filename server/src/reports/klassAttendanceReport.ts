@@ -321,10 +321,29 @@ const BUILDING = {
       // separatorRow
     ];
 
-    // Convert header rows to special fields with styling
     const specialFields: ISpecialField[] = [];
+
+    // Month row: one merged cell per month, spanning that month's day columns
+    const monthRowIndex = ROW_COUNT.HEADER_OFFSET;
+    specialFields.push({
+      cell: { r: monthRowIndex, c: 0 },
+      value: 'חודש',
+      style: STYLING.tableHeaderStyle,
+    });
+    FORMATTING.getMonthSpans(sessions).forEach(({ startCol, endCol, label }) => {
+      specialFields.push({
+        cell: { r: monthRowIndex, c: startCol },
+        value: label,
+        style: STYLING.tableHeaderStyle,
+        ...(endCol > startCol
+          ? { merge: { s: { r: monthRowIndex, c: startCol }, e: { r: monthRowIndex, c: endCol } } }
+          : {}),
+      });
+    });
+
+    // Convert remaining header rows to special fields with styling
     rows.forEach((row, rowIndex) => {
-      const actualRowIndex = ROW_COUNT.HEADER_OFFSET + rowIndex;
+      const actualRowIndex = monthRowIndex + 1 + rowIndex;
       row.forEach((cell, colIndex) => {
         if (cell !== '') {
           specialFields.push({
@@ -336,10 +355,11 @@ const BUILDING = {
       });
     });
 
-    // Define borders for header section
+    // Define borders for header section (month row + rows above)
+    const rowCount = 1 + rows.length;
     const lastCol = sessions.length;
     const startRow = ROW_INDEX.TABLE_START;
-    const endRow = startRow + rows.length - 1;
+    const endRow = startRow + rowCount - 1;
 
     const borderRanges = [
       {
@@ -349,7 +369,7 @@ const BUILDING = {
       },
     ];
 
-    return { rowCount: rows.length, specialFields, borderRanges };
+    return { rowCount, specialFields, borderRanges };
   },
 
   // Build table data section: student rows + special fields + borders
@@ -559,10 +579,41 @@ const BUILDING = {
   },
 };
 
+const HEBREW_MONTHS = [
+  'ינואר',
+  'פברואר',
+  'מרץ',
+  'אפריל',
+  'מאי',
+  'יוני',
+  'יולי',
+  'אוגוסט',
+  'ספטמבר',
+  'אוקטובר',
+  'נובמבר',
+  'דצמבר',
+];
+
 const FORMATTING = {
   getHebrewDayOfWeek(date: Date): string {
     const days = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
     return days[date.getDay()];
+  },
+
+  // Group session columns into consecutive same-month spans (1-based column index, col 0 is the label column)
+  getMonthSpans(sessions: SessionData[]): { startCol: number; endCol: number; label: string }[] {
+    const spans: { startCol: number; endCol: number; label: string }[] = [];
+    sessions.forEach((session, index) => {
+      const col = index + 1;
+      const label = `${HEBREW_MONTHS[session.date.getMonth()]} ${session.date.getFullYear()}`;
+      const last = spans[spans.length - 1];
+      if (last && last.label === label) {
+        last.endCol = col;
+      } else {
+        spans.push({ startCol: col, endCol: col, label });
+      }
+    });
+    return spans;
   },
 
   getAttendanceMark(reports: (AttReport | null | undefined)[]): string {
