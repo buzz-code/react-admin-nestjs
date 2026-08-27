@@ -307,7 +307,7 @@ const BUILDING = {
     const dateRow = [
       'תאריך',
       ...sessions.map(
-        (s) => `${s.date.getDate().toString().padStart(2, '0')}-${(s.date.getMonth() + 1).toString().padStart(2, '0')}`,
+        (s) => `${s.date.getDate().toString().padStart(2, '0')}/${(s.date.getMonth() + 1).toString().padStart(2, '0')}`,
       ),
     ];
     // const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
