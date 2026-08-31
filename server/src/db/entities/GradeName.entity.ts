@@ -1,6 +1,8 @@
 import { BeforeInsert, BeforeUpdate, Column, DataSource, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
 import { KlassType } from './KlassType.entity';
+import { Teacher } from './Teacher.entity';
+import { User } from './User.entity';
 import { findOneAndAssignReferenceId, getDataSource } from '@shared/utils/entity/foreignKey.util';
 import { IsOptional } from 'class-validator';
 import { IsNotEmpty, IsNumber, MaxLength } from '@shared/utils/validation/class-validator-he';
@@ -15,7 +17,7 @@ export class GradeName implements IHasUserId {
   async fillFields() {
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([KlassType]);
+      dataSource = await getDataSource([KlassType, Teacher, User]);
 
       this.klassTypeReferenceId = await findOneAndAssignReferenceId(
         dataSource,
