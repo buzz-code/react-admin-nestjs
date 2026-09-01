@@ -14,6 +14,7 @@ import { AttReport } from '../entities/AttReport.entity';
       .addSelect('att_report.reportDate', 'reportDate')
       .addSelect('att_report.teacherReferenceId', 'teacherReferenceId')
       .addSelect('att_report.lessonReferenceId', 'lessonReferenceId')
+      .addSelect('MIN(att_report.klassReferenceId)', 'klassReferenceId')
       .addSelect(
         'MIN(MIN(att_report.createdAt)) OVER (PARTITION BY att_report.userId, att_report.teacherReferenceId, att_report.reportDate)',
         'reportHour',
@@ -40,6 +41,9 @@ export class TeacherReportedToday implements IHasUserId {
 
   @Column({ nullable: true })
   lessonReferenceId: number;
+
+  @Column({ nullable: true })
+  klassReferenceId: number;
 
   @Column()
   reportHour: Date;
