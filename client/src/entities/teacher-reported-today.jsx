@@ -22,8 +22,8 @@ const formatHour = (value) => (value ? new Date(value).toLocaleTimeString('he-IL
 
 const NO_KLASS_KEY = 'none';
 
-// The view has one row per teacher+lesson+date; group rows sharing the same
-// teacher+date into a single card, collecting their lesson rows.
+// The view has one row per teacher+lesson+date+klass; group rows sharing the same
+// teacher+date+klass into a single card, collecting their lesson rows.
 function groupByTeacherAndDate(rows) {
     const groups = new Map();
     rows.forEach((row) => {
