@@ -117,12 +117,6 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const schedule = await this.getScheduleForTeacherNow(teacher);
     const lessonReferenceId = schedule?.klassReferenceId === klass.id ? schedule.lessonReferenceId : undefined;
 
-    const alreadyReported = await this.hasReportedTodayForKlass(klass.id);
-    if (alreadyReported) {
-      await this.hangupWithMessageByKey('SEMINAR.ALREADY_REPORTED');
-      return;
-    }
-
     const roster = await this.getKlassRoster(klass.id);
     if (roster.length === 0) {
       await this.hangupWithMessageByKey('SEMINAR.NO_STUDENTS_IN_KLASS');
@@ -205,19 +199,6 @@ export class YemotHandlerService extends BaseYemotHandlerService {
 
   private getIsraelDateString(date: Date): string {
     return date.toLocaleDateString('en-CA', { timeZone: 'Asia/Jerusalem' });
-  }
-
-  private async hasReportedTodayForKlass(klassReferenceId: number): Promise<boolean> {
-    const todayDateOnly = this.getIsraelDateString(new Date());
-
-    const existingReport = await this.dataSource.getRepository(AttReport).findOne({
-      where: {
-        userId: this.user.id,
-        klassReferenceId,
-        reportDate: todayDateOnly as unknown as Date,
-      },
-    });
-    return !!existingReport;
   }
 
   private async getKlassRoster(klassReferenceId: number): Promise<StudentKlass[]> {
