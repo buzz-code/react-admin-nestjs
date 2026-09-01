@@ -3,7 +3,8 @@ import { Box, Card, CardContent, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
-const todayDateOnly = new Date().toISOString().slice(0, 10);
+const ISRAEL_TIMEZONE = 'Asia/Jerusalem';
+const todayDateOnly = new Date().toLocaleDateString('en-CA', { timeZone: ISRAEL_TIMEZONE });
 
 const filters = [
     adminUserFilter,
@@ -16,7 +17,6 @@ const filterDefaultValues = {
     'reportDate:$lte': todayDateOnly,
 };
 
-const ISRAEL_TIMEZONE = 'Asia/Jerusalem';
 const formatDate = (value) => (value ? new Date(value).toLocaleDateString('he-IL', { timeZone: ISRAEL_TIMEZONE }) : '');
 const formatHour = (value) => (value ? new Date(value).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit', timeZone: ISRAEL_TIMEZONE }) : '');
 
@@ -27,7 +27,7 @@ const NO_KLASS_KEY = 'none';
 function groupByTeacherAndDate(rows) {
     const groups = new Map();
     rows.forEach((row) => {
-        const key = `${row.userId}_${row.teacherReferenceId}_${row.reportDate}`;
+        const key = `${row.userId}_${row.teacherReferenceId}_${row.reportDate}_${row.klassReferenceId ?? NO_KLASS_KEY}`;
         if (!groups.has(key)) {
             groups.set(key, { ...row, lessonRows: [] });
         }
