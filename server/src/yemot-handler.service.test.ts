@@ -514,27 +514,25 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       expect(byStudent[102].absCount).toBe(1);
     });
 
-    it('already reported today for this klass — hangup with SEMINAR.ALREADY_REPORTED', async () => {
+    it('allows reporting again for the same klass on the same day', async () => {
       jest.setSystemTime(israelTimeAt(7, 0));
       const year = getCurrentHebrewYear();
       const klass = { id: 240, userId: 1, key: 11, name: 'Klass Eleven', year };
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      const builder = teacherSetup('Seminar already reported for klass', {
-        extraSeeds: {
-          Klass: [klass],
-          AttReport: [
-            { id: 900, userId: 1, studentReferenceId: 101, klassReferenceId: 240, reportDate: today, absCount: 0 },
-          ],
-        },
-      });
+      const builder = seminarBuilder('Seminar repeated report for klass', klass)
+        .seed('AttReport', [
+          { id: 900, userId: 1, studentReferenceId: 101, klassReferenceId: 240, reportDate: today, absCount: 0 },
+        ]);
       startsSeminarCall(builder, '11', '1');
-      const scenario = builder.systemHangsUp(/already reported/i).build();
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
 
       const result = await runner.run(scenario);
       expect(result.passed).toBe(true);
       expect(result.hungup).toBe(true);
+      expect(result.saved['AttReport']).toHaveLength(3);
     });
 
     it('schedule matches teacher and resolved klass — sets lessonReferenceId', async () => {
