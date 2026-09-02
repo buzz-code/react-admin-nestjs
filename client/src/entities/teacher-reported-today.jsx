@@ -1,7 +1,14 @@
-import { ChipField, DateInput, ReferenceField, RecordContextProvider, TextField, useListContext } from 'react-admin';
+import { ChipField, DateInput, ReferenceField, RecordContextProvider, TextField, useListContext, usePermissions } from 'react-admin';
 import { Badge, Box, Card, CardContent, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
+import { CommonList } from '@shared/components/crudContainers/CommonList';
+import { EmptyPage } from '@shared/components/crudContainers/EmptyPage';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
+import { filterArrayByParams } from '@shared/utils/filtersUtil';
+import { useIsAdmin } from '@shared/utils/permissionsUtil';
+
+// This is a card view, not a table, so cap high rather than paginate at 10 rows.
+const LIST_PAGE_SIZE = 1000;
 
 const ISRAEL_TIMEZONE = 'Asia/Jerusalem';
 const todayDateOnly = new Date().toLocaleDateString('en-CA', { timeZone: ISRAEL_TIMEZONE });
@@ -118,6 +125,28 @@ const TeacherReportCards = ({ isAdmin }) => {
 
 const Datagrid = ({ isAdmin }) => <TeacherReportCards isAdmin={isAdmin} />;
 
+// Card view has no pagination footer, so fetch everything up front instead of the default 10-row page.
+const List = () => {
+    const isAdmin = useIsAdmin();
+    const { permissions } = usePermissions();
+    const filtersArr = filterArrayByParams(filters, { isAdmin, permissions });
+
+    return (
+        <CommonList
+            filters={filtersArr}
+            filterDefaultValues={filterDefaultValues}
+            exporter={false}
+            empty={<EmptyPage />}
+            sort={{ field: 'reportDate', order: 'DESC' }}
+            configurable={false}
+            perPage={LIST_PAGE_SIZE}
+            pagination={false}
+        >
+            <Datagrid isAdmin={isAdmin} />
+        </CommonList>
+    );
+};
+
 const entity = {
     Datagrid,
     filters,
@@ -127,4 +156,4 @@ const entity = {
     sort: { field: 'reportDate', order: 'DESC' },
 };
 
-export default getResourceComponents(entity);
+export default { ...getResourceComponents(entity), list: List };

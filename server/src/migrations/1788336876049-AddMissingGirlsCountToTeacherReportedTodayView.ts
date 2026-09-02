@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddMissingGirlsCountToTeacherReportedTodayView1787700000000 implements MigrationInterface {
-    name = 'AddMissingGirlsCountToTeacherReportedTodayView1787700000000'
+export class AddMissingGirlsCountToTeacherReportedTodayView1788336876049 implements MigrationInterface {
+    name = 'AddMissingGirlsCountToTeacherReportedTodayView1788336876049'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const dbName = queryRunner.connection.options.database;
