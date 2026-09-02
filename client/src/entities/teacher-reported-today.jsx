@@ -1,7 +1,14 @@
-import { ChipField, DateInput, ReferenceField, RecordContextProvider, TextField, useListContext } from 'react-admin';
-import { Box, Card, CardContent, Typography } from '@mui/material';
+import { ChipField, DateInput, ReferenceField, RecordContextProvider, TextField, useListContext, usePermissions } from 'react-admin';
+import { Badge, Box, Card, CardContent, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
+import { CommonList } from '@shared/components/crudContainers/CommonList';
+import { EmptyPage } from '@shared/components/crudContainers/EmptyPage';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
+import { filterArrayByParams } from '@shared/utils/filtersUtil';
+import { useIsAdmin } from '@shared/utils/permissionsUtil';
+
+// This is a card view, not a table, so cap high rather than paginate at 10 rows.
+const LIST_PAGE_SIZE = 1000;
 
 const ISRAEL_TIMEZONE = 'Asia/Jerusalem';
 const todayDateOnly = new Date().toLocaleDateString('en-CA', { timeZone: ISRAEL_TIMEZONE });
@@ -94,9 +101,11 @@ const TeacherReportCards = ({ isAdmin }) => {
                                             {group.lessonRows.length > 0 ? (
                                                 group.lessonRows.map((row) => (
                                                     <RecordContextProvider key={row.id} value={row}>
-                                                        <ReferenceField source="lessonReferenceId" reference="lesson">
-                                                            <ChipField source="name" size="small" color="primary" variant="outlined" />
-                                                        </ReferenceField>
+                                                        <Badge badgeContent={row.missingGirlsCount} color="error" title="מספר בנות שחסרו">
+                                                            <ReferenceField source="lessonReferenceId" reference="lesson">
+                                                                <ChipField source="name" size="small" color="primary" variant="outlined" />
+                                                            </ReferenceField>
+                                                        </Badge>
                                                     </RecordContextProvider>
                                                 ))
                                             ) : (
@@ -116,6 +125,30 @@ const TeacherReportCards = ({ isAdmin }) => {
 
 const Datagrid = ({ isAdmin }) => <TeacherReportCards isAdmin={isAdmin} />;
 
+// Card view has no pagination footer, so fetch everything up front instead of the default 10-row page.
+// Mirrors CommonEntity's own List wiring, which likewise only forwards `filter`.
+const List = ({ filter = {} }) => {
+    const isAdmin = useIsAdmin();
+    const { permissions } = usePermissions();
+    const filtersArr = filterArrayByParams(filters, { isAdmin, permissions });
+
+    return (
+        <CommonList
+            filter={filter}
+            filters={filtersArr}
+            filterDefaultValues={filterDefaultValues}
+            exporter={false}
+            empty={<EmptyPage />}
+            sort={{ field: 'reportDate', order: 'DESC' }}
+            configurable={false}
+            perPage={LIST_PAGE_SIZE}
+            pagination={false}
+        >
+            <Datagrid isAdmin={isAdmin} />
+        </CommonList>
+    );
+};
+
 const entity = {
     Datagrid,
     filters,
@@ -125,4 +158,4 @@ const entity = {
     sort: { field: 'reportDate', order: 'DESC' },
 };
 
-export default getResourceComponents(entity);
+export default { ...getResourceComponents(entity), list: List };
