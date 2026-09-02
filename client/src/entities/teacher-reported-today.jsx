@@ -1,5 +1,5 @@
 import { ChipField, DateInput, ReferenceField, RecordContextProvider, TextField, useListContext } from 'react-admin';
-import { Box, Card, CardContent, Typography } from '@mui/material';
+import { Badge, Box, Card, CardContent, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
@@ -94,9 +94,11 @@ const TeacherReportCards = ({ isAdmin }) => {
                                             {group.lessonRows.length > 0 ? (
                                                 group.lessonRows.map((row) => (
                                                     <RecordContextProvider key={row.id} value={row}>
-                                                        <ReferenceField source="lessonReferenceId" reference="lesson">
-                                                            <ChipField source="name" size="small" color="primary" variant="outlined" />
-                                                        </ReferenceField>
+                                                        <Badge badgeContent={row.missingGirlsCount} color="error" title="מספר בנות שחסרו">
+                                                            <ReferenceField source="lessonReferenceId" reference="lesson">
+                                                                <ChipField source="name" size="small" color="primary" variant="outlined" />
+                                                            </ReferenceField>
+                                                        </Badge>
                                                     </RecordContextProvider>
                                                 ))
                                             ) : (

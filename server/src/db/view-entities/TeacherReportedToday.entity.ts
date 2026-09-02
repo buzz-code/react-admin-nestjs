@@ -19,6 +19,10 @@ import { AttReport } from '../entities/AttReport.entity';
         'MIN(MIN(att_report.createdAt)) OVER (PARTITION BY att_report.userId, att_report.teacherReferenceId, att_report.reportDate, att_report.klassReferenceId)',
         'reportHour',
       )
+      .addSelect(
+        'COUNT(DISTINCT CASE WHEN att_report.absCount > 0 THEN att_report.studentReferenceId END)',
+        'missingGirlsCount',
+      )
       .from(AttReport, 'att_report')
       .where('att_report.teacherReferenceId IS NOT NULL')
       .groupBy('att_report.userId')
@@ -48,4 +52,7 @@ export class TeacherReportedToday implements IHasUserId {
 
   @Column()
   reportHour: Date;
+
+  @Column()
+  missingGirlsCount: number;
 }
