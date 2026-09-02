@@ -126,13 +126,15 @@ const TeacherReportCards = ({ isAdmin }) => {
 const Datagrid = ({ isAdmin }) => <TeacherReportCards isAdmin={isAdmin} />;
 
 // Card view has no pagination footer, so fetch everything up front instead of the default 10-row page.
-const List = () => {
+// Mirrors CommonEntity's own List wiring, which likewise only forwards `filter`.
+const List = ({ filter = {} }) => {
     const isAdmin = useIsAdmin();
     const { permissions } = usePermissions();
     const filtersArr = filterArrayByParams(filters, { isAdmin, permissions });
 
     return (
         <CommonList
+            filter={filter}
             filters={filtersArr}
             filterDefaultValues={filterDefaultValues}
             exporter={false}
