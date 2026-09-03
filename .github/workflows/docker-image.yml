@@ -65,3 +65,17 @@ jobs:
         with:
           url: ${{ secrets.SERVER_WEBHOOK }}
           preventFailureOnNoResponse: true
+
+      - name: 'Update dokploy client service'
+        if: steps.changes.outputs.client == 'true'
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: ${{ secrets.DOKPLOY_CLIENT_WEBHOOK }}
+          preventFailureOnNoResponse: true
+
+      - name: 'Update dokploy server service'
+        if: steps.changes.outputs.server == 'true'
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: ${{ secrets.DOKPLOY_SERVER_WEBHOOK }}
+          preventFailureOnNoResponse: true
