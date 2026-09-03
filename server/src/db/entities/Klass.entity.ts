@@ -24,11 +24,14 @@ import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-ty
 @Index('klasses_users_idx', ['userId'], {})
 @Index(['userId', 'key', 'year'], { unique: true })
 @Index('klasses_user_id_key_idx', ['userId', 'key'])
+@Index('klasses_user_id_phone_year_unique', ['userId', 'phone', 'year'], { unique: true })
 @Entity('klasses')
 export class Klass implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
   async fillFields() {
+    if (this.phone === '') this.phone = null;
+
     let dataSource: DataSource;
     try {
       fillDefaultYearValue(this);
@@ -103,6 +106,13 @@ export class Klass implements IHasUserId {
 
   @Column('varchar', { name: 'teacher_id', nullable: true, length: 10 })
   teacherId: string | null;
+
+  @IsOptional({ always: true })
+  @StringType
+  @MaxLength(20, { always: true })
+  @IsUniqueCombination(['userId', 'year'], [Klass, KlassType, User, Teacher], { always: true })
+  @Column('varchar', { name: 'phone', nullable: true, length: 20 })
+  phone: string | null;
 
   @Column({ nullable: true })
   @Index('klasses_teacher_reference_id_idx')

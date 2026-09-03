@@ -7,23 +7,29 @@ import { AttReport } from '../entities/AttReport.entity';
     dataSource
       .createQueryBuilder()
       .select(
-        "CONCAT(att_report.userId, '_', att_report.teacherReferenceId, '_', att_report.reportDate, '_', COALESCE(att_report.lessonReferenceId, 'null'))",
+        "CONCAT(att_report.userId, '_', att_report.teacherReferenceId, '_', att_report.reportDate, '_', COALESCE(att_report.lessonReferenceId, 'null'), '_', COALESCE(att_report.klassReferenceId, 'null'))",
         'id',
       )
       .addSelect('att_report.userId', 'userId')
       .addSelect('att_report.reportDate', 'reportDate')
       .addSelect('att_report.teacherReferenceId', 'teacherReferenceId')
       .addSelect('att_report.lessonReferenceId', 'lessonReferenceId')
+      .addSelect('att_report.klassReferenceId', 'klassReferenceId')
       .addSelect(
-        'MIN(MIN(att_report.createdAt)) OVER (PARTITION BY att_report.userId, att_report.teacherReferenceId, att_report.reportDate)',
+        'MIN(MIN(att_report.createdAt)) OVER (PARTITION BY att_report.userId, att_report.teacherReferenceId, att_report.reportDate, att_report.klassReferenceId)',
         'reportHour',
+      )
+      .addSelect(
+        'COUNT(DISTINCT CASE WHEN att_report.absCount > 0 THEN att_report.studentReferenceId END)',
+        'missingGirlsCount',
       )
       .from(AttReport, 'att_report')
       .where('att_report.teacherReferenceId IS NOT NULL')
       .groupBy('att_report.userId')
       .addGroupBy('att_report.teacherReferenceId')
       .addGroupBy('att_report.reportDate')
-      .addGroupBy('att_report.lessonReferenceId'),
+      .addGroupBy('att_report.lessonReferenceId')
+      .addGroupBy('att_report.klassReferenceId'),
 })
 export class TeacherReportedToday implements IHasUserId {
   @Column()
@@ -41,6 +47,12 @@ export class TeacherReportedToday implements IHasUserId {
   @Column({ nullable: true })
   lessonReferenceId: number;
 
+  @Column({ nullable: true })
+  klassReferenceId: number;
+
   @Column()
   reportHour: Date;
+
+  @Column()
+  missingGirlsCount: number;
 }

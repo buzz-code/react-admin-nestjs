@@ -108,6 +108,7 @@ export default {
                 teacherId: 'מורה',
                 teacherReferenceId: 'מורה',
                 order: 'סדר הצגה',
+                phone: 'טלפון',
             },
         },
         klass_type: {
@@ -207,6 +208,7 @@ export default {
             fields: {
                 ...generalResourceFieldsTranslation,
                 tz: 'תז',
+                number: 'מספר מורה',
                 phone: 'טלפון',
                 phone2: 'טלפון 2',
                 email: 'כתובת מייל',
@@ -396,6 +398,21 @@ export default {
                 count: 'מספר חיסורים',
                 effect: 'השפעה',
                 effectPercent: 'השפעה באחוזים',
+            },
+        },
+        attendance_cleanup_rule: {
+            name: 'כלל ניקוי נוכחות |||| כללי ניקוי נוכחות',
+            fields: {
+                ...generalResourceFieldsTranslation,
+                name: 'שם הכלל',
+                lessonReferenceId: 'שיעור לניקוי',
+                klassReferenceId: 'כיתה/מסלול לשמירה',
+                dayOfWeek: 'יום בשבוע',
+                weeksBack: 'שבועות אחורה',
+                active: 'פעיל?',
+            },
+            actions: {
+                runNow: 'הרץ עכשיו',
             },
         },
         grade_effect_by_user: {

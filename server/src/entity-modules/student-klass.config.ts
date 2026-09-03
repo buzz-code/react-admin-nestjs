@@ -35,6 +35,7 @@ function getConfig(): BaseEntityModuleOptions {
           { value: 'student.name', label: 'שם התלמידה' },
           { value: 'klass.key', label: 'קוד כיתה' },
           { value: 'klass.name', label: 'כיתה' },
+          { value: 'student.studentNumber', label: 'מספר תלמידה' },
         ];
       },
     },

@@ -79,6 +79,7 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="key" />
             <TextField source="name" />
             <TextField source="displayName" />
+            <TextField source="phone" />
             <MultiReferenceField
                 source="klassTypeReferenceId"
                 sortBy="klassType.name"
@@ -110,6 +111,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <NumberInput source="key" validate={[required(), unique()]} />
             <TextInput source="name" validate={[required(), maxLength(500)]} />
             <TextInput source="displayName" validate={[maxLength(500)]} />
+            <TextInput source="phone" validate={[maxLength(20), unique()]} />
             <CommonReferenceInput
                 source="klassTypeReferenceId"
                 reference="klass_type"
@@ -128,7 +130,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
 const Representation = CommonRepresentation;
 
 const importer = {
-    fields: ['key', 'name', 'klassTypeId', 'teacherId', 'year', 'displayName', 'order'],
+    fields: ['key', 'name', 'klassTypeId', 'teacherId', 'year', 'displayName', 'order', 'phone'],
 };
 
 const entity = {

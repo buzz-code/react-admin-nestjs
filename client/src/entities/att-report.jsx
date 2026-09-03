@@ -159,7 +159,6 @@ export const Inputs = ({ isCreate, isAdmin }) => {
             <CommonReferenceInput
                 source="lessonReferenceId"
                 reference="lesson"
-                validate={required()}
                 dynamicFilter={filterByUserIdAndYear}
             />
             <DateInput source="reportDate" validate={required()} />
