@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - main
+  workflow_dispatch: {}
 
 jobs:
   build:
@@ -53,14 +54,14 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-server:${{github.sha}}
 
       - name: 'Update client service'
-        if: steps.changes.outputs.client == 'true'
+        if: steps.changes.outputs.client == 'true' && !cancelled()
         uses: fjogeleit/http-request-action@v1
         with:
           url: ${{ secrets.CLIENT_WEBHOOK }}
           preventFailureOnNoResponse: true
 
       - name: 'Update server service'
-        if: steps.changes.outputs.server == 'true'
+        if: steps.changes.outputs.server == 'true' && !cancelled()
         uses: fjogeleit/http-request-action@v1
         with:
           url: ${{ secrets.SERVER_WEBHOOK }}
