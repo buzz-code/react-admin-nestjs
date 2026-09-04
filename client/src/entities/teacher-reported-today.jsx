@@ -62,16 +62,24 @@ function groupByKlass(groups) {
     });
 }
 
+// Total missing girls for the whole card: sum across its lessons, or the card's own
+// count when it has no per-lesson breakdown (the "ללא שיוך שיעור" case).
+function getTotalMissingGirls(group) {
+    return group.lessonRows.length > 0
+        ? group.lessonRows.reduce((sum, row) => sum + (row.missingGirlsCount || 0), 0)
+        : group.missingGirlsCount || 0;
+}
+
 const TeacherReportCards = ({ isAdmin }) => {
     const { data } = useListContext();
     const groups = groupByTeacherAndDate(data || []);
     const columns = groupByKlass(groups);
 
     return (
-        <Box sx={{ display: 'flex', gap: 2, padding: 2, overflowX: 'auto', alignItems: 'flex-start' }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, padding: 1, alignItems: 'flex-start' }}>
             {columns.map((column) => (
-                <Box key={column.klassReferenceId ?? NO_KLASS_KEY} sx={{ minWidth: 320, flex: '0 0 320px' }}>
-                    <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
+                <Box key={column.klassReferenceId ?? NO_KLASS_KEY} sx={{ minWidth: 220, flex: '0 0 220px' }}>
+                    <Typography variant="subtitle2" sx={{ marginBottom: 0.5 }}>
                         {column.klassReferenceId ? (
                             <RecordContextProvider value={{ klassReferenceId: column.klassReferenceId }}>
                                 <ReferenceField source="klassReferenceId" reference="klass">
@@ -80,42 +88,50 @@ const TeacherReportCards = ({ isAdmin }) => {
                             </RecordContextProvider>
                         ) : 'ללא כיתה'}
                     </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        {column.groups.map((group) => (
-                            <RecordContextProvider key={group.id} value={group}>
-                                <Card variant="outlined">
-                                    <CardContent>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
-                                            <Typography variant="h6">
-                                                <ReferenceField source="teacherReferenceId" reference="teacher">
-                                                    <TextField source="name" />
-                                                </ReferenceField>
-                                            </Typography>
-                                            <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-                                                {isAdmin && <ReferenceField source="userId" reference="user" />}
-                                                <Typography variant="body2" color="text.secondary">{formatDate(group.reportDate)}</Typography>
-                                                <Typography variant="body2" color="text.secondary">{formatHour(group.reportHour)}</Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
+                        {column.groups.map((group) => {
+                            const totalMissingGirls = getTotalMissingGirls(group);
+                            return (
+                                <RecordContextProvider key={group.id} value={group}>
+                                    <Card variant="outlined">
+                                        <CardContent sx={{ p: 1, '&:last-child': { pb: 1 } }}>
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 0.5 }}>
+                                                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                                    <ReferenceField source="teacherReferenceId" reference="teacher">
+                                                        <TextField source="name" />
+                                                    </ReferenceField>
+                                                </Typography>
+                                                {totalMissingGirls > 0 && (
+                                                    <Typography variant="caption" sx={{ color: 'error.main', fontWeight: 'bold' }} title="מספר בנות שחסרו">
+                                                        חסרו {totalMissingGirls}
+                                                    </Typography>
+                                                )}
                                             </Box>
-                                        </Box>
-                                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', marginTop: 1.5 }}>
-                                            {group.lessonRows.length > 0 ? (
-                                                group.lessonRows.map((row) => (
-                                                    <RecordContextProvider key={row.id} value={row}>
-                                                        <Badge badgeContent={row.missingGirlsCount} color="error" title="מספר בנות שחסרו">
-                                                            <ReferenceField source="lessonReferenceId" reference="lesson">
-                                                                <ChipField source="name" size="small" color="primary" variant="outlined" />
-                                                            </ReferenceField>
-                                                        </Badge>
-                                                    </RecordContextProvider>
-                                                ))
-                                            ) : (
-                                                <Typography variant="body2" color="text.secondary">ללא שיוך שיעור</Typography>
-                                            )}
-                                        </Box>
-                                    </CardContent>
-                                </Card>
-                            </RecordContextProvider>
-                        ))}
+                                            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                                                {isAdmin && <ReferenceField source="userId" reference="user" />}
+                                                <Typography variant="caption" color="text.secondary">{formatDate(group.reportDate)}</Typography>
+                                                <Typography variant="caption" color="text.secondary">{formatHour(group.reportHour)}</Typography>
+                                            </Box>
+                                            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', marginTop: 0.5 }}>
+                                                {group.lessonRows.length > 0 ? (
+                                                    group.lessonRows.map((row) => (
+                                                        <RecordContextProvider key={row.id} value={row}>
+                                                            <Badge badgeContent={row.missingGirlsCount} color="error" title="מספר בנות שחסרו">
+                                                                <ReferenceField source="lessonReferenceId" reference="lesson">
+                                                                    <ChipField source="name" size="small" color="primary" variant="outlined" />
+                                                                </ReferenceField>
+                                                            </Badge>
+                                                        </RecordContextProvider>
+                                                    ))
+                                                ) : (
+                                                    <Typography variant="caption" color="text.secondary">ללא שיוך שיעור</Typography>
+                                                )}
+                                            </Box>
+                                        </CardContent>
+                                    </Card>
+                                </RecordContextProvider>
+                            );
+                        })}
                     </Box>
                 </Box>
             ))}
