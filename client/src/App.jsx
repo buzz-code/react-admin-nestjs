@@ -1,3 +1,4 @@
+// deploy-pipeline smoke test, ok to remove
 import { Resource, CustomRoutes } from 'react-admin';
 import { Route } from 'react-router-dom';
 import { blue, purple } from '@mui/material/colors';
