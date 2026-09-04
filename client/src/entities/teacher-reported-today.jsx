@@ -76,7 +76,7 @@ const TeacherReportCards = ({ isAdmin }) => {
     const columns = groupByKlass(groups);
 
     return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, padding: 1, alignItems: 'flex-start' }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, padding: 1, alignItems: 'flex-start', overflowX: 'auto' }}>
             {columns.map((column) => (
                 <Box key={column.klassReferenceId ?? NO_KLASS_KEY} sx={{ minWidth: 220, flex: '0 0 220px' }}>
                     <Typography variant="subtitle2" sx={{ marginBottom: 0.5 }}>
