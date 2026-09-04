@@ -66,16 +66,10 @@ jobs:
           url: ${{ secrets.SERVER_WEBHOOK }}
           preventFailureOnNoResponse: true
 
-      - name: 'Update dokploy client service'
-        if: steps.changes.outputs.client == 'true'
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: ${{ secrets.DOKPLOY_CLIENT_WEBHOOK }}
-          preventFailureOnNoResponse: true
-
-      - name: 'Update dokploy server service'
-        if: steps.changes.outputs.server == 'true'
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: ${{ secrets.DOKPLOY_SERVER_WEBHOOK }}
-          preventFailureOnNoResponse: true
+      - name: 'Update dokploy attendance-app (client+server, one compose stack)'
+        if: steps.changes.outputs.client == 'true' || steps.changes.outputs.server == 'true'
+        run: |
+          curl -sS -X POST "https://docker.yoman.online/api/compose.deploy" \
+            -H "x-api-key: ${{ secrets.DOKPLOY_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"composeId":"3swCEgwjEt92AsVKkOhcU"}'
