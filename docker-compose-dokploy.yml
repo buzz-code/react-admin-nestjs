@@ -1,0 +1,60 @@
+version: "3.8"
+
+# client+server only, pointed at an external shared MySQL (see
+# db/docker-compose.yml) over Dokploy's dokploy-network. Mirrors
+# docker-compose-swarm.yml but targets Dokploy instead of Coolify —
+# that file's caddy/elknet/private-network/backend-network networks
+# are Coolify-specific and don't exist under Dokploy, so it can't be
+# reused as-is without breaking the deployment(s) that already rely
+# on it.
+services:
+    client:
+        image: 'ghcr.io/buzz-code/react-admin-nestjs-client:latest'
+        container_name: client
+        restart: unless-stopped
+        depends_on:
+            - server
+        healthcheck:
+            # 127.0.0.1, not localhost -- localhost resolution is
+            # unreliable in this image and silently fails the wget
+            # exec, which Traefik then reads as unhealthy and refuses
+            # to route to at all.
+            test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:80/"]
+            interval: 30s
+            timeout: 10s
+            start_period: 60s
+            retries: 3
+        environment:
+            PORT: 80
+            REACT_APP_API_URL: 'https://api.$DOMAIN_NAME'
+        networks:
+            - dokploy-network
+
+    server:
+        image: 'ghcr.io/buzz-code/react-admin-nestjs-server:latest'
+        container_name: server
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+            interval: 30s
+            timeout: 10s
+            start_period: 60s
+            retries: 3
+        environment:
+            DOMAIN_NAME: $DOMAIN_NAME
+            MYSQL_HOST: $MYSQL_HOST
+            MYSQL_USER: $MYSQL_USER
+            MYSQL_PASSWORD: $MYSQL_PASSWORD
+            MYSQL_DATABASE: $MYSQL_DATABASE
+            JWT_SECRET: $JWT_SECRET
+            ADMIN_USER: $ADMIN_USER
+            SMTP_USER: $SMTP_USER
+            SMTP_PASSWORD: $SMTP_PASSWORD
+            MAINTENANCE_MODE: $MAINTENANCE_MODE
+            MAINTENANCE_MESSAGE: $MAINTENANCE_MESSAGE
+        networks:
+            - dokploy-network
+
+networks:
+    dokploy-network:
+        external: true
