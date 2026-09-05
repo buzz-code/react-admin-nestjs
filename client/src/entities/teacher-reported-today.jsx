@@ -155,7 +155,7 @@ const List = ({ filter = {} }) => {
             filterDefaultValues={filterDefaultValues}
             exporter={false}
             empty={<EmptyPage />}
-            sort={{ field: 'reportDate', order: 'DESC' }}
+            sort={{ field: 'reportHour', order: 'ASC' }}
             configurable={false}
             perPage={LIST_PAGE_SIZE}
             pagination={false}
@@ -171,7 +171,7 @@ const entity = {
     filterDefaultValues,
     exporter: false,
     configurable: false,
-    sort: { field: 'reportDate', order: 'DESC' },
+    sort: { field: 'reportHour', order: 'ASC' },
 };
 
 export default { ...getResourceComponents(entity), list: List };
