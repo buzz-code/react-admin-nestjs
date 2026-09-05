@@ -1,7 +1,8 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
 import { User } from 'src/db/entities/User.entity';
-import { IsOptional } from 'class-validator';
+import { IsArray, IsEmail, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { CrudValidationGroups } from '@dataui/crud';
 import { IsNotEmpty, IsUniqueCombination, MaxLength } from '@shared/utils/validation/class-validator-he';
 import { StringType } from '@shared/utils/entity/class-transformer';
@@ -17,8 +18,9 @@ import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-ty
 export class Teacher implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
-  normalizeNumber() {
+  normalizeFields() {
     if (this.number === '') this.number = null;
+    this.email = splitEmails(this.email);
   }
 
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
@@ -65,10 +67,11 @@ export class Teacher implements IHasUserId {
   number: string | null;
 
   @IsOptional({ always: true })
-  @StringType
-  @MaxLength(500, { always: true })
-  @Column('varchar', { name: 'email', nullable: true, length: 500 })
-  email: string | null;
+  @IsArray({ always: true })
+  @IsEmail({}, { each: true, always: true })
+  @Transform(({ value }) => splitEmails(value))
+  @Column('simple-array', { name: 'email', nullable: true })
+  email: string[] | null;
 
   @IsOptional({ always: true })
   @StringType
@@ -94,4 +97,12 @@ export class Teacher implements IHasUserId {
   })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
+}
+
+function splitEmails(value: unknown): string[] | null {
+  if (typeof value !== 'string') return value as string[] | null;
+  return value
+    .split(',')
+    .map((e) => e.trim())
+    .filter(Boolean);
 }
