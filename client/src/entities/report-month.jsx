@@ -3,7 +3,6 @@ import {
     DateInput,
     DateTimeInput,
     maxLength,
-    NumberInput,
     ReferenceField,
     required,
     TextField,

@@ -1,4 +1,4 @@
-import { ReferenceField, TextField, SelectField, NumberField } from 'react-admin';
+import { ReferenceField, TextField, NumberField } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonReferenceInputFilter, filterByUserId } from '@shared/components/fields/CommonReferenceInputFilter';

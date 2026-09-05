@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Box, Divider } from '@mui/material';
 import { Button, SaveButton } from 'react-admin';
 import { PreviewListWithSavingDialog } from '../../../shared/components/import/PreviewListWithSavingDialog';

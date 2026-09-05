@@ -1,4 +1,3 @@
-import React from 'react';
 import { NumberInput, required } from 'react-admin';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';

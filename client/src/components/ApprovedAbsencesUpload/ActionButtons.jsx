@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from 'react-admin';
 import Box from '@mui/material/Box';
 

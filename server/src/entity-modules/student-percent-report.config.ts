@@ -6,7 +6,6 @@ import { IHeader } from '@shared/utils/exporter/types';
 import { getPercentsFormatter } from '@shared/utils/formatting/formatter.util';
 import { AbsCountEffectByUser } from 'src/db/view-entities/AbsCountEffectByUser.entity';
 import { GradeEffectByUser } from 'src/db/view-entities/GradeEffectByUser.entity';
-import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
 import { GradeName } from 'src/db/entities/GradeName.entity';
 import { AttendanceName } from 'src/db/entities/AttendanceName.entity';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
