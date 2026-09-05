@@ -1,11 +1,15 @@
 import {
+    ArrayInput,
     DateField,
     DateInput,
     DateTimeInput,
+    email,
     EmailField,
+    FunctionField,
     maxLength,
     ReferenceField,
     required,
+    SimpleFormIterator,
     TextField,
     TextInput,
 } from 'react-admin';
@@ -34,7 +38,14 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="number" />
             <TextField source="phone" />
             <TextField source="phone2" />
-            <EmailField source="email" />
+            <FunctionField
+                source="email"
+                render={(record) => [].concat(record.email ?? []).map((addr) => (
+                    <div key={addr}>
+                        <EmailField record={{ email: addr }} source="email" />
+                    </div>
+                ))}
+            />
             <TextField source="comment" />
             {isAdmin && <DateField showDate showTime source="createdAt" />}
             {isAdmin && <DateField showDate showTime source="updatedAt" />}
@@ -54,7 +65,11 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <TextInput source="number" validate={[maxLength(10), unique()]} />
             <TextInput source="phone" validate={maxLength(10)} />
             <TextInput source="phone2" validate={maxLength(10)} />
-            <TextInput source="email" validate={maxLength(500)} />
+            <ArrayInput source="email">
+                <SimpleFormIterator>
+                    <TextInput source="" label={false} validate={email()} />
+                </SimpleFormIterator>
+            </ArrayInput>
             <TextInput source="comment" validate={maxLength(1000)} />
             {!isCreate && isAdmin && <DateTimeInput source="createdAt" disabled />}
             {!isCreate && isAdmin && <DateTimeInput source="updatedAt" disabled />}
