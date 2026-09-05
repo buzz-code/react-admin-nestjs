@@ -97,9 +97,6 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
     });
 
     pivotData.forEach((item) => {
-      // if (item.absCount === 0) {
-      //     return;
-      // }
       const key = `${item.lessonReferenceId}`;
       headers[key] ??= { value: key, label: `${item.lesson?.name}` };
       studentMap[item.studentReferenceId][key] ??= 0;
