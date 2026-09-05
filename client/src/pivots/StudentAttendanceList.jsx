@@ -12,13 +12,11 @@ import {
     useListContext,
     TextInput,
     DateInput,
-    BooleanInput,
     NullableBooleanInput,
 } from 'react-admin';
 import { defaultYearFilter } from '@shared/utils/yearFilter';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
-import { CommonSelectArrayField } from '@shared/components/fields/CommonSelectArrayField';
 import { semesterChoices } from 'src/entities/report-month';
 import CommonReferenceArrayInput from '@shared/components/fields/CommonReferenceArrayInput';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';

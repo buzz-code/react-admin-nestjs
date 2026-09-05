@@ -1,4 +1,3 @@
-import React from 'react';
 import { Form, TextInput } from 'react-admin';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';

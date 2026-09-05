@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Container, Paper, Stack } from '@mui/material';
 import { useNotify, useStore } from 'react-admin';
 import { ReportContext, defaultContextValue } from './context';

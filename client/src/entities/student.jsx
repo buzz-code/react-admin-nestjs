@@ -2,7 +2,6 @@ import {
     BooleanField,
     BooleanInput,
     DateField,
-    DateInput,
     DateTimeInput,
     Labeled,
     maxLength,
@@ -10,7 +9,6 @@ import {
     ReferenceField,
     ReferenceManyField,
     required,
-    SelectInput,
     TextField,
     TextInput,
 } from 'react-admin';
@@ -21,7 +19,6 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { useUnique } from '@shared/utils/useUnique';
-import { CommonReferenceInputFilter } from '@shared/components/fields/CommonReferenceInputFilter';
 import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { FunctionField } from 'react-admin';
 import { getColorForValue } from '@shared/utils/thresholdUtil';
 

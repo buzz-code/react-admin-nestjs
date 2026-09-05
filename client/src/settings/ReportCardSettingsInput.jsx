@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box } from '@mui/material';
 import { BooleanInput, Link } from 'react-admin';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';

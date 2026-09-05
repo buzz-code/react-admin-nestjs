@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dashboard } from 'src/GeneralLayout';
 import { useIsTeacherView, useIsStudentView } from 'src/utils/appPermissions';
 import { TeacherGuard } from 'src/components/TeacherView/TeacherAccess';

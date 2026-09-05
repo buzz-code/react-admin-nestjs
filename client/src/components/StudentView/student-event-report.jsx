@@ -12,7 +12,6 @@ import {
     useGetList,
     Create,
     SimpleForm,
-    FormDataConsumer,
     Loading,
     ArrayInput,
     SimpleFormIterator,

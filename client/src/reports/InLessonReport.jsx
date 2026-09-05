@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useRedirect, useDataProvider, useNotify } from 'react-admin';
 import { useSavableData } from '../../shared/components/import/util';
 import { Datagrid as AttDatagrid } from 'src/entities/att-report';

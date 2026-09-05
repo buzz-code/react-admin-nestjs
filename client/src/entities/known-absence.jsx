@@ -18,7 +18,6 @@ import { MultiReferenceField } from '@shared/components/fields/CommonReferenceFi
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import {
     CommonReferenceInputFilter,
-    filterByUserId,
     filterByUserIdAndYear,
 } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
