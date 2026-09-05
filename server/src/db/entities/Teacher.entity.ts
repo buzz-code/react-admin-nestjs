@@ -18,13 +18,8 @@ import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-ty
 export class Teacher implements IHasUserId {
   @BeforeInsert()
   @BeforeUpdate()
-  normalizeNumber() {
+  normalizeFields() {
     if (this.number === '') this.number = null;
-  }
-
-  @BeforeInsert()
-  @BeforeUpdate()
-  normalizeEmail() {
     this.email = splitEmails(this.email);
   }
 

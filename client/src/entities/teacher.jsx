@@ -67,7 +67,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <TextInput source="phone2" validate={maxLength(10)} />
             <ArrayInput source="email">
                 <SimpleFormIterator>
-                    <TextInput source="" label={false} validate={email()} />
+                    <TextInput source="" label={false} type="email" validate={email()} />
                 </SimpleFormIterator>
             </ArrayInput>
             <TextInput source="comment" validate={maxLength(1000)} />
