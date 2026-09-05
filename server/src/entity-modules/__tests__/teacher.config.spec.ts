@@ -16,9 +16,17 @@ describe('TeacherConfig', () => {
         { value: 'name', label: 'שם' },
         { value: 'phone', label: 'טלפון' },
         { value: 'phone2', label: 'טלפון 2' },
-        { value: 'email', label: 'כתובת מייל' },
+        { value: expect.any(Function), label: 'כתובת מייל' },
         { value: 'displayName', label: 'שם לתצוגה' },
       ]),
     );
+  });
+
+  it('should join teacher emails into a comma separated string for export', () => {
+    const headers = teacherConfig.exporter.getExportHeaders([]);
+    const emailHeader = headers.find((h: any) => h.label === 'כתובת מייל') as any;
+
+    expect(emailHeader.value({ email: ['a@example.com', 'b@example.com'] })).toBe('a@example.com, b@example.com');
+    expect(emailHeader.value({ email: null })).toBe('');
   });
 });
