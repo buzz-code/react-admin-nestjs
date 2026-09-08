@@ -35,6 +35,7 @@ import { cleanDateFields } from '@shared/utils/entity/deafultValues.util';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { LessonKlassName } from '../view-entities/LessonKlassName.entity';
 import { CreatedAtColumn, JsonColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
+import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('lessons_users_idx', ['userId'], {})
 @Index(['userId', 'key', 'year'], { unique: true })
@@ -128,6 +129,8 @@ export class Lesson implements IHasUserId {
   })
   klassReferenceIdsJson: string;
 
+  @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 

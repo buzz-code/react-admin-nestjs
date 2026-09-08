@@ -25,6 +25,7 @@ import { StudentByYear } from '../view-entities/StudentByYear.entity';
 import { PaymentTrack } from '@shared/entities/PaymentTrack.entity';
 import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
+import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('student_klasses_users_idx', ['userId'], {})
 @Index('student_klasses_user_year_idx', ['userId', 'year'], {})
@@ -107,6 +108,7 @@ export class StudentKlass implements IHasUserId {
   @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @StringType
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;

@@ -22,6 +22,7 @@ import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { cleanDateFields, cleanTimeFields } from '@shared/utils/entity/deafultValues.util';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
+import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('lesson_schedules_users_idx', ['userId'], {})
 @Index('lesson_schedules_teacher_date_idx', ['userId', 'teacherReferenceId', 'scheduleDate'], {})
@@ -141,6 +142,8 @@ export class LessonSchedule implements IHasUserId {
 
   @ValidateIf((lessonSchedule: LessonSchedule) => !Boolean(lessonSchedule.teacherReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 

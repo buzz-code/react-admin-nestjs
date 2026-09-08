@@ -20,6 +20,7 @@ import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from '@shared/ut
 import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
+import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('klasses_users_idx', ['userId'], {})
 @Index(['userId', 'key', 'year'], { unique: true })
@@ -107,6 +108,8 @@ export class Klass implements IHasUserId {
   @Index('klasses_klass_type_reference_id_idx')
   klassTypeReferenceId: number;
 
+  @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @Column('varchar', { name: 'teacher_id', nullable: true, length: 10 })
   teacherId: string | null;
 

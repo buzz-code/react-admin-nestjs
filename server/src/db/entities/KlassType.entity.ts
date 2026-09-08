@@ -18,6 +18,7 @@ import { findOneAndAssignReferenceId, getDataSource } from '@shared/utils/entity
 import { Teacher } from './Teacher.entity';
 import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
+import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 export enum KlassTypeEnum {
   baseKlass = 'כיתת אם',
@@ -73,6 +74,8 @@ export class KlassType implements IHasUserId {
   @Index('klass_types_klassTypeEnum_idx')
   klassTypeEnum: KlassTypeEnum;
 
+  @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 

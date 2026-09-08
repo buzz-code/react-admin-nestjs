@@ -27,6 +27,7 @@ import { DateType, NumberType, StringType } from '@shared/utils/entity/class-tra
 import { LessonKlassName } from '../view-entities/LessonKlassName.entity';
 import { ReportGroupSession } from './ReportGroupSession.entity';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
+import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('att_users_idx', ['userId'], {})
 @Index(
@@ -107,6 +108,8 @@ export class AttReport implements IHasUserId {
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;
 
@@ -120,6 +123,8 @@ export class AttReport implements IHasUserId {
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 

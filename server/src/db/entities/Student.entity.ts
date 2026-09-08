@@ -6,6 +6,7 @@ import { CrudValidationGroups } from '@dataui/crud';
 import { IsNotEmpty, IsUniqueCombination, MaxLength, IsBoolean } from '@shared/utils/validation/class-validator-he';
 import { StringType, BooleanType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
+import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('students_users_idx', ['userId'], {})
 @Index(['userId', 'tz', 'year'], { unique: true })
@@ -23,6 +24,7 @@ export class Student implements IHasUserId {
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @StringType
   @IsUniqueCombination(['userId'], [Student, User], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
@@ -31,6 +33,7 @@ export class Student implements IHasUserId {
 
   @IsOptional({ always: true })
   @MaxLength(20, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @StringType
   @IsUniqueCombination(['userId'], [Student, User], { always: true })
   @Column('varchar', { name: 'student_number', nullable: true, length: 20 })

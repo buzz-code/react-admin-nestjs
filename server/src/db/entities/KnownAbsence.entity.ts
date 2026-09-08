@@ -27,6 +27,7 @@ import { BooleanType, DateType, NumberType, StringType } from '@shared/utils/ent
 import { LessonKlassName } from '../view-entities/LessonKlassName.entity';
 import { CreatedAtColumn, DateColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 import { FileData } from '@shared/entities/Image.entity';
+import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('known_users_idx', ['userId'], {})
 @Index(['studentReferenceId', 'year'])
@@ -95,6 +96,8 @@ export class KnownAbsence implements IHasUserId {
 
   @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;
 
