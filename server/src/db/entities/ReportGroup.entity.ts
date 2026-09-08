@@ -16,8 +16,9 @@ import { Teacher } from './Teacher.entity';
 import { Lesson } from './Lesson.entity';
 import { Klass } from './Klass.entity';
 import { ReportGroupSession } from './ReportGroupSession.entity';
+import { IsOptional } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, MaxLength } from '@shared/utils/validation/class-validator-he';
 import { StringType, NumberType } from '@shared/utils/entity/class-transformer';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { LongTextColumn } from '@shared/utils/entity/column-types.util';
@@ -53,22 +54,30 @@ export class ReportGroup implements IHasUserId {
   @LongTextColumn({ nullable: true })
   signatureData: string; // ONE signature for entire group
 
+  @IsOptional({ always: true })
   @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('report_groups_teacher_reference_id_idx')
   teacherReferenceId: number;
 
+  @IsOptional({ always: true })
   @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('report_groups_lesson_reference_id_idx')
   lessonReferenceId: number;
 
+  @IsOptional({ always: true })
   @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('report_groups_klass_reference_id_idx')
   klassReferenceId: number;
 
+  @IsOptional({ always: true })
   @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   year: number;
 

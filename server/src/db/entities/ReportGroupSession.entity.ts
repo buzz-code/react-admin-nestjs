@@ -14,7 +14,7 @@ import { ReportGroup } from './ReportGroup.entity';
 import { AttReport } from './AttReport.entity';
 import { Grade } from './Grade.entity';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsDate } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsDate, IsNumber } from '@shared/utils/validation/class-validator-he';
 import { StringType, NumberType, DateType } from '@shared/utils/entity/class-transformer';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { cleanDateFields, cleanTimeFields } from '@shared/utils/entity/deafultValues.util';
@@ -38,6 +38,7 @@ export class ReportGroupSession {
   userId: number;
 
   @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column()
   reportGroupId: number;
