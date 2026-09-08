@@ -108,8 +108,7 @@ export class Klass implements IHasUserId {
   @Index('klasses_klass_type_reference_id_idx')
   klassTypeReferenceId: number;
 
-  @MaxLength(10, { always: true })
-  @IsDigitsOnly(undefined, { always: true })
+  @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'teacher_id', nullable: true, length: 10 })
   teacherId: string | null;
 

@@ -129,8 +129,7 @@ export class Lesson implements IHasUserId {
   })
   klassReferenceIdsJson: string;
 
-  @MaxLength(10, { always: true })
-  @IsDigitsOnly(undefined, { always: true })
+  @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 

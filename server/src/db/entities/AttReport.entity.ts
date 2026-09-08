@@ -108,8 +108,7 @@ export class AttReport implements IHasUserId {
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @MaxLength(10, { always: true })
-  @IsDigitsOnly(undefined, { always: true })
+  @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;
 
@@ -123,8 +122,7 @@ export class AttReport implements IHasUserId {
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @MaxLength(10, { always: true })
-  @IsDigitsOnly(undefined, { always: true })
+  @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 

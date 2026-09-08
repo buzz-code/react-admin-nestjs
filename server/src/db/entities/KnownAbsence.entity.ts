@@ -96,8 +96,7 @@ export class KnownAbsence implements IHasUserId {
 
   @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @MaxLength(10, { always: true })
-  @IsDigitsOnly(undefined, { always: true })
+  @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;
 
