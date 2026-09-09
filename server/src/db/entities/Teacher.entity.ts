@@ -4,10 +4,9 @@ import { User } from 'src/db/entities/User.entity';
 import { IsArray, IsEmail, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
-import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('teachers_users_idx', ['userId'], {})
 @Index(['userId', 'tz', 'year'], { unique: true })

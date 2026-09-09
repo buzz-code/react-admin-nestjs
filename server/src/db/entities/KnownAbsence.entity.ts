@@ -15,7 +15,7 @@ import { findOneAndAssignReferenceId, getDataSource } from '@shared/utils/entity
 import { Student } from './Student.entity';
 import { IsOptional, ValidateIf } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsBoolean, IsDate, IsNotEmpty, IsNumber, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsBoolean, IsDate, IsNotEmpty, IsNumber, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { fillDefaultReportDateValue } from '@shared/utils/entity/deafultValues.util';
 import { Klass } from './Klass.entity';
@@ -27,7 +27,6 @@ import { BooleanType, DateType, NumberType, StringType } from '@shared/utils/ent
 import { LessonKlassName } from '../view-entities/LessonKlassName.entity';
 import { CreatedAtColumn, DateColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 import { FileData } from '@shared/entities/Image.entity';
-import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('known_users_idx', ['userId'], {})
 @Index(['studentReferenceId', 'year'])

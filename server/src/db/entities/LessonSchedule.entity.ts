@@ -17,12 +17,11 @@ import { User } from './User.entity';
 import { findOneAndAssignReferenceId, getDataSource } from '@shared/utils/entity/foreignKey.util';
 import { IsOptional, ValidateIf } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, MaxLength, IsDate } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { cleanDateFields, cleanTimeFields } from '@shared/utils/entity/deafultValues.util';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
-import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('lesson_schedules_users_idx', ['userId'], {})
 @Index('lesson_schedules_teacher_date_idx', ['userId', 'teacherReferenceId', 'scheduleDate'], {})

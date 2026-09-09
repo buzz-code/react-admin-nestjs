@@ -13,12 +13,11 @@ import { IHasUserId } from '@shared/base-entity/interface';
 import { User } from 'src/db/entities/User.entity';
 import { IsOptional } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { findOneAndAssignReferenceId, getDataSource } from '@shared/utils/entity/foreignKey.util';
 import { Teacher } from './Teacher.entity';
 import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
-import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 export enum KlassTypeEnum {
   baseKlass = 'כיתת אם',

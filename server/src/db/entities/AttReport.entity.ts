@@ -20,14 +20,13 @@ import { User } from './User.entity';
 import { KlassType } from './KlassType.entity';
 import { IsOptional, ValidateIf } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsPositive } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsPositive, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { fillDefaultReportDateValue } from '@shared/utils/entity/deafultValues.util';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { LessonKlassName } from '../view-entities/LessonKlassName.entity';
 import { ReportGroupSession } from './ReportGroupSession.entity';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
-import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('att_users_idx', ['userId'], {})
 @Index(

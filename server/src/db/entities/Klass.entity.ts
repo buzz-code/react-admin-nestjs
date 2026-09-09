@@ -16,11 +16,10 @@ import { User } from './User.entity';
 import { findOneAndAssignReferenceId, getDataSource } from '@shared/utils/entity/foreignKey.util';
 import { IsOptional, ValidateIf } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
-import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('klasses_users_idx', ['userId'], {})
 @Index(['userId', 'key', 'year'], { unique: true })

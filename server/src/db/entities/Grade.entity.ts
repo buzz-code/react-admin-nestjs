@@ -20,14 +20,13 @@ import { KlassType } from './KlassType.entity';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { fillDefaultReportDateValue } from '@shared/utils/entity/deafultValues.util';
 import { IsOptional, ValidateIf } from 'class-validator';
-import { IsDate, IsNotEmpty, IsNumber, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsDate, IsNotEmpty, IsNumber, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { CrudValidationGroups } from '@dataui/crud';
 import { StudentBaseKlass } from '../view-entities/StudentBaseKlass.entity';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { LessonKlassName } from '../view-entities/LessonKlassName.entity';
 import { ReportGroupSession } from './ReportGroupSession.entity';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
-import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('grades_users_idx', ['userId'], {})
 @Index('grades_user_year_idx', ['userId', 'year'], {})

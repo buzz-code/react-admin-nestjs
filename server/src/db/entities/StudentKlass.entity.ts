@@ -18,14 +18,13 @@ import { KlassType } from './KlassType.entity';
 import { Teacher } from './Teacher.entity';
 import { IsOptional, ValidateIf } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { MaxCountByUserLimit } from '@shared/utils/validation/max-count-by-user-limit';
 import { StudentByYear } from '../view-entities/StudentByYear.entity';
 import { PaymentTrack } from '@shared/entities/PaymentTrack.entity';
 import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
-import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('student_klasses_users_idx', ['userId'], {})
 @Index('student_klasses_user_year_idx', ['userId', 'year'], {})

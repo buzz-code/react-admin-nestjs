@@ -29,13 +29,13 @@ import {
   IsUniqueCombination,
   MaxLength,
   Min,
+  IsDigitsOnly,
 } from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { cleanDateFields } from '@shared/utils/entity/deafultValues.util';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { LessonKlassName } from '../view-entities/LessonKlassName.entity';
 import { CreatedAtColumn, JsonColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
-import { IsDigitsOnly } from 'src/utils/validation/numeric-string.util';
 
 @Index('lessons_users_idx', ['userId'], {})
 @Index(['userId', 'key', 'year'], { unique: true })
