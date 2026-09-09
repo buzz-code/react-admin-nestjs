@@ -29,6 +29,7 @@ import {
   IsUniqueCombination,
   MaxLength,
   Min,
+  IsDigitsOnly,
 } from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { cleanDateFields } from '@shared/utils/entity/deafultValues.util';
@@ -83,6 +84,9 @@ export class Lesson implements IHasUserId {
   @Column('int', { name: 'user_id' })
   userId: number;
 
+  @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   year: number;
 
@@ -125,6 +129,7 @@ export class Lesson implements IHasUserId {
   })
   klassReferenceIdsJson: string;
 
+  @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 

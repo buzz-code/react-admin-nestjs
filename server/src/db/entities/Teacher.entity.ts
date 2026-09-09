@@ -4,8 +4,8 @@ import { User } from 'src/db/entities/User.entity';
 import { IsArray, IsEmail, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsUniqueCombination, MaxLength } from '@shared/utils/validation/class-validator-he';
-import { StringType } from '@shared/utils/entity/class-transformer';
+import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
+import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 
 @Index('teachers_users_idx', ['userId'], {})
@@ -29,12 +29,16 @@ export class Teacher implements IHasUserId {
   @Column('int', { name: 'user_id' })
   userId: number;
 
+  @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   year: number;
 
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
   @StringType
   @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @IsUniqueCombination(['userId'], [Teacher, User], { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @Column('varchar', { name: 'tz', length: 10 })
@@ -62,6 +66,7 @@ export class Teacher implements IHasUserId {
   @IsOptional({ always: true })
   @StringType
   @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @IsUniqueCombination(['userId'], [Teacher, User], { always: true })
   @Column('varchar', { name: 'number', nullable: true, length: 10 })
   number: string | null;

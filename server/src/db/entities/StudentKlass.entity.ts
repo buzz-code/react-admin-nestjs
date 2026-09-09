@@ -18,7 +18,7 @@ import { KlassType } from './KlassType.entity';
 import { Teacher } from './Teacher.entity';
 import { IsOptional, ValidateIf } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { MaxCountByUserLimit } from '@shared/utils/validation/max-count-by-user-limit';
 import { StudentByYear } from '../view-entities/StudentByYear.entity';
@@ -107,6 +107,7 @@ export class StudentKlass implements IHasUserId {
   @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @MaxLength(10, { always: true })
+  @IsDigitsOnly(undefined, { always: true })
   @StringType
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;

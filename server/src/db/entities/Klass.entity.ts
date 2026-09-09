@@ -16,7 +16,7 @@ import { User } from './User.entity';
 import { findOneAndAssignReferenceId, getDataSource } from '@shared/utils/entity/foreignKey.util';
 import { IsOptional, ValidateIf } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
@@ -64,6 +64,9 @@ export class Klass implements IHasUserId {
   @Column('int', { name: 'user_id' })
   userId: number;
 
+  @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   year: number;
 
@@ -104,6 +107,7 @@ export class Klass implements IHasUserId {
   @Index('klasses_klass_type_reference_id_idx')
   klassTypeReferenceId: number;
 
+  @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'teacher_id', nullable: true, length: 10 })
   teacherId: string | null;
 

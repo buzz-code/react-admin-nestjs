@@ -17,7 +17,7 @@ import { User } from './User.entity';
 import { findOneAndAssignReferenceId, getDataSource } from '@shared/utils/entity/foreignKey.util';
 import { IsOptional, ValidateIf } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, MaxLength, IsDate } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { cleanDateFields, cleanTimeFields } from '@shared/utils/entity/deafultValues.util';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
@@ -74,6 +74,9 @@ export class LessonSchedule implements IHasUserId {
   @Column('int', { name: 'user_id' })
   userId: number;
 
+  @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   year: number;
 
@@ -138,6 +141,7 @@ export class LessonSchedule implements IHasUserId {
 
   @ValidateIf((lessonSchedule: LessonSchedule) => !Boolean(lessonSchedule.teacherReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 

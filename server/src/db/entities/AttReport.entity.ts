@@ -20,7 +20,7 @@ import { User } from './User.entity';
 import { KlassType } from './KlassType.entity';
 import { IsOptional, ValidateIf } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsPositive } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsPositive, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { fillDefaultReportDateValue } from '@shared/utils/entity/deafultValues.util';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
@@ -99,11 +99,15 @@ export class AttReport implements IHasUserId {
   @Column('int', { name: 'user_id' })
   userId: number;
 
+  @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   year: number;
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.studentReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;
 
@@ -117,6 +121,7 @@ export class AttReport implements IHasUserId {
 
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.teacherReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 
