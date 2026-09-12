@@ -500,7 +500,6 @@ const LessonSignatureReport: React.FunctionComponent<LessonSignaturePdfData | Er
               <StudentRecordsTable
                 studentRecords={sessionData.records}
                 entityConfig={entityConfig}
-                entityName={entityName}
               />
             </React.Fragment>
           );
@@ -519,7 +518,6 @@ const LessonSignatureReport: React.FunctionComponent<LessonSignaturePdfData | Er
           <StudentRecordsTable
             studentRecords={studentRecords}
             entityConfig={entityConfig}
-            entityName={entityName}
           />
         </>
       )}
@@ -695,7 +693,6 @@ const LessonDetailsSection: React.FC<LessonDetailsSectionProps> = ({
 interface StudentRecordsTableProps {
   studentRecords: LessonSignaturePdfData['studentRecords'];
   entityConfig: ReturnType<typeof getEntityConfig>;
-  entityName: string;
 }
 
 const StudentRecordsTable: React.FC<StudentRecordsTableProps> = ({

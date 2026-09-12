@@ -340,13 +340,7 @@ const useCellStyles = () => {
         textAlign: 'right',
     }
 
-    const emptyCellStyle: React.CSSProperties = {
-        ...commonTableStyle,
-        ...convertToReactStyle(useStyles(ReportElementType.TABLE_CELL)),
-        minWidth: 60,
-    }
-
-    return { fullCellStyle, rightAlignFullCellStyle, emptyCellStyle };
+    return { fullCellStyle, rightAlignFullCellStyle };
 }
 interface ReportTableContentProps {
     reportData: ReportDataArrItem;
