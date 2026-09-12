@@ -35,7 +35,7 @@ const getReportData: IGetReportDataFunction = async (
   params: TeacherReportFileParams,
   dataSource,
 ): Promise<TeacherReportFileData[]> => {
-  const [userId, teacherId, reportMonthId, year] = params.id.split('_');
+  const [, teacherId, reportMonthId, year] = params.id.split('_');
   const teacherReportTable = params.isGrades ? TeacherGradeReportStatus : TeacherReportStatus;
   const [user, teacher, teacherReportStatus, reportMonth] = await Promise.all([
     dataSource.getRepository(User).findOneBy({ id: params.userId }),

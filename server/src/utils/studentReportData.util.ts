@@ -9,7 +9,7 @@ import {
   roundFractional,
 } from '@shared/utils/reportData.util';
 import { getReportDateFilter } from '@shared/utils/entity/filters.util';
-import { FindOptionsWhere, FindOperator, In, Not, Any } from 'typeorm';
+import { FindOptionsWhere, FindOperator, In, Not } from 'typeorm';
 import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 import { AttReportAndGrade } from 'src/db/view-entities/AttReportAndGrade.entity';
 import { AttGradeEffect } from 'src/db/entities/AttGradeEffect';
