@@ -2,7 +2,6 @@ import * as React from 'react';
 import { DataSource, In } from 'typeorm';
 import { ImportFile } from '@shared/entities/ImportFile.entity';
 import { ReportGroup } from 'src/db/entities/ReportGroup.entity';
-import { ReportGroupSession } from 'src/db/entities/ReportGroupSession.entity';
 import { AttReport } from 'src/db/entities/AttReport.entity';
 import { Grade } from 'src/db/entities/Grade.entity';
 import { Student } from 'src/db/entities/Student.entity';
@@ -452,7 +451,7 @@ const LessonSignatureReport: React.FunctionComponent<LessonSignaturePdfData | Er
 
   // Handle success case - cast to correct type after error check
   const data = props as LessonSignaturePdfData;
-  const { id, teacher, lesson, klass, studentRecords, entityName, sessions, signatureData, createdAt } = data;
+  const { teacher, lesson, klass, studentRecords, entityName, sessions, signatureData, createdAt } = data;
   const entityConfig = getEntityConfig(entityName);
 
   // Group records by sessionId (if available) or date
@@ -702,7 +701,6 @@ interface StudentRecordsTableProps {
 const StudentRecordsTable: React.FC<StudentRecordsTableProps> = ({
   studentRecords,
   entityConfig,
-  entityName
 }) => {
   const containerStyle: React.CSSProperties = {
     marginBottom: '30px',

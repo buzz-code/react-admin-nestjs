@@ -14,7 +14,7 @@ import { IImageField, ISpecialField } from '@shared/utils/importer/types';
 import * as ExcelJS from 'exceljs';
 import { getUniqueValues, groupDataByKeysAndCalc, groupDataByKeyFn } from '@shared/utils/reportData.util';
 import { ReportGroup } from 'src/db/entities/ReportGroup.entity';
-import { formatTime, formatDate, formatDisplayName } from '@shared/utils/formatting/formatter.util';
+import { formatDate, formatDisplayName } from '@shared/utils/formatting/formatter.util';
 
 export interface KlassAttendanceReportParams {
   userId: number;
@@ -310,21 +310,7 @@ const BUILDING = {
         (s) => `${s.date.getDate().toString().padStart(2, '0')}/${(s.date.getMonth() + 1).toString().padStart(2, '0')}`,
       ),
     ];
-    // const hoursRow = ['שעות לימוד', ...sessions.map(s => `${formatTime(s.startTime)}-${formatTime(s.endTime)}`)];
-    // const topicRow = ['שיעור', ...sessions.map(s => s.topic)];
-    // const lessonCountRow = ['מס\' שעות לימוד', ...sessions.map(s => s.lessonCount.toString())];
-    // const teacherRow = ['שם המורה', ...sessions.map(s => s.teacherName)];
-    // const separatorRow = ['', ...sessions.map(() => '--')];
-
-    const rows = [
-      dayRow,
-      dateRow,
-      // hoursRow,
-      // topicRow,
-      // lessonCountRow,
-      // teacherRow,
-      // separatorRow
-    ];
+    const rows = [dayRow, dateRow];
 
     // Convert header rows to special fields with styling
     const specialFields: ISpecialField[] = [];

@@ -1,9 +1,5 @@
-import { Column, DataSource, JoinColumn, ManyToOne, ViewEntity } from 'typeorm';
+import { Column, ViewEntity } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
-import { StudentKlass } from 'src/db/entities/StudentKlass.entity';
-import { Student } from '../entities/Student.entity';
-import { AttReport } from '../entities/AttReport.entity';
-import { Grade } from '../entities/Grade.entity';
 
 @ViewEntity('att_report_and_grade', {
   expression: `

@@ -410,7 +410,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
         ציון: ${report.gradeAvg ? report.gradeAvg * 100 : '-'}, השפעה: ${gradeEffect.effectPercent ? gradeEffect.effectPercent + '%' : gradeEffect.effect}, ציון סופי: ${displayGrade}
     `;
 
-    const { fullCellStyle, rightAlignFullCellStyle, emptyCellStyle } = useCellStyles();
+    const { fullCellStyle, rightAlignFullCellStyle } = useCellStyles();
 
     return <tr>
         <td style={rightAlignFullCellStyle}>{formatDisplayName(report.lesson)}</td>
@@ -571,7 +571,7 @@ function getReports(
 ): AppProps['reports'] {
     const dataMap = groupDataByKeys(reports, ['teacherReferenceId', 'klassReferenceId', 'lessonReferenceId']);
 
-    const data = Object.entries(dataMap).map(([key, val]) => {
+    const data = Object.entries(dataMap).map(([, val]) => {
         const { userId, year, studentReferenceId, klassReferenceId, lessonReferenceId, teacherReferenceId } = val[0];
         const knownAbsences = knownAbsMap[klassReferenceId]?.[lessonReferenceId];
         const { lessonsCount, absCount, approvedAbsCount, attPercents, absPercents, gradeAvg, lastGrade, maxGrade } = calcReportsData(val, [{ absnceCount: knownAbsences }]);
