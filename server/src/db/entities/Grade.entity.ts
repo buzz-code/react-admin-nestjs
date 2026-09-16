@@ -103,7 +103,9 @@ export class Grade implements IHasUserId {
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;
 
-  @ValidateIf((grade: Grade) => !Boolean(grade.studentTz) && Boolean(grade.studentReferenceId), { always: true })
+  @ValidateIf((grade: Grade) => grade.studentReferenceId !== undefined && grade.studentReferenceId !== null, {
+    always: true,
+  })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
@@ -117,7 +119,9 @@ export class Grade implements IHasUserId {
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 
-  @ValidateIf((grade: Grade) => !Boolean(grade.teacherId) && Boolean(grade.teacherReferenceId), { always: true })
+  @ValidateIf((grade: Grade) => grade.teacherReferenceId !== undefined && grade.teacherReferenceId !== null, {
+    always: true,
+  })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
@@ -133,7 +137,9 @@ export class Grade implements IHasUserId {
   @Column('int', { name: 'klass_id', nullable: true })
   klassId: number | null;
 
-  @ValidateIf((grade: Grade) => !Boolean(grade.klassId) && Boolean(grade.klassReferenceId), { always: true })
+  @ValidateIf((grade: Grade) => grade.klassReferenceId !== undefined && grade.klassReferenceId !== null, {
+    always: true,
+  })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
@@ -148,7 +154,9 @@ export class Grade implements IHasUserId {
   @Column('int', { name: 'lesson_id', nullable: true })
   lessonId: number;
 
-  @ValidateIf((grade: Grade) => !Boolean(grade.lessonId) && Boolean(grade.lessonReferenceId), { always: true })
+  @ValidateIf((grade: Grade) => grade.lessonReferenceId !== undefined && grade.lessonReferenceId !== null, {
+    always: true,
+  })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })

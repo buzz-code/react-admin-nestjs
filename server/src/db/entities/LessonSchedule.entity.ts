@@ -147,8 +147,10 @@ export class LessonSchedule implements IHasUserId {
 
   @ValidateIf(
     (lessonSchedule: LessonSchedule) =>
-      !Boolean(lessonSchedule.teacherId) && Boolean(lessonSchedule.teacherReferenceId),
-    { always: true },
+      lessonSchedule.teacherReferenceId !== undefined && lessonSchedule.teacherReferenceId !== null,
+    {
+      always: true,
+    },
   )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @NumberType

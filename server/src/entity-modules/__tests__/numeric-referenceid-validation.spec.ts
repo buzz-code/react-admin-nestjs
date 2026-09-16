@@ -119,4 +119,18 @@ describe('numeric validation on ReferenceId/int columns', () => {
       expect(errorProps(errors)).toEqual(['year']);
     });
   });
+
+  describe('sibling-bypass regression: referenceId validated whenever present', () => {
+    it('Grade: rejects garbage studentReferenceId even when studentTz is also supplied', async () => {
+      const body = { studentTz: '1234567890', studentReferenceId: 'garbage', reportDate: '2026-09-16' };
+      const errors = await validateAs(Grade, body, CrudValidationGroups.CREATE);
+      expect(errorsOnField(errors, 'studentReferenceId')).toBe(true);
+    });
+
+    it('AttReport: rejects garbage studentReferenceId even when studentTz is also supplied', async () => {
+      const body = { studentTz: '1234567890', studentReferenceId: 'garbage', reportDate: '2026-09-16' };
+      const errors = await validateAs(AttReport, body, CrudValidationGroups.CREATE);
+      expect(errorsOnField(errors, 'studentReferenceId')).toBe(true);
+    });
+  });
 });
