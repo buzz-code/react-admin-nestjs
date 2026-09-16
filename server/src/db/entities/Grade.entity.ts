@@ -135,6 +135,8 @@ export class Grade implements IHasUserId {
 
   @ValidateIf((grade: Grade) => !Boolean(grade.klassId) && Boolean(grade.klassReferenceId), { always: true })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_klass_reference_id_idx')
   klassReferenceId: number;

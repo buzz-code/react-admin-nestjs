@@ -36,6 +36,7 @@ const errorsOnField = (errors: ValidationError[], field: string): boolean =>
 const numericFields: Array<{ entity: any; field: string }> = [
   { entity: Grade, field: 'studentReferenceId' },
   { entity: Grade, field: 'teacherReferenceId' },
+  { entity: Grade, field: 'klassReferenceId' },
   { entity: Grade, field: 'lessonReferenceId' },
   { entity: Grade, field: 'reportGroupSessionId' },
   { entity: AttReport, field: 'reportGroupSessionId' },
