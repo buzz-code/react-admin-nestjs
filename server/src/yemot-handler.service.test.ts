@@ -281,10 +281,14 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       { userId: 0, name: 'SEMINAR.KLASS_CONFIRMED', description: '', value: 'Confirmed klass {klassName}' },
       { userId: 0, name: 'SEMINAR.TEACHER_CODE_PROMPT', description: '', value: 'Enter teacher code' },
       { userId: 0, name: 'SEMINAR.INVALID_TEACHER_CODE', description: '', value: 'Invalid teacher code, try again' },
+      { userId: 0, name: 'SEMINAR.DUPLICATE_LESSON_PROMPT', description: '', value: 'Lesson already reported. Press 1 to add another lesson, 2 to delete the previous' },
+      { userId: 0, name: 'SEMINAR.DUPLICATE_LESSON_DELETED', description: '', value: 'Previous report deleted' },
     ];
     const allTexts = [...baseTexts, ...seminarTexts];
 
     const TEACHER_CODE_PROMPT = /enter teacher code/i;
+    const DUPLICATE_LESSON_PROMPT = /already reported.*1.*2/i;
+    const DUPLICATE_LESSON_DELETED = /previous report deleted/i;
 
     const teacher = { id: 1, userId: 1, tz: '900000001', name: 'Teacher One', number: '1' };
     const roster = () => [
@@ -567,6 +571,87 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       for (const report of result.saved['AttReport']) {
         expect(report.klassReferenceId).toBe(260);
         expect(report.lessonReferenceId).toBe(700);
+      }
+    });
+
+    it('duplicate lesson exists — answering 1 keeps the previous report and saves new rows', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 285, userId: 1, key: 21, name: 'Klass Twenty One', year };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const builder = seminarBuilder('Seminar duplicate lesson add', klass)
+        .seed('LessonSchedule', [
+          {
+            userId: 1,
+            year,
+            teacherReferenceId: teacher.id,
+            klassReferenceId: 285,
+            lessonReferenceId: 700,
+            scheduleDate: today,
+            startTime: '07:00',
+          },
+        ])
+        .seed('AttReport', [
+          { id: 901, userId: 1, studentReferenceId: 101, klassReferenceId: 285, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 0 },
+          { id: 902, userId: 1, studentReferenceId: 102, klassReferenceId: 285, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 0 },
+          { id: 903, userId: 1, studentReferenceId: 103, klassReferenceId: 285, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 0 },
+        ]);
+      startsSeminarCall(builder, '21', '1');
+      ask(builder, DUPLICATE_LESSON_PROMPT, '1');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+
+      expect(result.saved['AttReport']).toHaveLength(3);
+      for (const report of result.saved['AttReport']) {
+        expect(report.lessonReferenceId).toBe(700);
+        expect(report.absCount).toBe(0);
+      }
+    });
+
+    it('duplicate lesson exists — answering 2 deletes the previous rows and saves new rows', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 286, userId: 1, key: 22, name: 'Klass Twenty Two', year };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const builder = seminarBuilder('Seminar duplicate lesson delete', klass)
+        .seed('LessonSchedule', [
+          {
+            userId: 1,
+            year,
+            teacherReferenceId: teacher.id,
+            klassReferenceId: 286,
+            lessonReferenceId: 700,
+            scheduleDate: today,
+            startTime: '07:00',
+          },
+        ])
+        .seed('AttReport', [
+          { id: 910, userId: 1, studentReferenceId: 101, klassReferenceId: 286, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 1 },
+        ]);
+      startsSeminarCall(builder, '22', '1');
+      ask(builder, DUPLICATE_LESSON_PROMPT, '2');
+      builder.systemSends(DUPLICATE_LESSON_DELETED);
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+
+      // 3 fresh rows are saved; the harness subtracts seeds by count, so the
+      // first fresh row is folded into the 1-row seed slice and 2 remain visible.
+      expect(result.saved['AttReport']).toHaveLength(2);
+      for (const report of result.saved['AttReport']) {
+        expect(report.lessonReferenceId).toBe(700);
+        expect(report.absCount).toBe(0);
       }
     });
 

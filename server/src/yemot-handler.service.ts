@@ -117,6 +117,10 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const schedule = await this.getScheduleForTeacherNow(teacher);
     const lessonReferenceId = schedule?.klassReferenceId === klass.id ? schedule.lessonReferenceId : undefined;
 
+    if (lessonReferenceId) {
+      await this.handleLessonDuplicate(teacher, klass, lessonReferenceId);
+    }
+
     const roster = await this.getKlassRoster(klass.id);
     if (roster.length === 0) {
       await this.hangupWithMessageByKey('SEMINAR.NO_STUDENTS_IN_KLASS');
@@ -126,6 +130,34 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const absentStudentReferenceIds = await this.collectAbsentStudentIds();
     await this.saveSeminarAttendance(teacher, klass, roster, absentStudentReferenceIds, lessonReferenceId);
     await this.hangupWithMessageByKey('SYSTEM.REPORT_SUCCESS');
+  }
+
+  private async handleLessonDuplicate(teacher: Teacher, klass: Klass, lessonReferenceId: number): Promise<void> {
+    const reportDate = this.getIsraelDateString(new Date()) as unknown as Date;
+    const existing = await this.dataSource.getRepository(AttReport).findOneBy({
+      userId: this.user.id,
+      klassReferenceId: klass.id,
+      teacherReferenceId: teacher.id,
+      lessonReferenceId,
+      reportDate,
+    });
+    if (!existing) return;
+
+    const choice = await this.askForInputByKey('SEMINAR.DUPLICATE_LESSON_PROMPT', undefined, {
+      min_digits: 1,
+      max_digits: 1,
+      digits_allowed: ['1', '2'],
+    });
+    if (choice !== '2') return;
+
+    await this.dataSource.getRepository(AttReport).delete({
+      userId: this.user.id,
+      klassReferenceId: klass.id,
+      teacherReferenceId: teacher.id,
+      lessonReferenceId,
+      reportDate,
+    });
+    await this.sendMessageByKey('SEMINAR.DUPLICATE_LESSON_DELETED');
   }
 
   private async getScheduleForTeacherNow(teacher: Teacher): Promise<LessonSchedule | null> {
