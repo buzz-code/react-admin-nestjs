@@ -232,6 +232,9 @@ export class AttReport implements IHasUserId {
   @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
 
+  @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('att_reports_report_group_session_id_idx')
   reportGroupSessionId: number;

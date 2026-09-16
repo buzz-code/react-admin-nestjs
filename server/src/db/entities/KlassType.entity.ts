@@ -77,6 +77,9 @@ export class KlassType implements IHasUserId {
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 
+  @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   teacherReferenceId: number;
 

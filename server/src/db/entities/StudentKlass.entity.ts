@@ -116,6 +116,8 @@ export class StudentKlass implements IHasUserId {
     always: true,
   })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   studentReferenceId: number;
 
@@ -131,6 +133,8 @@ export class StudentKlass implements IHasUserId {
     always: true,
   })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   klassReferenceId: number;
 

@@ -103,6 +103,8 @@ export class KnownAbsence implements IHasUserId {
     always: true,
   })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('known_absences_student_reference_id_idx')
   studentReferenceId: number;
@@ -129,6 +131,8 @@ export class KnownAbsence implements IHasUserId {
   lessonId: number;
 
   @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   lessonReferenceId: number;
 
