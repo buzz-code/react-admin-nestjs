@@ -112,10 +112,15 @@ export class StudentKlass implements IHasUserId {
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;
 
-  @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.studentTz) && Boolean(attReport.studentReferenceId), {
-    always: true,
-  })
+  @ValidateIf(
+    (attReport: StudentKlass) => attReport.studentReferenceId !== undefined && attReport.studentReferenceId !== null,
+    {
+      always: true,
+    },
+  )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   studentReferenceId: number;
 
@@ -127,10 +132,15 @@ export class StudentKlass implements IHasUserId {
   @Column('int', { name: 'klass_id', nullable: true })
   klassId: number;
 
-  @ValidateIf((attReport: StudentKlass) => !Boolean(attReport.klassId) && Boolean(attReport.klassReferenceId), {
-    always: true,
-  })
+  @ValidateIf(
+    (attReport: StudentKlass) => attReport.klassReferenceId !== undefined && attReport.klassReferenceId !== null,
+    {
+      always: true,
+    },
+  )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   klassReferenceId: number;
 

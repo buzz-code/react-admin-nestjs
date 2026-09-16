@@ -99,10 +99,15 @@ export class KnownAbsence implements IHasUserId {
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;
 
-  @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.studentTz) && Boolean(attReport.studentReferenceId), {
-    always: true,
-  })
+  @ValidateIf(
+    (attReport: KnownAbsence) => attReport.studentReferenceId !== undefined && attReport.studentReferenceId !== null,
+    {
+      always: true,
+    },
+  )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('known_absences_student_reference_id_idx')
   studentReferenceId: number;
@@ -129,6 +134,8 @@ export class KnownAbsence implements IHasUserId {
   lessonId: number;
 
   @IsOptional({ always: true })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   lessonReferenceId: number;
 
