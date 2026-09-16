@@ -115,6 +115,8 @@ export class AttReport implements IHasUserId {
     always: true,
   })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('att_reports_student_reference_id_idx')
   studentReferenceId: number;
@@ -129,6 +131,8 @@ export class AttReport implements IHasUserId {
     always: true,
   })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('att_reports_teacher_reference_id_idx')
   teacherReferenceId: number;
@@ -145,6 +149,8 @@ export class AttReport implements IHasUserId {
     always: true,
   })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('att_reports_klass_reference_id_idx')
   klassReferenceId: number;
@@ -159,6 +165,8 @@ export class AttReport implements IHasUserId {
   @ValidateIf((attReport: AttReport) => !Boolean(attReport.lessonId) && Boolean(attReport.lessonReferenceId), {
     always: true,
   })
+  @NumberType
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('att_reports_lesson_reference_id_idx')
   lessonReferenceId: number;
