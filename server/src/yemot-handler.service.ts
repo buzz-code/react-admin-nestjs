@@ -117,14 +117,14 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const schedule = await this.getScheduleForTeacherNow(teacher);
     const lessonReferenceId = schedule?.klassReferenceId === klass.id ? schedule.lessonReferenceId : undefined;
 
-    if (lessonReferenceId) {
-      await this.handleLessonDuplicate(teacher, klass, lessonReferenceId);
-    }
-
     const roster = await this.getKlassRoster(klass.id);
     if (roster.length === 0) {
       await this.hangupWithMessageByKey('SEMINAR.NO_STUDENTS_IN_KLASS');
       return;
+    }
+
+    if (lessonReferenceId) {
+      await this.handleLessonDuplicate(teacher, klass, lessonReferenceId);
     }
 
     const absentStudentReferenceIds = await this.collectAbsentStudentIds();
@@ -150,12 +150,28 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     });
     if (choice !== '2') return;
 
-    await this.dataSource.getRepository(AttReport).delete({
-      userId: this.user.id,
-      klassReferenceId: klass.id,
-      teacherReferenceId: teacher.id,
-      lessonReferenceId,
-      reportDate,
+    await this.dataSource.transaction(async (manager) => {
+      const attReportRepo = manager.getRepository(AttReport);
+      const duplicateWhere = {
+        userId: this.user.id,
+        klassReferenceId: klass.id,
+        teacherReferenceId: teacher.id,
+        lessonReferenceId,
+        reportDate,
+      };
+      const priorRows = await attReportRepo.find({ where: duplicateWhere });
+      await attReportRepo.delete(duplicateWhere);
+
+      const sessionIds = [...new Set(priorRows.map((row) => row.reportGroupSessionId).filter((id) => id != null))];
+      for (const reportGroupSessionId of sessionIds) {
+        if (await attReportRepo.findOneBy({ reportGroupSessionId })) continue;
+        const session = await manager.getRepository(ReportGroupSession).findOneBy({ id: reportGroupSessionId });
+        if (!session) continue;
+        await manager.getRepository(ReportGroupSession).delete(session.id);
+        if (!(await manager.getRepository(ReportGroupSession).findOneBy({ reportGroupId: session.reportGroupId }))) {
+          await manager.getRepository(ReportGroup).delete(session.reportGroupId);
+        }
+      }
     });
     await this.sendMessageByKey('SEMINAR.DUPLICATE_LESSON_DELETED');
   }
