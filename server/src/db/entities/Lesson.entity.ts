@@ -130,6 +130,7 @@ export class Lesson implements IHasUserId {
   klassReferenceIdsJson: string;
 
   @IsDigitsOnly(10, { always: true })
+  @StringType
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 
