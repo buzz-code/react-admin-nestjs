@@ -1,4 +1,4 @@
-import { YemotScenarioBuilder, YemotScenarioRunner, useFakeDateOnly } from '@shared/utils/yemot/testing';
+import { MockCall, MockExitError, YemotScenarioBuilder, YemotScenarioRunner, createRealDataSource, useFakeDateOnly } from '@shared/utils/yemot/testing';
 import { getCurrentHebrewYear } from '@shared/utils/entity/year.util';
 import { YemotHandlerService } from './yemot-handler.service';
 
@@ -281,10 +281,14 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       { userId: 0, name: 'SEMINAR.KLASS_CONFIRMED', description: '', value: 'Confirmed klass {klassName}' },
       { userId: 0, name: 'SEMINAR.TEACHER_CODE_PROMPT', description: '', value: 'Enter teacher code' },
       { userId: 0, name: 'SEMINAR.INVALID_TEACHER_CODE', description: '', value: 'Invalid teacher code, try again' },
+      { userId: 0, name: 'SEMINAR.DUPLICATE_LESSON_PROMPT', description: '', value: 'Lesson already reported. Press 1 to add another lesson, 2 to delete the previous' },
+      { userId: 0, name: 'SEMINAR.DUPLICATE_LESSON_DELETED', description: '', value: 'Previous report deleted' },
     ];
     const allTexts = [...baseTexts, ...seminarTexts];
 
     const TEACHER_CODE_PROMPT = /enter teacher code/i;
+    const DUPLICATE_LESSON_PROMPT = /already reported.*1.*2/i;
+    const DUPLICATE_LESSON_DELETED = /previous report deleted/i;
 
     const teacher = { id: 1, userId: 1, tz: '900000001', name: 'Teacher One', number: '1' };
     const roster = () => [
@@ -567,6 +571,130 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       for (const report of result.saved['AttReport']) {
         expect(report.klassReferenceId).toBe(260);
         expect(report.lessonReferenceId).toBe(700);
+      }
+    });
+
+    it('duplicate lesson exists — answering 1 keeps the previous report and saves new rows', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 285, userId: 1, key: 21, name: 'Klass Twenty One', year };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const builder = seminarBuilder('Seminar duplicate lesson add', klass)
+        .seed('LessonSchedule', [
+          {
+            userId: 1,
+            year,
+            teacherReferenceId: teacher.id,
+            klassReferenceId: 285,
+            lessonReferenceId: 700,
+            scheduleDate: today,
+            startTime: '07:00',
+          },
+        ])
+        .seed('AttReport', [
+          { id: 901, userId: 1, studentReferenceId: 101, klassReferenceId: 285, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 0 },
+          { id: 902, userId: 1, studentReferenceId: 102, klassReferenceId: 285, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 0 },
+          { id: 903, userId: 1, studentReferenceId: 103, klassReferenceId: 285, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 0 },
+        ]);
+      startsSeminarCall(builder, '21', '1');
+      ask(builder, DUPLICATE_LESSON_PROMPT, '1');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.hungup).toBe(true);
+
+      expect(result.saved['AttReport']).toHaveLength(3);
+      for (const report of result.saved['AttReport']) {
+        expect(report.lessonReferenceId).toBe(700);
+        expect(report.absCount).toBe(0);
+      }
+    });
+
+    it('duplicate lesson exists — answering 2 deletes all prior rows (and their unused report session/group) and saves fresh rows', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const ds = await createRealDataSource();
+      try {
+        const repo = (entityName: string) => ds.getRepository(entityName);
+        await repo('User').save({ ...baseUser, permissions: { seminarAttendanceYemot: true } });
+        await repo('Text').save(allTexts);
+        await repo('Teacher').save(teacher);
+        await repo('Klass').save({ id: 286, userId: 1, key: 22, name: 'Klass Twenty Two', year });
+        await repo('Student').save(roster());
+        await repo('StudentKlass').save(studentKlasses(286, year));
+        await repo('LessonSchedule').save([
+          {
+            userId: 1,
+            year,
+            teacherReferenceId: teacher.id,
+            klassReferenceId: 286,
+            lessonReferenceId: 700,
+            scheduleDate: today,
+            startTime: '07:00',
+          },
+        ]);
+        await repo('ReportGroup').save([
+          { id: 800, userId: 1, name: 'prior group', topic: 'prior', teacherReferenceId: teacher.id, klassReferenceId: 286, year },
+          { id: 801, userId: 1, name: 'fully deleted group', topic: 'prior', teacherReferenceId: teacher.id, klassReferenceId: 286, year },
+        ]);
+        await repo('ReportGroupSession').save([
+          { id: 900, userId: 1, reportGroupId: 800, sessionDate: today, startTime: '07:30' },
+          { id: 901, userId: 1, reportGroupId: 800, sessionDate: today, startTime: '08:00' },
+          { id: 902, userId: 1, reportGroupId: 801, sessionDate: today, startTime: '08:30' },
+        ]);
+        await repo('AttReport').save([
+          { id: 910, userId: 1, studentReferenceId: 101, klassReferenceId: 286, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 1, reportGroupSessionId: 900 },
+          { id: 911, userId: 1, studentReferenceId: 102, klassReferenceId: 286, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 0, reportGroupSessionId: 900 },
+          { id: 912, userId: 1, studentReferenceId: 103, klassReferenceId: 286, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 0, reportGroupSessionId: 900 },
+          { id: 913, userId: 1, studentReferenceId: 102, klassReferenceId: 286, teacherReferenceId: 1, lessonReferenceId: 701, reportDate: today, absCount: 0, reportGroupSessionId: 901 },
+          { id: 914, userId: 1, studentReferenceId: 101, klassReferenceId: 286, teacherReferenceId: 1, lessonReferenceId: 700, reportDate: today, absCount: 0, reportGroupSessionId: 902 },
+        ]);
+
+        const call = new MockCall({ ApiDID: '099999999', ApiPhone: '0501234567', ApiCallId: 'test-call-2' });
+        call.setInputs(['22', '1', '2', '0']);
+        const tracker = {
+          logConversationStep: jest.fn().mockResolvedValue(undefined),
+          initializeCall: jest.fn().mockResolvedValue(undefined),
+          finalizeCall: jest.fn().mockResolvedValue(undefined),
+          markCallError: jest.fn().mockResolvedValue(undefined),
+        };
+        const handler = new YemotHandlerService(ds as any, call as any, tracker as any);
+        await handler.processCall().catch((e) => {
+          if (!(e instanceof MockExitError)) throw e;
+        });
+
+        expect(call.getMessages().flat().map((m) => m.data)).toEqual(
+          expect.arrayContaining([expect.stringMatching(DUPLICATE_LESSON_DELETED)]),
+        );
+
+        // Prior rows for the lesson (ids 910-912, one per student) are gone; only the
+        // fresh report plus the unrelated row for lesson 701 remain.
+        const reports = await repo('AttReport').find();
+        expect(reports).toHaveLength(4);
+        const freshRows = reports.filter((r: any) => r.lessonReferenceId === 700);
+        expect(freshRows.map((r: any) => r.studentReferenceId).sort()).toEqual([101, 102, 103]);
+        for (const report of freshRows) {
+          expect(report.absCount).toBe(0);
+          expect(report.reportGroupSessionId).toBeFalsy();
+        }
+        expect(reports.some((r: any) => r.id === 913)).toBe(true);
+
+        // Sessions 900 and 902 had no remaining references and were deleted, along
+        // with group 801 (no sessions left); session 901 is still referenced by row
+        // 913, so its group 800 is kept.
+        const sessions = await repo('ReportGroupSession').find();
+        expect(sessions.map((s: any) => s.id)).toEqual([901]);
+        const groups = await repo('ReportGroup').find();
+        expect(groups.map((g: any) => g.id)).toEqual([800]);
+      } finally {
+        await ds.destroy();
       }
     });
 
