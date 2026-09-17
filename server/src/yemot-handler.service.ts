@@ -117,22 +117,25 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     const schedule = await this.getScheduleForTeacherNow(teacher);
     const lessonReferenceId = schedule?.klassReferenceId === klass.id ? schedule.lessonReferenceId : undefined;
 
+    const shouldDeletePreviousLesson = lessonReferenceId
+      ? await this.askDuplicateLessonChoice(teacher, klass, lessonReferenceId)
+      : false;
+
     const roster = await this.getKlassRoster(klass.id);
     if (roster.length === 0) {
       await this.hangupWithMessageByKey('SEMINAR.NO_STUDENTS_IN_KLASS');
       return;
     }
 
-    if (lessonReferenceId) {
-      await this.handleLessonDuplicate(teacher, klass, lessonReferenceId);
-    }
-
     const absentStudentReferenceIds = await this.collectAbsentStudentIds();
-    await this.saveSeminarAttendance(teacher, klass, roster, absentStudentReferenceIds, lessonReferenceId);
+    await this.saveSeminarAttendance(teacher, klass, roster, absentStudentReferenceIds, lessonReferenceId, shouldDeletePreviousLesson);
+    if (shouldDeletePreviousLesson) {
+      await this.sendMessageByKey('SEMINAR.DUPLICATE_LESSON_DELETED');
+    }
     await this.hangupWithMessageByKey('SYSTEM.REPORT_SUCCESS');
   }
 
-  private async handleLessonDuplicate(teacher: Teacher, klass: Klass, lessonReferenceId: number): Promise<void> {
+  private async askDuplicateLessonChoice(teacher: Teacher, klass: Klass, lessonReferenceId: number): Promise<boolean> {
     const reportDate = this.getIsraelDateString(new Date()) as unknown as Date;
     const existing = await this.dataSource.getRepository(AttReport).findOneBy({
       userId: this.user.id,
@@ -141,39 +144,14 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       lessonReferenceId,
       reportDate,
     });
-    if (!existing) return;
+    if (!existing) return false;
 
     const choice = await this.askForInputByKey('SEMINAR.DUPLICATE_LESSON_PROMPT', undefined, {
       min_digits: 1,
       max_digits: 1,
       digits_allowed: ['1', '2'],
     });
-    if (choice !== '2') return;
-
-    await this.dataSource.transaction(async (manager) => {
-      const attReportRepo = manager.getRepository(AttReport);
-      const duplicateWhere = {
-        userId: this.user.id,
-        klassReferenceId: klass.id,
-        teacherReferenceId: teacher.id,
-        lessonReferenceId,
-        reportDate,
-      };
-      const priorRows = await attReportRepo.find({ where: duplicateWhere });
-      await attReportRepo.delete(duplicateWhere);
-
-      const sessionIds = [...new Set(priorRows.map((row) => row.reportGroupSessionId).filter((id) => id != null))];
-      for (const reportGroupSessionId of sessionIds) {
-        if (await attReportRepo.findOneBy({ reportGroupSessionId })) continue;
-        const session = await manager.getRepository(ReportGroupSession).findOneBy({ id: reportGroupSessionId });
-        if (!session) continue;
-        await manager.getRepository(ReportGroupSession).delete(session.id);
-        if (!(await manager.getRepository(ReportGroupSession).findOneBy({ reportGroupId: session.reportGroupId }))) {
-          await manager.getRepository(ReportGroup).delete(session.reportGroupId);
-        }
-      }
-    });
-    await this.sendMessageByKey('SEMINAR.DUPLICATE_LESSON_DELETED');
+    return choice === '2';
   }
 
   private async getScheduleForTeacherNow(teacher: Teacher): Promise<LessonSchedule | null> {
@@ -288,12 +266,25 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     roster: StudentKlass[],
     absentStudentReferenceIds: Set<number>,
     lessonReferenceId?: number,
+    shouldDeletePreviousLesson?: boolean,
   ): Promise<void> {
     const now = new Date();
     const reportDate = this.getIsraelDateString(now) as unknown as Date;
     const callTime = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Jerusalem', hour12: false });
 
     await this.dataSource.transaction(async (manager) => {
+      const attReportRepo = manager.getRepository(AttReport);
+
+      if (shouldDeletePreviousLesson) {
+        await attReportRepo.delete({
+          userId: this.user.id,
+          klassReferenceId: klass.id,
+          teacherReferenceId: teacher.id,
+          lessonReferenceId,
+          reportDate,
+        });
+      }
+
       let reportGroupSessionId: number | undefined;
 
       if (hasPermission(this.user, 'lessonSignature')) {
@@ -316,7 +307,6 @@ export class YemotHandlerService extends BaseYemotHandlerService {
         reportGroupSessionId = reportGroupSession.id;
       }
 
-      const attReportRepo = manager.getRepository(AttReport);
       const rows = roster.map((studentKlass) =>
         attReportRepo.create({
           userId: this.user.id,

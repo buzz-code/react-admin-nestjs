@@ -614,7 +614,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       }
     });
 
-    it('duplicate lesson exists — answering 2 deletes all prior rows (and their unused report session/group) and saves fresh rows', async () => {
+    it('duplicate lesson exists — answering 2 deletes all prior rows for that lesson and saves fresh rows', async () => {
       jest.setSystemTime(israelTimeAt(7, 0));
       const year = getCurrentHebrewYear();
       const today = new Date();
@@ -674,8 +674,9 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
           expect.arrayContaining([expect.stringMatching(DUPLICATE_LESSON_DELETED)]),
         );
 
-        // Prior rows for the lesson (ids 910-912, one per student) are gone; only the
-        // fresh report plus the unrelated row for lesson 701 remain.
+        // Prior rows for the lesson (910-912, 914 — every row matching user+klass+teacher+
+        // lesson+date, regardless of student) are gone; only the fresh report plus the
+        // unrelated row for lesson 701 remain.
         const reports = await repo('AttReport').find();
         expect(reports).toHaveLength(4);
         const freshRows = reports.filter((r: any) => r.lessonReferenceId === 700);
@@ -686,13 +687,12 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         }
         expect(reports.some((r: any) => r.id === 913)).toBe(true);
 
-        // Sessions 900 and 902 had no remaining references and were deleted, along
-        // with group 801 (no sessions left); session 901 is still referenced by row
-        // 913, so its group 800 is kept.
+        // Report groups/sessions are left untouched — deleting a duplicate report only
+        // removes AttReport rows, it never cascades into ReportGroup/ReportGroupSession.
         const sessions = await repo('ReportGroupSession').find();
-        expect(sessions.map((s: any) => s.id)).toEqual([901]);
+        expect(sessions.map((s: any) => s.id).sort()).toEqual([900, 901, 902]);
         const groups = await repo('ReportGroup').find();
-        expect(groups.map((g: any) => g.id)).toEqual([800]);
+        expect(groups.map((g: any) => g.id).sort()).toEqual([800, 801]);
       } finally {
         await ds.destroy();
       }
