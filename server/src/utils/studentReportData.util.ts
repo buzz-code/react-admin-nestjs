@@ -221,7 +221,6 @@ export function getDisplayGrade(
   gradeNames: GradeName[] = [],
   klassTypeReferenceId?: number,
 ) {
-  // if (grade === 0) return '0%';
   if (!grade) return '';
 
   // ========== investigation ==========
