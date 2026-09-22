@@ -132,6 +132,18 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
   beforeEach(() => useFakeDateOnly());
   afterEach(() => jest.useRealTimers());
 
+  it('maintenance message — immediate hangup, no call routing', async () => {
+    const scenario = baseSetup('Maintenance message', {
+      user: { ...baseUser, additionalData: { maintainanceMessage: 'System under maintenance' } },
+    })
+      .systemHangsUp('System under maintenance')
+      .build();
+
+    const result = await runner.run(scenario);
+    expect(result.passed).toBe(true);
+    expect(result.hungup).toBe(true);
+  });
+
   it('past deadline — immediate hangup with CLOSED', async () => {
     jest.setSystemTime(israelTimeAt(9, 0));
 
