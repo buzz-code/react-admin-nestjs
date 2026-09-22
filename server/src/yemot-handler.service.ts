@@ -25,6 +25,11 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   override async processCall(): Promise<void> {
     await this.getUserByDidPhone();
     this.logger.log(`Processing call with ID: ${this.call.callId} from phone: ${this.call.phone}`);
+
+    if (this.user?.additionalData?.maintainanceMessage) {
+      return this.hangupWithMessage(this.user.additionalData.maintainanceMessage);
+    }
+
     if (hasPermission(this.user, 'seminarAttendanceYemot')) {
       if (this.isManagerCall()) {
         await this.processManagerReportCall();
