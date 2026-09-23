@@ -12,6 +12,7 @@ import { Lesson } from 'src/db/entities/Lesson.entity';
 import { LessonSchedule } from 'src/db/entities/LessonSchedule.entity';
 import { Klass } from 'src/db/entities/Klass.entity';
 import { KlassType } from 'src/db/entities/KlassType.entity';
+import { GradeName } from 'src/db/entities/GradeName.entity';
 
 /**
  * Mirrors the CRUD validation pipeline (@dataui/crud ValidationPipe +
@@ -51,6 +52,11 @@ const numericFields: Array<{ entity: any; field: string }> = [
   { entity: Klass, field: 'teacherReferenceId' },
   { entity: KlassType, field: 'teacherReferenceId' },
   { entity: Student, field: 'year' },
+  { entity: KnownAbsence, field: 'klassReferenceId' },
+  { entity: LessonSchedule, field: 'klassReferenceId' },
+  { entity: LessonSchedule, field: 'lessonReferenceId' },
+  { entity: Klass, field: 'klassTypeReferenceId' },
+  { entity: GradeName, field: 'klassTypeReferenceId' },
 ];
 
 describe('numeric validation on ReferenceId/int columns', () => {

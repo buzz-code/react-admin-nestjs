@@ -119,10 +119,14 @@ export class KnownAbsence implements IHasUserId {
   @Column('int', { name: 'klass_id', nullable: true })
   klassId: number | null;
 
-  @ValidateIf((attReport: KnownAbsence) => !Boolean(attReport.klassId) && Boolean(attReport.klassReferenceId), {
-    always: true,
-  })
+  @ValidateIf(
+    (attReport: KnownAbsence) => attReport.klassReferenceId !== undefined && attReport.klassReferenceId !== null,
+    {
+      always: true,
+    },
+  )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   klassReferenceId: number;
 

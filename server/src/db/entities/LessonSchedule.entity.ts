@@ -107,10 +107,14 @@ export class LessonSchedule implements IHasUserId {
   klassId: number | null;
 
   @ValidateIf(
-    (lessonSchedule: LessonSchedule) => !Boolean(lessonSchedule.klassId) && Boolean(lessonSchedule.klassReferenceId),
-    { always: true },
+    (lessonSchedule: LessonSchedule) =>
+      lessonSchedule.klassReferenceId !== undefined && lessonSchedule.klassReferenceId !== null,
+    {
+      always: true,
+    },
   )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('lesson_schedules_klass_reference_id_idx')
   klassReferenceId: number;
@@ -125,10 +129,13 @@ export class LessonSchedule implements IHasUserId {
 
   @ValidateIf(
     (lessonSchedule: LessonSchedule) =>
-      !Boolean(lessonSchedule.lessonId) && Boolean(lessonSchedule.lessonReferenceId),
-    { always: true },
+      lessonSchedule.lessonReferenceId !== undefined && lessonSchedule.lessonReferenceId !== null,
+    {
+      always: true,
+    },
   )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('lesson_schedules_lesson_reference_id_idx')
   lessonReferenceId: number;

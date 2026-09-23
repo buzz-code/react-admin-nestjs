@@ -99,10 +99,14 @@ export class Klass implements IHasUserId {
   @Column('int', { name: 'klass_type_id', nullable: true })
   klassTypeId: number | null;
 
-  @ValidateIf((attReport: Klass) => !Boolean(attReport.klassTypeId) && Boolean(attReport.klassTypeReferenceId), {
-    always: true,
-  })
+  @ValidateIf(
+    (attReport: Klass) => attReport.klassTypeReferenceId !== undefined && attReport.klassTypeReferenceId !== null,
+    {
+      always: true,
+    },
+  )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('klasses_klass_type_reference_id_idx')
   klassTypeReferenceId: number;
