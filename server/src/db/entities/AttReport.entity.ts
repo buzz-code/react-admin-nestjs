@@ -118,7 +118,6 @@ export class AttReport implements IHasUserId {
     },
   )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('att_reports_student_reference_id_idx')
@@ -137,7 +136,6 @@ export class AttReport implements IHasUserId {
     },
   )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('att_reports_teacher_reference_id_idx')
@@ -158,7 +156,6 @@ export class AttReport implements IHasUserId {
     },
   )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('att_reports_klass_reference_id_idx')
@@ -177,7 +174,6 @@ export class AttReport implements IHasUserId {
       always: true,
     },
   )
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('att_reports_lesson_reference_id_idx')
@@ -253,7 +249,6 @@ export class AttReport implements IHasUserId {
   klass: Klass;
 
   @IsOptional({ always: true })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('att_reports_report_group_session_id_idx')

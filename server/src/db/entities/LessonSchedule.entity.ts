@@ -153,7 +153,6 @@ export class LessonSchedule implements IHasUserId {
     },
   )
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('lesson_schedules_teacher_reference_id_idx')

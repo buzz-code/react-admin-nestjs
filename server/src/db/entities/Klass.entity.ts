@@ -119,7 +119,6 @@ export class Klass implements IHasUserId {
   phone: string | null;
 
   @IsOptional({ always: true })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('klasses_teacher_reference_id_idx')

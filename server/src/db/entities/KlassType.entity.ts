@@ -78,7 +78,6 @@ export class KlassType implements IHasUserId {
   teacherId: string;
 
   @IsOptional({ always: true })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   teacherReferenceId: number;

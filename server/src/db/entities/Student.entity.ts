@@ -4,7 +4,7 @@ import { User } from 'src/db/entities/User.entity';
 import { IsOptional } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
 import { IsNotEmpty, IsUniqueCombination, MaxLength, IsBoolean, IsDigitsOnly, IsNumber } from '@shared/utils/validation/class-validator-he';
-import { StringType, BooleanType, NumberType } from '@shared/utils/entity/class-transformer';
+import { StringType, BooleanType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 
 @Index('students_users_idx', ['userId'], {})
@@ -19,7 +19,6 @@ export class Student implements IHasUserId {
   userId: number;
 
   @IsOptional({ always: true })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   year: number;

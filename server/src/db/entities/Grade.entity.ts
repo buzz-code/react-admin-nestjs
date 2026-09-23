@@ -107,7 +107,6 @@ export class Grade implements IHasUserId {
     always: true,
   })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_student_reference_id_idx')
@@ -123,7 +122,6 @@ export class Grade implements IHasUserId {
     always: true,
   })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_teacher_reference_id_idx')
@@ -141,7 +139,6 @@ export class Grade implements IHasUserId {
     always: true,
   })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_klass_reference_id_idx')
@@ -157,7 +154,6 @@ export class Grade implements IHasUserId {
   @ValidateIf((grade: Grade) => grade.lessonReferenceId !== undefined && grade.lessonReferenceId !== null, {
     always: true,
   })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_lesson_reference_id_idx')
@@ -232,7 +228,6 @@ export class Grade implements IHasUserId {
   klass: Klass;
 
   @IsOptional({ always: true })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_report_group_session_id_idx')

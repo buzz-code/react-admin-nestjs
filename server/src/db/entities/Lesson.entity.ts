@@ -134,7 +134,6 @@ export class Lesson implements IHasUserId {
   teacherId: string;
 
   @IsOptional({ always: true })
-  @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('lessons_teacher_reference_id_idx')
