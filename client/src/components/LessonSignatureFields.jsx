@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 import { required } from 'react-admin';
 import SignatureInput from '@shared/components/fields/signature/SignatureInput';

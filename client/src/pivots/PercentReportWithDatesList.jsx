@@ -6,8 +6,6 @@ import {
     useRecordContext,
     useListFilterContext,
     TextInput,
-    useAuthState,
-    usePermissions,
     BooleanInput,
     NullableBooleanInput,
 } from 'react-admin';

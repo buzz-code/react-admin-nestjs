@@ -1,4 +1,3 @@
-import React from 'react';
 import { FormDataConsumer, SimpleForm, NumberInput, RecordContextProvider, useStore } from 'react-admin';
 import Divider from '@mui/material/Divider';
 import { ReportHeader } from './ReportHeader';

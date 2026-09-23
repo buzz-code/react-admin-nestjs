@@ -1,7 +1,6 @@
 import {
     ArrayInput,
     DateField,
-    DateInput,
     DateTimeInput,
     email,
     EmailField,

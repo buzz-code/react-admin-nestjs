@@ -17,7 +17,6 @@ import { IsOptional } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
 import { IsNotEmpty, IsDate, IsNumber } from '@shared/utils/validation/class-validator-he';
 import { StringType, NumberType, DateType } from '@shared/utils/entity/class-transformer';
-import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { cleanDateFields, cleanTimeFields } from '@shared/utils/entity/deafultValues.util';
 
 @Index('report_group_sessions_user_id_idx', ['userId'], {})
