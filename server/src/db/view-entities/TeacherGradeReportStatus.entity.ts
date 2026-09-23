@@ -1,4 +1,4 @@
-import { Column, DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
+import { Column, DataSource, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
 import { Teacher } from '../entities/Teacher.entity';
 import { ReportMonth } from '../entities/ReportMonth.entity';

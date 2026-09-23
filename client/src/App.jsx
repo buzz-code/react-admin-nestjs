@@ -36,7 +36,6 @@ import transportation from 'src/entities/transportation';
 import absenceType from 'src/entities/absenceType';
 import uploadedFile from '@shared/components/common-entities/uploaded-file';
 import studentKlassesReport from 'src/entities/student-klasses-report';
-import StudentEventReport from 'src/components/StudentView/student-event-report';
 import reportMonth from 'src/entities/report-month';
 import teacherReportStatus from 'src/entities/teacher-report-status';
 import teacherGradeReportStatus from 'src/entities/teacher-grade-report-status';

@@ -1,6 +1,5 @@
 import {
     DateField,
-    DateInput,
     DateTimeInput,
     NullableBooleanInput,
     ReferenceField,

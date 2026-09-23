@@ -1,7 +1,5 @@
-import { Column, DataSource, ViewEntity } from 'typeorm';
+import { Column, ViewEntity } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
-import { Klass } from '../entities/Klass.entity';
-import { Lesson } from '../entities/Lesson.entity';
 import {
   getGroupConcatExpression,
   getJsonTableColumn,

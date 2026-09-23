@@ -5,7 +5,6 @@ import {
     TextField,
     TextInput,
     ReferenceField,
-    required,
     NumberInput,
     BooleanInput,
     NullableBooleanInput,
