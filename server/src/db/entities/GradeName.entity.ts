@@ -59,6 +59,7 @@ export class GradeName implements IHasUserId {
   klassTypeId: number | null;
 
   @IsOptional({ always: true })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grade_names_klass_type_reference_id_idx')
   klassTypeReferenceId: number;

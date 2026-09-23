@@ -72,6 +72,7 @@ export class AttendanceCleanupRule implements IHasUserId {
 
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   lessonReferenceId: number;
 
@@ -85,6 +86,7 @@ export class AttendanceCleanupRule implements IHasUserId {
   /** The track/class to PRESERVE (checked via student_klasses membership, not att_reports.klassReferenceId). */
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
   @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   klassReferenceId: number;
 

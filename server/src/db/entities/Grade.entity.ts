@@ -103,8 +103,11 @@ export class Grade implements IHasUserId {
   @Column('varchar', { name: 'student_tz', length: 10, nullable: true })
   studentTz: string;
 
-  @ValidateIf((grade: Grade) => !Boolean(grade.studentTz) && Boolean(grade.studentReferenceId), { always: true })
+  @ValidateIf((grade: Grade) => grade.studentReferenceId !== undefined && grade.studentReferenceId !== null, {
+    always: true,
+  })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_student_reference_id_idx')
   studentReferenceId: number;
@@ -115,8 +118,11 @@ export class Grade implements IHasUserId {
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 
-  @ValidateIf((grade: Grade) => !Boolean(grade.teacherId) && Boolean(grade.teacherReferenceId), { always: true })
+  @ValidateIf((grade: Grade) => grade.teacherReferenceId !== undefined && grade.teacherReferenceId !== null, {
+    always: true,
+  })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_teacher_reference_id_idx')
   teacherReferenceId: number;
@@ -129,8 +135,11 @@ export class Grade implements IHasUserId {
   @Column('int', { name: 'klass_id', nullable: true })
   klassId: number | null;
 
-  @ValidateIf((grade: Grade) => !Boolean(grade.klassId) && Boolean(grade.klassReferenceId), { always: true })
+  @ValidateIf((grade: Grade) => grade.klassReferenceId !== undefined && grade.klassReferenceId !== null, {
+    always: true,
+  })
   @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_klass_reference_id_idx')
   klassReferenceId: number;
@@ -142,7 +151,10 @@ export class Grade implements IHasUserId {
   @Column('int', { name: 'lesson_id', nullable: true })
   lessonId: number;
 
-  @ValidateIf((grade: Grade) => !Boolean(grade.lessonId) && Boolean(grade.lessonReferenceId), { always: true })
+  @ValidateIf((grade: Grade) => grade.lessonReferenceId !== undefined && grade.lessonReferenceId !== null, {
+    always: true,
+  })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_lesson_reference_id_idx')
   lessonReferenceId: number;
@@ -215,6 +227,8 @@ export class Grade implements IHasUserId {
   @JoinColumn({ name: 'klassReferenceId' })
   klass: Klass;
 
+  @IsOptional({ always: true })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('grades_report_group_session_id_idx')
   reportGroupSessionId: number;

@@ -133,6 +133,8 @@ export class Lesson implements IHasUserId {
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })
   teacherId: string;
 
+  @IsOptional({ always: true })
+  @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
   @Index('lessons_teacher_reference_id_idx')
   teacherReferenceId: number;
