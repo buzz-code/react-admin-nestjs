@@ -12,7 +12,7 @@ import { Klass } from 'src/db/entities/Klass.entity';
 import { formatPercent } from '@shared/utils/formatting/formatter.util';
 import { roundAllNumericProperties } from '@shared/utils/reportData.util';
 import { getAsNumberArray } from '@shared/utils/queryParam.util';
-import { ABSENCE_THRESHOLDS } from 'src/utils/absenceThresholds';
+import { ABSENCE_THRESHOLDS, AbsenceThreshold } from 'src/utils/absenceThresholds';
 
 function getConfig(): BaseEntityModuleOptions {
   return {
@@ -197,7 +197,10 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
       }),
     ]);
 
-    const headers: Record<string, { value: string; label: string; numFmt?: string; thresholds?: any }> = {};
+    const headers: Record<
+      string,
+      { value: string; label: string; numFmt?: string; thresholds?: readonly AbsenceThreshold[] }
+    > = {};
     const rawAbs: Record<number, Record<string, number>> = {};
     const rawLessons: Record<number, Record<string, number>> = {};
     const rawKnownAbs: Record<number, Record<string, number>> = {};

@@ -16,8 +16,9 @@ import { Between, In } from 'typeorm';
 
 const SCHEDULE_MATCH_TOLERANCE_MINUTES = 90;
 /**
- * Yemot Handler Service for processing incoming Yemot calls
- * Currently returns a maintenance mode message
+ * Yemot Handler Service for processing incoming Yemot calls.
+ * Hangs up with a maintenance message when configured; otherwise routes to the
+ * manager report status, seminar attendance, or transportation report flow.
  */
 
 @Injectable()
