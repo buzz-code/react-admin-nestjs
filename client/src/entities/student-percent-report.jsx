@@ -1,4 +1,4 @@
-import { DateInput, NumberField, TextField, ReferenceField, useRecordContext, TextInput } from 'react-admin';
+import { NumberField, TextField, ReferenceField, useRecordContext, TextInput } from 'react-admin';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -14,8 +14,6 @@ import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 
 const filters = [
     adminUserFilter,
-    // <DateInput source="reportDate:$gte" label="תאריך דיווח אחרי" alwaysOn />,
-    // <DateInput source="reportDate:$lte" label="תאריך דיווח לפני" alwaysOn />,
     <CommonReferenceInputFilter
         source="studentReferenceId"
         reference="student_by_year"

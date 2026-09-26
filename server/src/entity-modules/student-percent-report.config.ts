@@ -22,7 +22,7 @@ import {
   IGradeEffect,
 } from 'src/utils/studentReportData.util';
 import { getKnownAbsenceFilterBySprAndDates, getReportDataFilterBySprAndDates } from 'src/utils/studentReportData.util';
-import { DataSource, In } from 'typeorm';
+import { DataSource, EntityTarget, FindOptionsWhere, In } from 'typeorm';
 
 function getConfig(): BaseEntityModuleOptions {
   return {
@@ -67,6 +67,13 @@ function getConfig(): BaseEntityModuleOptions {
   };
 }
 
+interface IStudentPercentReportDebug {
+  absCountEffectId: string;
+  gradeEffectId: string;
+  absCountEffect: IGradeEffect;
+  gradeEffect: IGradeEffect;
+}
+
 interface StudentPercentReportWithDates extends StudentPercentReport {
   approvedAbsCount?: number;
   attGradeEffect?: number;
@@ -74,7 +81,7 @@ interface StudentPercentReportWithDates extends StudentPercentReport {
   finalAttendance?: string;
   estimation?: string;
   comments?: string;
-  debug?: any;
+  debug?: IStudentPercentReportDebug;
 }
 class StudentPercentReportService<T extends Entity | StudentPercentReport> extends BaseEntityService<T> {
   protected async populatePivotData(pivotName: string, list: T[], extra: any, filter: any, auth: any) {
@@ -205,9 +212,15 @@ function getGradeEffectId(item: StudentPercentReportWithDates): string {
   return `${item.userId}_${Math.floor(item.attPercents * 100)}`;
 }
 
-function fetchAttGradeEffect(
+interface IEffectViewRow {
+  id: string;
+  effect: number;
+  effectPercent: number;
+}
+
+function fetchAttGradeEffect<T extends IEffectViewRow>(
   dataSource: DataSource,
-  viewEntity: any,
+  viewEntity: EntityTarget<T>,
   ids: string[],
 ): Promise<Record<string, IGradeEffect>> {
   return dataSource
@@ -215,7 +228,7 @@ function fetchAttGradeEffect(
     .find({
       where: {
         id: In(ids),
-      },
+      } as FindOptionsWhere<T>,
       select: ['id', 'effect', 'effectPercent'],
     })
     .then((arr) =>

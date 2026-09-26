@@ -59,8 +59,6 @@ function getConfig(): BaseEntityModuleOptions {
           { value: getHebrewDateFormatter('reportDate'), label: 'תאריך עברי' },
           { value: 'howManyLessons', label: 'מספר שיעורים' },
           { value: 'absCount', label: 'מספר חיסורים' },
-          // { value: 'approvedAbsCount', label: 'מספר חיסורים מאושרים' },
-          // { value: 'sheetName', label: 'חודש דיווח' },
           { value: 'comments', label: 'הערות' },
         ];
         if (!shouldShowTopic(req)) {
@@ -108,7 +106,7 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
 
   @Override()
   async deleteOne(req: CrudRequest<any>): Promise<void | T> {
-    const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
+    const attReportService = this.getAttReportService();
     return attReportService.deleteOne(req) as Promise<void | T>;
   }
 
