@@ -122,9 +122,11 @@ export class YemotHandlerService extends BaseYemotHandlerService {
 
     const schedule = await this.getScheduleForTeacherNow(teacher);
     const scheduledLessonId = schedule?.klassReferenceId === klass.id ? schedule.lessonReferenceId : undefined;
-    const lessonReferenceId = scheduledLessonId ?? (await this.getLessonByInput()).id;
+    const lessonReferenceId = scheduledLessonId ?? (await this.getLessonByInput())?.id;
 
-    const shouldDeletePreviousLesson = await this.askDuplicateLessonChoice(teacher, klass, lessonReferenceId);
+    const shouldDeletePreviousLesson = lessonReferenceId
+      ? await this.askDuplicateLessonChoice(teacher, klass, lessonReferenceId)
+      : false;
 
     const roster = await this.getKlassRoster(klass.id);
     if (roster.length === 0) {
@@ -228,15 +230,17 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     return klass;
   }
 
-  private async getLessonByInput(): Promise<Lesson> {
+  private async getLessonByInput(): Promise<Lesson | null> {
+    const lessonRepo = this.dataSource.getRepository(Lesson);
+    const lessonCount = await lessonRepo.countBy({ userId: this.user.id, year: getCurrentHebrewYear() });
+    if (lessonCount === 0) return null;
+
     let lesson: Lesson = null;
     while (!lesson) {
       const key = await this.askForInputByKey('SEMINAR.LESSON_PROMPT');
-      lesson = await this.dataSource.getRepository(Lesson).findOneBy({
-        userId: this.user.id,
-        key: Number(key),
-        year: getCurrentHebrewYear(),
-      });
+      lesson = /^\d+$/.test(key)
+        ? await lessonRepo.findOneBy({ userId: this.user.id, key: Number(key), year: getCurrentHebrewYear() })
+        : null;
       if (!lesson) {
         await this.sendMessageByKey('SEMINAR.INVALID_LESSON');
       }
