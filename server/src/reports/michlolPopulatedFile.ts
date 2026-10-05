@@ -74,7 +74,7 @@ const getReportData: IGetReportDataFunction = async (
 
       const studentReports = studentReportsMap[studentId] || [];
       const studentKnownAbsences = knownAbsencesMap[studentId] || [];
-      const { attPercents, absCount, approvedAbsCount, gradeAvg, lessonsCount, lastGrade } = calcReportsData(
+      const { attPercents, absCount, approvedAbsCount, lastGrade } = calcReportsData(
         studentReports,
         studentKnownAbsences,
       );

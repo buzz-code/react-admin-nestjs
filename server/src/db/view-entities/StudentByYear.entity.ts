@@ -47,8 +47,4 @@ export class StudentByYear implements IHasUserId {
 
   @Column('simple-array', { nullable: true })
   klassTypeReferenceIds: string[];
-
-  // @ManyToOne(() => Student, { createForeignKeyConstraints: false })
-  // @JoinColumn({ name: 'id' })
-  // student: Student;
 }

@@ -101,7 +101,6 @@ export const useFileProcessor = (setFileName, setPreviewData, setLoading) => {
                 const matched = matchResults.filter((r) => r.matched).length;
                 const notMatched = matchResults.filter((r) => !r.matched).length;
 
-                console.log('Match Results:', matchResults);
                 setPreviewData({
                     total: validRows.length,
                     matched,
