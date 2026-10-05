@@ -12,6 +12,7 @@ import { AttReport } from './db/entities/AttReport.entity';
 import { ReportGroup } from './db/entities/ReportGroup.entity';
 import { ReportGroupSession } from './db/entities/ReportGroupSession.entity';
 import { LessonSchedule } from './db/entities/LessonSchedule.entity';
+import { Lesson } from './db/entities/Lesson.entity';
 import { Between, In } from 'typeorm';
 
 const SCHEDULE_MATCH_TOLERANCE_MINUTES = 90;
@@ -120,7 +121,8 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     await this.sendMessageByKey('SEMINAR.WELCOME', { teacherName: teacher.name });
 
     const schedule = await this.getScheduleForTeacherNow(teacher);
-    const lessonReferenceId = schedule?.klassReferenceId === klass.id ? schedule.lessonReferenceId : undefined;
+    const scheduledLessonId = schedule?.klassReferenceId === klass.id ? schedule.lessonReferenceId : undefined;
+    const lessonReferenceId = scheduledLessonId ?? (await this.getLessonByInput())?.id;
 
     const shouldDeletePreviousLesson = lessonReferenceId
       ? await this.askDuplicateLessonChoice(teacher, klass, lessonReferenceId)
@@ -226,6 +228,24 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       }
     }
     return klass;
+  }
+
+  private async getLessonByInput(): Promise<Lesson | null> {
+    const lessonRepo = this.dataSource.getRepository(Lesson);
+    const lessonCount = await lessonRepo.countBy({ userId: this.user.id, year: getCurrentHebrewYear() });
+    if (lessonCount === 0) return null;
+
+    let lesson: Lesson = null;
+    while (!lesson) {
+      const key = await this.askForInputByKey('SEMINAR.LESSON_PROMPT');
+      lesson = /^\d+$/.test(key)
+        ? await lessonRepo.findOneBy({ userId: this.user.id, key: Number(key), year: getCurrentHebrewYear() })
+        : null;
+      if (!lesson) {
+        await this.sendMessageByKey('SEMINAR.INVALID_LESSON');
+      }
+    }
+    return lesson;
   }
 
   private getIsraelDateString(date: Date): string {
