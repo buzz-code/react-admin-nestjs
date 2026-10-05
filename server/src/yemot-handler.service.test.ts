@@ -20,6 +20,7 @@ const DEPARTURE_PROMPT = /departure.*07:30/i;
 const KLASS_PROMPT = /enter klass number/i;
 const ABSENT_STUDENT_PROMPT = /enter absent student number/i;
 const CONFIRM_STUDENT_PROMPT = /confirm student/i;
+const LESSON_PROMPT = /enter lesson number/i;
 
 // ---- Generic scenario-step primitives — every step below is one of these ----
 
@@ -122,12 +123,33 @@ function confirmsStudentName(builder: YemotScenarioBuilder, studentNumber: strin
   return accept ? answered : answered.systemSends(/name rejected/i);
 }
 
+function entersLesson(builder: YemotScenarioBuilder, lessonKey: string): YemotScenarioBuilder {
+  return ask(builder, LESSON_PROMPT, lessonKey);
+}
+
 function finishAbsentStudentEntry(builder: YemotScenarioBuilder): YemotScenarioBuilder {
   return ask(builder, ABSENT_STUDENT_PROMPT, '0');
 }
 
 describe('YemotHandlerService — react-admin-nestjs', () => {
   const runner = new YemotScenarioRunner(YemotHandlerService as any);
+
+  // Lesson has a MySQL-only generated column (klass_reference_ids_json) that sqlite rejects on
+  // repository save, so seed Lesson rows with a raw insert that skips it.
+  const seedData = (runner as any).seedData.bind(runner);
+  (runner as any).seedData = async (ds: any, seed: Record<string, any[]>) => {
+    const { Lesson: lessons = [], ...rest } = seed;
+    await seedData(ds, rest);
+    for (const lesson of lessons) {
+      await ds.query('INSERT INTO `lessons` (`id`, `user_id`, `key`, `name`, `year`) VALUES (?, ?, ?, ?, ?)', [
+        lesson.id,
+        lesson.userId,
+        lesson.key,
+        lesson.name,
+        lesson.year,
+      ]);
+    }
+  };
 
   beforeEach(() => useFakeDateOnly());
   afterEach(() => jest.useRealTimers());
@@ -295,6 +317,8 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       { userId: 0, name: 'SEMINAR.INVALID_TEACHER_CODE', description: '', value: 'Invalid teacher code, try again' },
       { userId: 0, name: 'SEMINAR.DUPLICATE_LESSON_PROMPT', description: '', value: 'Lesson already reported. Press 1 to add another lesson, 2 to delete the previous' },
       { userId: 0, name: 'SEMINAR.DUPLICATE_LESSON_DELETED', description: '', value: 'Previous report deleted' },
+      { userId: 0, name: 'SEMINAR.LESSON_PROMPT', description: '', value: 'Enter lesson number' },
+      { userId: 0, name: 'SEMINAR.INVALID_LESSON', description: '', value: 'Invalid lesson, try again' },
     ];
     const allTexts = [...baseTexts, ...seminarTexts];
 
@@ -334,7 +358,12 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
     ): YemotScenarioBuilder {
       return teacherSetup(name, {
         permissions,
-        extraSeeds: { Klass: [klass], Student: roster(), StudentKlass: studentKlasses(klass.id, klass.year) },
+        extraSeeds: {
+          Klass: [klass],
+          Student: roster(),
+          StudentKlass: studentKlasses(klass.id, klass.year),
+          Lesson: [{ id: 800, userId: 1, key: 5, name: 'Lesson Five', year: klass.year }],
+        },
       });
     }
 
@@ -361,6 +390,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('ReportGroup', [])
         .seed('ReportGroupSession', []);
       startsSeminarCall(builder, '7', '1');
+      entersLesson(builder, '5');
       confirmsStudentName(builder, '11', true);
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
@@ -398,6 +428,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         .seed('ReportGroup', [])
         .seed('ReportGroupSession', []);
       startsSeminarCall(builder, '8', '1');
+      entersLesson(builder, '5');
       confirmsStudentName(builder, '11', true);
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
@@ -423,6 +454,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       builder.systemSends(/confirmed klass/i);
       entersTeacherCode(builder, '1');
       welcomesTeacher(builder);
+      entersLesson(builder, '5');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -443,6 +475,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
           Klass: [phoneKlass, manualKlass],
           Student: roster(),
           StudentKlass: studentKlasses(282, year),
+          Lesson: [{ id: 800, userId: 1, key: 5, name: 'Lesson Five', year }],
         },
       }).seed('AttReport', []);
       builder.systemSends(/confirmed klass/i);
@@ -450,6 +483,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       entersKlass(builder, '18');
       entersTeacherCode(builder, '1');
       welcomesTeacher(builder);
+      entersLesson(builder, '5');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -469,6 +503,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       askThenReject(builder, TEACHER_CODE_PROMPT, '99', /invalid teacher code/i);
       entersTeacherCode(builder, '1');
       welcomesTeacher(builder);
+      entersLesson(builder, '5');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -486,6 +521,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       entersKlass(builder, '9');
       entersTeacherCode(builder, '1');
       welcomesTeacher(builder);
+      entersLesson(builder, '5');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -500,6 +536,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
 
       const builder = seminarBuilder('Seminar invalid student number retry', klass);
       startsSeminarCall(builder, '10', '1');
+      entersLesson(builder, '5');
       askThenReject(builder, ABSENT_STUDENT_PROMPT, '999', /invalid student number/i);
       confirmsStudentName(builder, '11', true);
       finishAbsentStudentEntry(builder);
@@ -516,6 +553,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
 
       const builder = seminarBuilder('Seminar name confirmation rejected', klass).seed('AttReport', []);
       startsSeminarCall(builder, '15', '1');
+      entersLesson(builder, '5');
       confirmsStudentName(builder, '11', false);
       confirmsStudentName(builder, '12', true);
       finishAbsentStudentEntry(builder);
@@ -542,6 +580,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
           { id: 900, userId: 1, studentReferenceId: 101, klassReferenceId: 240, reportDate: today, absCount: 0 },
         ]);
       startsSeminarCall(builder, '11', '1');
+      entersLesson(builder, '5');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -710,7 +749,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       }
     });
 
-    it('schedule matches teacher but not the resolved klass — lessonReferenceId stays unset', async () => {
+    it('schedule matches teacher but not the resolved klass — asks for lesson number', async () => {
       jest.setSystemTime(israelTimeAt(7, 0));
       const year = getCurrentHebrewYear();
       const klass = { id: 284, userId: 1, key: 20, name: 'Klass Twenty', year };
@@ -731,6 +770,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         ])
         .seed('AttReport', []);
       startsSeminarCall(builder, '20', '1');
+      entersLesson(builder, '5');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -740,17 +780,18 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
 
       expect(result.saved['AttReport']).toHaveLength(3);
       for (const report of result.saved['AttReport']) {
-        expect(report.lessonReferenceId).toBeFalsy();
+        expect(report.lessonReferenceId).toBe(800);
       }
     });
 
-    it('no schedule for teacher today — no lessonReferenceId', async () => {
+    it('no schedule for teacher today — asks for lesson number and sets lessonReferenceId', async () => {
       jest.setSystemTime(israelTimeAt(7, 0));
       const year = getCurrentHebrewYear();
       const klass = { id: 270, userId: 1, key: 14, name: 'Klass Fourteen', year };
 
       const builder = seminarBuilder('Seminar no schedule', klass).seed('AttReport', []);
       startsSeminarCall(builder, '14', '1');
+      entersLesson(builder, '5');
       finishAbsentStudentEntry(builder);
       const scenario = builder.systemHangsUp(/success/i).build();
 
@@ -760,7 +801,72 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
 
       expect(result.saved['AttReport']).toHaveLength(3);
       for (const report of result.saved['AttReport']) {
+        expect(report.lessonReferenceId).toBe(800);
+      }
+    });
+
+    it('invalid lesson number — error message then retry with valid lesson', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 287, userId: 1, key: 23, name: 'Klass Twenty Three', year };
+
+      const builder = seminarBuilder('Seminar invalid lesson retry', klass).seed('AttReport', []);
+      startsSeminarCall(builder, '23', '1');
+      askThenReject(builder, LESSON_PROMPT, '99', /invalid lesson/i);
+      askThenReject(builder, LESSON_PROMPT, '*', /invalid lesson/i);
+      entersLesson(builder, '5');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      for (const report of result.saved['AttReport']) {
+        expect(report.lessonReferenceId).toBe(800);
+      }
+    });
+
+    it('no lessons for current year — skips lesson prompt, saves without lessonReferenceId', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 289, userId: 1, key: 25, name: 'Klass Twenty Five', year };
+
+      const builder = teacherSetup('Seminar no lessons configured', {
+        extraSeeds: { Klass: [klass], Student: roster(), StudentKlass: studentKlasses(289, year) },
+      }).seed('AttReport', []);
+      startsSeminarCall(builder, '25', '1');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.saved['AttReport']).toHaveLength(3);
+      for (const report of result.saved['AttReport']) {
         expect(report.lessonReferenceId).toBeFalsy();
+      }
+    });
+
+    it('typed lesson already reported — asks duplicate question, answering 1 adds another lesson', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 288, userId: 1, key: 24, name: 'Klass Twenty Four', year };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const builder = seminarBuilder('Seminar typed lesson duplicate', klass).seed('AttReport', [
+        { id: 920, userId: 1, studentReferenceId: 101, klassReferenceId: 288, teacherReferenceId: 1, lessonReferenceId: 800, reportDate: today, absCount: 1 },
+      ]);
+      startsSeminarCall(builder, '24', '1');
+      entersLesson(builder, '5');
+      ask(builder, DUPLICATE_LESSON_PROMPT, '1');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.saved['AttReport']).toHaveLength(3);
+      for (const report of result.saved['AttReport']) {
+        expect(report.lessonReferenceId).toBe(800);
+        expect(report.absCount).toBe(0);
       }
     });
 
@@ -769,8 +875,11 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       const year = getCurrentHebrewYear();
       const klass = { id: 250, userId: 1, key: 12, name: 'Klass Twelve', year };
 
-      const builder = teacherSetup('Seminar no students in klass', { extraSeeds: { Klass: [klass] } });
+      const builder = teacherSetup('Seminar no students in klass', {
+        extraSeeds: { Klass: [klass], Lesson: [{ id: 800, userId: 1, key: 5, name: 'Lesson Five', year }] },
+      });
       startsSeminarCall(builder, '12', '1');
+      entersLesson(builder, '5');
       const scenario = builder.systemHangsUp(/no students/i).build();
 
       const result = await runner.run(scenario);
