@@ -16,7 +16,7 @@ import { AttReport } from '../entities/AttReport.entity';
       .addSelect('att_report.lessonReferenceId', 'lessonReferenceId')
       .addSelect('att_report.klassReferenceId', 'klassReferenceId')
       .addSelect(
-        'MIN(MIN(att_report.createdAt)) OVER (PARTITION BY att_report.userId, att_report.teacherReferenceId, att_report.reportDate, att_report.klassReferenceId)',
+        'MIN(att_report.createdAt)',
         'reportHour',
       )
       .addSelect(
