@@ -116,7 +116,7 @@ const TeacherReportCards = ({ isAdmin }) => {
                                                 {group.lessonRows.length > 0 ? (
                                                     group.lessonRows.map((row) => (
                                                         <RecordContextProvider key={row.id} value={row}>
-                                                            <Badge badgeContent={row.missingGirlsCount} color="error" title="מספר בנות שחסרו">
+                                                            <Badge badgeContent={Number(row.missingGirlsCount)} color="error" title="מספר בנות שחסרו">
                                                                 <ReferenceField source="lessonReferenceId" reference="lesson">
                                                                     <ChipField source="name" size="small" color="primary" variant="outlined" />
                                                                 </ReferenceField>
