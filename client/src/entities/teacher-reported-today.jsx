@@ -66,8 +66,8 @@ function groupByKlass(groups) {
 // count when it has no per-lesson breakdown (the "ללא שיוך שיעור" case).
 function getTotalMissingGirls(group) {
     return group.lessonRows.length > 0
-        ? group.lessonRows.reduce((sum, row) => sum + (row.missingGirlsCount || 0), 0)
-        : group.missingGirlsCount || 0;
+        ? group.lessonRows.reduce((sum, row) => sum + (Number(row.missingGirlsCount) || 0), 0)
+        : Number(group.missingGirlsCount) || 0;
 }
 
 const TeacherReportCards = ({ isAdmin }) => {
