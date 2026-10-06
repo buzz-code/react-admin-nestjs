@@ -418,7 +418,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       }
     });
 
-    it('happy path without lessonSignature permission — still creates a ReportGroup/Session', async () => {
+    it('happy path without lessonSignature permission — saves AttReport rows without a report group', async () => {
       jest.setSystemTime(israelTimeAt(7, 0));
       const year = getCurrentHebrewYear();
       const klass = { id: 210, userId: 1, key: 8, name: 'Klass Eight', year };
@@ -438,11 +438,10 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       expect(result.hungup).toBe(true);
 
       expect(result.saved['AttReport']).toHaveLength(3);
-      expect(result.saved['ReportGroup']).toHaveLength(1);
-      expect(result.saved['ReportGroupSession']).toHaveLength(1);
-      const session = result.saved['ReportGroupSession'][0];
+      expect(result.saved['ReportGroup']).toHaveLength(0);
+      expect(result.saved['ReportGroupSession']).toHaveLength(0);
       for (const report of result.saved['AttReport']) {
-        expect(report.reportGroupSessionId).toBe(session.id);
+        expect(report.reportGroupSessionId).toBeFalsy();
       }
     });
 
@@ -733,21 +732,18 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
         expect(reports).toHaveLength(4);
         const freshRows = reports.filter((r: any) => r.lessonReferenceId === 700);
         expect(freshRows.map((r: any) => r.studentReferenceId).sort()).toEqual([101, 102, 103]);
-        const freshSessionId = freshRows[0].reportGroupSessionId;
         for (const report of freshRows) {
           expect(report.absCount).toBe(0);
-          expect(report.reportGroupSessionId).toBe(freshSessionId);
+          expect(report.reportGroupSessionId).toBeFalsy();
         }
         expect(reports.some((r: any) => r.id === 913)).toBe(true);
 
-        // Prior report groups/sessions are left untouched — deleting a duplicate report only
+        // Report groups/sessions are left untouched — deleting a duplicate report only
         // removes AttReport rows, it never cascades into ReportGroup/ReportGroupSession.
-        // The fresh report adds its own group/session.
         const sessions = await repo('ReportGroupSession').find();
-        expect(sessions.map((s: any) => s.id).sort()).toEqual([900, 901, 902, freshSessionId]);
+        expect(sessions.map((s: any) => s.id).sort()).toEqual([900, 901, 902]);
         const groups = await repo('ReportGroup').find();
-        expect(groups).toHaveLength(3);
-        expect(groups.map((g: any) => g.id)).toEqual(expect.arrayContaining([800, 801]));
+        expect(groups.map((g: any) => g.id).sort()).toEqual([800, 801]);
       } finally {
         await ds.destroy();
       }
