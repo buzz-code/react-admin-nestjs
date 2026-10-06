@@ -1,16 +1,9 @@
 import { Column, ViewEntity } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
-import { databaseConfig } from '@shared/config/database.config';
-import { getConcatExpression } from '@shared/utils/entity/column-types.util';
+import { getAddMinutesExpression, getConcatExpression } from '@shared/utils/entity/column-types.util';
 
 // Reports of the same teacher+lesson+klass+date more than this many minutes apart are separate lessons.
 const NEW_LESSON_GAP_MINUTES = 15;
-
-// SQLite (tests) has no INTERVAL arithmetic.
-const isWithinLessonGap = (time: string, previousTime: string) =>
-  databaseConfig.type === 'sqlite'
-    ? `datetime(${time}) <= datetime(${previousTime}, '+${NEW_LESSON_GAP_MINUTES} minutes')`
-    : `${time} <= ${previousTime} + INTERVAL ${NEW_LESSON_GAP_MINUTES} MINUTE`;
 
 const PREVIOUS_REPORT_TIME = `LAG(att_reports.created_at) OVER (
                       PARTITION BY att_reports.user_id, att_reports.teacherReferenceId, att_reports.report_date, att_reports.lessonReferenceId, att_reports.klassReferenceId
@@ -47,7 +40,7 @@ const PREVIOUS_REPORT_TIME = `LAG(att_reports.created_at) OVER (
                att_reports.studentReferenceId AS studentReferenceId,
                att_reports.abs_count AS absCount,
                att_reports.created_at AS createdAt,
-               CASE WHEN ${isWithinLessonGap('att_reports.created_at', PREVIOUS_REPORT_TIME)} THEN 0 ELSE 1 END AS isNewLesson
+               CASE WHEN att_reports.created_at <= ${getAddMinutesExpression(PREVIOUS_REPORT_TIME, NEW_LESSON_GAP_MINUTES)} THEN 0 ELSE 1 END AS isNewLesson
         FROM att_reports
         WHERE att_reports.teacherReferenceId IS NOT NULL
       ) reports
