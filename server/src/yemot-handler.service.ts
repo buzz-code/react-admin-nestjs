@@ -311,27 +311,23 @@ export class YemotHandlerService extends BaseYemotHandlerService {
         });
       }
 
-      let reportGroupSessionId: number | undefined;
+      // Always create a session, so each phone report is its own lesson (teacher_reported_today relies on it).
+      const reportGroup = await manager.getRepository(ReportGroup).save({
+        userId: this.user.id,
+        name: `נוכחות סמינר - ${klass.name}`,
+        topic: 'נוכחות סמינר',
+        teacherReferenceId: teacher.id,
+        klassReferenceId: klass.id,
+        year: getCurrentHebrewYear(),
+      });
 
-      if (hasPermission(this.user, 'lessonSignature')) {
-        const reportGroup = await manager.getRepository(ReportGroup).save({
-          userId: this.user.id,
-          name: `נוכחות סמינר - ${klass.name}`,
-          topic: 'נוכחות סמינר',
-          teacherReferenceId: teacher.id,
-          klassReferenceId: klass.id,
-          year: getCurrentHebrewYear(),
-        });
-
-        const reportGroupSession = await manager.getRepository(ReportGroupSession).save({
-          userId: this.user.id,
-          reportGroupId: reportGroup.id,
-          sessionDate: reportDate,
-          startTime: callTime,
-        });
-
-        reportGroupSessionId = reportGroupSession.id;
-      }
+      const reportGroupSession = await manager.getRepository(ReportGroupSession).save({
+        userId: this.user.id,
+        reportGroupId: reportGroup.id,
+        sessionDate: reportDate,
+        startTime: callTime,
+      });
+      const reportGroupSessionId = reportGroupSession.id;
 
       const rows = roster.map((studentKlass) =>
         attReportRepo.create({
