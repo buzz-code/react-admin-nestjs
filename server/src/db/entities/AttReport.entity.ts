@@ -44,6 +44,7 @@ import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-ty
   {},
 )
 @Index('att_teacher_lesson_date_idx', ['teacherReferenceId', 'lessonReferenceId', 'reportDate'], {})
+@Index('att_user_report_date_idx', ['userId', 'reportDate'], {})
 @Entity('att_reports')
 export class AttReport implements IHasUserId {
   @BeforeInsert()

@@ -29,12 +29,12 @@ const formatHour = (value) => (value ? new Date(value).toLocaleTimeString('he-IL
 
 const NO_KLASS_KEY = 'none';
 
-// The view has one row per teacher+lesson+date+klass; group rows sharing the same
-// teacher+date+klass into a single card, collecting their lesson rows.
+// The view has one row per lesson taught; each lesson gets its own card,
+// so a teacher who taught two lessons shows as two cards.
 function groupByTeacherAndDate(rows) {
     const groups = new Map();
     rows.forEach((row) => {
-        const key = `${row.userId}_${row.teacherReferenceId}_${row.reportDate}_${row.klassReferenceId ?? NO_KLASS_KEY}`;
+        const key = row.id;
         if (!groups.has(key)) {
             groups.set(key, { ...row, lessonRows: [] });
         }
@@ -66,8 +66,8 @@ function groupByKlass(groups) {
 // count when it has no per-lesson breakdown (the "ללא שיוך שיעור" case).
 function getTotalMissingGirls(group) {
     return group.lessonRows.length > 0
-        ? group.lessonRows.reduce((sum, row) => sum + (row.missingGirlsCount || 0), 0)
-        : group.missingGirlsCount || 0;
+        ? group.lessonRows.reduce((sum, row) => sum + (Number(row.missingGirlsCount) || 0), 0)
+        : Number(group.missingGirlsCount) || 0;
 }
 
 const TeacherReportCards = ({ isAdmin }) => {
@@ -116,7 +116,7 @@ const TeacherReportCards = ({ isAdmin }) => {
                                                 {group.lessonRows.length > 0 ? (
                                                     group.lessonRows.map((row) => (
                                                         <RecordContextProvider key={row.id} value={row}>
-                                                            <Badge badgeContent={row.missingGirlsCount} color="error" title="מספר בנות שחסרו">
+                                                            <Badge badgeContent={Number(row.missingGirlsCount)} color="error" title="מספר בנות שחסרו">
                                                                 <ReferenceField source="lessonReferenceId" reference="lesson">
                                                                     <ChipField source="name" size="small" color="primary" variant="outlined" />
                                                                 </ReferenceField>
