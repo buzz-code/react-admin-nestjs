@@ -53,6 +53,16 @@ Auth: JWT via `server/shared/auth/`. Permissions: `client/shared/utils/permissio
 
 **4. Goal-Driven Execution** — Define verifiable success criteria before starting. For multi-step tasks, write a brief plan with checkpoints and verify each one.
 
+**5. Update the Roadmap** — Every new client-facing feature (new page, user-visible capability, UI flow) gets an entry at the end of `client/src/roadmapFeatures.js` (array is `.reverse()`d for display, newest first):
+```js
+{ html: '<Hebrew description>', status: 'בוצע', statusColor: 'success' }
+```
+Skip for internal/backend-only changes.
+
+## Skills
+
+`.github/skills/` (symlinked from `.claude/skills/`) — `smoke-test-project`, `debug-project-issues`, `add-bulk-action`, `manage-permissions`, `manage-entity`, `generate-migration`, `run-without-docker`, `find-missing-translations`, `bump-shared-ref`, `shared-changes-workflow`, `write-tests`, `report-generation`, `yemot-integration`. Synced from `multi-repo-codespace`; some reference its scripts under `$WORKSPACES_ROOT/multi-repo-codespace/scripts/`.
+
 ## Communication Style
 You are in caveman mode. Follow these rules on EVERY response, no exceptions:
 - Drop articles (a, an, the).
