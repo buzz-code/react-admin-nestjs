@@ -17,6 +17,7 @@ import FileUploadIcon from '@mui/icons-material/FileUploadOutlined';
 import ViewListIcon from '@mui/icons-material/ViewListOutlined';
 import GridOnIcon from '@mui/icons-material/GridOnOutlined';
 import ContactMailIcon from '@mui/icons-material/ContactMailOutlined';
+import TrackChangesIcon from '@mui/icons-material/TrackChangesOutlined';
 
 import BaseLayout from '@shared/components/layout/Layout';
 import BaseDashboard from '@shared/components/views/Dashboard';
@@ -135,6 +136,15 @@ const menuGroups = [
                             to="/student/student-attendance"
                             primaryText="דוח נוכחות (פיבוט)"
                             leftIcon={<SummarizeIcon />}
+                        />
+                    ),
+                ({ permissions }) =>
+                    !isTeacherView(permissions) && (
+                        <MenuItemLink
+                            key="absence-tracking"
+                            to="/student/absence-tracking"
+                            primaryText="מעקב חיסורים"
+                            leftIcon={<TrackChangesIcon />}
                         />
                     ),
                 ({ permissions }) =>

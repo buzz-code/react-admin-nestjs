@@ -189,6 +189,10 @@ describe('StudentByYear Config', () => {
         value: '101',
         label: 'Math',
       });
+
+      // Lessons per subject are sent without a header, so the pivot table gets no extra column
+      expect((mockStudents[0] as any).lessons_101).toBe(10);
+      expect(mockStudents[0].headers.map((h) => h.value)).not.toContain('lessons_101');
     });
 
     it('should round StudentAttendanceByKlass numeric results', async () => {
