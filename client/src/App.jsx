@@ -223,7 +223,7 @@ const App = () => (
                         options={{ menuGroup: 'report' }}
                         icon={RuleIcon}
                     />
-                    {isSeminarAttendanceYemot(permissions) && (
+                    {(isSeminarAttendanceYemot(permissions) || isAdmin(permissions)) && (
                         <Resource
                             name="teacher_reported_today"
                             {...teacherReportedToday}

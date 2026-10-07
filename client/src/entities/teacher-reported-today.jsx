@@ -1,5 +1,5 @@
-import { ChipField, DateInput, ReferenceField, RecordContextProvider, TextField, useListContext, usePermissions } from 'react-admin';
-import { Badge, Box, Card, CardContent, Typography } from '@mui/material';
+import { DateInput, ReferenceField, RecordContextProvider, TextField, useListContext, usePermissions } from 'react-admin';
+import { Box, Card, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonList } from '@shared/components/crudContainers/CommonList';
 import { EmptyPage } from '@shared/components/crudContainers/EmptyPage';
@@ -29,112 +29,141 @@ const formatHour = (value) => (value ? new Date(value).toLocaleTimeString('he-IL
 
 const NO_KLASS_KEY = 'none';
 
-// The view has one row per lesson taught; each lesson gets its own card,
-// so a teacher who taught two lessons shows as two cards.
-function groupByTeacherAndDate(rows) {
-    const groups = new Map();
-    rows.forEach((row) => {
-        const key = row.id;
-        if (!groups.has(key)) {
-            groups.set(key, { ...row, lessonRows: [] });
-        }
-        if (row.lessonReferenceId) {
-            groups.get(key).lessonRows.push(row);
-        }
-    });
-    return [...groups.values()];
-}
+// A lesson with this many missing girls or more is highlighted in red; fewer (but some) in orange.
+const HIGH_MISSING_THRESHOLD = 5;
 
-// Split teacher cards into one column per class, so reports are easy to scan by class.
-function groupByKlass(groups) {
-    const columns = new Map();
-    groups.forEach((group) => {
-        const key = group.klassReferenceId ?? NO_KLASS_KEY;
-        if (!columns.has(key)) {
-            columns.set(key, { klassReferenceId: group.klassReferenceId, groups: [] });
+const missingCount = (row) => Number(row.missingGirlsCount) || 0;
+
+const missingPillSx = (count) => ({
+    display: 'inline-block',
+    minWidth: 32,
+    textAlign: 'center',
+    px: 1,
+    borderRadius: 999,
+    fontSize: 14,
+    fontVariantNumeric: 'tabular-nums',
+    ...(count === 0
+        ? { color: 'text.secondary' }
+        : count >= HIGH_MISSING_THRESHOLD
+            ? { bgcolor: '#fde7e6', color: '#a5221a', fontWeight: 'bold' }
+            : { bgcolor: '#fff1dc', color: '#9a4a00', fontWeight: 500 }),
+});
+
+// The view has one row per lesson taught (already sorted by reportHour); group them into one card per class.
+function groupByKlass(rows) {
+    const klasses = new Map();
+    rows.forEach((row) => {
+        // Lessons without a class are grouped per user, so an admin never sees two users' rows in one card.
+        const key = row.klassReferenceId ?? `${NO_KLASS_KEY}_${row.userId}`;
+        if (!klasses.has(key)) {
+            klasses.set(key, { key, klassReferenceId: row.klassReferenceId, userId: row.userId, lessons: [] });
         }
-        columns.get(key).groups.push(group);
+        klasses.get(key).lessons.push(row);
     });
-    return [...columns.values()].sort((a, b) => {
+    return [...klasses.values()].sort((a, b) => {
         if (!a.klassReferenceId) return 1;
         if (!b.klassReferenceId) return -1;
         return a.klassReferenceId - b.klassReferenceId;
     });
 }
 
-// Total missing girls for the whole card: sum across its lessons, or the card's own
-// count when it has no per-lesson breakdown (the "ללא שיוך שיעור" case).
-function getTotalMissingGirls(group) {
-    return group.lessonRows.length > 0
-        ? group.lessonRows.reduce((sum, row) => sum + (Number(row.missingGirlsCount) || 0), 0)
-        : Number(group.missingGirlsCount) || 0;
-}
+const sumMissing = (rows) => rows.reduce((sum, row) => sum + missingCount(row), 0);
+
+const SummaryTiles = ({ rows, klassCount }) => {
+    const tiles = [
+        { label: 'שיעורים שדווחו', value: rows.length },
+        { label: 'כיתות', value: klassCount },
+        { label: 'מורות', value: new Set(rows.map((row) => row.teacherReferenceId)).size },
+        { label: 'סה״כ חסרות', value: sumMissing(rows) },
+    ];
+    return (
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 2, mb: 2 }}>
+            {tiles.map((tile) => (
+                <Card key={tile.label} variant="outlined" sx={{ px: 2.5, py: 2, borderRadius: 3 }}>
+                    <Typography variant="body2" color="text.secondary">{tile.label}</Typography>
+                    <Typography sx={{ fontSize: 32, fontWeight: 'bold', fontVariantNumeric: 'tabular-nums' }}>{tile.value}</Typography>
+                </Card>
+            ))}
+        </Box>
+    );
+};
+
+const LessonRow = ({ row, showDate }) => {
+    const count = missingCount(row);
+    return (
+        <RecordContextProvider value={row}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: showDate ? '96px minmax(0, 1fr) minmax(0, 1fr) 44px' : '48px minmax(0, 1fr) minmax(0, 1fr) 44px', gap: 1.5, alignItems: 'center', px: 2, py: 1.25, borderTop: 1, borderColor: 'divider' }}>
+                <Typography variant="body2" sx={{ fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+                    {showDate && `${formatDate(row.reportDate)} `}{formatHour(row.reportHour)}
+                </Typography>
+                <Typography variant="body2" component="div" sx={{ fontWeight: 500 }}>
+                    {row.lessonReferenceId ? (
+                        <ReferenceField source="lessonReferenceId" reference="lesson" link={false}>
+                            <TextField source="name" />
+                        </ReferenceField>
+                    ) : 'ללא שיוך שיעור'}
+                </Typography>
+                <Typography variant="body2" component="div" color="text.secondary">
+                    <ReferenceField source="teacherReferenceId" reference="teacher" link={false}>
+                        <TextField source="name" />
+                    </ReferenceField>
+                </Typography>
+                <Box component="span" sx={missingPillSx(count)} title="מספר בנות שחסרו">
+                    {count === 0 ? '–' : count}
+                </Box>
+            </Box>
+        </RecordContextProvider>
+    );
+};
 
 const TeacherReportCards = ({ isAdmin }) => {
-    const { data } = useListContext();
-    const groups = groupByTeacherAndDate(data || []);
-    const columns = groupByKlass(groups);
+    const { data, total, filterValues } = useListContext();
+    const rows = data || [];
+    const klasses = groupByKlass(rows);
+    // Show the date on each row unless the filter is a single day.
+    const showDate = !filterValues?.['reportDate:$gte'] || filterValues['reportDate:$gte'] !== filterValues['reportDate:$lte'];
 
     return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, padding: 1, alignItems: 'flex-start', overflowX: 'auto' }}>
-            {columns.map((column) => (
-                <Box key={column.klassReferenceId ?? NO_KLASS_KEY} sx={{ minWidth: 220, flex: '0 0 220px' }}>
-                    <Typography variant="subtitle2" sx={{ marginBottom: 0.5 }}>
-                        {column.klassReferenceId ? (
-                            <RecordContextProvider value={{ klassReferenceId: column.klassReferenceId }}>
-                                <ReferenceField source="klassReferenceId" reference="klass">
-                                    <TextField source="name" />
-                                </ReferenceField>
-                            </RecordContextProvider>
-                        ) : 'ללא כיתה'}
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
-                        {column.groups.map((group) => {
-                            const totalMissingGirls = getTotalMissingGirls(group);
-                            return (
-                                <RecordContextProvider key={group.id} value={group}>
-                                    <Card variant="outlined">
-                                        <CardContent sx={{ p: 1, '&:last-child': { pb: 1 } }}>
-                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 0.5 }}>
-                                                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                                                    <ReferenceField source="teacherReferenceId" reference="teacher">
-                                                        <TextField source="name" />
-                                                    </ReferenceField>
-                                                </Typography>
-                                                {totalMissingGirls > 0 && (
-                                                    <Typography variant="caption" sx={{ color: 'error.main', fontWeight: 'bold' }} title="מספר בנות שחסרו">
-                                                        חסרו {totalMissingGirls}
-                                                    </Typography>
-                                                )}
-                                            </Box>
-                                            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                                                {isAdmin && <ReferenceField source="userId" reference="user" />}
-                                                <Typography variant="caption" color="text.secondary">{formatDate(group.reportDate)}</Typography>
-                                                <Typography variant="caption" color="text.secondary">{formatHour(group.reportHour)}</Typography>
-                                            </Box>
-                                            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', marginTop: 0.5 }}>
-                                                {group.lessonRows.length > 0 ? (
-                                                    group.lessonRows.map((row) => (
-                                                        <RecordContextProvider key={row.id} value={row}>
-                                                            <Badge badgeContent={Number(row.missingGirlsCount)} color="error" title="מספר בנות שחסרו">
-                                                                <ReferenceField source="lessonReferenceId" reference="lesson">
-                                                                    <ChipField source="name" size="small" color="primary" variant="outlined" />
-                                                                </ReferenceField>
-                                                            </Badge>
-                                                        </RecordContextProvider>
-                                                    ))
-                                                ) : (
-                                                    <Typography variant="caption" color="text.secondary">ללא שיוך שיעור</Typography>
-                                                )}
-                                            </Box>
-                                        </CardContent>
-                                    </Card>
+        <Box sx={{ p: 1 }}>
+            {total > rows.length && (
+                <Typography variant="body2" color="warning.dark" sx={{ mb: 1 }}>
+                    מוצגים {rows.length} מתוך {total} שיעורים. צמצמו את טווח התאריכים כדי לראות את כולם.
+                </Typography>
+            )}
+            <SummaryTiles rows={rows} klassCount={klasses.length} />
+            <Box sx={{ columnWidth: 340, columnGap: 2 }}>
+                {klasses.map((klass) => {
+                    const lessonCount = klass.lessons.length;
+                    return (
+                        <Card key={klass.key} variant="outlined" sx={{ breakInside: 'avoid', mb: 2, borderRadius: 3 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 1, px: 2, py: 1.5 }}>
+                                <Typography component="div" sx={{ fontWeight: 'bold', fontSize: 17 }}>
+                                    {klass.klassReferenceId ? (
+                                        <RecordContextProvider value={{ klassReferenceId: klass.klassReferenceId }}>
+                                            <ReferenceField source="klassReferenceId" reference="klass">
+                                                <TextField source="name" sx={{ fontWeight: 'bold', fontSize: 17 }} />
+                                            </ReferenceField>
+                                        </RecordContextProvider>
+                                    ) : 'ללא כיתה'}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {lessonCount === 1 ? 'שיעור אחד' : `${lessonCount} שיעורים`} · חסרו {sumMissing(klass.lessons)}
+                                </Typography>
+                            </Box>
+                            {isAdmin && (
+                                <RecordContextProvider value={{ userId: klass.userId }}>
+                                    <Box sx={{ px: 2, pb: 1 }}>
+                                        <ReferenceField source="userId" reference="user" />
+                                    </Box>
                                 </RecordContextProvider>
-                            );
-                        })}
-                    </Box>
-                </Box>
-            ))}
+                            )}
+                            {klass.lessons.map((row) => (
+                                <LessonRow key={row.id} row={row} showDate={showDate} />
+                            ))}
+                        </Card>
+                    );
+                })}
+            </Box>
         </Box>
     );
 };

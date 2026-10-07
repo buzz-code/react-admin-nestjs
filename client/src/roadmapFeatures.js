@@ -30,6 +30,7 @@ export default [
     { html: 'הוספת דף "צור קשר" לשליחת פנייה עם קבצים מצורפים', status: 'בוצע', statusColor: 'success' },
     { html: 'תשתית משימות רקע: ייצוא נתונים אסינכרוני, תזמונים קבועים וניטור משימות', status: 'בוצע', statusColor: 'success' },
     { html: 'ניקוי אוטומטי של נוכחות שיעור נבחר, לפי כיתה/מסלול לשמירה, בכל מוצאי שבת', status: 'בוצע', statusColor: 'success' },
+    { html: 'עיצוב חדש לדוח המורות שדיווחו: כרטיס לכל כיתה עם שורה לכל שיעור, צביעת מספר החסרות וריבועי סיכום', status: 'בוצע', statusColor: 'success' },
 
     // { html: 'הגדרת תקופת זמן לפי תאריכים', status: 'בקרוב', statusColor: 'warning' },
     // { html: 'הגדרת תקופת זמן לפי יום בשבוע', status: 'בוצע', statusColor: 'success' },
