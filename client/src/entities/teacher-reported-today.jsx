@@ -1,5 +1,6 @@
-import { DateInput, ReferenceField, RecordContextProvider, TextField, useListContext, usePermissions } from 'react-admin';
-import { Box, Card, Typography } from '@mui/material';
+import { useState } from 'react';
+import { DateInput, ReferenceField, RecordContextProvider, TextField, useGetList, useListContext, usePermissions } from 'react-admin';
+import { Box, ButtonBase, Card, CircularProgress, Popover, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonList } from '@shared/components/crudContainers/CommonList';
 import { EmptyPage } from '@shared/components/crudContainers/EmptyPage';
@@ -67,6 +68,70 @@ function groupByKlass(rows) {
     });
 }
 
+// The same subject taught twice in a day shows as two rows; a row's reports end where the next one's begin.
+const nextLessonStart = (row, lessons) => lessons.find((other) =>
+    other.teacherReferenceId === row.teacherReferenceId
+    && other.lessonReferenceId === row.lessonReferenceId
+    && other.reportDate === row.reportDate
+    && other.reportHour > row.reportHour
+)?.reportHour;
+
+const MissingGirlsList = ({ row, until }) => {
+    const filter = {
+        teacherReferenceId: row.teacherReferenceId,
+        klassReferenceId: row.klassReferenceId,
+        lessonReferenceId: row.lessonReferenceId,
+        'reportDate:$eq': row.reportDate,
+        'absCount:$gt': 0,
+        'createdAt:$gte': row.reportHour,
+        ...(until && { 'createdAt:$lt': until }),
+    };
+    const { data, isPending } = useGetList('att_report', { filter, pagination: { page: 1, perPage: 200 }, sort: { field: 'id', order: 'ASC' } });
+    if (isPending) {
+        return <CircularProgress size={20} sx={{ m: 2 }} />;
+    }
+    const studentIds = [...new Set((data || []).map((report) => report.studentReferenceId))];
+    return (
+        <Box component="ol" sx={{ m: 0, py: 1, px: 4, minWidth: 180 }}>
+            {studentIds.map((studentReferenceId) => (
+                <Typography component="li" variant="body2" key={studentReferenceId} sx={{ py: 0.25 }}>
+                    <RecordContextProvider value={{ studentReferenceId }}>
+                        <ReferenceField source="studentReferenceId" reference="student" link={false}>
+                            <TextField source="name" />
+                        </ReferenceField>
+                    </RecordContextProvider>
+                </Typography>
+            ))}
+        </Box>
+    );
+};
+
+// Names are fetched only when the count is clicked, so opening the report stays one query.
+const MissingGirls = ({ row, until }) => {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const count = missingCount(row);
+    if (count === 0) {
+        return <Box component="span" sx={missingPillSx(count)} title="מספר בנות שחסרו">–</Box>;
+    }
+    return (
+        <>
+            <ButtonBase onClick={(event) => setAnchorEl(event.currentTarget)} sx={{ ...missingPillSx(count), cursor: 'pointer' }} title="הצגת שמות הבנות שחסרו">
+                {count}
+            </ButtonBase>
+            <Popover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+            >
+                <Typography variant="subtitle2" sx={{ px: 2, pt: 1.5 }}>בנות שחסרו</Typography>
+                <MissingGirlsList row={row} until={until} />
+            </Popover>
+        </>
+    );
+};
+
 const sumMissing = (rows) => rows.reduce((sum, row) => sum + missingCount(row), 0);
 
 const SummaryTiles = ({ rows, klassCount }) => {
@@ -88,8 +153,7 @@ const SummaryTiles = ({ rows, klassCount }) => {
     );
 };
 
-const LessonRow = ({ row, showDate }) => {
-    const count = missingCount(row);
+const LessonRow = ({ row, showDate, until }) => {
     return (
         <RecordContextProvider value={row}>
             <Box sx={{ display: 'grid', gridTemplateColumns: showDate ? '96px minmax(0, 1fr) minmax(0, 1fr) 44px' : '48px minmax(0, 1fr) minmax(0, 1fr) 44px', gap: 1.5, alignItems: 'center', px: 2, py: 1.25, borderTop: 1, borderColor: 'divider' }}>
@@ -108,9 +172,7 @@ const LessonRow = ({ row, showDate }) => {
                         <TextField source="name" />
                     </ReferenceField>
                 </Typography>
-                <Box component="span" sx={missingPillSx(count)} title="מספר בנות שחסרו">
-                    {count === 0 ? '–' : count}
-                </Box>
+                <MissingGirls row={row} until={until} />
             </Box>
         </RecordContextProvider>
     );
@@ -158,7 +220,7 @@ const TeacherReportCards = ({ isAdmin }) => {
                                 </RecordContextProvider>
                             )}
                             {klass.lessons.map((row) => (
-                                <LessonRow key={row.id} row={row} showDate={showDate} />
+                                <LessonRow key={row.id} row={row} showDate={showDate} until={nextLessonStart(row, klass.lessons)} />
                             ))}
                         </Card>
                     );
