@@ -9,8 +9,8 @@ import {
     useListContext,
     usePermissions,
 } from 'react-admin';
-import { useQueries, useQuery } from '@tanstack/react-query';
-import { Box, Card, CardActionArea, CircularProgress, LinearProgress, TextField as MuiTextField, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { Box, Card, CardActionArea, CircularProgress, TextField as MuiTextField, Typography } from '@mui/material';
 import { CommonList } from '@shared/components/crudContainers/CommonList';
 import { EmptyPage } from '@shared/components/crudContainers/EmptyPage';
 import {
@@ -111,44 +111,22 @@ const fetchBaseKlasses = (dataProvider, rows, year) =>
         })
         .then((result) => result.data);
 
-// The list context holds page 1 (the data provider caps a page at MAX_PAGE_SIZE). Its base classes load first,
-// then the other pages load in parallel, each with its base classes, and show as soon as they arrive.
-// A page is shown only with its base classes, so students never flash under "no class".
-const usePivotPages = () => {
+// Like the pivot table, this shows one page of students (the list context's current page), plus their base classes.
+// The page is shown only with its base classes, so students never flash under "no class".
+const usePivotPage = () => {
     const dataProvider = useDataProvider();
-    const { data, total, filterValues, sort, isPending } = useListContext();
-    const pageCount = Math.ceil((total ?? 0) / MAX_PAGE_SIZE);
+    const { data, total, filterValues, isPending } = useListContext();
     const year = filterValues?.year;
-    const firstKlasses = useQuery({
+    const klasses = useQuery({
         queryKey: ['student_base_klass', 'absence-tracking', year, (data ?? []).map((row) => row.id)],
         enabled: !isPending && !!data?.length,
         queryFn: () => fetchBaseKlasses(dataProvider, data, year),
     });
-    const rest = useQueries({
-        queries: Array.from({ length: Math.max(0, pageCount - 1) }, (_, i) => ({
-            queryKey: [RESOURCE, 'absence-tracking-page', filterValues, sort, i + 2],
-            enabled: !isPending && !firstKlasses.isPending,
-            queryFn: async () => {
-                const { data: rows } = await dataProvider.getList(RESOURCE, {
-                    pagination: { page: i + 2, perPage: MAX_PAGE_SIZE },
-                    sort,
-                    filter: filterValues,
-                });
-                return { rows, klasses: await fetchBaseKlasses(dataProvider, rows, year) };
-            },
-        })),
-        combine: (results) => ({
-            pages: results.map((query) => query.data).filter(Boolean),
-            isLoadingMore: results.some((query) => query.isPending),
-        }),
-    });
-    const firstPage = data?.length && !firstKlasses.isPending ? [{ rows: data, klasses: firstKlasses.data ?? [] }] : [];
-    const pages = [...firstPage, ...rest.pages];
     return {
-        pages,
+        rows: data ?? [],
+        klasses: klasses.data ?? [],
         total: total ?? 0,
-        isPending: isPending || (!!data?.length && firstKlasses.isPending),
-        isLoadingMore: rest.isLoadingMore,
+        isPending: isPending || (!!data?.length && klasses.isPending),
     };
 };
 
@@ -442,7 +420,7 @@ const KlassCard = ({ group, thresholdRatio, lessonHeaders, openIds, onToggle }) 
 };
 
 const AbsenceTrackingView = () => {
-    const { pages, total, isPending, isLoadingMore } = usePivotPages();
+    const { rows, klasses, total, isPending } = usePivotPage();
     const [thresholdInput, setThresholdInput] = useState(readStoredThreshold);
     const [status, setStatus] = useState('');
     const [openIds, setOpenIds] = useState(() => new Set());
@@ -451,9 +429,8 @@ const AbsenceTrackingView = () => {
     const thresholdPercent = parsedThreshold > 0 && parsedThreshold <= 100 ? parsedThreshold : DEFAULT_THRESHOLD_PERCENT;
     const thresholdRatio = thresholdPercent / 100;
 
-    const rows = pages.flatMap((page) => page.rows);
-    const lessonHeaders = getLessonHeaders(pages.map((page) => page.rows));
-    const baseKlassByStudent = Object.fromEntries(pages.flatMap((page) => page.klasses).map((row) => [row.id, row.klassName]));
+    const lessonHeaders = getLessonHeaders([rows]);
+    const baseKlassByStudent = Object.fromEntries(klasses.map((row) => [row.id, row.klassName]));
 
     const allStudents = rows.map((row) => getStudentStats(row, lessonHeaders, thresholdRatio));
     const students = allStudents.filter((s) => s.hasReports);
@@ -489,13 +466,11 @@ const AbsenceTrackingView = () => {
                 <CircularProgress size={28} sx={{ m: 2 }} />
             ) : (
                 <>
-                    {isLoadingMore && (
-                        <Box sx={{ mb: 2 }}>
-                            <Typography variant="body2" color="text.secondary">
-                                נטענו {rows.length} מתוך {total} תלמידות…
-                            </Typography>
-                            <LinearProgress variant="determinate" value={total ? (rows.length / total) * 100 : 0} />
-                        </Box>
+                    {total > rows.length && (
+                        <Typography variant="body2" color="warning.dark" sx={{ mb: 1 }}>
+                            מוצגות {rows.length} מתוך {total} תלמידות, והסיכום מתייחס אליהן בלבד. לדוח של כיתה שלמה בחרי כיתה
+                            במסנן.
+                        </Typography>
                     )}
                     <SummaryTiles
                         students={students}
@@ -543,7 +518,6 @@ const AbsenceTrackingList = () => {
             sort={{ field: 'id', order: 'ASC' }}
             configurable={false}
             perPage={MAX_PAGE_SIZE}
-            pagination={false}
         >
             <AbsenceTrackingView />
         </CommonList>
