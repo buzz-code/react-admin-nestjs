@@ -7,6 +7,7 @@ import { EmptyPage } from '@shared/components/crudContainers/EmptyPage';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 import { filterArrayByParams } from '@shared/utils/filtersUtil';
 import { useIsAdmin } from '@shared/utils/permissionsUtil';
+import { MAX_PAGE_SIZE } from '@shared/config/settings';
 
 // This is a card view, not a table, so cap high rather than paginate at 10 rows.
 const LIST_PAGE_SIZE = 1000;
@@ -86,7 +87,7 @@ const MissingGirlsList = ({ row, until }) => {
         'createdAt:$gte': row.reportHour,
         ...(until && { 'createdAt:$lt': until }),
     };
-    const { data, isPending } = useGetList('att_report', { filter, pagination: { page: 1, perPage: 200 }, sort: { field: 'id', order: 'ASC' } });
+    const { data, isPending } = useGetList('att_report', { filter, pagination: { page: 1, perPage: MAX_PAGE_SIZE }, sort: { field: 'id', order: 'ASC' } });
     if (isPending) {
         return <CircularProgress size={20} sx={{ m: 2 }} />;
     }
