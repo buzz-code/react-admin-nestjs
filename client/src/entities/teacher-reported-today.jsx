@@ -53,9 +53,10 @@ const missingPillSx = (count) => ({
 function groupByKlass(rows) {
     const klasses = new Map();
     rows.forEach((row) => {
-        const key = row.klassReferenceId ?? NO_KLASS_KEY;
+        // Lessons without a class are grouped per user, so an admin never sees two users' rows in one card.
+        const key = row.klassReferenceId ?? `${NO_KLASS_KEY}_${row.userId}`;
         if (!klasses.has(key)) {
-            klasses.set(key, { klassReferenceId: row.klassReferenceId, userId: row.userId, lessons: [] });
+            klasses.set(key, { key, klassReferenceId: row.klassReferenceId, userId: row.userId, lessons: [] });
         }
         klasses.get(key).lessons.push(row);
     });
@@ -116,19 +117,25 @@ const LessonRow = ({ row, showDate }) => {
 };
 
 const TeacherReportCards = ({ isAdmin }) => {
-    const { data } = useListContext();
+    const { data, total, filterValues } = useListContext();
     const rows = data || [];
     const klasses = groupByKlass(rows);
-    const showDate = new Set(rows.map((row) => row.reportDate)).size > 1;
+    // Show the date on each row unless the filter is a single day.
+    const showDate = !filterValues?.['reportDate:$gte'] || filterValues['reportDate:$gte'] !== filterValues['reportDate:$lte'];
 
     return (
         <Box sx={{ p: 1 }}>
+            {total > rows.length && (
+                <Typography variant="body2" color="warning.dark" sx={{ mb: 1 }}>
+                    מוצגים {rows.length} מתוך {total} שיעורים. צמצמו את טווח התאריכים כדי לראות את כולם.
+                </Typography>
+            )}
             <SummaryTiles rows={rows} klassCount={klasses.length} />
             <Box sx={{ columnWidth: 340, columnGap: 2 }}>
                 {klasses.map((klass) => {
                     const lessonCount = klass.lessons.length;
                     return (
-                        <Card key={klass.klassReferenceId ?? NO_KLASS_KEY} variant="outlined" sx={{ breakInside: 'avoid', mb: 2, borderRadius: 3 }}>
+                        <Card key={klass.key} variant="outlined" sx={{ breakInside: 'avoid', mb: 2, borderRadius: 3 }}>
                             <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 1, px: 2, py: 1.5 }}>
                                 <Typography component="div" sx={{ fontWeight: 'bold', fontSize: 17 }}>
                                     {klass.klassReferenceId ? (
