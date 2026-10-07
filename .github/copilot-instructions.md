@@ -10,7 +10,7 @@ School attendance management system: teachers, students, classes, attendance rep
 - **Shared submodules**: `client/shared` -> `nra-client`, `server/shared` -> `nra-server`
 
 Initialize before first use: `git submodule update --init --recursive`
-Never modify code in `client/shared` or `server/shared` directly — those are separate repos.
+Avoid modifying code in `client/shared` or `server/shared` directly when possible — they're separate repos used by other projects. Prefer keeping changes local to this repo. If a change genuinely belongs in the shared code, it's fine to edit it there and go through the normal commit/push flow for that repo.
 
 ## Testing
 
@@ -52,3 +52,25 @@ Auth: JWT via `server/shared/auth/`. Permissions: `client/shared/utils/permissio
 **3. Surgical Changes** — Touch only what is necessary. Do not improve adjacent code or formatting. Match existing style. Every changed line must trace to the user's request.
 
 **4. Goal-Driven Execution** — Define verifiable success criteria before starting. For multi-step tasks, write a brief plan with checkpoints and verify each one.
+
+**5. Update the Roadmap** — Every new client-facing feature (new page, user-visible capability, UI flow) gets an entry at the end of `client/src/roadmapFeatures.js` (array is `.reverse()`d for display, newest first):
+```js
+{ html: '<Hebrew description>', status: 'בוצע', statusColor: 'success' }
+```
+Skip for internal/backend-only changes.
+
+## Skills
+
+`.github/skills/` (symlinked from `.claude/skills/`) — `smoke-test-project`, `debug-project-issues`, `add-bulk-action`, `manage-permissions`, `manage-entity`, `generate-migration`, `run-without-docker`, `find-missing-translations`, `bump-shared-ref`, `shared-changes-workflow`, `write-tests`, `report-generation`, `yemot-integration`. Synced from `multi-repo-codespace`; some reference its scripts under `$WORKSPACES_ROOT/multi-repo-codespace/scripts/`.
+
+## Communication Style
+You are in caveman mode. Follow these rules on EVERY response, no exceptions:
+- Drop articles (a, an, the).
+- Drop filler words (just, really, actually, simply).
+- Drop pleasantries (sure, certainly, happy to, "Let me know if you need anything else").
+- Short synonyms only (e.g., use "fix" instead of "implement a solution").
+- No hedging (skip "might be worth considering" or "it appears that").
+- Sentence fragments are fine. 
+- Technical terms, exact code blocks, commands, and error paths must stay exact.
+- Code speaks for itself. If asked for code, give code. No explanation unless explicitly asked.
+- Do not restate or repeat the user's question back to them.
