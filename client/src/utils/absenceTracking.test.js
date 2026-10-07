@@ -46,12 +46,13 @@ describe('getStudentStats', () => {
 
     it('uses unapproved absences for the ratio and lists subjects with absences', () => {
         const stats = getStudentStats(
-            { id: 1, name: 'שרה', 11: 4, null: 0, total: 6, totalKnownAbsences: 2, totalLessons: 40 },
+            { id: 1, name: 'שרה', 11: 4, lessons_11: 30, null: 0, lessons_null: 10, total: 6, totalKnownAbsences: 2, totalLessons: 40 },
             lessons,
             0.2,
         );
         expect(stats).toMatchObject({ unapproved: 4, approved: 2, lessons: 40, ratio: 0.1, hasReports: true });
-        expect(stats.subjects).toEqual([{ key: '11', name: 'אנגלית', abs: 4 }]);
+        expect(stats.subjects).toEqual([{ key: '11', name: 'אנגלית', abs: 4, lessons: 30 }]);
+        expect(stats.subjectTotals).toHaveLength(2);
         expect(stats.status).toEqual({ key: 'ok', left: 4 });
     });
 
@@ -76,17 +77,22 @@ describe('groupByKlass', () => {
 });
 
 describe('getTopSubject', () => {
-    it('returns the subject behind a large share of absences', () => {
-        const students = [
-            { subjects: [{ name: 'אנגלית', abs: 6 }, { name: 'תנ"ך', abs: 1 }] },
-            { subjects: [{ name: 'אנגלית', abs: 3 }, { name: 'תנ"ך', abs: 2 }] },
-        ];
-        expect(getTopSubject(students)).toEqual({ name: 'אנגלית', abs: 9, share: 0.75 });
+    const st = (...subjects) => ({ subjectTotals: subjects.map(([name, abs, lessons]) => ({ name, abs, lessons })) });
+
+    it('picks the subject by absence rate, not by count', () => {
+        // תנ"ך has more absences (8) but over many lessons; אנגלית has the higher rate.
+        const students = [st(['אנגלית', 3, 10], ['תנ"ך', 4, 60]), st(['אנגלית', 3, 10], ['תנ"ך', 4, 60])];
+        const top = getTopSubject(students);
+        expect(top).toMatchObject({ name: 'אנגלית', abs: 6, lessons: 20, rate: 0.3 });
+        expect(top.classRate).toBeCloseTo(14 / 140);
+        expect(top.times).toBeCloseTo(3);
     });
 
-    it('returns nothing for a single subject or too few absences', () => {
-        expect(getTopSubject([{ subjects: [{ name: 'אנגלית', abs: 9 }] }])).toBeNull();
-        expect(getTopSubject([{ subjects: [{ name: 'אנגלית', abs: 2 }, { name: 'תנ"ך', abs: 1 }] }])).toBeNull();
+    it('returns nothing when no subject stands out, or for too few lessons/absences', () => {
+        expect(getTopSubject([st(['אנגלית', 5, 50], ['תנ"ך', 5, 50])])).toBeNull();
+        expect(getTopSubject([st(['אנגלית', 5, 8], ['תנ"ך', 1, 100])])).toBeNull();
+        expect(getTopSubject([st(['אנגלית', 4, 20], ['תנ"ך', 0, 100])])).toBeNull();
+        expect(getTopSubject([st(['אנגלית', 9, 20])])).toBeNull();
     });
 });
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
     DateInput,
     NullableBooleanInput,
@@ -9,8 +9,8 @@ import {
     useListContext,
     usePermissions,
 } from 'react-admin';
-import { useQuery } from '@tanstack/react-query';
-import { Box, ButtonBase, Card, CircularProgress, TextField as MuiTextField, Typography } from '@mui/material';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import { Box, Card, CardActionArea, CircularProgress, LinearProgress, TextField as MuiTextField, Typography } from '@mui/material';
 import { CommonList } from '@shared/components/crudContainers/CommonList';
 import { EmptyPage } from '@shared/components/crudContainers/EmptyPage';
 import {
@@ -102,56 +102,54 @@ const readStoredThreshold = () => {
     }
 };
 
-const chunk = (items, size) => {
-    const chunks = [];
-    for (let i = 0; i < items.length; i += size) chunks.push(items.slice(i, i + size));
-    return chunks;
-};
+const fetchBaseKlasses = (dataProvider, rows, year) =>
+    dataProvider
+        .getList('student_base_klass', {
+            pagination: { page: 1, perPage: MAX_PAGE_SIZE },
+            sort: { field: 'id', order: 'ASC' },
+            filter: { id: rows.map((row) => row.id), ...(year && { year }) },
+        })
+        .then((result) => result.data);
 
-// The list context holds page 1 (the data provider caps a page at MAX_PAGE_SIZE); fetch the rest.
-const useAllPivotRows = () => {
+// The list context holds page 1 (the data provider caps a page at MAX_PAGE_SIZE). Its base classes load first,
+// then the other pages load in parallel, each with its base classes, and show as soon as they arrive.
+// A page is shown only with its base classes, so students never flash under "no class".
+const usePivotPages = () => {
     const dataProvider = useDataProvider();
     const { data, total, filterValues, sort, isPending } = useListContext();
     const pageCount = Math.ceil((total ?? 0) / MAX_PAGE_SIZE);
-    const { data: restPages, isPending: restPending } = useQuery({
-        queryKey: [RESOURCE, 'absence-tracking-pages', filterValues, sort, pageCount],
-        enabled: !isPending && pageCount > 1,
-        queryFn: () =>
-            Promise.all(
-                Array.from({ length: pageCount - 1 }, (_, i) =>
-                    dataProvider
-                        .getList(RESOURCE, {
-                            pagination: { page: i + 2, perPage: MAX_PAGE_SIZE },
-                            sort,
-                            filter: filterValues,
-                        })
-                        .then((result) => result.data),
-                ),
-            ),
+    const year = filterValues?.year;
+    const firstKlasses = useQuery({
+        queryKey: ['student_base_klass', 'absence-tracking', year, (data ?? []).map((row) => row.id)],
+        enabled: !isPending && !!data?.length,
+        queryFn: () => fetchBaseKlasses(dataProvider, data, year),
     });
-    const pages = useMemo(() => [data ?? [], ...(restPages ?? [])], [data, restPages]);
-    return { pages, isPending: isPending || (pageCount > 1 && restPending) };
-};
-
-const useBaseKlasses = (studentIds, year) => {
-    const dataProvider = useDataProvider();
-    const { data } = useQuery({
-        queryKey: ['student_base_klass', 'absence-tracking', studentIds, year],
-        enabled: studentIds.length > 0,
-        queryFn: () =>
-            Promise.all(
-                chunk(studentIds, MAX_PAGE_SIZE).map((ids) =>
-                    dataProvider
-                        .getList('student_base_klass', {
-                            pagination: { page: 1, perPage: MAX_PAGE_SIZE },
-                            sort: { field: 'id', order: 'ASC' },
-                            filter: { id: ids, ...(year && { year }) },
-                        })
-                        .then((result) => result.data),
-                ),
-            ).then((results) => Object.fromEntries(results.flat().map((row) => [row.id, row.klassName]))),
+    const rest = useQueries({
+        queries: Array.from({ length: Math.max(0, pageCount - 1) }, (_, i) => ({
+            queryKey: [RESOURCE, 'absence-tracking-page', filterValues, sort, i + 2],
+            enabled: !isPending && !firstKlasses.isPending,
+            queryFn: async () => {
+                const { data: rows } = await dataProvider.getList(RESOURCE, {
+                    pagination: { page: i + 2, perPage: MAX_PAGE_SIZE },
+                    sort,
+                    filter: filterValues,
+                });
+                return { rows, klasses: await fetchBaseKlasses(dataProvider, rows, year) };
+            },
+        })),
+        combine: (results) => ({
+            pages: results.map((query) => query.data).filter(Boolean),
+            isLoadingMore: results.some((query) => query.isPending),
+        }),
     });
-    return data ?? {};
+    const firstPage = data?.length && !firstKlasses.isPending ? [{ rows: data, klasses: firstKlasses.data ?? [] }] : [];
+    const pages = [...firstPage, ...rest.pages];
+    return {
+        pages,
+        total: total ?? 0,
+        isPending: isPending || (!!data?.length && firstKlasses.isPending),
+        isLoadingMore: rest.isLoadingMore,
+    };
 };
 
 const ThresholdInput = ({ value, onChange }) => (
@@ -198,25 +196,23 @@ const SummaryTiles = ({ students, noReportsCount, thresholdPercent, status, onSt
                     <Card
                         key={tile.label}
                         variant="outlined"
-                        component={clickable ? ButtonBase : 'div'}
-                        onClick={clickable ? () => onStatusChange(status === tile.key ? '' : tile.key) : undefined}
-                        aria-pressed={clickable ? selected : undefined}
                         sx={{
-                            px: 2.5,
-                            py: 1.5,
                             borderRadius: 3,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'flex-start',
-                            textAlign: 'start',
                             ...(selected && { borderColor: 'primary.main', boxShadow: (theme) => `inset 0 0 0 1px ${theme.palette.primary.main}` }),
                         }}
                     >
-                        <Typography variant="body2" color="text.secondary">{tile.label}</Typography>
-                        <Typography sx={{ fontSize: 30, fontWeight: 'bold', fontVariantNumeric: 'tabular-nums', color: tile.color }}>
-                            {tile.value}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">{tile.hint}</Typography>
+                        <Box
+                            component={clickable ? CardActionArea : 'div'}
+                            onClick={clickable ? () => onStatusChange(status === tile.key ? '' : tile.key) : undefined}
+                            aria-pressed={clickable ? selected : undefined}
+                            sx={{ px: 2.5, py: 1.5, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'start' }}
+                        >
+                            <Typography variant="body2" color="text.secondary">{tile.label}</Typography>
+                            <Typography sx={{ fontSize: 30, fontWeight: 'bold', fontVariantNumeric: 'tabular-nums', color: tile.color }}>
+                                {tile.value}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">{tile.hint}</Typography>
+                        </Box>
                     </Card>
                 );
             })}
@@ -399,7 +395,7 @@ const StudentRow = ({ student, thresholdRatio, lessonHeaders, open, onToggle }) 
             <Box sx={{ minWidth: 0 }}>
                 <Typography variant="body2" sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{student.name}</Typography>
                 <Typography variant="caption" color="text.secondary">
-                    {student.unapproved} חיסורים מתוך {student.lessons} שיעורים{student.approved ? ` · ${student.approved} מאושרים` : ''}
+                    {student.unapproved} לא מאושרים מתוך {student.lessons} שיעורים{student.approved ? ` · ${student.approved} מאושרים` : ''}
                 </Typography>
             </Box>
             <ThresholdMeter student={student} thresholdRatio={thresholdRatio} />
@@ -426,7 +422,8 @@ const KlassCard = ({ group, thresholdRatio, lessonHeaders, openIds, onToggle }) 
                 </Box>
                 {topSubject && (
                     <Typography variant="body2" sx={{ bgcolor: 'action.hover', borderRadius: 2, px: 1.25, py: 0.5 }}>
-                        הכי הרבה חיסורים בכיתה: <b>{topSubject.name}</b> – {topSubject.abs} חיסורים, {Math.round(topSubject.share * 100)}% מכל החיסורים בכיתה
+                        אחוז החיסור הגבוה בכיתה: <b>{topSubject.name}</b> – {formatPercent(topSubject.rate)}, פי{' '}
+                        {topSubject.times.toFixed(1)} מאחוז החיסור הכללי בכיתה ({formatPercent(topSubject.classRate)})
                     </Typography>
                 )}
             </Box>
@@ -445,8 +442,7 @@ const KlassCard = ({ group, thresholdRatio, lessonHeaders, openIds, onToggle }) 
 };
 
 const AbsenceTrackingView = () => {
-    const { filterValues } = useListContext();
-    const { pages, isPending } = useAllPivotRows();
+    const { pages, total, isPending, isLoadingMore } = usePivotPages();
     const [thresholdInput, setThresholdInput] = useState(readStoredThreshold);
     const [status, setStatus] = useState('');
     const [openIds, setOpenIds] = useState(() => new Set());
@@ -455,10 +451,9 @@ const AbsenceTrackingView = () => {
     const thresholdPercent = parsedThreshold > 0 && parsedThreshold <= 100 ? parsedThreshold : DEFAULT_THRESHOLD_PERCENT;
     const thresholdRatio = thresholdPercent / 100;
 
-    const rows = useMemo(() => pages.flat(), [pages]);
-    const lessonHeaders = useMemo(() => getLessonHeaders(pages), [pages]);
-    const studentIds = useMemo(() => rows.map((row) => row.id), [rows]);
-    const baseKlassByStudent = useBaseKlasses(studentIds, filterValues?.year);
+    const rows = pages.flatMap((page) => page.rows);
+    const lessonHeaders = getLessonHeaders(pages.map((page) => page.rows));
+    const baseKlassByStudent = Object.fromEntries(pages.flatMap((page) => page.klasses).map((row) => [row.id, row.klassName]));
 
     const allStudents = rows.map((row) => getStudentStats(row, lessonHeaders, thresholdRatio));
     const students = allStudents.filter((s) => s.hasReports);
@@ -494,6 +489,14 @@ const AbsenceTrackingView = () => {
                 <CircularProgress size={28} sx={{ m: 2 }} />
             ) : (
                 <>
+                    {isLoadingMore && (
+                        <Box sx={{ mb: 2 }}>
+                            <Typography variant="body2" color="text.secondary">
+                                נטענו {rows.length} מתוך {total} תלמידות…
+                            </Typography>
+                            <LinearProgress variant="determinate" value={total ? (rows.length / total) * 100 : 0} />
+                        </Box>
+                    )}
                     <SummaryTiles
                         students={students}
                         noReportsCount={allStudents.length - students.length}

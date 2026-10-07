@@ -43,10 +43,11 @@ export function getStudentStats(row, lessonHeaders, thresholdRatio) {
     const abs = Number(row.total) || 0;
     const approved = Number(row.totalKnownAbsences) || 0;
     const unapproved = Math.max(0, abs - approved);
-    const subjects = [...lessonHeaders.entries()]
-        .map(([key, name]) => ({ key, name, abs: Number(row[key]) || 0 }))
-        .filter((subject) => subject.abs > 0)
-        .sort((a, b) => b.abs - a.abs);
+    // `lessons_<lesson id>` is sent by the pivot without a header, next to the lesson's absence count.
+    const subjectTotals = [...lessonHeaders.entries()]
+        .map(([key, name]) => ({ key, name, abs: Number(row[key]) || 0, lessons: Number(row[`lessons_${key}`]) || 0 }))
+        .filter((subject) => subject.lessons > 0 || subject.abs > 0);
+    const subjects = subjectTotals.filter((subject) => subject.abs > 0).sort((a, b) => b.abs - a.abs);
     return {
         id: row.id,
         name: row.name,
@@ -58,6 +59,7 @@ export function getStudentStats(row, lessonHeaders, thresholdRatio) {
         unapproved,
         ratio: lessons ? unapproved / lessons : 0,
         subjects,
+        subjectTotals,
         status: lessons ? getThresholdStatus(unapproved, lessons, thresholdRatio) : { key: 'ok', left: 0 },
     };
 }
@@ -88,20 +90,30 @@ export function groupByKlass(students, baseKlassByStudent, noKlassLabel) {
     });
 }
 
-// The subject behind an unusually large share of the class's absences, if there is one.
-export function getTopSubject(students, minShare = 0.25, minAbsences = 5) {
+// The subject whose absence rate in the class stands out against the class's rate over all subjects.
+// Rates include approved absences, like the per-subject counts the pivot sends.
+export function getTopSubject(students, { minRatio = 1.5, minLessons = 10, minAbsences = 5 } = {}) {
     const bySubject = new Map();
-    let total = 0;
+    let totalLessons = 0;
+    let totalAbs = 0;
     students.forEach((student) =>
-        student.subjects.forEach((subject) => {
-            bySubject.set(subject.name, (bySubject.get(subject.name) ?? 0) + subject.abs);
-            total += subject.abs;
+        student.subjectTotals.forEach((subject) => {
+            const current = bySubject.get(subject.name) ?? { name: subject.name, abs: 0, lessons: 0 };
+            current.abs += subject.abs;
+            current.lessons += subject.lessons;
+            bySubject.set(subject.name, current);
+            totalLessons += subject.lessons;
+            totalAbs += subject.abs;
         }),
     );
-    if (bySubject.size < 2 || !total) return null;
-    const [name, abs] = [...bySubject.entries()].sort((a, b) => b[1] - a[1])[0];
-    const share = abs / total;
-    return abs >= minAbsences && share >= minShare ? { name, abs, share } : null;
+    if (bySubject.size < 2 || !totalLessons || !totalAbs) return null;
+    const classRate = totalAbs / totalLessons;
+    const top = [...bySubject.values()]
+        .filter((subject) => subject.lessons >= minLessons)
+        .map((subject) => ({ ...subject, rate: subject.abs / subject.lessons }))
+        .sort((a, b) => b.rate - a.rate)[0];
+    if (!top || top.abs < minAbsences || top.rate < classRate * minRatio) return null;
+    return { ...top, classRate, times: top.rate / classRate };
 }
 
 // Per-subject lessons/absences and the list of absence dates, from one student's att_report rows.
