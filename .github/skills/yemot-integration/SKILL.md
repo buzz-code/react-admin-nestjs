@@ -14,7 +14,8 @@ description: Use when working on Yemot (Israeli IVR phone) call flows in any NRA
 Shared code lives in `server/shared/utils/yemot/` (`nra-server`); each project subclasses it.
 
 - **v2 (current) — subclass `BaseYemotHandlerService`.** Each project defines `server/src/yemot-handler.service.ts` extending it and overriding `processCall()`. Inside, `this.call`, `this.user`, `this.logger` are available; branch on `hasPermission(this.user, '<key>')` to route to the right flow. See `react-admin-nestjs/server/src/yemot-handler.service.ts`.
-- The shared router/service (`v2/yemot-router.service.ts`, `yemot.service.ts`) owns call lifecycle: active-call map, step saving, hangup handling, `getUserByDidPhone()`.
+- The shared router (`v2/yemot-router.service.ts`) and call tracker (`v2/yemot-call-tracking.service.ts`) own call lifecycle: active-call map, step saving, hangup handling, `getUserByDidPhone()`.
+- **v1 (legacy, unused) — do not use.** `yemot.module.ts`, `yemot.service.ts`, `chain.interface.ts`, `yemot.util.ts`, `yemot.exception.ts` and the `YemotProcessor`/`YemotRequest`/`YemotResponse` classes in `yemot.interface.ts` are the old chain-based flow. No project wires them; only `FormatString` from `yemot.interface.ts` is still imported. New phone code goes through v2 only.
 - **Permissions:** phone flows are gated by permission keys (e.g. `seminarAttendanceYemot`, `yemotSimulator`). Adding/gating a flow → also use `manage-permissions`.
 
 ## Common tasks
@@ -23,7 +24,7 @@ Shared code lives in `server/shared/utils/yemot/` (`nra-server`); each project s
 
 **Menu texts** live in DB (`YemotCall`/yemot-texts) and are updated via migrations — see the `UpdateYemotTexts*` migrations in `react-admin-nestjs/server/src/migrations/`. Use `generate-migration` for schema/text changes.
 
-**File upload/download to Yemot:** paths must carry the `ivr2:` scheme prefix (a past bug shipped without it). `deleteFile`/`downloadFile` live in the shared yemot util — reuse them, mind the auth and path prefix.
+**File upload/download to Yemot:** paths must carry the `ivr2:` scheme prefix (a past bug shipped without it). `uploadFile`/`downloadFile`/`deleteFile` live in `utils/phone/yemot-api.service.ts` — reuse them, mind the auth and path prefix.
 
 ## Test with the scenario harness (no live phone)
 
