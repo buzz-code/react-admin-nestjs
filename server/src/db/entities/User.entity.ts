@@ -8,18 +8,16 @@ import { Teacher } from 'src/db/entities/Teacher.entity';
 
 @Entity('users')
 export class User extends BaseUser {
-  // @OneToMany(() => Grade, (grades) => grades.user)
+  // Typed only, not mapped: these entities reference the user through a plain
+  // `userId` column, with no TypeORM relation. Adding @OneToMany here would
+  // also require a matching @ManyToOne on each entity.
   grades: Grade[];
 
-  // @OneToMany(() => KlassType, (klassTypes) => klassTypes.user)
   klassTypes: KlassType[];
 
-  // @OneToMany(() => KnownAbsence, (knownAbsences) => knownAbsences.user)
   knownAbsences: KnownAbsence[];
 
-  // @OneToMany(() => Student, (students) => students.user)
   students: Student[];
 
-  // @OneToMany(() => Teacher, (teachers) => teachers.user)
   teachers: Teacher[];
 }
