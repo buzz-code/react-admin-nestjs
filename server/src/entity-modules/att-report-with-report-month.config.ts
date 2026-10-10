@@ -126,7 +126,7 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     return super.doAction(req, body);
   }
 
-  private async bulkChangeKlass(extra: any): Promise<string> {
+  private async bulkChangeKlass(extra: Record<string, string>): Promise<string> {
     const ids = getAsNumberArray(extra.ids);
     if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
     const klassReferenceId = getAsNumber(extra.klassReferenceId);
@@ -135,7 +135,7 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     return `עודכנו ${result.affected} רשומות`;
   }
 
-  private async bulkChangeTeacher(extra: any): Promise<string> {
+  private async bulkChangeTeacher(extra: Record<string, string>): Promise<string> {
     const ids = getAsNumberArray(extra.ids);
     if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
     const teacherReferenceId = getAsNumber(extra.teacherReferenceId);
@@ -144,7 +144,7 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     return `עודכנו ${result.affected} רשומות`;
   }
 
-  private async bulkKnownAbsences(extra: any): Promise<string> {
+  private async bulkKnownAbsences(extra: Record<string, string>): Promise<string> {
     const ids = getAsArray(extra.ids);
     if (!ids) return 'לא נבחרו רשומות';
     const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
@@ -169,7 +169,7 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     return `נוצרו ${reports.length} חיסורים מאושרים`;
   }
 
-  private async fixStudentReferenceV2(extra: any): Promise<string> {
+  private async fixStudentReferenceV2(extra: Record<string, string>): Promise<string> {
     const ids = getAsArray(extra.ids);
     if (!ids) return 'לא נבחרו רשומות';
     const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
@@ -189,7 +189,7 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     return `עודכנו ${reportsToSave.length} רשומות`;
   }
 
-  private async fixReferences(extra: any): Promise<string> {
+  private async fixReferences(extra: Record<string, string>): Promise<string> {
     const ids = getAsNumberArray(extra.ids);
     if (!ids) return 'לא נבחרו רשומות';
     const referenceFields = {

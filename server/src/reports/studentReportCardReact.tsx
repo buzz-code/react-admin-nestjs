@@ -410,7 +410,7 @@ const ReportItem: React.FunctionComponent<ReportItemProps> = ({ reportParams, re
         ציון: ${report.gradeAvg ? report.gradeAvg * 100 : '-'}, השפעה: ${gradeEffect.effectPercent ? gradeEffect.effectPercent + '%' : gradeEffect.effect}, ציון סופי: ${displayGrade}
     `;
 
-    const { fullCellStyle, rightAlignFullCellStyle, emptyCellStyle } = useCellStyles();
+    const { fullCellStyle, rightAlignFullCellStyle } = useCellStyles();
 
     return <tr>
         <td style={rightAlignFullCellStyle}>{formatDisplayName(report.lesson)}</td>

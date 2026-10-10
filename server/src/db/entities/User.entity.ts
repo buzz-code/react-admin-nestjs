@@ -8,18 +8,13 @@ import { Teacher } from 'src/db/entities/Teacher.entity';
 
 @Entity('users')
 export class User extends BaseUser {
-  // @OneToMany(() => Grade, (grades) => grades.user)
   grades: Grade[];
 
-  // @OneToMany(() => KlassType, (klassTypes) => klassTypes.user)
   klassTypes: KlassType[];
 
-  // @OneToMany(() => KnownAbsence, (knownAbsences) => knownAbsences.user)
   knownAbsences: KnownAbsence[];
 
-  // @OneToMany(() => Student, (students) => students.user)
   students: Student[];
 
-  // @OneToMany(() => Teacher, (teachers) => teachers.user)
   teachers: Teacher[];
 }
