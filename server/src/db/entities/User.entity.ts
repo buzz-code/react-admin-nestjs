@@ -8,9 +8,9 @@ import { Teacher } from 'src/db/entities/Teacher.entity';
 
 @Entity('users')
 export class User extends BaseUser {
-  // Inverse sides of the user relations, typed only (no @OneToMany): the owning
-  // side (the `user` field on each entity) defines the relation, and mapping
-  // the inverse here is not needed. Add the decorator if a query must join from user.
+  // Typed only, not mapped: these entities reference the user through a plain
+  // `userId` column, with no TypeORM relation. Adding @OneToMany here would
+  // also require a matching @ManyToOne on each entity.
   grades: Grade[];
 
   klassTypes: KlassType[];
