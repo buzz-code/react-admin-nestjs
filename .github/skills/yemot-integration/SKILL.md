@@ -15,7 +15,7 @@ Shared code lives in `server/shared/utils/yemot/` (`nra-server`); each project s
 
 - **v2 (current) — subclass `BaseYemotHandlerService`.** Each project defines `server/src/yemot-handler.service.ts` extending it and overriding `processCall()`. Inside, `this.call`, `this.user`, `this.logger` are available; branch on `hasPermission(this.user, '<key>')` to route to the right flow. See `react-admin-nestjs/server/src/yemot-handler.service.ts`.
 - The shared router (`v2/yemot-router.service.ts`) and call tracker (`v2/yemot-call-tracking.service.ts`) own call lifecycle: active-call map, step saving, hangup handling, `getUserByDidPhone()`.
-- **v1 (legacy, unused) — do not use.** `yemot.module.ts`, `yemot.service.ts`, `chain.interface.ts`, `yemot.util.ts`, `yemot.exception.ts` and the `YemotProcessor`/`YemotRequest`/`YemotResponse` classes in `yemot.interface.ts` are the old chain-based flow. No project wires them; only `FormatString` from `yemot.interface.ts` is still imported. New phone code goes through v2 only.
+- **v1 (old chain-based `YemotModule`/`YemotService`/`Chain`) — removed from `nra-server`, do not reintroduce.** `yemot.interface.ts` now holds only `FormatString`. All phone code goes through v2.
 - **Permissions:** phone flows are gated by permission keys (e.g. `seminarAttendanceYemot`, `yemotSimulator`). Adding/gating a flow → also use `manage-permissions`.
 
 ## Common tasks
