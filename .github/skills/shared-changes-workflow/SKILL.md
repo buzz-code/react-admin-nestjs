@@ -83,7 +83,7 @@ After the shared PR merges, for each of the 5 projects use `bump-shared-ref`: bu
 
 ### 5. Update the roadmap
 
-If the change is client-facing, add a `roadmapFeatures.js` entry in each affected project (see multi-repo coding guidelines).
+If customers (schools) see the change, add a `roadmapFeatures.js` entry in each affected project (see multi-repo coding guidelines). Skip admin-only screens/features (e.g. the `user` table) — the roadmap is for customers.
 
 ## Rules
 

@@ -57,7 +57,7 @@ Auth: JWT via `server/shared/auth/`. Permissions: `client/shared/utils/permissio
 ```js
 { html: '<Hebrew description>', status: 'בוצע', statusColor: 'success' }
 ```
-Skip for internal/backend-only changes.
+Roadmap is read by customers (schools) — add entry only when customers see the change. Skip for internal/backend-only changes and admin-only screens/features (e.g. `user` table, impersonation, payment flags).
 
 ## Skills
 
