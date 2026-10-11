@@ -427,23 +427,19 @@ export class YemotHandlerService extends BaseYemotHandlerService {
 
   private async createAbsenceRecord(student: Student, transportation: Transportation) {
     const absenceRepo = this.dataSource.getRepository(KnownAbsence);
-    const studentKlass = await this.dataSource.getRepository(StudentKlass).findOneBy({
+    const studentKlasses = await this.dataSource.getRepository(StudentKlass).findBy({
       userId: this.user.id,
       studentReferenceId: student.id,
     });
-    if (!studentKlass) {
+    if (!studentKlasses.length) {
       await this.hangupWithMessageByKey('STUDENT.NO_CLASS');
       return;
     }
     // Transport lateness belongs to the student's morning klass ("בוקר ...") when she has one
-    const studentKlasses = await this.dataSource.getRepository(StudentKlass).findBy({
-      userId: this.user.id,
-      studentReferenceId: student.id,
-      year: getCurrentHebrewYear(),
-    });
     const morningKlass = await this.dataSource.getRepository(Klass).findOneBy({
       userId: this.user.id,
       id: In(studentKlasses.map((sk) => sk.klassReferenceId)),
+      year: getCurrentHebrewYear(),
       name: Like('בוקר%'),
     });
     const newAbsence = absenceRepo.create({
@@ -454,7 +450,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       absnceCount: 1,
       isApproved: true,
       comment: `איחור של הסעה  ${transportation.key}`,
-      klassReferenceId: morningKlass?.id ?? studentKlass.klassReferenceId,
+      klassReferenceId: morningKlass?.id ?? studentKlasses[0].klassReferenceId,
     });
     await absenceRepo.save(newAbsence);
   }
