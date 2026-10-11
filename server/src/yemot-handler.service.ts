@@ -13,7 +13,7 @@ import { ReportGroup } from './db/entities/ReportGroup.entity';
 import { ReportGroupSession } from './db/entities/ReportGroupSession.entity';
 import { LessonSchedule } from './db/entities/LessonSchedule.entity';
 import { Lesson } from './db/entities/Lesson.entity';
-import { Between, In } from 'typeorm';
+import { Between, In, Like } from 'typeorm';
 
 const SCHEDULE_MATCH_TOLERANCE_MINUTES = 90;
 /**
@@ -435,6 +435,17 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       await this.hangupWithMessageByKey('STUDENT.NO_CLASS');
       return;
     }
+    // Transport lateness belongs to the student's morning klass ("בוקר ...") when she has one
+    const studentKlasses = await this.dataSource.getRepository(StudentKlass).findBy({
+      userId: this.user.id,
+      studentReferenceId: student.id,
+      year: getCurrentHebrewYear(),
+    });
+    const morningKlass = await this.dataSource.getRepository(Klass).findOneBy({
+      userId: this.user.id,
+      id: In(studentKlasses.map((sk) => sk.klassReferenceId)),
+      name: Like('בוקר%'),
+    });
     const newAbsence = absenceRepo.create({
       userId: this.user.id,
       studentTz: student.tz,
@@ -443,7 +454,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       absnceCount: 1,
       isApproved: true,
       comment: `איחור של הסעה  ${transportation.key}`,
-      klassReferenceId: studentKlass.klassReferenceId,
+      klassReferenceId: morningKlass?.id ?? studentKlass.klassReferenceId,
     });
     await absenceRepo.save(newAbsence);
   }
