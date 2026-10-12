@@ -116,6 +116,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
         return this.bulkChangeKlass(req.parsed.extra);
       case 'bulkChangeTeacher':
         return this.bulkChangeTeacher(req.parsed.extra);
+      case 'bulkChangeReportDate':
+        return this.bulkChangeReportDate(req.parsed.extra);
       case 'bulkKnownAbsences':
         return this.bulkKnownAbsences(req.parsed.extra);
       case 'fixStudentReferenceV2':
@@ -141,6 +143,15 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     const teacherReferenceId = getAsNumber(extra.teacherReferenceId);
     if (!teacherReferenceId) return 'לא נבחר מורה';
     const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, { teacherReferenceId });
+    return `עודכנו ${result.affected} רשומות`;
+  }
+
+  private async bulkChangeReportDate(extra: Record<string, string>): Promise<string> {
+    const ids = getAsNumberArray(extra.ids);
+    if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
+    const reportDate = getAsDate(extra.reportDate);
+    if (!reportDate) return 'לא נבחר תאריך';
+    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, { reportDate });
     return `עודכנו ${result.affected} רשומות`;
   }
 

@@ -9,11 +9,13 @@ import {
     BooleanInput,
     NullableBooleanInput,
     maxLength,
+    required,
 } from 'react-admin';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import HelpIcon from '@mui/icons-material/Help';
 import ClassIcon from '@mui/icons-material/Class';
 import PersonIcon from '@mui/icons-material/Person';
+import EventIcon from '@mui/icons-material/Event';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -97,6 +99,15 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
             {isAdmin && <CommonYearInput />}
             <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
+        </BulkActionButton>,
+        <BulkActionButton
+            label="שינוי תאריך"
+            icon={<EventIcon />}
+            name="bulkChangeReportDate"
+            key="bulkChangeReportDate"
+            reloadOnEnd
+        >
+            <DateInput source="reportDate" validate={required()} />
         </BulkActionButton>,
         <BulkActionButton label="הוספת חיסורים מאושרים" icon={<PlaylistRemoveIcon />} name="bulkKnownAbsences">
             <DateInput source="reportDate" resource="known_absence" />

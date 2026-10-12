@@ -69,6 +69,7 @@ describe('att-report-with-report-month.config', () => {
         findBy: jest.fn(),
         insert: jest.fn(),
         save: jest.fn(),
+        update: jest.fn().mockResolvedValue({ affected: 2 }),
       };
       mockDataSource = {
         getRepository: jest.fn().mockReturnValue(mockRepo),
@@ -120,6 +121,26 @@ describe('att-report-with-report-month.config', () => {
 
       expect(mockDataSource.getRepository).toHaveBeenCalledWith(AttReport);
       expect(mockBaseCreateMany).toHaveBeenCalledWith(req, dto);
+    });
+
+    it('bulkChangeReportDate should update reportDate of selected reports', async () => {
+      const req = { parsed: { extra: { action: 'bulkChangeReportDate', ids: '1,2', reportDate: '2026-10-11' } } } as any;
+
+      const result = await service.doAction(req, {});
+
+      expect(mockDataSource.getRepository).toHaveBeenCalledWith(AttReport);
+      expect(mockRepo.update).toHaveBeenCalledWith({ id: expect.anything() }, { reportDate: expect.any(Date) });
+      expect(mockRepo.update.mock.calls[0][0].id.value).toEqual([1, 2]);
+      expect(result).toBe('עודכנו 2 רשומות');
+    });
+
+    it('bulkChangeReportDate should not update without a date', async () => {
+      const req = { parsed: { extra: { action: 'bulkChangeReportDate', ids: '1,2' } } } as any;
+
+      const result = await service.doAction(req, {});
+
+      expect(mockRepo.update).not.toHaveBeenCalled();
+      expect(result).toBe('לא נבחר תאריך');
     });
   });
 });
