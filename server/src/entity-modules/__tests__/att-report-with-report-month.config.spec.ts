@@ -123,24 +123,49 @@ describe('att-report-with-report-month.config', () => {
       expect(mockBaseCreateMany).toHaveBeenCalledWith(req, dto);
     });
 
-    it('bulkChangeReportDate should update reportDate of selected reports', async () => {
-      const req = { parsed: { extra: { action: 'bulkChangeReportDate', ids: '1,2', reportDate: '2026-10-11' } } } as any;
+    it('bulkEdit should update only filled fields', async () => {
+      const req = {
+        parsed: {
+          extra: {
+            action: 'bulkEdit',
+            ids: '1,2',
+            reportDate: '2026-10-11',
+            klassReferenceId: '5',
+            teacherReferenceId: 'undefined',
+            lessonReferenceId: 'null',
+            howManyLessons: '',
+            absCount: '0',
+          },
+        },
+      } as any;
 
       const result = await service.doAction(req, {});
 
       expect(mockDataSource.getRepository).toHaveBeenCalledWith(AttReport);
-      expect(mockRepo.update).toHaveBeenCalledWith({ id: expect.anything() }, { reportDate: expect.any(Date) });
+      expect(mockRepo.update).toHaveBeenCalledWith(
+        { id: expect.anything() },
+        { reportDate: new Date('2026-10-11'), klassReferenceId: 5, absCount: 0 },
+      );
       expect(mockRepo.update.mock.calls[0][0].id.value).toEqual([1, 2]);
       expect(result).toBe('עודכנו 2 רשומות');
     });
 
-    it('bulkChangeReportDate should not update without a date', async () => {
-      const req = { parsed: { extra: { action: 'bulkChangeReportDate', ids: '1,2' } } } as any;
+    it('bulkEdit should not update when no field is filled', async () => {
+      const req = { parsed: { extra: { action: 'bulkEdit', ids: '1,2', reportDate: 'null' } } } as any;
 
       const result = await service.doAction(req, {});
 
       expect(mockRepo.update).not.toHaveBeenCalled();
-      expect(result).toBe('לא נבחר תאריך');
+      expect(result).toBe('לא נבחרו שדות לעדכון');
+    });
+
+    it('bulkEdit should reject invalid values', async () => {
+      const req = { parsed: { extra: { action: 'bulkEdit', ids: '1', absCount: 'abc' } } } as any;
+
+      const result = await service.doAction(req, {});
+
+      expect(mockRepo.update).not.toHaveBeenCalled();
+      expect(result).toBe('ערך לא תקין');
     });
   });
 });

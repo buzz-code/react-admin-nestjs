@@ -9,13 +9,13 @@ import {
     BooleanInput,
     NullableBooleanInput,
     maxLength,
-    required,
+    useResourceContext,
+    useStore,
 } from 'react-admin';
+import { useEffect } from 'react';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import HelpIcon from '@mui/icons-material/Help';
-import ClassIcon from '@mui/icons-material/Class';
-import PersonIcon from '@mui/icons-material/Person';
-import EventIcon from '@mui/icons-material/Event';
+import EditIcon from '@mui/icons-material/Edit';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -76,39 +76,37 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
+// Fields left empty are not changed, so the dialog must not reopen with the last submitted values
+const BulkEditButton = (props) => {
+    const resource = useResourceContext();
+    const [cachedValues, setCachedValues] = useStore(`common.BulkRequestButton.${resource}.${props.name}`, {});
+    useEffect(() => {
+        if (Object.keys(cachedValues ?? {}).length) {
+            setCachedValues({});
+        }
+    }, [cachedValues, setCachedValues]);
+    return <BulkActionButton {...props} />;
+};
+
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     const additionalBulkButtons = [
-        <BulkActionButton
-            label="שינוי כיתה"
-            icon={<ClassIcon />}
-            name="bulkChangeKlass"
-            key="bulkChangeKlass"
+        <BulkEditButton
+            label="עריכה מרוכזת"
+            icon={<EditIcon />}
+            name="bulkEdit"
+            key="bulkEdit"
             reloadOnEnd
         >
             {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
             {isAdmin && <CommonYearInput />}
+            <DateInput source="reportDate" />
             <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />
-        </BulkActionButton>,
-        <BulkActionButton
-            label="שינוי מורה"
-            icon={<PersonIcon />}
-            name="bulkChangeTeacher"
-            key="bulkChangeTeacher"
-            reloadOnEnd
-        >
-            {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
-            {isAdmin && <CommonYearInput />}
             <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
-        </BulkActionButton>,
-        <BulkActionButton
-            label="שינוי תאריך"
-            icon={<EventIcon />}
-            name="bulkChangeReportDate"
-            key="bulkChangeReportDate"
-            reloadOnEnd
-        >
-            <DateInput source="reportDate" validate={required()} />
-        </BulkActionButton>,
+            <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} />
+            <NumberInput source="howManyLessons" />
+            <NumberInput source="absCount" />
+            <TextInput source="comments" />
+        </BulkEditButton>,
         <BulkActionButton label="הוספת חיסורים מאושרים" icon={<PlaylistRemoveIcon />} name="bulkKnownAbsences">
             <DateInput source="reportDate" resource="known_absence" />
             <NumberInput source="absnceCount" resource="known_absence" defaultValue={1} />

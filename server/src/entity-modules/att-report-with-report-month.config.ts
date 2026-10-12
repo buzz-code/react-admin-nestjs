@@ -112,12 +112,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
 
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
-      case 'bulkChangeKlass':
-        return this.bulkChangeKlass(req.parsed.extra);
-      case 'bulkChangeTeacher':
-        return this.bulkChangeTeacher(req.parsed.extra);
-      case 'bulkChangeReportDate':
-        return this.bulkChangeReportDate(req.parsed.extra);
+      case 'bulkEdit':
+        return this.bulkEdit(req.parsed.extra);
       case 'bulkKnownAbsences':
         return this.bulkKnownAbsences(req.parsed.extra);
       case 'fixStudentReferenceV2':
@@ -128,30 +124,30 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     return super.doAction(req, body);
   }
 
-  private async bulkChangeKlass(extra: Record<string, string>): Promise<string> {
+  private async bulkEdit(extra: Record<string, string>): Promise<string> {
     const ids = getAsNumberArray(extra.ids);
     if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
-    const klassReferenceId = getAsNumber(extra.klassReferenceId);
-    if (!klassReferenceId) return 'לא נבחרה כיתה';
-    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, { klassReferenceId });
-    return `עודכנו ${result.affected} רשומות`;
-  }
 
-  private async bulkChangeTeacher(extra: Record<string, string>): Promise<string> {
-    const ids = getAsNumberArray(extra.ids);
-    if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
-    const teacherReferenceId = getAsNumber(extra.teacherReferenceId);
-    if (!teacherReferenceId) return 'לא נבחר מורה';
-    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, { teacherReferenceId });
-    return `עודכנו ${result.affected} רשומות`;
-  }
+    const isEmpty = (value: string) => value === undefined || value === 'undefined' || value === 'null' || value === '';
+    const numberFields = ['klassReferenceId', 'teacherReferenceId', 'lessonReferenceId', 'howManyLessons', 'absCount'];
+    const update: Partial<AttReport> = {};
+    for (const field of numberFields) {
+      if (isEmpty(extra[field])) continue;
+      const value = getAsNumber(extra[field]);
+      if (isNaN(value)) return 'ערך לא תקין';
+      update[field] = value;
+    }
+    if (!isEmpty(extra.reportDate)) {
+      const reportDate = getAsDate(extra.reportDate);
+      if (isNaN(reportDate.getTime())) return 'תאריך לא תקין';
+      update.reportDate = reportDate;
+    }
+    if (!isEmpty(extra.comments)) {
+      update.comments = getAsString(extra.comments);
+    }
+    if (Object.keys(update).length === 0) return 'לא נבחרו שדות לעדכון';
 
-  private async bulkChangeReportDate(extra: Record<string, string>): Promise<string> {
-    const ids = getAsNumberArray(extra.ids);
-    if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
-    const reportDate = getAsDate(extra.reportDate);
-    if (!reportDate) return 'לא נבחר תאריך';
-    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, { reportDate });
+    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, update);
     return `עודכנו ${result.affected} רשומות`;
   }
 
