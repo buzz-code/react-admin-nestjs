@@ -10,6 +10,7 @@ import { validateBulk } from '@shared/base-entity/base-entity.util';
 import { fixReferences } from '@shared/utils/entity/fixReference.util';
 import { getHebrewDateFormatter } from '@shared/utils/formatting/formatter.util';
 import { shouldShowTopic } from './att-report.config';
+import { getBulkEditUpdate } from '@shared/utils/entity/bulkEdit.util';
 import {
   getAsArray,
   getAsDate,
@@ -128,23 +129,11 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     const ids = getAsNumberArray(extra.ids);
     if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
 
-    const isEmpty = (value: string) => value === undefined || value === 'undefined' || value === 'null' || value === '';
-    const numberFields = ['klassReferenceId', 'teacherReferenceId', 'lessonReferenceId', 'howManyLessons', 'absCount'];
-    const update: Partial<AttReport> = {};
-    for (const field of numberFields) {
-      if (isEmpty(extra[field])) continue;
-      const value = getAsNumber(extra[field]);
-      if (isNaN(value)) return 'ערך לא תקין';
-      update[field] = value;
-    }
-    if (!isEmpty(extra.reportDate)) {
-      const reportDate = getAsDate(extra.reportDate);
-      if (isNaN(reportDate.getTime())) return 'תאריך לא תקין';
-      update.reportDate = reportDate;
-    }
-    if (!isEmpty(extra.comments)) {
-      update.comments = getAsString(extra.comments);
-    }
+    const update = getBulkEditUpdate(extra, {
+      numbers: ['klassReferenceId', 'teacherReferenceId', 'lessonReferenceId', 'howManyLessons', 'absCount'],
+      dates: ['reportDate'],
+      strings: ['comments'],
+    });
     if (Object.keys(update).length === 0) return 'לא נבחרו שדות לעדכון';
 
     const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, update);

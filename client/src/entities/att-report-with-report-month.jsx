@@ -9,10 +9,7 @@ import {
     BooleanInput,
     NullableBooleanInput,
     maxLength,
-    useResourceContext,
-    useStore,
 } from 'react-admin';
-import { useEffect } from 'react';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import HelpIcon from '@mui/icons-material/Help';
 import EditIcon from '@mui/icons-material/Edit';
@@ -76,26 +73,15 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
-// Fields left empty are not changed, so the dialog must not reopen with the last submitted values
-const BulkEditButton = (props) => {
-    const resource = useResourceContext();
-    const [cachedValues, setCachedValues] = useStore(`common.BulkRequestButton.${resource}.${props.name}`, {});
-    useEffect(() => {
-        if (Object.keys(cachedValues ?? {}).length) {
-            setCachedValues({});
-        }
-    }, [cachedValues, setCachedValues]);
-    return <BulkActionButton {...props} />;
-};
-
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     const additionalBulkButtons = [
-        <BulkEditButton
+        <BulkActionButton
             label="עריכה מרוכזת"
             icon={<EditIcon />}
             name="bulkEdit"
             key="bulkEdit"
             reloadOnEnd
+            cacheValues={false}
         >
             {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
             {isAdmin && <CommonYearInput />}
@@ -106,7 +92,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             <NumberInput source="howManyLessons" />
             <NumberInput source="absCount" />
             <TextInput source="comments" />
-        </BulkEditButton>,
+        </BulkActionButton>,
         <BulkActionButton label="הוספת חיסורים מאושרים" icon={<PlaylistRemoveIcon />} name="bulkKnownAbsences">
             <DateInput source="reportDate" resource="known_absence" />
             <NumberInput source="absnceCount" resource="known_absence" defaultValue={1} />

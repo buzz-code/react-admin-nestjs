@@ -162,10 +162,8 @@ describe('att-report-with-report-month.config', () => {
     it('bulkEdit should reject invalid values', async () => {
       const req = { parsed: { extra: { action: 'bulkEdit', ids: '1', absCount: 'abc' } } } as any;
 
-      const result = await service.doAction(req, {});
-
+      await expect(service.doAction(req, {})).rejects.toThrow('ערך לא תקין');
       expect(mockRepo.update).not.toHaveBeenCalled();
-      expect(result).toBe('ערך לא תקין');
     });
   });
 });
