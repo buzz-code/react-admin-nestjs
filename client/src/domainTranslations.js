@@ -16,6 +16,8 @@ export default {
                 defaultPageSize: 'מספר שורות בטבלה',
                 lateValue: 'שווי איחור',
                 phoneNumber: 'מספר טלפון',
+                mailAddressTitle: 'שם השולח',
+                mailAddressAlias: 'כתובת השולח',
                 yemotApiKey: 'מפתח API של Yemot',
                 managerPhone: 'טלפון מנהלת',
                 dashboardItems: 'הגדרות תמונת מצב',
