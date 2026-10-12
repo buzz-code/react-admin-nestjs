@@ -278,6 +278,53 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
     expect(result.hungup).toBe(true);
   });
 
+  it('morning klass — transport lateness saved on the "בוקר" klass, not the base klass', async () => {
+    jest.setSystemTime(israelTimeAt(7, 0));
+    const year = getCurrentHebrewYear();
+
+    const builder = transportSetup('Morning klass', {
+      studentKlass: { ...defaultStudentKlass, year },
+      extraSeeds: {
+        Klass: [
+          { id: 200, userId: 1, key: 1, name: 'ה1', year },
+          { id: 201, userId: 1, key: 2, name: 'בוקר ה1', year },
+        ],
+        StudentKlass: [
+          { ...defaultStudentKlass, year },
+          { id: 51, userId: 1, studentReferenceId: 100, klassReferenceId: 201, year },
+        ],
+        KnownAbsence: [],
+      },
+    });
+    respondToTz(builder, '123456789');
+    respondToTransport(builder, '5');
+    confirmDeparture(builder, true);
+    const scenario = builder.systemHangsUp(/success/i).build();
+
+    const result = await runner.run(scenario);
+    expect(result.passed).toBe(true);
+    expect(result.saved['KnownAbsence']).toHaveLength(1);
+    expect(result.saved['KnownAbsence'][0].klassReferenceId).toBe(201);
+  });
+
+  it('no morning klass — transport lateness falls back to the student klass', async () => {
+    jest.setSystemTime(israelTimeAt(7, 0));
+    const year = getCurrentHebrewYear();
+
+    const builder = transportSetup('No morning klass', {
+      studentKlass: { ...defaultStudentKlass, year },
+      extraSeeds: { Klass: [{ id: 200, userId: 1, key: 1, name: 'ה1', year }], KnownAbsence: [] },
+    });
+    respondToTz(builder, '123456789');
+    respondToTransport(builder, '5');
+    confirmDeparture(builder, true);
+    const scenario = builder.systemHangsUp(/success/i).build();
+
+    const result = await runner.run(scenario);
+    expect(result.passed).toBe(true);
+    expect(result.saved['KnownAbsence'][0].klassReferenceId).toBe(200);
+  });
+
   it('past deadline — exactly at 8:50, hangup with CLOSED', async () => {
     jest.setSystemTime(israelTimeAt(8, 50));
 
