@@ -62,6 +62,8 @@ Always pass `-p` (pretty-print) so the generated SQL is readable instead of one 
 NODE_ENV=development yarn typeorm:generate src/migrations/YourMigrationName -p
 ```
 
+**Timestamp must be the real current time.** The `<timestamp>` prefix in the file name (and the matching suffix on the class name) must be the actual millisecond epoch at creation — what `typeorm:generate`/`migration:create` write, or `date +%s%3N` when you name a file by hand (e.g. a data-only migration). Never use a rounded/made-up value (`1787100000000`), start-of-today midnight, or `+1` on the previous migration. TypeORM orders migrations by this number, so a fake one can sort before migrations already applied in production and get skipped or run out of order. It must also be greater than every existing migration's timestamp in `server/src/migrations/`.
+
 **Check the generated file for noise.** If an existing entity has an index/column with no explicit name, TypeORM may compute a different auto-generated hash name than what's actually stored in the DB, and your migration will include an unrelated rename alongside your real change. Strip anything not related to what you changed.
 
 ## Step 5: Verify zero diff
