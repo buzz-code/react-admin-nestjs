@@ -17,6 +17,7 @@ import { DashboardItemsInput } from '@shared/components/settings/DashboardItemsI
 import { getLateValue, getDashboardItems, getReportStyles, getReportCardSettings, normalizeReportStyles } from './settingsUtil';
 import { ReportStylesInput } from './ReportStylesInput';
 import { GeneralSettingsInput } from './GeneralSettingsInput';
+import { MailSettingsInput } from './MailSettingsInput';
 import { ReportCardSettingsInput } from './ReportCardSettingsInput';
 import { YemotSettingsInput } from '@shared/components/phone/YemotSettingsInput';
 import { PhoneSettingsInput } from '@shared/components/phone/PhoneSettingsInput';
@@ -42,20 +43,26 @@ export default function Settings() {
         reportStyles: normalizeReportStyles(getReportStyles(identity)),
         reportCardSettings: getReportCardSettings(identity),
         phoneNumber: identity?.phoneNumber ?? '',
+        mailAddressTitle: identity?.mailAddressTitle ?? '',
+        mailAddressAlias: identity?.mailAddressAlias ?? '',
     };
 
-    const handleSave = async ({ phoneNumber, ...values }) => {
+    const handleSave = async ({ phoneNumber, mailAddressTitle, mailAddressAlias, ...values }) => {
         try {
-            await dataProvider.updateSettings({ data: values });
-            if (phoneNumber !== (identity?.phoneNumber ?? '')) {
-                await dataProvider.updateProfile({ data: { phoneNumber } });
+            const profile = Object.fromEntries(
+                Object.entries({ phoneNumber, mailAddressTitle, mailAddressAlias })
+                    .filter(([key, value]) => value !== (identity?.[key] ?? ''))
+            );
+            if (Object.keys(profile).length) {
+                await dataProvider.updateProfile({ data: profile });
             }
+            await dataProvider.updateSettings({ data: values });
             await authProvider.getIdentity(true);
             notify('ההגדרות נשמרו בהצלחה', { type: 'info' });
             navigate('/');
             window.location.reload();
         } catch (e) {
-            notify('שמירה נכשלה', { type: 'error' });
+            notify(e?.status === 400 && e?.message ? e.message : 'שמירה נכשלה', { type: 'error' });
         }
     };
 
@@ -66,6 +73,7 @@ export default function Settings() {
                 <ResourceContextProvider value="settings">
                     <SimpleForm onSubmit={handleSave} defaultValues={defaultValues} toolbar={<SettingsToolbar />}>
                         <GeneralSettingsInput />
+                        <MailSettingsInput />
                         <ReportStylesInput />
                         <ReportCardSettingsInput />
                         <CommonSettingsAccordion
