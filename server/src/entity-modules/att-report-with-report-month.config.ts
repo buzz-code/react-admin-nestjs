@@ -10,6 +10,7 @@ import { validateBulk } from '@shared/base-entity/base-entity.util';
 import { fixReferences } from '@shared/utils/entity/fixReference.util';
 import { getHebrewDateFormatter } from '@shared/utils/formatting/formatter.util';
 import { shouldShowTopic } from './att-report.config';
+import { getBulkEditUpdate } from '@shared/utils/entity/bulkEdit.util';
 import {
   getAsArray,
   getAsDate,
@@ -112,10 +113,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
 
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
-      case 'bulkChangeKlass':
-        return this.bulkChangeKlass(req.parsed.extra);
-      case 'bulkChangeTeacher':
-        return this.bulkChangeTeacher(req.parsed.extra);
+      case 'bulkEdit':
+        return this.bulkEdit(req.parsed.extra);
       case 'bulkKnownAbsences':
         return this.bulkKnownAbsences(req.parsed.extra);
       case 'fixStudentReferenceV2':
@@ -126,21 +125,18 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     return super.doAction(req, body);
   }
 
-  private async bulkChangeKlass(extra: Record<string, string>): Promise<string> {
+  private async bulkEdit(extra: Record<string, string>): Promise<string> {
     const ids = getAsNumberArray(extra.ids);
     if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
-    const klassReferenceId = getAsNumber(extra.klassReferenceId);
-    if (!klassReferenceId) return 'לא נבחרה כיתה';
-    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, { klassReferenceId });
-    return `עודכנו ${result.affected} רשומות`;
-  }
 
-  private async bulkChangeTeacher(extra: Record<string, string>): Promise<string> {
-    const ids = getAsNumberArray(extra.ids);
-    if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
-    const teacherReferenceId = getAsNumber(extra.teacherReferenceId);
-    if (!teacherReferenceId) return 'לא נבחר מורה';
-    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, { teacherReferenceId });
+    const update = getBulkEditUpdate(extra, {
+      numbers: ['klassReferenceId', 'teacherReferenceId', 'lessonReferenceId', 'howManyLessons', 'absCount'],
+      dates: ['reportDate'],
+      strings: ['comments'],
+    });
+    if (Object.keys(update).length === 0) return 'לא נבחרו שדות לעדכון';
+
+    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, update);
     return `עודכנו ${result.affected} רשומות`;
   }
 

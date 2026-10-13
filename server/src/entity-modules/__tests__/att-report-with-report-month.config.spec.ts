@@ -69,6 +69,7 @@ describe('att-report-with-report-month.config', () => {
         findBy: jest.fn(),
         insert: jest.fn(),
         save: jest.fn(),
+        update: jest.fn().mockResolvedValue({ affected: 2 }),
       };
       mockDataSource = {
         getRepository: jest.fn().mockReturnValue(mockRepo),
@@ -120,6 +121,49 @@ describe('att-report-with-report-month.config', () => {
 
       expect(mockDataSource.getRepository).toHaveBeenCalledWith(AttReport);
       expect(mockBaseCreateMany).toHaveBeenCalledWith(req, dto);
+    });
+
+    it('bulkEdit should update only filled fields', async () => {
+      const req = {
+        parsed: {
+          extra: {
+            action: 'bulkEdit',
+            ids: '1,2',
+            reportDate: '2026-10-11',
+            klassReferenceId: '5',
+            teacherReferenceId: 'undefined',
+            lessonReferenceId: 'null',
+            howManyLessons: '',
+            absCount: '0',
+          },
+        },
+      } as any;
+
+      const result = await service.doAction(req, {});
+
+      expect(mockDataSource.getRepository).toHaveBeenCalledWith(AttReport);
+      expect(mockRepo.update).toHaveBeenCalledWith(
+        { id: expect.anything() },
+        { reportDate: new Date('2026-10-11'), klassReferenceId: 5, absCount: 0 },
+      );
+      expect(mockRepo.update.mock.calls[0][0].id.value).toEqual([1, 2]);
+      expect(result).toBe('עודכנו 2 רשומות');
+    });
+
+    it('bulkEdit should not update when no field is filled', async () => {
+      const req = { parsed: { extra: { action: 'bulkEdit', ids: '1,2', reportDate: 'null' } } } as any;
+
+      const result = await service.doAction(req, {});
+
+      expect(mockRepo.update).not.toHaveBeenCalled();
+      expect(result).toBe('לא נבחרו שדות לעדכון');
+    });
+
+    it('bulkEdit should reject invalid values', async () => {
+      const req = { parsed: { extra: { action: 'bulkEdit', ids: '1', absCount: 'abc' } } } as any;
+
+      await expect(service.doAction(req, {})).rejects.toThrow('ערך לא תקין');
+      expect(mockRepo.update).not.toHaveBeenCalled();
     });
   });
 });
