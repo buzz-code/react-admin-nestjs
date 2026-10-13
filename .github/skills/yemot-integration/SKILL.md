@@ -22,7 +22,7 @@ Shared code lives in `server/shared/utils/yemot/` (`nra-server`); each project s
 
 **Add/change a flow:** edit the project's `YemotHandlerService.processCall()` (and its private `process*Call()` helpers). Ask the user (via `this.read/send` helpers on the base) for input, validate, persist. Keep flow-specific logic in the project; only truly shared IVR mechanics go in `nra-server`.
 
-**Menu texts** live in DB (`YemotCall`/yemot-texts) and are updated via migrations — see the `UpdateYemotTexts*` migrations in `react-admin-nestjs/server/src/migrations/`. Use `generate-migration` for schema/text changes.
+**Menu texts** live in DB (`YemotCall`/yemot-texts) and are updated via migrations — see the `UpdateYemotTexts*` migrations in `react-admin-nestjs/server/src/migrations/`. Use `generate-migration` for schema/text changes; a hand-written text migration still needs a real `date +%s%3N` timestamp (see that skill).
 
 **File upload/download to Yemot:** paths must carry the `ivr2:` scheme prefix (a past bug shipped without it). `uploadFile`/`downloadFile`/`deleteFile` live in `utils/phone/yemot-api.service.ts` — reuse them, mind the auth and path prefix.
 
