@@ -139,6 +139,13 @@ describe('StudentByYear Config', () => {
           absCount: 3,
           howManyLessons: 10,
         },
+        {
+          studentReferenceId: 2,
+          lessonReferenceId: 102,
+          lesson: { name: 'Bible', displayName: 'תנ"ך' },
+          absCount: 0,
+          howManyLessons: 5,
+        },
       ];
 
       const mockKnownAbsences = [
@@ -189,6 +196,8 @@ describe('StudentByYear Config', () => {
         value: '101',
         label: 'Math',
       });
+      // A lesson's display name, when set, is the column label
+      expect(mockStudents[0].headers).toContainEqual({ value: '102', label: 'תנ"ך' });
 
       // Lessons per subject are sent without a header, so the pivot table gets no extra column
       expect((mockStudents[0] as any).lessons_101).toBe(10);

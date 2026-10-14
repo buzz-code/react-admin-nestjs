@@ -39,9 +39,7 @@ const dataProvider = {
         return Promise.resolve({ data: [], total: 0 });
     }),
     getOne: jest.fn(() => Promise.resolve({ data: { id: 1 } })),
-    getMany: jest.fn((resource) =>
-        Promise.resolve({ data: resource === 'lesson' ? [{ id: 11, name: 'אנגלית', displayName: 'אנגלית מתקדמת' }, { id: 12, name: 'תנ"ך' }] : [] }),
-    ),
+    getMany: jest.fn(() => Promise.resolve({ data: [] })),
     getManyReference: jest.fn(() => Promise.resolve({ data: [], total: 0 })),
 };
 
@@ -65,5 +63,4 @@ test('shows class cards, threshold status and the student drill-down', async () 
     fireEvent.click(screen.getByText('שרה כהן'));
     expect(await screen.findByText('פירוט לפי מקצוע')).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText('50.0%')).toBeInTheDocument());
-    expect(screen.getAllByText('אנגלית מתקדמת').length).toBeGreaterThan(0);
 });

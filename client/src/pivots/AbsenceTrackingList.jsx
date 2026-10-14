@@ -122,18 +122,11 @@ const usePivotPage = () => {
         enabled: !isPending && !!data?.length,
         queryFn: () => fetchBaseKlasses(dataProvider, data, year),
     });
-    const lessonIds = [...getLessonHeaders([data]).keys()].filter((id) => id !== 'null');
-    const lessons = useQuery({
-        queryKey: ['lesson', 'absence-tracking', lessonIds],
-        enabled: !isPending && !!lessonIds.length,
-        queryFn: () => dataProvider.getMany('lesson', { ids: lessonIds }).then((result) => result.data),
-    });
     return {
         rows: data ?? [],
         klasses: klasses.data ?? [],
-        lessons: lessons.data ?? [],
         total: total ?? 0,
-        isPending: isPending || (!!data?.length && klasses.isPending) || (!!lessonIds.length && lessons.isPending),
+        isPending: isPending || (!!data?.length && klasses.isPending),
     };
 };
 
@@ -427,7 +420,7 @@ const KlassCard = ({ group, thresholdRatio, lessonHeaders, openIds, onToggle }) 
 };
 
 const AbsenceTrackingView = () => {
-    const { rows, klasses, lessons, total, isPending } = usePivotPage();
+    const { rows, klasses, total, isPending } = usePivotPage();
     const [thresholdInput, setThresholdInput] = useState(readStoredThreshold);
     const [status, setStatus] = useState('');
     const [openIds, setOpenIds] = useState(() => new Set());
@@ -437,7 +430,6 @@ const AbsenceTrackingView = () => {
     const thresholdRatio = thresholdPercent / 100;
 
     const lessonHeaders = getLessonHeaders([rows]);
-    lessons.forEach((lesson) => lesson.displayName && lessonHeaders.set(String(lesson.id), lesson.displayName));
     const baseKlassByStudent = Object.fromEntries(klasses.map((row) => [row.id, row.klassDisplayName]));
 
     const allStudents = rows.map((row) => getStudentStats(row, lessonHeaders, thresholdRatio));
