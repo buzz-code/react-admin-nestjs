@@ -24,8 +24,8 @@ const getWeekday = (dateOnly) => new Date(`${dateOnly}T00:00:00Z`).getUTCDay();
 // The day's lessons from the lessonTimes setting, sorted by start time.
 export function getDayPeriods(lessonTimes, dateOnly) {
     const weekday = getWeekday(dateOnly);
-    const group = (lessonTimes || []).find((item) => item?.days?.map(Number).includes(weekday));
-    return (group?.periods || [])
+    const group = lessonTimes.find((item) => Array.isArray(item?.days) && item.days.map(Number).includes(weekday));
+    return (Array.isArray(group?.periods) ? group.periods : [])
         .filter((period) => period?.start && period?.end)
         .map((period) => ({ start: period.start, end: period.end, startMinutes: timeToMinutes(period.start) }))
         .sort((a, b) => a.startMinutes - b.startMinutes)
@@ -44,8 +44,9 @@ const getPeriodIndex = (row, periods) => {
 
 // The class's lessons with an empty slot ({ isGap: true, period, reportDate }) before each reported lesson
 // that comes after one or more unreported lessons of the same day. Nothing is added after the last report of the day.
+// A lesson is placed by the time it was reported, so a report entered late counts for the lesson it was entered in.
 export function withLessonGaps(lessons, lessonTimes) {
-    if (!lessonTimes?.length) {
+    if (!Array.isArray(lessonTimes) || !lessonTimes.length) {
         return lessons;
     }
     const result = [];

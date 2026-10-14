@@ -80,4 +80,16 @@ describe('withLessonGaps', () => {
         const result = withLessonGaps([lesson(1, '2026-10-14T05:10:00Z', '2026-10-14T00:00:00.000Z'), lesson(2, '2026-10-14T06:50:00Z', '2026-10-14T00:00:00.000Z')], lessonTimes);
         expect(result.filter((row) => row.isGap).map((row) => row.period.number)).toEqual([2]);
     });
+
+    it('places a report entered late by the time it was entered', () => {
+        // Lesson 1 at 08:10, lesson 3 at 09:55, then lesson 2 reported late at 10:20 counts as lesson 3.
+        const result = withLessonGaps([lesson(1, '2026-10-14T05:10:00Z'), lesson(2, '2026-10-14T06:55:00Z'), lesson(3, '2026-10-14T07:20:00Z')], lessonTimes);
+        expect(result.map((row) => (row.isGap ? `gap${row.period.number}` : row.id))).toEqual([1, 'gap2', 2, 3]);
+    });
+
+    it('ignores malformed lesson times', () => {
+        const lessons = [lesson(1, '2026-10-14T05:10:00Z'), lesson(2, '2026-10-14T08:20:00Z')];
+        expect(withLessonGaps(lessons, 'bad')).toBe(lessons);
+        expect(withLessonGaps(lessons, [{ days: '3', periods: 'x' }, null])).toEqual(lessons);
+    });
 });

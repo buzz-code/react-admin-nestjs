@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DateInput, ReferenceField, RecordContextProvider, TextField, useGetList, useListContext, usePermissions } from 'react-admin';
+import { DateInput, ReferenceField, RecordContextProvider, TextField, useGetIdentity, useGetList, useListContext, usePermissions } from 'react-admin';
 import { Box, ButtonBase, Card, CircularProgress, Popover, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonList } from '@shared/components/crudContainers/CommonList';
@@ -198,6 +198,7 @@ const GapRow = ({ gap, showDate }) => (
 const TeacherReportCards = ({ isAdmin }) => {
     const { data, total, filterValues } = useListContext();
     const lessonTimes = useLessonTimes();
+    const { identity } = useGetIdentity();
     const rows = data || [];
     const klasses = groupByKlass(rows);
     // Show the date on each row unless the filter is a single day.
@@ -237,7 +238,8 @@ const TeacherReportCards = ({ isAdmin }) => {
                                     </Box>
                                 </RecordContextProvider>
                             )}
-                            {withLessonGaps(klass.lessons, lessonTimes).map((row) => (row.isGap
+                            {/* Lesson times are the viewer's own setting, so an admin sees no gaps in other users' classes. */}
+                            {(identity && Number(klass.userId) === Number(identity.id) ? withLessonGaps(klass.lessons, lessonTimes) : klass.lessons).map((row) => (row.isGap
                                 ? <GapRow key={row.id} gap={row} showDate={showDate} />
                                 : <LessonRow key={row.id} row={row} showDate={showDate} until={nextLessonStart(row, klass.lessons)} />
                             ))}
