@@ -1,9 +1,12 @@
-import { ArrayInput, CheckboxGroupInput, NumberInput, SimpleFormIterator, TextInput, required } from 'react-admin';
+import { ArrayInput, CheckboxGroupInput, NumberInput, SimpleFormIterator, TimeInput, required } from 'react-admin';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { PAGE_SIZE_OPTIONS } from '@shared/config/settings';
 
 const pageSizeOptions = PAGE_SIZE_OPTIONS.map((option) => ({ id: option, name: option }));
+
+// Keep the "HH:mm" string; TimeInput's default parse turns it into a Date.
+const parseTime = (value) => value || null;
 
 const weekdayChoices = [
     { id: 0, name: 'ראשון' },
@@ -42,8 +45,8 @@ export function GeneralSettingsInput() {
                     <CheckboxGroupInput source="days" choices={weekdayChoices} validate={required()} />
                     <ArrayInput source="periods">
                         <SimpleFormIterator inline disableReordering>
-                            <TextInput source="start" type="time" validate={required()} InputLabelProps={{ shrink: true }} />
-                            <TextInput source="end" type="time" validate={required()} InputLabelProps={{ shrink: true }} />
+                            <TimeInput source="start" parse={parseTime} validate={required()} />
+                            <TimeInput source="end" parse={parseTime} validate={required()} />
                         </SimpleFormIterator>
                     </ArrayInput>
                 </SimpleFormIterator>
