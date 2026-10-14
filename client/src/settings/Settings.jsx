@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { getDefaultPageSize } from '@shared/utils/settingsUtil';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 import { DashboardItemsInput } from '@shared/components/settings/DashboardItemsInput';
-import { getLateValue, getDashboardItems, getReportStyles, getReportCardSettings, normalizeReportStyles } from './settingsUtil';
+import { getLateValue, getLessonTimes, getDashboardItems, getReportStyles, getReportCardSettings, normalizeReportStyles } from './settingsUtil';
 import { ReportStylesInput } from './ReportStylesInput';
 import { GeneralSettingsInput } from './GeneralSettingsInput';
 import { MailSettingsInput } from './MailSettingsInput';
@@ -39,6 +39,7 @@ export default function Settings() {
     const defaultValues = {
         defaultPageSize: getDefaultPageSize(identity),
         lateValue: getLateValue(identity),
+        lessonTimes: getLessonTimes(identity),
         dashboardItems: getDashboardItems(identity),
         reportStyles: normalizeReportStyles(getReportStyles(identity)),
         reportCardSettings: getReportCardSettings(identity),
