@@ -15,6 +15,11 @@ export default {
             fields: {
                 defaultPageSize: 'מספר שורות בטבלה',
                 lateValue: 'שווי איחור',
+                lessonTimes: 'זמני שיעורים',
+                'lessonTimes.days': 'ימים',
+                'lessonTimes.periods': 'שיעורים',
+                'lessonTimes.periods.start': 'שעת התחלה',
+                'lessonTimes.periods.end': 'שעת סיום',
                 phoneNumber: 'מספר טלפון',
                 mailAddressTitle: 'שם השולח',
                 mailAddressAlias: 'כתובת השולח',

@@ -8,6 +8,8 @@ import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 import { filterArrayByParams } from '@shared/utils/filtersUtil';
 import { useIsAdmin } from '@shared/utils/permissionsUtil';
 import { MAX_PAGE_SIZE } from '@shared/config/settings';
+import { useLessonTimes } from 'src/settings/settingsUtil';
+import { withLessonGaps } from 'src/utils/lessonGaps';
 
 // This is a card view, not a table, so cap high rather than paginate at 10 rows.
 const LIST_PAGE_SIZE = 1000;
@@ -181,8 +183,23 @@ const LessonRow = ({ row, showDate, until }) => {
     );
 };
 
+// A lesson from the lessonTimes setting that had no report while later lessons that day did.
+const GapRow = ({ gap, showDate }) => (
+    <Box sx={{ px: 2, py: 0.75, borderTop: 1, borderColor: 'divider' }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: showDate ? '96px minmax(0, 1fr)' : '48px minmax(0, 1fr)', gap: 1.5, alignItems: 'center', px: 1, py: 0.5, border: '1px dashed', borderColor: 'text.disabled', borderRadius: 1, color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ fontVariantNumeric: 'tabular-nums' }}>
+                {showDate && `${formatDate(gap.reportDate)} `}{gap.period.start}
+            </Typography>
+            <Typography variant="body2">
+                שיעור {gap.period.number} ({gap.period.start}–{gap.period.end}) לא דווח
+            </Typography>
+        </Box>
+    </Box>
+);
+
 const TeacherReportCards = ({ isAdmin }) => {
     const { data, total, filterValues } = useListContext();
+    const lessonTimes = useLessonTimes();
     const rows = data || [];
     const klasses = groupByKlass(rows);
     // Show the date on each row unless the filter is a single day.
@@ -222,8 +239,9 @@ const TeacherReportCards = ({ isAdmin }) => {
                                     </Box>
                                 </RecordContextProvider>
                             )}
-                            {klass.lessons.map((row) => (
-                                <LessonRow key={row.id} row={row} showDate={showDate} until={nextLessonStart(row, klass.lessons)} />
+                            {(isAdmin ? klass.lessons : withLessonGaps(klass.lessons, lessonTimes)).map((row) => (row.isGap
+                                ? <GapRow key={row.id} gap={row} showDate={showDate} />
+                                : <LessonRow key={row.id} row={row} showDate={showDate} until={nextLessonStart(row, klass.lessons)} />
                             ))}
                         </Card>
                     );

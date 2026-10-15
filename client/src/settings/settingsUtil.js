@@ -9,6 +9,15 @@ export function getLateValue(identity) {
     return identity?.additionalData?.lateValue || 0.3;
 }
 
+export function useLessonTimes() {
+    const { identity } = useGetIdentity();
+    return getLessonTimes(identity);
+}
+
+export function getLessonTimes(identity) {
+    return identity?.additionalData?.lessonTimes || [];
+}
+
 export const useDashboardItems = () => {
     const { identity } = useGetIdentity();
     return getDashboardItems(identity);
