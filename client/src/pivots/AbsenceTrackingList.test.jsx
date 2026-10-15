@@ -28,7 +28,7 @@ const dataProvider = {
             return Promise.resolve({ data: pivotRows, total: pivotRows.length });
         }
         if (resource === 'student_base_klass') {
-            return Promise.resolve({ data: [{ id: 1, klassName: 'א1' }, { id: 2, klassName: 'א1' }], total: 2 });
+            return Promise.resolve({ data: [{ id: 1, klassName: 'א1', klassDisplayName: 'כיתה א1' }, { id: 2, klassName: 'א1', klassDisplayName: 'כיתה א1' }], total: 2 });
         }
         if (resource === 'att_report') {
             return Promise.resolve({
@@ -51,7 +51,7 @@ test('shows class cards, threshold status and the student drill-down', async () 
     );
 
     expect(await screen.findByText('שרה כהן')).toBeInTheDocument();
-    expect(await screen.findByText('א1')).toBeInTheDocument();
+    expect(await screen.findByText('כיתה א1')).toBeInTheDocument();
     // 10 of 40 = 25%, over the default 20% threshold by 2 absences.
     expect(screen.getByText('2 מעל הסף')).toBeInTheDocument();
     expect(screen.getByText('ועוד 1 בלי דיווחים בתקופה')).toBeInTheDocument();

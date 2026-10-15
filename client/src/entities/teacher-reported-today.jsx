@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DateInput, ReferenceField, RecordContextProvider, TextField, useGetList, useListContext, usePermissions } from 'react-admin';
+import { DateInput, FunctionField, ReferenceField, RecordContextProvider, TextField, useGetList, useListContext, usePermissions } from 'react-admin';
 import { Box, ButtonBase, Card, CircularProgress, Popover, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonList } from '@shared/components/crudContainers/CommonList';
@@ -156,6 +156,8 @@ const SummaryTiles = ({ rows, klassCount }) => {
     );
 };
 
+const displayNameOrName = (record) => record.displayName || record.name;
+
 const LessonRow = ({ row, showDate, until }) => {
     return (
         <RecordContextProvider value={row}>
@@ -166,13 +168,13 @@ const LessonRow = ({ row, showDate, until }) => {
                 <Typography variant="body2" component="div" sx={{ fontWeight: 500 }}>
                     {row.lessonReferenceId ? (
                         <ReferenceField source="lessonReferenceId" reference="lesson" link={false}>
-                            <TextField source="name" />
+                            <FunctionField render={displayNameOrName} />
                         </ReferenceField>
                     ) : 'ללא שיוך שיעור'}
                 </Typography>
                 <Typography variant="body2" component="div" color="text.secondary">
                     <ReferenceField source="teacherReferenceId" reference="teacher" link={false}>
-                        <TextField source="name" />
+                        <FunctionField render={displayNameOrName} />
                     </ReferenceField>
                 </Typography>
                 <MissingGirls row={row} until={until} />
@@ -221,7 +223,7 @@ const TeacherReportCards = ({ isAdmin }) => {
                                     {klass.klassReferenceId ? (
                                         <RecordContextProvider value={{ klassReferenceId: klass.klassReferenceId }}>
                                             <ReferenceField source="klassReferenceId" reference="klass">
-                                                <TextField source="name" sx={{ fontWeight: 'bold', fontSize: 17 }} />
+                                                <FunctionField render={displayNameOrName} sx={{ fontWeight: 'bold', fontSize: 17 }} />
                                             </ReferenceField>
                                         </RecordContextProvider>
                                     ) : 'ללא כיתה'}

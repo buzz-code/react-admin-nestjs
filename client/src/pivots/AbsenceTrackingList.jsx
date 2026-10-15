@@ -430,7 +430,7 @@ const AbsenceTrackingView = () => {
     const thresholdRatio = thresholdPercent / 100;
 
     const lessonHeaders = getLessonHeaders([rows]);
-    const baseKlassByStudent = Object.fromEntries(klasses.map((row) => [row.id, row.klassName]));
+    const baseKlassByStudent = Object.fromEntries(klasses.map((row) => [row.id, row.klassDisplayName]));
 
     const allStudents = rows.map((row) => getStudentStats(row, lessonHeaders, thresholdRatio));
     const students = allStudents.filter((s) => s.hasReports);

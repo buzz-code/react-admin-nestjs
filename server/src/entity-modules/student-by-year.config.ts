@@ -98,7 +98,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
 
     pivotData.forEach((item) => {
       const key = `${item.lessonReferenceId}`;
-      headers[key] ??= { value: key, label: `${item.lesson?.name}` };
+      headers[key] ??= { value: key, label: `${item.lesson?.displayName || item.lesson?.name}` };
       studentMap[item.studentReferenceId][key] ??= 0;
       studentMap[item.studentReferenceId][key] += item.absCount;
       // Lessons per subject, without a header: not a column of this pivot, read by the absence tracking page.
