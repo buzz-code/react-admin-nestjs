@@ -77,6 +77,7 @@ const getReportData: IGetReportDataFunction = async (
           studentReferenceId: Not(IsNull()),
           student: {
             id: Not(IsNull()),
+            isActive: true,
           },
         },
         relations: {
