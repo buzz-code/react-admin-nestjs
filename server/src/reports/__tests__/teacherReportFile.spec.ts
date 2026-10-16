@@ -132,6 +132,11 @@ describe('teacherReportFile', () => {
 
       expect(result).toHaveLength(1);
       expect(mockLessonRepo.findBy).toHaveBeenCalledWith({ id: 1, userId: 1 });
+      expect(mockStudentKlassRepo.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ student: expect.objectContaining({ isActive: true }) }),
+        }),
+      );
     });
 
     it('should handle lessons without klassReferenceIds', async () => {
