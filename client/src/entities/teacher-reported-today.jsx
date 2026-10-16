@@ -9,7 +9,7 @@ import { filterArrayByParams } from '@shared/utils/filtersUtil';
 import { useIsAdmin } from '@shared/utils/permissionsUtil';
 import { MAX_PAGE_SIZE } from '@shared/config/settings';
 import { useLessonTimes } from 'src/settings/settingsUtil';
-import { withLessonGaps } from 'src/utils/lessonGaps';
+import { getReportPeriod, withLessonGaps } from 'src/utils/lessonGaps';
 
 // This is a card view, not a table, so cap high rather than paginate at 10 rows.
 const LIST_PAGE_SIZE = 1000;
@@ -158,12 +158,17 @@ const SummaryTiles = ({ rows, klassCount }) => {
 
 const displayNameOrName = (record) => record.displayName || record.name;
 
-const LessonRow = ({ row, showDate, until }) => {
+const LessonRow = ({ row, showDate, until, period }) => {
     return (
         <RecordContextProvider value={row}>
             <Box sx={{ display: 'grid', gridTemplateColumns: showDate ? '96px minmax(0, 1fr) minmax(0, 1fr) 44px' : '48px minmax(0, 1fr) minmax(0, 1fr) 44px', gap: 1.5, alignItems: 'center', px: 2, py: 1.25, borderTop: 1, borderColor: 'divider' }}>
                 <Typography variant="body2" sx={{ fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
                     {showDate && `${formatDate(row.reportDate)} `}{formatHour(row.reportHour)}
+                    {period && (
+                        <Typography component="span" variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                            שיעור {period.number}
+                        </Typography>
+                    )}
                 </Typography>
                 <Typography variant="body2" component="div" sx={{ fontWeight: 500 }}>
                     {row.lessonReferenceId ? (
@@ -241,7 +246,7 @@ const TeacherReportCards = ({ isAdmin }) => {
                             )}
                             {(isAdmin ? klass.lessons : withLessonGaps(klass.lessons, lessonTimes)).map((row) => (row.isGap
                                 ? <GapRow key={row.id} gap={row} showDate={showDate} />
-                                : <LessonRow key={row.id} row={row} showDate={showDate} until={nextLessonStart(row, klass.lessons)} />
+                                : <LessonRow key={row.id} row={row} showDate={showDate} until={nextLessonStart(row, klass.lessons)} period={isAdmin ? undefined : getReportPeriod(row, lessonTimes)} />
                             ))}
                         </Card>
                     );

@@ -42,6 +42,15 @@ const getPeriodIndex = (row, periods) => {
     return periods.findLastIndex((period) => period.startMinutes <= minutes);
 };
 
+// The lesson from the lessonTimes setting that a reported lesson belongs to, if any.
+export function getReportPeriod(row, lessonTimes) {
+    if (!Array.isArray(lessonTimes) || !lessonTimes.length) {
+        return undefined;
+    }
+    const periods = getDayPeriods(lessonTimes, toDateOnly(row.reportDate));
+    return periods[getPeriodIndex(row, periods)];
+}
+
 // The class's lessons with an empty slot ({ isGap: true, period, reportDate }) before each reported lesson
 // that comes after one or more unreported lessons of the same day. Nothing is added after the last report of the day.
 // A lesson is placed by the time it was reported, so a report entered late counts for the lesson it was entered in.

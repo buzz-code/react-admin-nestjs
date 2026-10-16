@@ -1,4 +1,4 @@
-import { getDayPeriods, withLessonGaps } from './lessonGaps';
+import { getDayPeriods, getReportPeriod, withLessonGaps } from './lessonGaps';
 
 // 2026-10-14 is a Wednesday (weekday 3); Israel is UTC+3 on that date.
 const lessonTimes = [
@@ -91,5 +91,18 @@ describe('withLessonGaps', () => {
         const lessons = [lesson(1, '2026-10-14T05:10:00Z'), lesson(2, '2026-10-14T08:20:00Z')];
         expect(withLessonGaps(lessons, 'bad')).toBe(lessons);
         expect(withLessonGaps(lessons, [{ days: '3', periods: 'x' }, null])).toEqual(lessons);
+    });
+});
+
+describe('getReportPeriod', () => {
+    it('returns the lesson a report belongs to', () => {
+        // 09:35 is the break after lesson 2.
+        expect(getReportPeriod(lesson(1, '2026-10-14T06:35:00Z'), lessonTimes)?.number).toBe(2);
+    });
+
+    it('returns nothing without lesson times, before the first lesson, or for a late entry', () => {
+        expect(getReportPeriod(lesson(1, '2026-10-14T05:10:00Z'), [])).toBeUndefined();
+        expect(getReportPeriod(lesson(1, '2026-10-14T04:30:00Z'), lessonTimes)).toBeUndefined();
+        expect(getReportPeriod(lesson(1, '2026-10-14T05:10:00Z', '2026-10-13'), lessonTimes)).toBeUndefined();
     });
 });
