@@ -632,12 +632,6 @@ function filterReports(reports: IExtenedStudentPercentReport[], reportParams: IR
             (reportParams.forceGrades && (report.gradeAvg === undefined || report.gradeAvg === null)) ||
             (reportParams.forceAtt && !report.lessonsCount)
         )
-        // return this only if someone asks for it
-        // }).map(report => {
-        //     return {
-        //         ...report,
-        //         isSpecial: report.lessonsCount && report.lessonsCount * 2 == report.absCount,
-        //     }
     });
 }
 
