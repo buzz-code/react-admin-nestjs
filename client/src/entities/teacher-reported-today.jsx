@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { DateInput, FunctionField, ReferenceField, RecordContextProvider, TextField, useGetList, useListContext, usePermissions } from 'react-admin';
-import { Box, ButtonBase, Card, CircularProgress, Popover, Typography } from '@mui/material';
+import { Alert, Box, ButtonBase, Card, CircularProgress, Popover, Tab, Tabs, Typography } from '@mui/material';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
 import { CommonList } from '@shared/components/crudContainers/CommonList';
 import { EmptyPage } from '@shared/components/crudContainers/EmptyPage';
 import { adminUserFilter } from '@shared/components/fields/PermissionFilter';
 import { filterArrayByParams } from '@shared/utils/filtersUtil';
 import { useIsAdmin } from '@shared/utils/permissionsUtil';
+import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { MAX_PAGE_SIZE } from '@shared/config/settings';
 import { useLessonTimes } from 'src/settings/settingsUtil';
 import { withLessonGaps } from 'src/utils/lessonGaps';
@@ -197,56 +198,121 @@ const GapRow = ({ gap, showDate }) => (
     </Box>
 );
 
+const KlassCard = ({ klass, isAdmin, showDate, lessonTimes }) => {
+    const lessonCount = klass.lessons.length;
+    return (
+        <Card variant="outlined" sx={{ breakInside: 'avoid', mb: 2, borderRadius: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 1, px: 2, py: 1.5 }}>
+                <Typography component="div" sx={{ fontWeight: 'bold', fontSize: 17 }}>
+                    {klass.klassReferenceId ? (
+                        <RecordContextProvider value={{ klassReferenceId: klass.klassReferenceId }}>
+                            <ReferenceField source="klassReferenceId" reference="klass">
+                                <FunctionField render={displayNameOrName} sx={{ fontWeight: 'bold', fontSize: 17 }} />
+                            </ReferenceField>
+                        </RecordContextProvider>
+                    ) : 'ללא כיתה'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    {lessonCount === 1 ? 'שיעור אחד' : `${lessonCount} שיעורים`} · חסרו {sumMissing(klass.lessons)}
+                </Typography>
+            </Box>
+            {isAdmin && (
+                <RecordContextProvider value={{ userId: klass.userId }}>
+                    <Box sx={{ px: 2, pb: 1 }}>
+                        <ReferenceField source="userId" reference="user" />
+                    </Box>
+                </RecordContextProvider>
+            )}
+            {(isAdmin ? klass.lessons : withLessonGaps(klass.lessons, lessonTimes)).map((row) => (row.isGap
+                ? <GapRow key={row.id} gap={row} showDate={showDate} />
+                : <LessonRow key={row.id} row={row} showDate={showDate} until={nextLessonStart(row, klass.lessons)} />
+            ))}
+        </Card>
+    );
+};
+
+const KlassCards = ({ rows, isAdmin, showDate, lessonTimes }) => (
+    <Box sx={{ columnWidth: 340, columnGap: 2 }}>
+        {groupByKlass(rows).map((klass) => (
+            <KlassCard key={klass.key} klass={klass} isAdmin={isAdmin} showDate={showDate} lessonTimes={lessonTimes} />
+        ))}
+    </Box>
+);
+
+const ALL_GRADES = 'all';
+
+// Tabs come from the grades of the current year's classes.
+const useCurrentYearGrades = () => {
+    const { data } = useGetList('klass', {
+        filter: { year: defaultYearFilter.year },
+        pagination: { page: 1, perPage: MAX_PAGE_SIZE },
+        sort: { field: 'grade', order: 'ASC' },
+    });
+    return [...new Set((data || []).map((klass) => klass.grade).filter(Boolean))];
+};
+
+const GradeSection = ({ title, children }) => (
+    <Box sx={{ mb: 2 }}>
+        <Typography variant="h6" sx={{ mb: 1 }}>{title}</Typography>
+        {children}
+    </Box>
+);
+
 const TeacherReportCards = ({ isAdmin }) => {
     const { data, total, filterValues } = useListContext();
     const lessonTimes = useLessonTimes();
-    const rows = data || [];
-    const klasses = groupByKlass(rows);
+    const grades = useCurrentYearGrades();
+    const [selectedGrade, setSelectedGrade] = useState(ALL_GRADES);
+    const allRows = data || [];
+    const rows = selectedGrade === ALL_GRADES ? allRows : allRows.filter((row) => row.grade === selectedGrade);
     // Show the date on each row unless the filter is a single day.
     const showDate = !filterValues?.['reportDate:$gte'] || filterValues['reportDate:$gte'] !== filterValues['reportDate:$lte'];
+    const cardProps = { isAdmin, showDate, lessonTimes };
+
+    // A report range can include grades no longer used this year; still show them in the split view.
+    const sectionGrades = [...new Set([...grades, ...allRows.map((row) => row.grade).filter(Boolean)])];
+    const missingGradeRows = allRows.filter((row) => row.klassReferenceId && !row.grade);
+    const noKlassRows = allRows.filter((row) => !row.klassReferenceId);
 
     return (
         <Box sx={{ p: 1 }}>
-            {total > rows.length && (
+            {total > allRows.length && (
                 <Typography variant="body2" color="warning.dark" sx={{ mb: 1 }}>
-                    מוצגים {rows.length} מתוך {total} שיעורים. צמצמו את טווח התאריכים כדי לראות את כולם.
+                    מוצגים {allRows.length} מתוך {total} שיעורים. צמצמו את טווח התאריכים כדי לראות את כולם.
                 </Typography>
             )}
-            <SummaryTiles rows={rows} klassCount={klasses.length} />
-            <Box sx={{ columnWidth: 340, columnGap: 2 }}>
-                {klasses.map((klass) => {
-                    const lessonCount = klass.lessons.length;
-                    return (
-                        <Card key={klass.key} variant="outlined" sx={{ breakInside: 'avoid', mb: 2, borderRadius: 3 }}>
-                            <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 1, px: 2, py: 1.5 }}>
-                                <Typography component="div" sx={{ fontWeight: 'bold', fontSize: 17 }}>
-                                    {klass.klassReferenceId ? (
-                                        <RecordContextProvider value={{ klassReferenceId: klass.klassReferenceId }}>
-                                            <ReferenceField source="klassReferenceId" reference="klass">
-                                                <FunctionField render={displayNameOrName} sx={{ fontWeight: 'bold', fontSize: 17 }} />
-                                            </ReferenceField>
-                                        </RecordContextProvider>
-                                    ) : 'ללא כיתה'}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {lessonCount === 1 ? 'שיעור אחד' : `${lessonCount} שיעורים`} · חסרו {sumMissing(klass.lessons)}
-                                </Typography>
-                            </Box>
-                            {isAdmin && (
-                                <RecordContextProvider value={{ userId: klass.userId }}>
-                                    <Box sx={{ px: 2, pb: 1 }}>
-                                        <ReferenceField source="userId" reference="user" />
-                                    </Box>
-                                </RecordContextProvider>
-                            )}
-                            {(isAdmin ? klass.lessons : withLessonGaps(klass.lessons, lessonTimes)).map((row) => (row.isGap
-                                ? <GapRow key={row.id} gap={row} showDate={showDate} />
-                                : <LessonRow key={row.id} row={row} showDate={showDate} until={nextLessonStart(row, klass.lessons)} />
-                            ))}
-                        </Card>
-                    );
-                })}
-            </Box>
+            <Tabs value={selectedGrade} onChange={(event, grade) => setSelectedGrade(grade)} variant="scrollable" scrollButtons="auto" sx={{ mb: 2 }}>
+                <Tab value={ALL_GRADES} label="כל השנתונים" />
+                {grades.map((grade) => (
+                    <Tab key={grade} value={grade} label={grade} />
+                ))}
+            </Tabs>
+            <SummaryTiles rows={rows} klassCount={groupByKlass(rows).length} />
+            {selectedGrade === ALL_GRADES ? (
+                <>
+                    {sectionGrades.map((grade) => {
+                        const gradeRows = allRows.filter((row) => row.grade === grade);
+                        return gradeRows.length > 0 && (
+                            <GradeSection key={grade} title={`שנתון ${grade}`}>
+                                <KlassCards rows={gradeRows} {...cardProps} />
+                            </GradeSection>
+                        );
+                    })}
+                    {missingGradeRows.length > 0 && (
+                        <GradeSection title="ללא שנתון">
+                            <Alert severity="error" sx={{ mb: 1 }}>לא מוגדר שנתון לכיתה. יש להגדיר שנתון בטבלת הכיתות.</Alert>
+                            <KlassCards rows={missingGradeRows} {...cardProps} />
+                        </GradeSection>
+                    )}
+                    {noKlassRows.length > 0 && (
+                        <GradeSection title="ללא כיתה">
+                            <KlassCards rows={noKlassRows} {...cardProps} />
+                        </GradeSection>
+                    )}
+                </>
+            ) : (
+                <KlassCards rows={rows} {...cardProps} />
+            )}
         </Box>
     );
 };

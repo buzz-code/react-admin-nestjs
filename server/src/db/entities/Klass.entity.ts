@@ -122,6 +122,13 @@ export class Klass implements IHasUserId {
   @Column('varchar', { name: 'phone', nullable: true, length: 20 })
   phone: string | null;
 
+  @IsOptional({ groups: [CrudValidationGroups.UPDATE] })
+  @StringType
+  @MaxLength(50, { always: true })
+  @IsNotEmpty({ groups: [CrudValidationGroups.CREATE] })
+  @Column('varchar', { name: 'grade', nullable: true, length: 50 })
+  grade: string | null;
+
   @IsOptional({ always: true })
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
   @Column({ nullable: true })
