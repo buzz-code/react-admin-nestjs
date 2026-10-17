@@ -22,6 +22,7 @@ const PREVIOUS_REPORT_TIME = `LAG(att_reports.created_at) OVER (
            lesson_reports.teacherReferenceId AS teacherReferenceId,
            lesson_reports.lessonReferenceId AS lessonReferenceId,
            lesson_reports.klassReferenceId AS klassReferenceId,
+           klasses.grade AS grade,
            MIN(lesson_reports.createdAt) AS reportHour,
            COUNT(DISTINCT CASE WHEN lesson_reports.absCount > 0 THEN lesson_reports.studentReferenceId END) AS missingGirlsCount
     FROM (
@@ -45,7 +46,8 @@ const PREVIOUS_REPORT_TIME = `LAG(att_reports.created_at) OVER (
         WHERE att_reports.teacherReferenceId IS NOT NULL
       ) reports
     ) lesson_reports
-    GROUP BY lesson_reports.userId, lesson_reports.teacherReferenceId, lesson_reports.reportDate, lesson_reports.lessonReferenceId, lesson_reports.klassReferenceId, lesson_reports.lessonNumber
+    LEFT JOIN klasses ON klasses.id = lesson_reports.klassReferenceId
+    GROUP BY lesson_reports.userId, lesson_reports.teacherReferenceId, lesson_reports.reportDate, lesson_reports.lessonReferenceId, lesson_reports.klassReferenceId, lesson_reports.lessonNumber, klasses.grade
   `,
 })
 export class TeacherReportedToday implements IHasUserId {
@@ -66,6 +68,9 @@ export class TeacherReportedToday implements IHasUserId {
 
   @Column({ nullable: true })
   klassReferenceId: number;
+
+  @Column({ nullable: true })
+  grade: string;
 
   @Column()
   reportHour: Date;
