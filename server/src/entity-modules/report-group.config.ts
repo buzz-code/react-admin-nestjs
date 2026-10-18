@@ -40,8 +40,8 @@ class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityServi
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'updateSignatureData': {
-        const ids = getAsNumberArray(req.parsed.extra.ids);
-        if (!ids) return 'לא נבחרו רשומות';
+        const ids = (await this.getManyByIds(req, getAsNumberArray(req.parsed.extra.ids))).map((entity: any) => entity.id);
+        if (!ids.length) return 'לא נבחרו רשומות';
         const signatureData = getAsString(req.parsed.extra.signatureData);
         await this.updateSignatureData(ids, signatureData);
         return `עודכנו חתימות ל-${ids.length} קבוצות דוחות`;

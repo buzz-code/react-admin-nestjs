@@ -10,7 +10,7 @@ import studentReportCardReact from 'src/reports/studentReportCardReact';
 import { getUserIdFromUser } from '@shared/auth/auth.util';
 import { generateStudentReportCard } from 'src/reports/reportGenerator';
 import { In } from 'typeorm';
-import { getAsArray, getAsBoolean } from '@shared/utils/queryParam.util';
+import { getAsBoolean, getAsNumberArray } from '@shared/utils/queryParam.util';
 
 function getConfig(): BaseEntityModuleOptions {
   return {
@@ -47,9 +47,11 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'bulkUpdateActive': {
-        const ids = getAsArray(req.parsed.extra.ids);
+        const ids = (await this.getManyByIds(req, getAsNumberArray(req.parsed.extra.ids))).map(
+          (entity: any) => entity.id,
+        );
         const isActive = getAsBoolean(req.parsed.extra.isActive) ?? false;
-        if (!ids) return 'לא נבחרו רשומות';
+        if (!ids.length) return 'לא נבחרו רשומות';
 
         const result = await this.dataSource.getRepository(Student).update({ id: In(ids) }, { isActive });
 

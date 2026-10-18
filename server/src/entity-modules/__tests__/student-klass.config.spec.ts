@@ -169,6 +169,7 @@ describe('StudentKlassConfig', () => {
       const Service = config.service;
       service = new Service(mockRepository as Repository<StudentKlass>, mockMailService);
       service.dataSource = mockDataSource as DataSource;
+      service.getManyByIds = jest.fn().mockImplementation((req, ids) => Promise.resolve(ids.map((id) => ({ id }))));
     });
 
     describe('getReportData', () => {
@@ -223,6 +224,16 @@ describe('StudentKlassConfig', () => {
 
         expect(mockRepository.findBy).toHaveBeenCalledWith({ id: In([1, 2, 3]) });
         expect(mockRepository.save).toHaveBeenCalled();
+      });
+
+      it('should only fix references of ids the caller can access', async () => {
+        const req = createMockCrudRequest({ action: 'fixReferences', ids: '1,99' });
+        service.getManyByIds.mockResolvedValueOnce([{ id: 1 }]);
+        mockRepository.findBy.mockResolvedValueOnce([createMockStudentKlass({ id: 1, studentTz: '123', klassId: 1 })]);
+
+        await service.doAction(req, {});
+
+        expect(mockRepository.findBy).toHaveBeenCalledWith({ id: In([1]) });
       });
 
       it('should call super.doAction for unknown action', async () => {

@@ -83,6 +83,8 @@ describe('att-report-with-report-month.config', () => {
 
       // Mock getOne on the service instance itself since it calls this.getOne()
       service.getOne = jest.fn().mockResolvedValue({ id: 1, reportDate: '2022-01-01' });
+      // By default every selected id is accessible to the caller
+      service.getManyByIds = jest.fn().mockImplementation((req, ids) => Promise.resolve(ids.map((id) => ({ id }))));
 
       mockBaseCreateOne.mockClear();
       mockBaseCreateMany.mockClear();
@@ -148,6 +150,26 @@ describe('att-report-with-report-month.config', () => {
       );
       expect(mockRepo.update.mock.calls[0][0].id.value).toEqual([1, 2]);
       expect(result).toBe('עודכנו 2 רשומות');
+    });
+
+    it('bulkEdit should only update ids the caller can access', async () => {
+      service.getManyByIds.mockResolvedValueOnce([{ id: 1 }]);
+      const req = { parsed: { extra: { action: 'bulkEdit', ids: '1,99', absCount: '1' } } } as any;
+
+      await service.doAction(req, {});
+
+      expect(service.getManyByIds).toHaveBeenCalledWith(req, [1, 99]);
+      expect(mockRepo.update.mock.calls[0][0].id.value).toEqual([1]);
+    });
+
+    it('bulkEdit should do nothing when no selected id is accessible', async () => {
+      service.getManyByIds.mockResolvedValueOnce([]);
+      const req = { parsed: { extra: { action: 'bulkEdit', ids: '99', absCount: '1' } } } as any;
+
+      const result = await service.doAction(req, {});
+
+      expect(mockRepo.update).not.toHaveBeenCalled();
+      expect(result).toBe('לא נבחרו רשומות');
     });
 
     it('bulkEdit should not update when no field is filled', async () => {
