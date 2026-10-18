@@ -47,7 +47,7 @@ const createMockCrudRequest = (extra: any): CrudRequest =>
       },
       params: {},
     },
-  }) as CrudRequest;
+  } as CrudRequest);
 
 const createMockStudentKlass = (data: Partial<StudentKlass> = {}): StudentKlass => ({
   id: 1,

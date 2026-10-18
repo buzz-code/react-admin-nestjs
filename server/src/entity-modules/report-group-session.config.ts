@@ -38,7 +38,9 @@ class ReportGroupSessionService<T extends Entity | ReportGroupSession> extends B
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'adjustTime': {
-        const ids = (await this.getManyByIds(req, getAsNumberArray(req.parsed.extra.ids))).map((entity: any) => entity.id);
+        const ids = (await this.getManyByIds(req, getAsNumberArray(req.parsed.extra.ids))).map(
+          (entity: any) => entity.id,
+        );
         const hoursAdjustment = getAsNumber(req.parsed.extra.hoursAdjustment) || 0;
 
         if (hoursAdjustment === 0) {

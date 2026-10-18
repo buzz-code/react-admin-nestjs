@@ -26,7 +26,9 @@ class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'fixReferences': {
-        const ids = (await this.getManyByIds(req, getAsNumberArray(req.parsed.extra.ids))).map((entity: any) => entity.id);
+        const ids = (await this.getManyByIds(req, getAsNumberArray(req.parsed.extra.ids))).map(
+          (entity: any) => entity.id,
+        );
         if (!ids.length) return 'לא נבחרו רשומות';
         const referenceFields = {
           klassTypeId: 'klassTypeReferenceId',

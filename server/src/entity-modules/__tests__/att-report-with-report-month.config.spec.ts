@@ -11,10 +11,7 @@ const mockBaseConstructor = jest.fn();
 jest.mock('@shared/base-entity/base-entity.service', () => {
   class MockBaseEntityService {
     dataSource: any;
-    constructor(
-      public repo: any,
-      public mailSendService: any,
-    ) {
+    constructor(public repo: any, public mailSendService: any) {
       mockBaseConstructor(repo, mailSendService);
     }
     async createOne(req: any, dto: any) {
