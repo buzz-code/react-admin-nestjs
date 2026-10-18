@@ -23,6 +23,7 @@ import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput
 import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
+import { BulkEditButton } from '@shared/components/crudContainers/BulkEditButton';
 
 const filters = [
     ...commonAdminFilters,
@@ -53,9 +54,22 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
+const additionalBulkButtons = [
+    <BulkEditButton key="bulkEdit">
+        <DateInput source="reportDate" />
+        <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />
+        <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
+        <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} />
+        <NumberInput source="howManyLessons" />
+        <NumberInput source="grade" />
+        <TextInput source="estimation" />
+        <TextInput source="comments" />
+    </BulkEditButton>,
+];
+
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
-        <CommonDatagrid {...props}>
+        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}

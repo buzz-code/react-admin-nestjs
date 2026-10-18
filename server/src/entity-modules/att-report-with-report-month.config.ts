@@ -10,12 +10,20 @@ import { validateBulk } from '@shared/base-entity/base-entity.util';
 import { fixReferences } from '@shared/utils/entity/fixReference.util';
 import { getHebrewDateFormatter } from '@shared/utils/formatting/formatter.util';
 import { shouldShowTopic } from './att-report.config';
-import { getBulkEditUpdate } from '@shared/utils/entity/bulkEdit.util';
 import { getAsDate, getAsNumber, getAsBoolean, getAsString, getAsNumberArray } from '@shared/utils/queryParam.util';
 
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: AttReportWithReportMonth,
+    bulkEditFields: [
+      'reportDate',
+      'klassReferenceId',
+      'teacherReferenceId',
+      'lessonReferenceId',
+      'howManyLessons',
+      'absCount',
+      'comments',
+    ],
     query: {
       join: {
         studentBaseKlass: { eager: true },
@@ -107,7 +115,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'bulkEdit':
-        return this.bulkEdit(req.parsed.extra, await this.getOwnedIds(req));
+        // The view is read-only; the edit goes to the underlying att_report table
+        return this.handleBulkEditAction(req, this.dataSource.getRepository(AttReport));
       case 'bulkKnownAbsences':
         return this.bulkKnownAbsences(req.parsed.extra, await this.getOwnedIds(req));
       case 'fixStudentReferenceV2':
@@ -124,20 +133,6 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     const ids = getAsNumberArray(req.parsed.extra.ids);
     const entities = await this.getManyByIds(req, ids);
     return entities.map((entity: any) => entity.id);
-  }
-
-  private async bulkEdit(extra: Record<string, string>, ids: number[]): Promise<string> {
-    if (ids.length === 0) return 'לא נבחרו רשומות';
-
-    const update = getBulkEditUpdate(extra, {
-      numbers: ['klassReferenceId', 'teacherReferenceId', 'lessonReferenceId', 'howManyLessons', 'absCount'],
-      dates: ['reportDate'],
-      strings: ['comments'],
-    });
-    if (Object.keys(update).length === 0) return 'לא נבחרו שדות לעדכון';
-
-    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, update);
-    return `עודכנו ${result.affected} רשומות`;
   }
 
   private async bulkKnownAbsences(extra: Record<string, string>, ids: number[]): Promise<string> {
