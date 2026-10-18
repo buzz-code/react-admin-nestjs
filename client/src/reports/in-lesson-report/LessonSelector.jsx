@@ -48,7 +48,7 @@ export const LessonSelector = ({ onLessonFound, selectedTeacher }) => {
                         id: klassId,
                         pagination: { page: 1, perPage: 1000 },
                         sort: { field: 'student.name', order: 'ASC' },
-                        filter: { year: defaultYearFilter.year },
+                        filter: { year: defaultYearFilter.year, 'student.isActive': true },
                     });
                     return students;
                 }),
