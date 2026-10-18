@@ -20,8 +20,7 @@ import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { useUnique } from '@shared/utils/useUnique';
 import StudentReportCardReactButton from 'src/reports/studentReportCardReactButton';
-import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { BulkEditButton } from '@shared/components/crudContainers/BulkEditButton';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import { CommonYearField } from '@shared/components/fields/CommonYear';
 
@@ -39,15 +38,11 @@ const filterDefaultValues = {
 
 const additionalBulkButtons = [
     <StudentReportCardReactButton key="studentReportCardReact" defaultRequestValues={filterDefaultValues} />,
-    <BulkActionButton
-        label="סימון פעיל/לא פעיל"
-        icon={<CheckCircleIcon />}
-        name="bulkUpdateActive"
-        key="bulkUpdateActive"
-        reloadOnEnd
-    >
-        <BooleanInput source="isActive" label="פעיל" />
-    </BulkActionButton>,
+    <BulkEditButton key="bulkEdit">
+        <TextInput source="comment" validate={maxLength(1000)} />
+        <TextInput source="address" validate={maxLength(1000)} />
+        <NullableBooleanInput source="isActive" />
+    </BulkEditButton>,
 ];
 
 const Datagrid = ({ isAdmin, children, ...props }) => {

@@ -26,6 +26,7 @@ import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 import { BulkApproveAbsences } from 'src/components/BulkApproveAbsences';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
+import { BulkEditButton } from '@shared/components/crudContainers/BulkEditButton';
 import { useIsAbsenceType } from 'src/utils/appPermissions';
 
 import CommonFileField from '@shared/components/fields/CommonFileField';
@@ -64,10 +65,24 @@ const filterDefaultValues = {
     ...defaultYearFilter,
 };
 
+const additionalBulkButtons = [
+    <BulkEditButton key="bulkEdit">
+        <DateInput source="reportDate" />
+        <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />
+        <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} />
+        <NumberInput source="absnceCount" />
+        <NumberInput source="absnceCode" />
+        <TextInput source="reason" validate={maxLength(500)} />
+        <TextInput source="senderName" validate={maxLength(100)} />
+        <TextInput source="comment" validate={maxLength(500)} />
+        <NullableBooleanInput source="isApproved" />
+    </BulkEditButton>,
+];
+
 const Datagrid = ({ isAdmin, children, isPreview, ...props }) => {
     const isAbsenceType = useIsAbsenceType();
     return (
-        <CommonDatagrid {...props}>
+        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}

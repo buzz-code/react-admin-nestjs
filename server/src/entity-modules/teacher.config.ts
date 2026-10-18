@@ -5,6 +5,7 @@ import { Teacher } from 'src/db/entities/Teacher.entity';
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: Teacher,
+    bulkEditFields: ['comment'],
     exporter: {
       getExportHeaders(): IHeader[] {
         return [

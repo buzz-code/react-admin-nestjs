@@ -6,6 +6,17 @@ import { KnownAbsence } from 'src/db/entities/KnownAbsence.entity';
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: KnownAbsence,
+    bulkEditFields: [
+      'reportDate',
+      'klassReferenceId',
+      'lessonReferenceId',
+      'absnceCount',
+      'absnceCode',
+      'reason',
+      'senderName',
+      'comment',
+      'isApproved',
+    ],
     query: {
       join: {
         student: { eager: false },

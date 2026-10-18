@@ -12,7 +12,6 @@ import {
 } from 'react-admin';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import HelpIcon from '@mui/icons-material/Help';
-import EditIcon from '@mui/icons-material/Edit';
 import { CommonDatagrid } from '@shared/components/crudContainers/CommonList';
 import { MultiReferenceField } from '@shared/components/fields/CommonReferenceField';
 import { getResourceComponents } from '@shared/components/crudContainers/CommonEntity';
@@ -23,11 +22,12 @@ import {
 } from '@shared/components/fields/CommonReferenceInputFilter';
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { defaultYearFilter } from '@shared/utils/yearFilter';
-import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
+import { CommonYearField, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { Inputs } from './att-report';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 import { BulkActionButton } from '@shared/components/crudContainers/BulkActionButton';
 import { BulkFixReferenceButton } from '@shared/components/crudContainers/BulkFixReferenceButton';
+import { BulkEditButton } from '@shared/components/crudContainers/BulkEditButton';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import { useIsLessonSignature, isTeacherView } from 'src/utils/appPermissions';
 
@@ -75,16 +75,7 @@ const filterDefaultValues = {
 
 export const Datagrid = ({ isAdmin, children, ...props }) => {
     const additionalBulkButtons = [
-        <BulkActionButton
-            label="עריכה מרוכזת"
-            icon={<EditIcon />}
-            name="bulkEdit"
-            key="bulkEdit"
-            reloadOnEnd
-            cacheValues={false}
-        >
-            {isAdmin && <CommonReferenceInput source="userId" reference="user" />}
-            {isAdmin && <CommonYearInput />}
+        <BulkEditButton key="bulkEdit">
             <DateInput source="reportDate" />
             <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />
             <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
@@ -92,7 +83,7 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
             <NumberInput source="howManyLessons" />
             <NumberInput source="absCount" />
             <TextInput source="comments" />
-        </BulkActionButton>,
+        </BulkEditButton>,
         <BulkActionButton label="הוספת חיסורים מאושרים" icon={<PlaylistRemoveIcon />} name="bulkKnownAbsences">
             <DateInput source="reportDate" resource="known_absence" />
             <NumberInput source="absnceCount" resource="known_absence" defaultValue={1} />

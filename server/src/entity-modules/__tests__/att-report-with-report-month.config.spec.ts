@@ -122,67 +122,37 @@ describe('att-report-with-report-month.config', () => {
       expect(mockBaseCreateMany).toHaveBeenCalledWith(req, dto);
     });
 
-    it('bulkEdit should update only filled fields', async () => {
-      const req = {
-        parsed: {
-          extra: {
-            action: 'bulkEdit',
-            ids: '1,2',
-            reportDate: '2026-10-11',
-            klassReferenceId: '5',
-            teacherReferenceId: 'undefined',
-            lessonReferenceId: 'null',
-            howManyLessons: '',
-            absCount: '0',
-          },
-        },
-      } as any;
+    it('bulkEdit should update the att_report table through the shared bulk edit', async () => {
+      service.handleBulkEditAction = jest.fn().mockResolvedValue('עודכנו 2 רשומות');
+      const req = { parsed: { extra: { action: 'bulkEdit', ids: '1,2', absCount: '0' } } } as any;
 
       const result = await service.doAction(req, {});
 
       expect(mockDataSource.getRepository).toHaveBeenCalledWith(AttReport);
-      expect(mockRepo.update).toHaveBeenCalledWith(
-        { id: expect.anything() },
-        { reportDate: new Date('2026-10-11'), klassReferenceId: 5, absCount: 0 },
-      );
-      expect(mockRepo.update.mock.calls[0][0].id.value).toEqual([1, 2]);
+      expect(service.handleBulkEditAction).toHaveBeenCalledWith(req, mockRepo);
       expect(result).toBe('עודכנו 2 רשומות');
     });
 
-    it('bulkEdit should only update ids the caller can access', async () => {
+    it('bulkKnownAbsences should only use ids the caller can access', async () => {
       service.getManyByIds.mockResolvedValueOnce([{ id: 1 }]);
-      const req = { parsed: { extra: { action: 'bulkEdit', ids: '1,99', absCount: '1' } } } as any;
+      mockRepo.findBy.mockResolvedValueOnce([]);
+      const req = { parsed: { extra: { action: 'bulkKnownAbsences', ids: '1,99' } } } as any;
 
-      await service.doAction(req, {});
+      // An empty insert fails validation; only the lookup matters here
+      await service.doAction(req, {}).catch(() => undefined);
 
       expect(service.getManyByIds).toHaveBeenCalledWith(req, [1, 99]);
-      expect(mockRepo.update.mock.calls[0][0].id.value).toEqual([1]);
+      expect(mockRepo.findBy.mock.calls[0][0].id.value).toEqual([1]);
     });
 
-    it('bulkEdit should do nothing when no selected id is accessible', async () => {
+    it('bulkKnownAbsences should do nothing when no selected id is accessible', async () => {
       service.getManyByIds.mockResolvedValueOnce([]);
-      const req = { parsed: { extra: { action: 'bulkEdit', ids: '99', absCount: '1' } } } as any;
+      const req = { parsed: { extra: { action: 'bulkKnownAbsences', ids: '99' } } } as any;
 
       const result = await service.doAction(req, {});
 
-      expect(mockRepo.update).not.toHaveBeenCalled();
+      expect(mockRepo.findBy).not.toHaveBeenCalled();
       expect(result).toBe('לא נבחרו רשומות');
-    });
-
-    it('bulkEdit should not update when no field is filled', async () => {
-      const req = { parsed: { extra: { action: 'bulkEdit', ids: '1,2', reportDate: 'null' } } } as any;
-
-      const result = await service.doAction(req, {});
-
-      expect(mockRepo.update).not.toHaveBeenCalled();
-      expect(result).toBe('לא נבחרו שדות לעדכון');
-    });
-
-    it('bulkEdit should reject invalid values', async () => {
-      const req = { parsed: { extra: { action: 'bulkEdit', ids: '1', absCount: 'abc' } } } as any;
-
-      await expect(service.doAction(req, {})).rejects.toThrow('ערך לא תקין');
-      expect(mockRepo.update).not.toHaveBeenCalled();
     });
   });
 });
