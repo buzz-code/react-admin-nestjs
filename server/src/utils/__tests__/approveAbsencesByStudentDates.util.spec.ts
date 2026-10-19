@@ -20,6 +20,8 @@ describe('toDateStr', () => {
   it('keeps YYYY-MM-DD and normalizes dates', () => {
     expect(toDateStr('2026-10-18')).toBe('2026-10-18');
     expect(toDateStr(new Date(2026, 9, 18))).toBe('2026-10-18');
+    expect(toDateStr('10/03/2026')).toBe('2026-03-10');
+    expect(toDateStr('5.3.2026')).toBe('2026-03-05');
     expect(toDateStr('not a date')).toBeNull();
     expect(toDateStr(undefined)).toBeNull();
   });

@@ -30,11 +30,12 @@ export interface KnownAbsenceExtraFields {
   comment?: string;
 }
 
-// Normalizes a date (Date, ISO string or 'YYYY-MM-DD') to 'YYYY-MM-DD', or null when invalid.
+// Normalizes a date (Date, ISO string, 'YYYY-MM-DD' or Israeli 'DD/MM/YYYY') to 'YYYY-MM-DD', or null when invalid.
 export function toDateStr(value: Date | string | undefined | null): string | null {
   if (!value) return null;
   if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-  const date = new Date(value);
+  const dayFirst = typeof value === 'string' && value.trim().match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
+  const date = dayFirst ? new Date(Number(dayFirst[3]), Number(dayFirst[2]) - 1, Number(dayFirst[1])) : new Date(value);
   if (isNaN(date.getTime())) return null;
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
