@@ -307,9 +307,12 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update n8n version
 * add style editor in settings and use it in student report card
 * increase test coverage for 'server' folder
+* add index to lessons of year & teacher, and year, teacher, key, and user id
+* add option to self connect to yemot phone
+* phone call to teachers - available via phone campaigns (needs setup, extra cost)
 
 # todo
-* add index to lessons of year & teacher, and year, teacher, key, and user id for each- ask ai how to plan it
+* approved absences by student or for a full day - in progress
 * add pre-push test run
 * add pre-commit test run
 * add health check for all services
@@ -322,7 +325,6 @@ https://github.com/marmelab/react-admin/pull/10344, https://github.com/marmelab/
 * fix local dev dockerfile
 * add more unit testing to client side
 * check slow queries in kibana
-* update react-admin version
 * check docker security issues
 * add gzip to caddy
 * make sure db backup is saving only 7
@@ -333,8 +335,6 @@ https://github.com/marmelab/react-admin/pull/10344, https://github.com/marmelab/
 * use known absences in all student reports
 * use ra-components
 * add user image to export pdf file
-* add option to self connect to yemot phone
-* if teacher doesn't have email - she will get a phone call - see knowledge file
 * add ability to edit report templates
 ## bug fix
 * check why cannot view pdf with some jpg image, probably new version of jpg - see image in troubleshoot folder, this is related to pdf-lib package
