@@ -116,6 +116,7 @@ export default {
                 teacherReferenceId: 'מורה',
                 order: 'סדר הצגה',
                 phone: 'טלפון',
+                grade: 'שנתון',
             },
         },
         klass_type: {
@@ -317,6 +318,7 @@ export default {
                 teacherReferenceId: 'מורה',
                 reportDate: 'תאריך דיווח',
                 lessonReferenceId: 'שיעור',
+                grade: 'שנתון',
                 reportHour: 'שעת דיווח',
             },
         },
