@@ -10,6 +10,9 @@ jobs:
   build:
     name: 'Build'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: "Build:checkout"
         uses: actions/checkout@v2
@@ -22,8 +25,10 @@ jobs:
           filters: |
             client:
               - 'client/**'
+              - '.github/workflows/docker-image.yml'
             server:
               - 'server/**'
+              - '.github/workflows/docker-image.yml'
 
       - name: Login to Docker Hub
         if: steps.changes.outputs.client == 'true' || steps.changes.outputs.server == 'true'
@@ -31,7 +36,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Build:dockerimage-client'
         if: steps.changes.outputs.client == 'true'
