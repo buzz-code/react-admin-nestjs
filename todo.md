@@ -307,34 +307,23 @@ https://github.com/tinovyatkin/nest-puppeteer
 * update n8n version
 * add style editor in settings and use it in student report card
 * increase test coverage for 'server' folder
+* add index to lessons of year & teacher, and year, teacher, key, and user id
+* add option to self connect to yemot phone
+* phone call to teachers - available via phone campaigns (needs setup, extra cost)
+* re-structure student percents report with dates filter
 
 # todo
-* add index to lessons of year & teacher, and year, teacher, key, and user id for each- ask ai how to plan it
-* add pre-push test run
-* add pre-commit test run
-* add health check for all services
+* approved absences by student or for a full day - in progress
 * update react-admin version
 check those features:
 https://github.com/marmelab/react-admin/pull/10344, https://github.com/marmelab/react-admin/pull/10347, https://github.com/marmelab/react-admin/pull/10762, https://github.com/marmelab/react-admin/pull/10690, https://github.com/marmelab/react-admin/pull/10640, https://github.com/marmelab/react-admin/pull/10605, https://github.com/marmelab/react-admin/pull/10571, https://github.com/marmelab/react-admin/pull/10518, https://github.com/marmelab/react-admin/pull/10367
 
 # todo later
 ## infrastucture
-* fix local dev dockerfile
 * add more unit testing to client side
-* check slow queries in kibana
-* update react-admin version
-* check docker security issues
-* add gzip to caddy
-* make sure db backup is saving only 7
-* delete old docker logs
 ## new features
-* add custom implementatino for max-length that works with numbers too
-* re-structure student percents report - think how to do it with dates filter
 * use known absences in all student reports
 * use ra-components
-* add user image to export pdf file
-* add option to self connect to yemot phone
-* if teacher doesn't have email - she will get a phone call - see knowledge file
 * add ability to edit report templates
 ## bug fix
 * check why cannot view pdf with some jpg image, probably new version of jpg - see image in troubleshoot folder, this is related to pdf-lib package
