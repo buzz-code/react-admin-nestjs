@@ -5,7 +5,7 @@ import { BaseEntityModuleOptions, Entity } from '@shared/base-entity/interface';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { getUserIdFromUser } from '@shared/auth/auth.util';
 import { generateCommonFileResponse } from '@shared/utils/report/report.util';
-import { getAsNumber, getAsNumberArray } from '@shared/utils/queryParam.util';
+import { getAsBoolean, getAsNumber, getAsNumberArray } from '@shared/utils/queryParam.util';
 import { User } from '@shared/entities/User.entity';
 import { IHeader } from '@shared/utils/exporter/types';
 import { getHebrewDateFormatter } from '@shared/utils/formatting/formatter.util';
@@ -102,7 +102,9 @@ class AttReportService<T extends Entity | AttReport> extends BaseEntityService<T
         } catch {
           throw new BadRequestException('הקובץ אינו קובץ xlsx תקין');
         }
-        return importAttendanceWorkbook(this.dataSource, userId, parseAttendanceWorkbook(workbook));
+        return importAttendanceWorkbook(this.dataSource, userId, parseAttendanceWorkbook(workbook), {
+          dryRun: getAsBoolean(req.parsed.extra.dryRun),
+        });
       }
     }
     return super.doAction(req, body);

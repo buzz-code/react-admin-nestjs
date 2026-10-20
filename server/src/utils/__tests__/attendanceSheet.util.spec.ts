@@ -297,7 +297,7 @@ describe('importAttendanceWorkbook', () => {
     );
 
   it('creates a report per student and dated column, filtered by user', async () => {
-    const result = await importAttendanceWorkbook(dataSource, userId, parse({}), year);
+    const result = await importAttendanceWorkbook(dataSource, userId, parse({}), { year });
 
     expect(result).toMatchObject({ success: true, errors: [], created: 4, updated: 0 });
     expect(result.details).toEqual([
@@ -351,12 +351,36 @@ describe('importAttendanceWorkbook', () => {
     ]);
   });
 
+  it('returns the reports to preview without saving on a dry run', async () => {
+    repos.AttReport.find.mockResolvedValue([
+      { id: 50, studentReferenceId: 8, teacherReferenceId: 2, lessonReferenceId: 4, reportDate: '2026-09-01' },
+    ]);
+
+    const result = await importAttendanceWorkbook(dataSource, userId, parse({}), { dryRun: true, year });
+
+    expect(result).toMatchObject({ success: true, created: 3, updated: 1 });
+    expect(result.rows).toHaveLength(4);
+    expect(result.rows[0]).toEqual({
+      sheet: 'כיתה א',
+      cell: 'D9',
+      studentTz: '900',
+      studentName: 'תלמידה א',
+      teacherName: 'מורה א',
+      lessonName: 'שיעור א',
+      reportDate: '2026-09-01',
+      howManyLessons: 1,
+      absCount: 1,
+      isUpdate: true,
+    });
+    expect(dataSource.transaction).not.toHaveBeenCalled();
+  });
+
   it('updates existing reports on re-upload instead of duplicating', async () => {
     repos.AttReport.find.mockResolvedValue([
       { id: 50, studentReferenceId: 8, teacherReferenceId: 2, lessonReferenceId: 4, reportDate: '2026-09-01' },
     ]);
 
-    const result = await importAttendanceWorkbook(dataSource, userId, parse({}), year);
+    const result = await importAttendanceWorkbook(dataSource, userId, parse({}), { year });
 
     expect(result).toMatchObject({ success: true, created: 3, updated: 1 });
     expect(result.details[0]).toMatchObject({ created: 1, updated: 1 });
@@ -371,7 +395,7 @@ describe('importAttendanceWorkbook', () => {
     repos.Lesson.find.mockResolvedValue([{ id: 4, key: 101 }]);
     repos.Student.find.mockResolvedValue([{ id: 8, tz: '900' }]);
 
-    const result = await importAttendanceWorkbook(dataSource, userId, parse({}), year);
+    const result = await importAttendanceWorkbook(dataSource, userId, parse({}), { year });
 
     expect(result.success).toBe(false);
     expect(result.errors).toEqual([
@@ -384,14 +408,14 @@ describe('importAttendanceWorkbook', () => {
   });
 
   it('saves nothing when the file has structural errors', async () => {
-    const result = await importAttendanceWorkbook(dataSource, userId, parse({ klass: undefined }), year);
+    const result = await importAttendanceWorkbook(dataSource, userId, parse({ klass: undefined }), { year });
     expect(result.success).toBe(false);
     expect(result.errors).toEqual([{ sheet: 'כיתה א', cell: 'F2', message: 'חסר קוד כיתה' }]);
     expect(dataSource.transaction).not.toHaveBeenCalled();
   });
 
   it('warns without blocking when a student is not assigned to the sheet klass', async () => {
-    const result = await importAttendanceWorkbook(dataSource, userId, parse({}), year);
+    const result = await importAttendanceWorkbook(dataSource, userId, parse({}), { year });
     expect(result.success).toBe(true);
     expect(result.warnings).toEqual([
       { sheet: 'כיתה א', cell: 'A10', message: 'התלמידה תלמידה ב (901) לא משויכת לכיתה א1' },

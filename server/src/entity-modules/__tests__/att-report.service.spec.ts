@@ -77,10 +77,22 @@ describe('att-report service attendance sheet actions', () => {
     expect(result).toEqual({ success: true });
     const parsedWorkbook = (attendanceSheetUtil.parseAttendanceWorkbook as jest.Mock).mock.calls[0][0];
     expect(parsedWorkbook.getWorksheet('א1').getCell('F2').value).toBe(11);
-    expect(attendanceSheetUtil.importAttendanceWorkbook).toHaveBeenCalledWith(dataSource, 7, {
-      sheets: [],
-      errors: [],
-    });
+    expect(attendanceSheetUtil.importAttendanceWorkbook).toHaveBeenCalledWith(
+      dataSource,
+      7,
+      { sheets: [], errors: [] },
+      { dryRun: undefined },
+    );
+  });
+
+  it('passes the dry run flag', async () => {
+    const workbook = new ExcelJS.Workbook();
+    workbook.addWorksheet('א1');
+    const fileData = Buffer.from(await workbook.xlsx.writeBuffer()).toString('base64');
+
+    await service.doAction(makeReq({ action: 'attendanceSheetImport', dryRun: 'true' }), { fileData });
+
+    expect((attendanceSheetUtil.importAttendanceWorkbook as jest.Mock).mock.calls[0][3]).toEqual({ dryRun: true });
   });
 
   it('rejects a file that is not xlsx', async () => {

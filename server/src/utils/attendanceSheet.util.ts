@@ -77,6 +77,19 @@ export interface AttendanceSheetSummaryRow {
   updated: number;
 }
 
+export interface AttendanceSheetPreviewRow {
+  sheet: string;
+  cell: string;
+  studentTz: string;
+  studentName: string;
+  teacherName: string;
+  lessonName: string;
+  reportDate: string;
+  howManyLessons: number;
+  absCount: number;
+  isUpdate: boolean;
+}
+
 export interface AttendanceSheetImportResult {
   success: boolean;
   errors: SheetIssue[];
@@ -84,6 +97,8 @@ export interface AttendanceSheetImportResult {
   created: number;
   updated: number;
   details: AttendanceSheetSummaryRow[];
+  // dry run only: the reports that would be saved
+  rows?: AttendanceSheetPreviewRow[];
 }
 
 const isEmpty = (value: any) => value === null || value === undefined;
@@ -289,7 +304,7 @@ export async function importAttendanceWorkbook(
   dataSource: DataSource,
   userId: number,
   parsed: ParsedWorkbook,
-  year = getCurrentHebrewYear(),
+  { dryRun = false, year = getCurrentHebrewYear() } = {},
 ): Promise<AttendanceSheetImportResult> {
   const errors: SheetIssue[] = [...parsed.errors];
   const warnings: SheetIssue[] = [];
@@ -389,6 +404,7 @@ export async function importAttendanceWorkbook(
 
   const summary = new Map<string, AttendanceSheetSummaryRow>();
   const toSave: Partial<AttReport>[] = [];
+  const rows: AttendanceSheetPreviewRow[] = [];
   let created = 0;
   let updated = 0;
   sheets.forEach((sheet) => {
@@ -416,6 +432,19 @@ export async function importAttendanceWorkbook(
         absCount: report.absCount,
       });
 
+      rows.push({
+        sheet: sheet.name,
+        cell: report.cell,
+        studentTz: student.tz,
+        studentName: student.name,
+        teacherName: teacher.name,
+        lessonName: lesson.name,
+        reportDate: report.reportDate,
+        howManyLessons: report.howManyLessons,
+        absCount: report.absCount,
+        isUpdate: Boolean(existingId),
+      });
+
       const summaryKey = [sheet.name, teacher.id, lesson.id].join('|');
       if (!summary.has(summaryKey)) {
         summary.set(summaryKey, {
@@ -438,6 +467,10 @@ export async function importAttendanceWorkbook(
       }
     });
   });
+
+  if (dryRun) {
+    return { ...result(true, created, updated, [...summary.values()]), rows };
+  }
 
   // Reference ids are resolved above, so entity listeners (one DB connection per row) are skipped
   await dataSource.transaction((manager) =>
