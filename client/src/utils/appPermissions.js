@@ -18,6 +18,7 @@ export const appPermissions = {
     lessonSchedule: 'lessonSchedule',
     perDateLessonCount: 'perDateLessonCount',
     attendanceCleanupRules: 'attendanceCleanupRules',
+    attendanceSheetImport: 'attendanceSheetImport',
 };
 
 export const isScannerUpload = (permissions) => hasPermissionLogic(permissions, appPermissions.scannerUpload);
@@ -81,3 +82,7 @@ export const useIsPerDateLessonCount = () => useHasPermission(appPermissions.per
 export const isAttendanceCleanupRules = (permissions) =>
     isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.attendanceCleanupRules);
 export const useIsAttendanceCleanupRules = () => useHasPermission(appPermissions.attendanceCleanupRules) || useIsAdmin();
+
+export const isAttendanceSheetImport = (permissions) =>
+    isAdmin(permissions) || hasPermissionLogic(permissions, appPermissions.attendanceSheetImport);
+export const useIsAttendanceSheetImport = () => useHasPermission(appPermissions.attendanceSheetImport) || useIsAdmin();
