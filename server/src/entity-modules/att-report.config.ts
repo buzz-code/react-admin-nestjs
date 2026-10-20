@@ -1,11 +1,19 @@
 import { CrudRequest } from '@dataui/crud';
-import { BaseEntityModuleOptions } from '@shared/base-entity/interface';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
+import * as ExcelJS from 'exceljs';
+import { BaseEntityModuleOptions, Entity } from '@shared/base-entity/interface';
+import { BaseEntityService } from '@shared/base-entity/base-entity.service';
+import { getUserIdFromUser } from '@shared/auth/auth.util';
+import { generateCommonFileResponse } from '@shared/utils/report/report.util';
+import { getAsNumber, getAsNumberArray } from '@shared/utils/queryParam.util';
 import { User } from '@shared/entities/User.entity';
 import { IHeader } from '@shared/utils/exporter/types';
 import { getHebrewDateFormatter } from '@shared/utils/formatting/formatter.util';
 import { AttReport } from 'src/db/entities/AttReport.entity';
 import { hasPermission, isAdmin } from '@shared/utils/permissionsUtil';
 import { roundObjectProperty } from '@shared/utils/reportData.util';
+import attendanceSheetTemplate, { AttendanceSheetTemplateParams } from 'src/reports/attendanceSheetTemplate';
+import { importAttendanceWorkbook, parseAttendanceWorkbook } from 'src/utils/attendanceSheet.util';
 
 function getConfig(): BaseEntityModuleOptions {
   return {
@@ -71,8 +79,47 @@ function getConfig(): BaseEntityModuleOptions {
         };
       },
     },
+    service: AttReportService,
   };
 }
+
+class AttReportService<T extends Entity | AttReport> extends BaseEntityService<T> {
+  async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
+    switch (req.parsed.extra.action) {
+      case 'attendanceSheetTemplate': {
+        const params: AttendanceSheetTemplateParams = {
+          userId: getAttendanceSheetUserId(req),
+          klassId: getAsNumber(req.parsed.extra.klassId),
+          lessonIds: getAsNumberArray(req.parsed.extra.lessonIds) ?? [],
+        };
+        return generateCommonFileResponse(attendanceSheetTemplate, params, this.dataSource);
+      }
+      case 'attendanceSheetImport': {
+        const userId = getAttendanceSheetUserId(req);
+        const workbook = new ExcelJS.Workbook();
+        try {
+          await workbook.xlsx.load(Buffer.from(body?.fileData ?? '', 'base64'));
+        } catch {
+          throw new BadRequestException('הקובץ אינו קובץ xlsx תקין');
+        }
+        return importAttendanceWorkbook(this.dataSource, userId, parseAttendanceWorkbook(workbook));
+      }
+    }
+    return super.doAction(req, body);
+  }
+}
+
+// Every lookup and saved report is scoped to this user, so an admin must impersonate one first
+const getAttendanceSheetUserId = (req: CrudRequest) => {
+  if (!isAdmin(req.auth) && !hasPermission(req.auth, 'attendanceSheetImport')) {
+    throw new ForbiddenException('אין הרשאה לקליטת קובץ נוכחות');
+  }
+  const userId = getUserIdFromUser(req.auth);
+  if (!userId) {
+    throw new BadRequestException('יש להתחבר כמשתמש כדי לקלוט קובץ נוכחות');
+  }
+  return userId;
+};
 
 export default getConfig();
 
