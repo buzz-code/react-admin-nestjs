@@ -9,12 +9,11 @@ import { BulkToPdfReportGenerator } from '@shared/utils/report/bulk-to-pdf.gener
 import studentReportCardReact from 'src/reports/studentReportCardReact';
 import { getUserIdFromUser } from '@shared/auth/auth.util';
 import { generateStudentReportCard } from 'src/reports/reportGenerator';
-import { In } from 'typeorm';
-import { getAsArray, getAsBoolean } from '@shared/utils/queryParam.util';
 
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: Student,
+    bulkEditFields: ['comment', 'address', 'isActive'],
     exporter: {
       getExportHeaders(): IHeader[] {
         return [
@@ -42,21 +41,6 @@ class StudentService<T extends Entity | Student> extends BaseEntityService<T> {
       return generateStudentReportCard(userId, req.parsed.extra, generator);
     }
     return super.getReportData(req);
-  }
-
-  async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
-    switch (req.parsed.extra.action) {
-      case 'bulkUpdateActive': {
-        const ids = getAsArray(req.parsed.extra.ids);
-        const isActive = getAsBoolean(req.parsed.extra.isActive) ?? false;
-        if (!ids) return 'לא נבחרו רשומות';
-
-        const result = await this.dataSource.getRepository(Student).update({ id: In(ids) }, { isActive });
-
-        return `עודכנו ${result.affected} תלמידים`;
-      }
-    }
-    return super.doAction(req, body);
   }
 }
 

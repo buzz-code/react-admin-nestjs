@@ -259,6 +259,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
         userId: this.user.id,
         klassReferenceId,
         year: getCurrentHebrewYear(),
+        student: { isActive: true },
       },
     });
   }

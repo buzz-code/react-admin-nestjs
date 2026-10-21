@@ -18,6 +18,7 @@ import { getResourceComponents } from '@shared/components/crudContainers/CommonE
 import CommonReferenceInput from '@shared/components/fields/CommonReferenceInput';
 import { useUnique } from '@shared/utils/useUnique';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
+import { BulkEditButton } from '@shared/components/crudContainers/BulkEditButton';
 
 const filters = [
     ...commonAdminFilters,
@@ -25,9 +26,15 @@ const filters = [
     <TextInput source="name:$cont" alwaysOn />,
 ];
 
+const additionalBulkButtons = [
+    <BulkEditButton key="bulkEdit">
+        <TextInput source="comment" validate={maxLength(1000)} />
+    </BulkEditButton>,
+];
+
 const Datagrid = ({ isAdmin, children, ...props }) => {
     return (
-        <CommonDatagrid {...props}>
+        <CommonDatagrid {...props} additionalBulkButtons={additionalBulkButtons}>
             {children}
             {isAdmin && <TextField source="id" />}
             {isAdmin && <ReferenceField source="userId" reference="user" />}

@@ -12,6 +12,16 @@ import { getAsString } from '@shared/utils/queryParam.util';
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: Grade,
+    bulkEditFields: [
+      'reportDate',
+      'klassReferenceId',
+      'teacherReferenceId',
+      'lessonReferenceId',
+      'howManyLessons',
+      'grade',
+      'estimation',
+      'comments',
+    ],
     query: {
       join: {
         studentBaseKlass: { eager: false },

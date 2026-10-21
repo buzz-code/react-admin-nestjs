@@ -1,11 +1,11 @@
-import { Form, TextInput } from 'react-admin';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 const ConfigurationForm = ({ configValues, onChange }) => {
-    const handleFormChange = (values) => {
-        onChange(values);
+    const handleChange = (event) => {
+        onChange({ ...configValues, [event.target.name]: event.target.value });
     };
 
     return (
@@ -13,16 +13,28 @@ const ConfigurationForm = ({ configValues, onChange }) => {
             <Typography variant="h6" gutterBottom>
                 שלב 2: הגדרות
             </Typography>
-            <Form record={configValues} onSubmit={() => {}} onChange={handleFormChange}>
-                <Stack spacing={2} sx={{ maxWidth: 600 }}>
-                    <TextInput source="reason" label="סיבה" fullWidth />
-                    <TextInput source="senderName" label="שם השולח" fullWidth />
-                    <TextInput source="comment" label="הערה" multiline rows={3} fullWidth />
-                    <Typography variant="caption" color="text.secondary">
-                        הערה: תאריך ומספר חיסורים יילקחו מהדיווח המקורי
-                    </Typography>
-                </Stack>
-            </Form>
+            <Stack spacing={2} sx={{ maxWidth: 600 }}>
+                <TextField name="reason" label="סיבה" value={configValues.reason} onChange={handleChange} fullWidth />
+                <TextField
+                    name="senderName"
+                    label="שם השולח"
+                    value={configValues.senderName}
+                    onChange={handleChange}
+                    fullWidth
+                />
+                <TextField
+                    name="comment"
+                    label="הערה"
+                    value={configValues.comment}
+                    onChange={handleChange}
+                    multiline
+                    rows={3}
+                    fullWidth
+                />
+                <Typography variant="caption" color="text.secondary">
+                    הערה: תאריך ומספר חיסורים יילקחו מהדיווח המקורי
+                </Typography>
+            </Stack>
         </Box>
     );
 };

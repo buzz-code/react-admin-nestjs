@@ -6,6 +6,7 @@ import { Lesson } from 'src/db/entities/Lesson.entity';
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: Lesson,
+    bulkEditFields: ['teacherReferenceId', 'startDate', 'endDate', 'howManyLessons', 'comment'],
     query: {
       join: {
         teacher: { eager: false },

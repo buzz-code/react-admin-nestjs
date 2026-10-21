@@ -10,19 +10,20 @@ import { validateBulk } from '@shared/base-entity/base-entity.util';
 import { fixReferences } from '@shared/utils/entity/fixReference.util';
 import { getHebrewDateFormatter } from '@shared/utils/formatting/formatter.util';
 import { shouldShowTopic } from './att-report.config';
-import { getBulkEditUpdate } from '@shared/utils/entity/bulkEdit.util';
-import {
-  getAsArray,
-  getAsDate,
-  getAsNumber,
-  getAsBoolean,
-  getAsString,
-  getAsNumberArray,
-} from '@shared/utils/queryParam.util';
+import { getAsDate, getAsNumber, getAsBoolean, getAsString, getAsNumberArray } from '@shared/utils/queryParam.util';
 
 function getConfig(): BaseEntityModuleOptions {
   return {
     entity: AttReportWithReportMonth,
+    bulkEditFields: [
+      'reportDate',
+      'klassReferenceId',
+      'teacherReferenceId',
+      'lessonReferenceId',
+      'howManyLessons',
+      'absCount',
+      'comments',
+    ],
     query: {
       join: {
         studentBaseKlass: { eager: true },
@@ -114,35 +115,28 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'bulkEdit':
-        return this.bulkEdit(req.parsed.extra);
+        // The view is read-only; the edit goes to the underlying att_report table
+        return this.handleBulkEditAction(req, this.dataSource.getRepository(AttReport));
       case 'bulkKnownAbsences':
-        return this.bulkKnownAbsences(req.parsed.extra);
+        return this.bulkKnownAbsences(req.parsed.extra, await this.getOwnedIds(req));
       case 'fixStudentReferenceV2':
-        return this.fixStudentReferenceV2(req.parsed.extra);
+        return this.fixStudentReferenceV2(await this.getOwnedIds(req));
       case 'fixReferences':
-        return this.fixReferences(req.parsed.extra);
+        return this.fixReferences(await this.getOwnedIds(req));
     }
     return super.doAction(req, body);
   }
 
-  private async bulkEdit(extra: Record<string, string>): Promise<string> {
-    const ids = getAsNumberArray(extra.ids);
-    if (!ids || ids.length === 0) return 'לא נבחרו רשומות';
-
-    const update = getBulkEditUpdate(extra, {
-      numbers: ['klassReferenceId', 'teacherReferenceId', 'lessonReferenceId', 'howManyLessons', 'absCount'],
-      dates: ['reportDate'],
-      strings: ['comments'],
-    });
-    if (Object.keys(update).length === 0) return 'לא נבחרו שדות לעדכון';
-
-    const result = await this.dataSource.getRepository(AttReport).update({ id: In(ids) }, update);
-    return `עודכנו ${result.affected} רשומות`;
+  // Keeps only the selected ids the caller may access (crudAuth filter), so a
+  // caller-supplied id from another user's data is never touched.
+  private async getOwnedIds(req: CrudRequest<any, any>): Promise<number[]> {
+    const ids = getAsNumberArray(req.parsed.extra.ids);
+    const entities = await this.getManyByIds(req, ids);
+    return entities.map((entity: any) => entity.id);
   }
 
-  private async bulkKnownAbsences(extra: Record<string, string>): Promise<string> {
-    const ids = getAsArray(extra.ids);
-    if (!ids) return 'לא נבחרו רשומות';
+  private async bulkKnownAbsences(extra: Record<string, string>, ids: number[]): Promise<string> {
+    if (ids.length === 0) return 'לא נבחרו רשומות';
     const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
 
     const knownAbsences: Array<Partial<KnownAbsence>> = reports.map((report) => ({
@@ -165,9 +159,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     return `נוצרו ${reports.length} חיסורים מאושרים`;
   }
 
-  private async fixStudentReferenceV2(extra: Record<string, string>): Promise<string> {
-    const ids = getAsArray(extra.ids);
-    if (!ids) return 'לא נבחרו רשומות';
+  private async fixStudentReferenceV2(ids: number[]): Promise<string> {
+    if (ids.length === 0) return 'לא נבחרו רשומות';
     const reports = await this.dataSource.getRepository(AttReport).findBy({ id: In(ids) });
 
     const reportsToSave = [];
@@ -185,9 +178,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     return `עודכנו ${reportsToSave.length} רשומות`;
   }
 
-  private async fixReferences(extra: Record<string, string>): Promise<string> {
-    const ids = getAsNumberArray(extra.ids);
-    if (!ids) return 'לא נבחרו רשומות';
+  private async fixReferences(ids: number[]): Promise<string> {
+    if (ids.length === 0) return 'לא נבחרו רשומות';
     const referenceFields = {
       studentTz: 'studentReferenceId',
       klassId: 'klassReferenceId',

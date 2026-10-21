@@ -540,6 +540,29 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       expect(result.saved['AttReport']).toHaveLength(3);
     });
 
+    it('inactive student — excluded from the roster, gets no AttReport row', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 284, userId: 1, key: 20, name: 'Klass Twenty', year };
+
+      const builder = teacherSetup('Seminar skips inactive student', {
+        extraSeeds: {
+          Klass: [klass],
+          Student: roster().map((s) => (s.id === 103 ? { ...s, isActive: false } : s)),
+          StudentKlass: studentKlasses(klass.id, year),
+          Lesson: [{ id: 800, userId: 1, key: 5, name: 'Lesson Five', year }],
+        },
+      }).seed('AttReport', []);
+      startsSeminarCall(builder, '20', '1');
+      entersLesson(builder, '5');
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+      expect(result.saved['AttReport'].map((r: any) => r.studentReferenceId).sort()).toEqual([101, 102]);
+    });
+
     it('invalid teacher code — error message then retry with valid code', async () => {
       jest.setSystemTime(israelTimeAt(7, 0));
       const year = getCurrentHebrewYear();
