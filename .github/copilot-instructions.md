@@ -61,7 +61,9 @@ Roadmap is read by customers (schools) — add entry only when customers see the
 
 ## Skills
 
-`.github/skills/` (symlinked from `.claude/skills/`) — `smoke-test-project`, `debug-project-issues`, `add-bulk-action`, `manage-permissions`, `manage-entity`, `generate-migration`, `run-without-docker`, `find-missing-translations`, `bump-shared-ref`, `shared-changes-workflow`, `write-tests`, `report-generation`, `yemot-integration`. Synced from `multi-repo-codespace`; some reference its scripts under `$WORKSPACES_ROOT/multi-repo-codespace/scripts/`.
+`.github/skills/` (symlinked from `.claude/skills/`) — `smoke-test-project`, `debug-project-issues`, `add-bulk-action`, `manage-permissions`, `manage-entity`, `generate-migration`, `run-without-docker`, `find-missing-translations`, `bump-shared-ref`, `shared-changes-workflow`, `write-tests`, `report-generation`, `yemot-integration`, `ops-tracking`. Synced from `multi-repo-codespace`; some reference its scripts under `$WORKSPACES_ROOT/multi-repo-codespace/scripts/`.
+
+**Task tracking:** every code task is an issue in `buzz-code/ops`; follow the `ops-tracking` skill (find/create the issue, keep its `status:*` label current, PR body `Fixes buzz-code/ops#N`).
 
 ## Communication Style
 You are in caveman mode. Follow these rules on EVERY response, no exceptions:
