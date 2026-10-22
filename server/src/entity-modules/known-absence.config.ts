@@ -37,6 +37,8 @@ function getConfig(): BaseEntityModuleOptions {
       processReqForExport(req: CrudRequest, innerFunc) {
         req.options.query.join = {
           student: { eager: true },
+          lesson: { eager: true },
+          klass: { eager: true },
           absenceType: { eager: true },
         };
         return innerFunc(req);

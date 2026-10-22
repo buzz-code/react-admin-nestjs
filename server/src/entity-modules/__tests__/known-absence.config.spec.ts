@@ -12,6 +12,8 @@ createEntityConfigTests('KnownAbsenceConfig', config, {
   },
   expectedExportJoins: {
     student: { eager: true },
+    lesson: { eager: true },
+    klass: { eager: true },
     absenceType: { eager: true },
   },
   expectedExportHeaders: {
