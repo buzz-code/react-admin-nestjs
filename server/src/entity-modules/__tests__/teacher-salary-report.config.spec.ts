@@ -8,11 +8,13 @@ createEntityConfigTests('TeacherSalaryReportConfig', config, {
     teacher: {},
     lesson: {},
     klass: {},
+    'klass.klassType': {},
     reportMonth: {},
   },
   expectedExportJoins: {
     teacher: { eager: true },
     klass: { eager: true },
+    'klass.klassType': { eager: false },
     lesson: { eager: true },
     reportMonth: { eager: true },
   },
