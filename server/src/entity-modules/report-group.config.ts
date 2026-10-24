@@ -11,6 +11,7 @@ import { getHebrewDateFormatter } from '@shared/utils/formatting/formatter.util'
 import { Repository } from 'typeorm';
 import { BadRequestException } from '@nestjs/common';
 import { getAsNumberArray, getAsString } from '@shared/utils/queryParam.util';
+import { getSelectedIds } from 'src/utils/selectedIds.util';
 
 class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityService<T> {
   reportsDict = {
@@ -40,9 +41,7 @@ class ReportGroupService<T extends Entity | ReportGroup> extends BaseEntityServi
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'updateSignatureData': {
-        const ids = (await this.getManyByIds(req, getAsNumberArray(req.parsed.extra.ids))).map(
-          (entity: any) => entity.id,
-        );
+        const ids = await getSelectedIds(this, req);
         if (!ids.length) return 'לא נבחרו רשומות';
         const signatureData = getAsString(req.parsed.extra.signatureData);
         await this.updateSignatureData(ids, signatureData);

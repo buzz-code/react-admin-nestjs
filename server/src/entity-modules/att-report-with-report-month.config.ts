@@ -10,7 +10,8 @@ import { validateBulk } from '@shared/base-entity/base-entity.util';
 import { fixReferences } from '@shared/utils/entity/fixReference.util';
 import { getHebrewDateFormatter } from '@shared/utils/formatting/formatter.util';
 import { shouldShowTopic } from './att-report.config';
-import { getAsDate, getAsNumber, getAsBoolean, getAsString, getAsNumberArray } from '@shared/utils/queryParam.util';
+import { getAsDate, getAsNumber, getAsBoolean, getAsString } from '@shared/utils/queryParam.util';
+import { getSelectedIds } from 'src/utils/selectedIds.util';
 
 function getConfig(): BaseEntityModuleOptions {
   return {
@@ -130,9 +131,7 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
   // Keeps only the selected ids the caller may access (crudAuth filter), so a
   // caller-supplied id from another user's data is never touched.
   private async getOwnedIds(req: CrudRequest<any, any>): Promise<number[]> {
-    const ids = getAsNumberArray(req.parsed.extra.ids);
-    const entities = await this.getManyByIds(req, ids);
-    return entities.map((entity: any) => entity.id);
+    return getSelectedIds(this, req);
   }
 
   private async bulkKnownAbsences(extra: Record<string, string>, ids: number[]): Promise<string> {
