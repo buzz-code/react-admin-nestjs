@@ -123,7 +123,7 @@ services:
         restart: unless-stopped
         depends_on:
             - database
-        image: phpmyadmin
+        image: phpmyadmin:5.2
         labels:
             caddy: sql.$DOMAIN_NAME
             caddy.reverse_proxy: "{{upstreams 80}}"
