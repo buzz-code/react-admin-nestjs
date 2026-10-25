@@ -7,6 +7,8 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 // React-Admin
 import { usePermissions } from 'react-admin';
@@ -17,6 +19,7 @@ import PreviewSummary from './ApprovedAbsencesUpload/PreviewSummary';
 import PreviewTable from './ApprovedAbsencesUpload/PreviewTable';
 import ConfigurationForm from './ApprovedAbsencesUpload/ConfigurationForm';
 import ActionButtons from './ApprovedAbsencesUpload/ActionButtons';
+import StudentDatesUpload from './ApprovedAbsencesUpload/StudentDatesUpload';
 
 // Custom Hooks
 import { useFileProcessor } from './ApprovedAbsencesUpload/useFileProcessor';
@@ -24,6 +27,7 @@ import { useApplyAction } from './ApprovedAbsencesUpload/useApplyAction';
 
 const ApprovedAbsencesUpload = () => {
     const { permissions } = usePermissions();
+    const [mode, setMode] = useState('klass');
     const [loading, setLoading] = useState(false);
     const [previewData, setPreviewData] = useState(null);
     const [fileName, setFileName] = useState('');
@@ -67,48 +71,58 @@ const ApprovedAbsencesUpload = () => {
                             העלאת חיסורים מאושרים
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            העלאת קובץ Excel להוספת חיסורים מאושרים עבור כיתות שלמות
+                            העלאת קובץ Excel להוספת חיסורים מאושרים עבור כיתות שלמות או תלמידות
                         </Typography>
                     </Box>
 
-                    <Divider />
+                    <Tabs value={mode} onChange={(e, value) => setMode(value)}>
+                        <Tab value="klass" label="לפי כיתה" />
+                        <Tab value="student" label="לפי תלמידה" />
+                    </Tabs>
 
-                    {/* File Upload Section */}
-                    <FileUploadSection
-                        fileInputRef={fileInputRef}
-                        fileName={fileName}
-                        loading={loading}
-                        onFileSelect={handleFileSelect}
-                        onDataParsed={handleFileUpload}
-                    />
-
-                    {/* Preview Section */}
-                    {previewData && !loading && (
+                    {mode === 'student' && <StudentDatesUpload />}
+                    {mode === 'klass' && (
                         <>
                             <Divider />
 
-                            {/* Summary Statistics */}
-                            <PreviewSummary previewData={previewData} />
-
-                            {/* Preview Table */}
-                            {previewData.details && previewData.details.length > 0 && (
-                                <Box>
-                                    <PreviewTable data={previewData.details} />
-                                </Box>
-                            )}
-
-                            <Divider />
-
-                            {/* Configuration Form */}
-                            <ConfigurationForm configValues={configValues} onChange={setConfigValues} />
-
-                            {/* Action Buttons */}
-                            <ActionButtons
+                            {/* File Upload Section */}
+                            <FileUploadSection
+                                fileInputRef={fileInputRef}
+                                fileName={fileName}
                                 loading={loading}
-                                matchedCount={previewData.matched}
-                                onCancel={handleCancel}
-                                onApply={handleApply}
+                                onFileSelect={handleFileSelect}
+                                onDataParsed={handleFileUpload}
                             />
+
+                            {/* Preview Section */}
+                            {previewData && !loading && (
+                                <>
+                                    <Divider />
+
+                                    {/* Summary Statistics */}
+                                    <PreviewSummary previewData={previewData} />
+
+                                    {/* Preview Table */}
+                                    {previewData.details && previewData.details.length > 0 && (
+                                        <Box>
+                                            <PreviewTable data={previewData.details} />
+                                        </Box>
+                                    )}
+
+                                    <Divider />
+
+                                    {/* Configuration Form */}
+                                    <ConfigurationForm configValues={configValues} onChange={setConfigValues} />
+
+                                    {/* Action Buttons */}
+                                    <ActionButtons
+                                        loading={loading}
+                                        matchedCount={previewData.matched}
+                                        onCancel={handleCancel}
+                                        onApply={handleApply}
+                                    />
+                                </>
+                            )}
                         </>
                     )}
                 </Stack>

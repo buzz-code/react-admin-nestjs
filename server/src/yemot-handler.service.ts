@@ -24,6 +24,10 @@ const SCHEDULE_MATCH_TOLERANCE_MINUTES = 90;
 
 @Injectable()
 export class YemotHandlerService extends BaseYemotHandlerService {
+  // Stateless replay (see shared yemot-replay.ts): time-based branches read
+  // callStartedAt instead of new Date(), and DB writes only follow the last prompt.
+  static stateless = true;
+
   override async processCall(): Promise<void> {
     await this.getUserByDidPhone();
     this.logger.log(`Processing call with ID: ${this.call.callId} from phone: ${this.call.phone}`);
@@ -49,7 +53,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   }
 
   private async processManagerReportCall(): Promise<void> {
-    const todayDateOnly = this.getIsraelDateString(new Date());
+    const todayDateOnly = this.getIsraelDateString(this.callStartedAt);
 
     const schedules = await this.dataSource.getRepository(LessonSchedule).find({
       where: { userId: this.user.id, scheduleDate: todayDateOnly as unknown as Date },
@@ -144,7 +148,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   }
 
   private async askDuplicateLessonChoice(teacher: Teacher, klass: Klass, lessonReferenceId: number): Promise<boolean> {
-    const reportDate = this.getIsraelDateString(new Date()) as unknown as Date;
+    const reportDate = this.getIsraelDateString(this.callStartedAt) as unknown as Date;
     const existing = await this.dataSource.getRepository(AttReport).findOneBy({
       userId: this.user.id,
       klassReferenceId: klass.id,
@@ -163,7 +167,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   }
 
   private async getScheduleForTeacherNow(teacher: Teacher): Promise<LessonSchedule | null> {
-    const todayDateOnly = this.getIsraelDateString(new Date());
+    const todayDateOnly = this.getIsraelDateString(this.callStartedAt);
     const schedules = await this.dataSource.getRepository(LessonSchedule).find({
       where: {
         userId: this.user.id,
@@ -173,7 +177,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     });
     if (schedules.length === 0) return null;
 
-    const nowMinutes = this.getIsraelMinutesSinceMidnight(new Date());
+    const nowMinutes = this.getIsraelMinutesSinceMidnight(this.callStartedAt);
     let closest: LessonSchedule | null = null;
     let closestDiff = Infinity;
     for (const schedule of schedules) {
@@ -295,7 +299,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     lessonReferenceId?: number,
     shouldDeletePreviousLesson?: boolean,
   ): Promise<void> {
-    const now = new Date();
+    const now = this.callStartedAt;
     const reportDate = this.getIsraelDateString(now) as unknown as Date;
     const callTime = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Jerusalem', hour12: false });
 
@@ -352,7 +356,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   }
 
   private isPastReportingDeadline(): boolean {
-    const now = new Date();
+    const now = this.callStartedAt;
     const israelTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
 
     const hour = israelTime.getHours();
@@ -383,10 +387,10 @@ export class YemotHandlerService extends BaseYemotHandlerService {
   private async hasReportedToday(studentId: number): Promise<boolean> {
     const absenceRepo = this.dataSource.getRepository(KnownAbsence);
 
-    const startOfDay = new Date();
+    const startOfDay = new Date(this.callStartedAt);
     startOfDay.setHours(0, 0, 0, 0);
 
-    const endOfDay = new Date();
+    const endOfDay = new Date(this.callStartedAt);
     endOfDay.setHours(23, 59, 59, 999);
 
     const existingReport = await absenceRepo.findOne({

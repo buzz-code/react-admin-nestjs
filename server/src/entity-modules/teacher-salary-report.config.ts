@@ -11,6 +11,7 @@ function getConfig(): BaseEntityModuleOptions {
         teacher: {},
         lesson: {},
         klass: {},
+        'klass.klassType': {},
         reportMonth: {},
       },
     },
@@ -19,6 +20,7 @@ function getConfig(): BaseEntityModuleOptions {
         req.options.query.join = {
           teacher: { eager: true },
           klass: { eager: true },
+          'klass.klassType': { eager: false },
           lesson: { eager: true },
           reportMonth: { eager: true },
         };

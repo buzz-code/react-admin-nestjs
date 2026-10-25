@@ -25,6 +25,7 @@ import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared/components/fields/CommonYear';
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 import { BulkApproveAbsences } from 'src/components/BulkApproveAbsences';
+import { ApproveFullDays } from 'src/components/ApproveFullDays';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import { BulkEditButton } from '@shared/components/crudContainers/BulkEditButton';
 import { useIsAbsenceType } from 'src/utils/appPermissions';
@@ -188,6 +189,7 @@ const importer = {
 
 const additionalListActions = [
     <BulkApproveAbsences key="approvedAbsences" label="אישור חיסורים לתלמידה" name="approvedAbsences" />,
+    <ApproveFullDays key="approveFullDays" label="אישור ימים מלאים" />,
 ];
 
 const entity = {

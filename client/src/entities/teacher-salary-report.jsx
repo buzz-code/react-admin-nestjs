@@ -53,10 +53,16 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
     );
 };
 
+const sortOptions = [
+    { field: 'klass.order', label: 'סדר כיתה' },
+    { field: 'klass.klassType.name', label: 'שיוך כיתה' },
+];
+
 const entity = {
     Datagrid,
     filters,
     filterDefaultValues,
+    sortOptions,
 };
 
 export default getResourceComponents(entity);
