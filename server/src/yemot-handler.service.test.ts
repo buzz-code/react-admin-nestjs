@@ -6,10 +6,9 @@ import { YemotHandlerService } from './yemot-handler.service';
  * Returns a Date that, when read with `toLocaleString` in Asia/Jerusalem,
  * represents the given local hour:minute on the current day.
  */
+// A fixed summer day, when Israel is UTC+3 - "today" broke these tests once winter time began.
 function israelTimeAt(hour: number, minute: number): Date {
-  const now = new Date();
-  const utcMs = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), hour - 3, minute);
-  return new Date(utcMs);
+  return new Date(Date.UTC(2026, 5, 15, hour - 3, minute));
 }
 
 // ---- Prompts reused across scenario steps ----
@@ -1020,7 +1019,7 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
           ],
         },
       })
-        .systemHangsUp(/Teacher A.*Teacher B/s)
+        .systemHangsUp(/Teacher A[\s\S]*Teacher B/)
         .build();
 
       const result = await runner.run(scenario);
