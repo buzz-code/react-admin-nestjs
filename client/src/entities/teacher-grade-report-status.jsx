@@ -4,6 +4,7 @@ import {
     TextField,
     required,
     BooleanInput,
+    NullableBooleanInput,
     TextInput,
     useGetList,
 } from 'react-admin';
@@ -28,6 +29,7 @@ const filters = [
         dynamicFilter={filterByUserId}
     />,
     <CommonYearInputFilter />,
+    <NullableBooleanInput source="hasNotReportedLessons" />,
 ];
 
 const filterDefaultValues = {
@@ -86,8 +88,8 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <TextField source="teacherComment" />
             <ReferenceField source="reportMonthReferenceId" reference="report_month" sortBy="reportMonthName" />
             <CommonYearField />
-            <ReferenceArrayField source="reportedLessons" reference="lesson" sortBy="reportedLessonNames" />
-            <ReferenceArrayField source="notReportedLessons" reference="lesson" sortBy="notReportedLessonNames" />
+            <ReferenceArrayField source="reportedLessons" reference="lesson" sortBy="reportedLessonsCount" sortByOrder="DESC" />
+            <ReferenceArrayField source="notReportedLessons" reference="lesson" sortBy="notReportedLessonsCount" sortByOrder="DESC" />
         </CommonDatagrid>
     );
 };

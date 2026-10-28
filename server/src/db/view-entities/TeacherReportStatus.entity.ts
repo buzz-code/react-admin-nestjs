@@ -47,6 +47,9 @@ import { getGroupConcatExpression } from '@shared/utils/entity/column-types.util
         ),
         'notReportedLessonNames',
       )
+      .addSelect('COUNT(DISTINCT CASE WHEN tlrs.isReported = 1 THEN tlrs.lessonId END)', 'reportedLessonsCount')
+      .addSelect('COUNT(DISTINCT CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonId END)', 'notReportedLessonsCount')
+      .addSelect('COUNT(DISTINCT CASE WHEN tlrs.isReported = 0 THEN tlrs.lessonId END) > 0', 'hasNotReportedLessons')
       .from(TeacherLessonReportStatus, 'tlrs')
       .leftJoin(Teacher, 'teacher', 'tlrs.teacherId = teacher.id')
       .leftJoin(ReportMonth, 'rm', 'tlrs.reportMonthId = rm.id')
@@ -94,4 +97,13 @@ export class TeacherReportStatus implements IHasUserId {
 
   @Column()
   notReportedLessonNames: string;
+
+  @ViewColumn()
+  reportedLessonsCount: number;
+
+  @ViewColumn()
+  notReportedLessonsCount: number;
+
+  @ViewColumn()
+  hasNotReportedLessons: boolean;
 }

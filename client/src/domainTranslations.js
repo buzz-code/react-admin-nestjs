@@ -340,6 +340,7 @@ export default {
                 reportMonthReferenceId: 'תקופת דיווח',
                 reportedLessons: 'שיעורים שדווחו',
                 notReportedLessons: 'שיעורים שלא דווחו',
+                hasNotReportedLessons: 'יש שיעורים שלא דווחו',
             },
         },
         teacher_reported_today: {
@@ -361,6 +362,7 @@ export default {
                 reportMonthReferenceId: 'תקופת דיווח',
                 reportedLessons: 'שיעורים שדווחו',
                 notReportedLessons: 'שיעורים שלא דווחו',
+                hasNotReportedLessons: 'יש שיעורים שלא דווחו',
             },
         },
         student_percent_report: {
