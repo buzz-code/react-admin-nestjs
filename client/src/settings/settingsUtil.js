@@ -18,6 +18,15 @@ export function getLessonTimes(identity) {
     return identity?.additionalData?.lessonTimes || [];
 }
 
+export function useAbsenceReasons() {
+    const { identity } = useGetIdentity();
+    return getAbsenceReasons(identity);
+}
+
+export function getAbsenceReasons(identity) {
+    return identity?.additionalData?.absenceReasons || [];
+}
+
 export const useDashboardItems = () => {
     const { identity } = useGetIdentity();
     return getDashboardItems(identity);

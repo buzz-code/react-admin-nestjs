@@ -1,4 +1,4 @@
-import { ArrayInput, CheckboxGroupInput, NumberInput, SimpleFormIterator, TimeInput, required } from 'react-admin';
+import { ArrayInput, CheckboxGroupInput, NumberInput, SimpleFormIterator, TextInput, TimeInput, maxLength, required } from 'react-admin';
 import { CommonSettingsAccordion } from '@shared/components/settings/CommonSettingsAccordion';
 import CommonAutocompleteInput from '@shared/components/fields/CommonAutocompleteInput';
 import { PAGE_SIZE_OPTIONS } from '@shared/config/settings';
@@ -22,7 +22,7 @@ export function GeneralSettingsInput() {
         <CommonSettingsAccordion
             id="general-settings"
             title="הגדרות כלליות"
-            subtitle="מספר שורות בטבלה, שווי איחור וזמני שיעורים"
+            subtitle="מספר שורות בטבלה, שווי איחור, זמני שיעורים וסיבות חיסור"
         >
             <CommonAutocompleteInput
                 source="defaultPageSize"
@@ -49,6 +49,14 @@ export function GeneralSettingsInput() {
                             <TimeInput source="end" parse={parseTime} validate={required()} />
                         </SimpleFormIterator>
                     </ArrayInput>
+                </SimpleFormIterator>
+            </ArrayInput>
+            <ArrayInput
+                source="absenceReasons"
+                helperText="רשימת סיבות לבחירה בשדה סיבה בחיסורים מאושרים. אפשר עדיין להקליד סיבה אחרת"
+            >
+                <SimpleFormIterator inline disableReordering>
+                    <TextInput label="סיבה" validate={[required(), maxLength(500)]} />
                 </SimpleFormIterator>
             </ArrayInput>
         </CommonSettingsAccordion>

@@ -52,6 +52,7 @@ export default {
                 'lessonTimes.periods': 'שיעורים',
                 'lessonTimes.periods.start': 'שעת התחלה',
                 'lessonTimes.periods.end': 'שעת סיום',
+                absenceReasons: 'סיבות חיסור',
                 phoneNumber: 'מספר טלפון',
                 mailAddressTitle: 'שם השולח',
                 mailAddressAlias: 'כתובת השולח',
