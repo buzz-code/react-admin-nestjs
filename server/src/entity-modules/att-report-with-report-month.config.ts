@@ -1,4 +1,5 @@
-import { CrudRequest, Override, CreateManyDto } from '@dataui/crud';
+import { CrudRequest, CrudRequestOptions, Override, CreateManyDto } from '@dataui/crud';
+import { ParsedRequestParams } from '@dataui/crud-request';
 import { In, DeepPartial } from 'typeorm';
 import { BaseEntityModuleOptions, Entity } from '@shared/base-entity/interface';
 import { IHeader } from '@shared/utils/exporter/types';
@@ -81,6 +82,14 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
     const attReportService = new BaseEntityService(this.dataSource.getRepository(AttReport), this.mailSendService);
     attReportService.dataSource = this.dataSource;
     return attReportService;
+  }
+
+  // The lead teacher report filters on `klass.klassType.teacherReferenceId`. Filter validation
+  // looks up the nested `klass.klassType` relation before `klass` is joined, and crud caches it
+  // without a join path, so resolve `klass` first.
+  async createBuilder(parsed: ParsedRequestParams, options: CrudRequestOptions, many = true, withDeleted = false) {
+    this.getRelationMetadata('klass', options.query.join.klass);
+    return super.createBuilder(parsed, options, many, withDeleted);
   }
 
   @Override()
