@@ -80,7 +80,8 @@ const customMenuItems = [
             />
         ),
     ({ permissions }) =>
-        shouldShowLessonReports(permissions) && (
+        shouldShowLessonReports(permissions) &&
+        !isTeacherView(permissions) && (
             <MenuItemLink
                 key="in-lesson-report-grade"
                 to="/in-lesson-report-grade"

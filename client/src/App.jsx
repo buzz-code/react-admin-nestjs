@@ -142,15 +142,6 @@ const App = () => (
                                     </TeacherGuard>
                                 }
                             />
-                            <Route
-                                path="/in-lesson-report-grade/*"
-                                element={
-                                    <TeacherGuard>
-                                        {' '}
-                                        <InLessonReport gradeMode />{' '}
-                                    </TeacherGuard>
-                                }
-                            />
                             <Route path="/percent-report-with-dates" element={<TeacherPercentReportWithDatesList />} />
                             <Route path="/student/student-attendance" element={<TeacherStudentAttendanceList />} />
                             <Route path="/att_report_with_report_month_lead" element={<LeadTeacherAttReportList />} />
