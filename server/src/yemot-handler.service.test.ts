@@ -1,5 +1,6 @@
 import { MockCall, MockExitError, YemotScenarioBuilder, YemotScenarioRunner, createRealDataSource, useFakeDateOnly } from '@shared/utils/yemot/testing';
 import { getCurrentHebrewYear } from '@shared/utils/entity/year.util';
+import { HangupError } from 'yemot-router2';
 import { YemotHandlerService } from './yemot-handler.service';
 
 /**
@@ -1036,5 +1037,28 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       expect(result.passed).toBe(true);
       expect(result.hungup).toBe(true);
     });
+  });
+});
+
+describe('YemotHandlerService — seminar caller hangs up mid-call', () => {
+  it('logs the confirmed absent students it could not save, then rethrows the hangup', async () => {
+    const students: Record<string, { id: number; name: string }> = { '513': { id: 21239, name: 'A' }, '814': { id: 21376, name: 'B' } };
+    const dataSource = { getRepository: () => ({ findOneBy: async ({ studentNumber }) => students[studentNumber] ?? null }) };
+    const call = { callId: 'call-1' };
+    const handler: any = new YemotHandlerService(dataSource as any, call as any, {} as any);
+    handler.user = { id: 1 };
+    const inputs = ['513', '814'];
+    handler.askForInputByKey = jest.fn(async () => {
+      if (inputs.length) return inputs.shift();
+      throw new HangupError(call as any);
+    });
+    handler.askConfirmation = jest.fn(async () => true);
+    const warn = jest.spyOn(handler.logger, 'warn').mockImplementation(() => undefined);
+
+    await expect(handler.collectAbsentStudentIds({ id: 7 }, { id: 200 })).rejects.toBeInstanceOf(HangupError);
+
+    expect(warn).toHaveBeenCalledWith(
+      'Call call-1 hung up before finishing - not saved: klass 200, teacher 7, 2 confirmed absent student(s) [21239, 21376]',
+    );
   });
 });
