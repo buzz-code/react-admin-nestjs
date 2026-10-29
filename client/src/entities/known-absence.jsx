@@ -26,6 +26,7 @@ import { CommonYearField, CommonYearInput, CommonYearInputFilter } from '@shared
 import { CommonHebrewDateField } from '@shared/components/fields/CommonHebrewDateField';
 import { BulkApproveAbsences } from 'src/components/BulkApproveAbsences';
 import { ApproveFullDays } from 'src/components/ApproveFullDays';
+import { AbsenceReasonInput } from 'src/components/AbsenceReasonInput';
 import { commonAdminFilters } from '@shared/components/fields/PermissionFilter';
 import { BulkEditButton } from '@shared/components/crudContainers/BulkEditButton';
 import { useIsAbsenceType } from 'src/utils/appPermissions';
@@ -73,7 +74,7 @@ const additionalBulkButtons = [
         <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} />
         <NumberInput source="absnceCount" />
         <NumberInput source="absnceCode" />
-        <TextInput source="reason" validate={maxLength(500)} />
+        <AbsenceReasonInput validate={maxLength(500)} />
         <TextInput source="senderName" validate={maxLength(100)} />
         <TextInput source="comment" validate={maxLength(500)} />
         <NullableBooleanInput source="isApproved" />
@@ -160,7 +161,7 @@ const Inputs = ({ isCreate, isAdmin }) => {
             <NumberInput source="absnceCount" validate={required()} />
             <NumberInput source="absnceCode" />
             <TextInput source="senderName" validate={maxLength(100)} />
-            <TextInput source="reason" validate={maxLength(500)} />
+            <AbsenceReasonInput validate={maxLength(500)} />
             <TextInput source="comment" validate={maxLength(500)} />
             <CommonFileField source="fileData" />
             <CommonFileDownloadButton source="fileData" label="הורד קובץ" />
