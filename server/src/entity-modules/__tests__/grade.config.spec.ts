@@ -1,4 +1,4 @@
-import { Repository, DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailSendService } from '@shared/utils/mail/mail-send.service';
 import gradeConfig from '../grade.config';
