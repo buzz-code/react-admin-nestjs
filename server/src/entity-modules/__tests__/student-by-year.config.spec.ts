@@ -1,6 +1,6 @@
 import config, { Utils } from '../student-by-year.config';
 import { StudentByYear } from 'src/db/view-entities/StudentByYear.entity';
-import { DataSource, EntityMetadata, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { ReportMonthSemester } from 'src/db/entities/ReportMonth.entity';
