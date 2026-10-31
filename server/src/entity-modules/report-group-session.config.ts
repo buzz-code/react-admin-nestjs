@@ -7,6 +7,7 @@ import { ReportGroupSession } from '../db/entities/ReportGroupSession.entity';
 import reportGroupSessionsSummary from 'src/reports/reportGroupSessionsSummary';
 import { In } from 'typeorm';
 import { getAsNumberArray, getAsNumber } from '@shared/utils/queryParam.util';
+import { getSelectedIds } from 'src/utils/selectedIds.util';
 
 class ReportGroupSessionService<T extends Entity | ReportGroupSession> extends BaseEntityService<T> {
   reportsDict = {
@@ -38,9 +39,7 @@ class ReportGroupSessionService<T extends Entity | ReportGroupSession> extends B
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'adjustTime': {
-        const ids = (await this.getManyByIds(req, getAsNumberArray(req.parsed.extra.ids))).map(
-          (entity: any) => entity.id,
-        );
+        const ids = await getSelectedIds(this, req);
         const hoursAdjustment = getAsNumber(req.parsed.extra.hoursAdjustment) || 0;
 
         if (hoursAdjustment === 0) {

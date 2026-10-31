@@ -11,6 +11,7 @@ import { generateStudentReportCard } from 'src/reports/reportGenerator';
 import studentReportCardReact from 'src/reports/studentReportCardReact';
 import { fixReferences } from '@shared/utils/entity/fixReference.util';
 import { getAsNumberArray } from '@shared/utils/queryParam.util';
+import { getSelectedIds } from 'src/utils/selectedIds.util';
 
 function getConfig(): BaseEntityModuleOptions {
   return {
@@ -66,9 +67,7 @@ class StudentKlassService<T extends Entity | StudentKlass> extends BaseEntitySer
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'fixReferences': {
-        const ids = (await this.getManyByIds(req, getAsNumberArray(req.parsed.extra.ids))).map(
-          (entity: any) => entity.id,
-        );
+        const ids = await getSelectedIds(this, req);
         if (!ids.length) return 'לא נבחרו רשומות';
         const referenceFields = {
           studentTz: 'studentReferenceId',
