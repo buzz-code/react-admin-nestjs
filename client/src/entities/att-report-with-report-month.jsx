@@ -77,9 +77,9 @@ export const Datagrid = ({ isAdmin, children, ...props }) => {
     const additionalBulkButtons = [
         <BulkEditButton key="bulkEdit">
             <DateInput source="reportDate" />
-            <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />
+            <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} filter={defaultYearFilter} />
             <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
-            <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} />
+            <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} filter={defaultYearFilter} />
             <NumberInput source="howManyLessons" />
             <NumberInput source="absCount" />
             <TextInput source="comments" />
