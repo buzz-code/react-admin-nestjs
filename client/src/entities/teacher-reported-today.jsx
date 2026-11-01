@@ -183,7 +183,7 @@ const LessonRow = ({ row, showDate, until }) => {
     );
 };
 
-// A lesson from the lessonTimes setting that had no report while later lessons that day did.
+// A lesson from the lessonTimes setting that had no report while a later lesson that day did.
 const GapRow = ({ gap, showDate }) => (
     <Box sx={{ px: 2, py: 0.75, borderTop: 1, borderColor: 'divider' }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: showDate ? '96px minmax(0, 1fr)' : '48px minmax(0, 1fr)', gap: 1.5, alignItems: 'center', px: 1, py: 0.5, border: '1px dashed', borderColor: 'text.disabled', borderRadius: 1, color: 'text.secondary' }}>
