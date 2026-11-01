@@ -150,3 +150,6 @@ export function getDetailDateRange(extra = {}, reportMonth) {
 }
 
 export const formatPercent = (ratio) => `${(ratio * 100).toFixed(1)}%`;
+
+// Absence counts can be fractional; show at most one decimal and hide float noise (9.600000000000001).
+export const formatNumber = (value) => String(Math.round((Number(value) || 0) * 10) / 10);
