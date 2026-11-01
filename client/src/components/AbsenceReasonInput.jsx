@@ -37,7 +37,6 @@ export const AbsenceReasonInput = ({ source = 'reason', label, validate, ...prop
             label={<FieldTitle label={label} source={source} resource={resource} isRequired={isRequired} />}
             error={invalid}
             helperText={invalid && <InputHelperText error={error?.message} />}
-            variant="filled"
             size="small"
             margin="dense"
             {...props}
