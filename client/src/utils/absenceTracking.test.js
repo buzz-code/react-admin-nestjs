@@ -1,4 +1,5 @@
 import {
+    formatNumber,
     getDetailDateRange,
     getLessonHeaders,
     getStudentStats,
@@ -121,5 +122,14 @@ describe('getDetailDateRange', () => {
             ),
         ).toEqual({ from: '2026-10-10', to: '2026-10-31' });
         expect(getDetailDateRange({}, undefined)).toEqual({ from: undefined, to: undefined });
+    });
+});
+
+describe('formatNumber', () => {
+    it('rounds to one decimal and hides float noise', () => {
+        expect(formatNumber(9.600000000000001)).toBe('9.6');
+        expect(formatNumber(8.899999999999999)).toBe('8.9');
+        expect(formatNumber(20)).toBe('20');
+        expect(formatNumber(2.25)).toBe('2.3');
     });
 });

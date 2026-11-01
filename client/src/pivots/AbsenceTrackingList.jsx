@@ -29,6 +29,7 @@ import { MAX_PAGE_SIZE } from '@shared/config/settings';
 import {
     DEFAULT_THRESHOLD_PERCENT,
     NEAR_THRESHOLD_ABSENCES,
+    formatNumber,
     formatPercent,
     getDetailDateRange,
     getLessonHeaders,
@@ -162,7 +163,7 @@ const SummaryTiles = ({ students, noReportsCount, thresholdPercent, status, onSt
         {
             label: 'אחוז חיסור כללי',
             value: lessons ? formatPercent(unapproved / lessons) : '–',
-            hint: `${unapproved} חיסורים לא מאושרים · ${approved} מאושרים`,
+            hint: `${formatNumber(unapproved)} חיסורים לא מאושרים · ${formatNumber(approved)} מאושרים`,
         },
     ];
     return (
@@ -199,8 +200,8 @@ const SummaryTiles = ({ students, noReportsCount, thresholdPercent, status, onSt
 };
 
 const leftText = ({ key, left }) => {
-    if (key === 'over') return left === 0 ? 'הגיעה לסף' : `${-left} מעל הסף`;
-    return left === 1 ? 'עוד חיסור אחד לסף' : `עוד ${left} חיסורים לסף`;
+    if (key === 'over') return left === 0 ? 'הגיעה לסף' : `${formatNumber(-left)} מעל הסף`;
+    return left === 1 ? 'עוד חיסור אחד לסף' : `עוד ${formatNumber(left)} חיסורים לסף`;
 };
 
 const ThresholdMeter = ({ student, thresholdRatio }) => {
@@ -246,7 +247,7 @@ const SubjectChips = ({ subjects }) => {
                     key={subject.key}
                     sx={{ ...chipSx, ...(index === 0 && subject.abs >= 3 && { borderColor: 'transparent', ...STATUS_STYLES.over.pill, fontWeight: 600 }) }}
                 >
-                    {subject.name} {subject.abs}
+                    {subject.name} {formatNumber(subject.abs)}
                 </Box>
             ))}
             {subjects.length > 4 && (
@@ -311,8 +312,8 @@ const StudentDetail = ({ student, lessonHeaders }) => {
                         {subjects.map((subject) => (
                             <tr key={subject.key}>
                                 <Box component="td" sx={cell}>{subject.name}</Box>
-                                <Box component="td" sx={cell}>{subject.lessons}</Box>
-                                <Box component="td" sx={cell}>{subject.abs}</Box>
+                                <Box component="td" sx={cell}>{formatNumber(subject.lessons)}</Box>
+                                <Box component="td" sx={cell}>{formatNumber(subject.abs)}</Box>
                                 <Box component="td" sx={cell}>{formatPercent(subject.ratio)}</Box>
                             </tr>
                         ))}
@@ -326,7 +327,7 @@ const StudentDetail = ({ student, lessonHeaders }) => {
                     <Box component="ul" sx={{ m: 0, p: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 0.25 }}>
                         {absences.slice(0, 10).map((absence) => (
                             <Typography component="li" variant="body2" key={absence.id}>
-                                {formatDate(absence.date)} · {absence.subject}{absence.count > 1 ? ` (${absence.count})` : ''}
+                                {formatDate(absence.date)} · {absence.subject}{absence.count > 1 ? ` (${formatNumber(absence.count)})` : ''}
                             </Typography>
                         ))}
                     </Box>
@@ -373,7 +374,7 @@ const StudentRow = ({ student, thresholdRatio, lessonHeaders, open, onToggle }) 
             <Box sx={{ minWidth: 0 }}>
                 <Typography variant="body2" sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{student.name}</Typography>
                 <Typography variant="caption" color="text.secondary">
-                    {student.unapproved} לא מאושרים מתוך {student.lessons} שיעורים{student.approved ? ` · ${student.approved} מאושרים` : ''}
+                    {formatNumber(student.unapproved)} לא מאושרים מתוך {formatNumber(student.lessons)} שיעורים{student.approved ? ` · ${formatNumber(student.approved)} מאושרים` : ''}
                 </Typography>
             </Box>
             <ThresholdMeter student={student} thresholdRatio={thresholdRatio} />
