@@ -42,14 +42,25 @@ describe('withLessonGaps', () => {
     });
 
     it('counts a report in the break for the lesson before it', () => {
-        // 09:35 is the break after lesson 2, 09:50 is lesson 3: nothing skipped.
-        const result = withLessonGaps([lesson(1, '2026-10-14T05:50:00Z'), lesson(2, '2026-10-14T06:35:00Z'), lesson(3, '2026-10-14T06:50:00Z')], lessonTimes);
+        // 08:40 is lesson 1, 09:35 is the break after lesson 2, 09:50 is lesson 3: nothing skipped.
+        const result = withLessonGaps([lesson(1, '2026-10-14T05:40:00Z'), lesson(2, '2026-10-14T06:35:00Z'), lesson(3, '2026-10-14T06:50:00Z')], lessonTimes);
         expect(result.some((row) => row.isGap)).toBe(false);
     });
 
-    it('adds nothing before the first or after the last report of the day', () => {
+    it('adds an empty slot for each unreported lesson before the first report of the day', () => {
+        // 09:50 is lesson 3: lessons 1-2 were skipped.
         const result = withLessonGaps([lesson(1, '2026-10-14T06:50:00Z')], lessonTimes);
-        expect(result).toEqual([lesson(1, '2026-10-14T06:50:00Z')]);
+        expect(result.map((row) => (row.isGap ? `gap${row.period.number}` : row.id))).toEqual(['gap1', 'gap2', 1]);
+    });
+
+    it('adds nothing after the last report of the day', () => {
+        const result = withLessonGaps([lesson(1, '2026-10-14T05:10:00Z')], lessonTimes);
+        expect(result).toEqual([lesson(1, '2026-10-14T05:10:00Z')]);
+    });
+
+    it('adds nothing for a report before the first lesson', () => {
+        const result = withLessonGaps([lesson(1, '2026-10-14T04:30:00Z')], lessonTimes);
+        expect(result.some((row) => row.isGap)).toBe(false);
     });
 
     it('does not add a slot between two reports of the same lesson', () => {

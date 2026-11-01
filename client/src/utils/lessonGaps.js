@@ -42,8 +42,8 @@ const getPeriodIndex = (row, periods) => {
     return periods.findLastIndex((period) => period.startMinutes <= minutes);
 };
 
-// The class's lessons with an empty slot ({ isGap: true, period, reportDate }) before each reported lesson
-// that comes after one or more unreported lessons of the same day. Nothing is added after the last report of the day.
+// The class's lessons with an empty slot ({ isGap: true, period, reportDate }) for each unreported lesson of the day
+// that comes before a reported one (including lessons before the first report). Nothing is added after the last report of the day.
 // A lesson is placed by the time it was reported, so a report entered late counts for the lesson it was entered in.
 export function withLessonGaps(lessons, lessonTimes) {
     if (!Array.isArray(lessonTimes) || !lessonTimes.length) {
@@ -58,11 +58,9 @@ export function withLessonGaps(lessons, lessonTimes) {
         const index = getPeriodIndex(row, periods);
         const lastIndex = lastIndexByDate.get(reportDate) ?? -1;
         if (index > lastIndex) {
-            if (lastIndex >= 0) {
-                periods.slice(lastIndex + 1, index).forEach((period) => {
-                    result.push({ isGap: true, id: `gap_${reportDate}_${period.number}`, reportDate: row.reportDate, period });
-                });
-            }
+            periods.slice(lastIndex + 1, index).forEach((period) => {
+                result.push({ isGap: true, id: `gap_${reportDate}_${period.number}`, reportDate: row.reportDate, period });
+            });
             lastIndexByDate.set(reportDate, index);
         }
         result.push(row);
