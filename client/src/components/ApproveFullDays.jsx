@@ -62,6 +62,7 @@ export const ApproveFullDays = ({ label }) => {
                         source="klassReferenceId"
                         reference="klass"
                         dynamicFilter={filterByUserIdAndYear}
+                        filter={defaultYearFilter}
                         label="כיתה (לא חובה)"
                     />
                     <AbsenceReasonInput validate={maxLength(500)} label="סיבה" />

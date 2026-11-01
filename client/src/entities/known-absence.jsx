@@ -70,8 +70,8 @@ const filterDefaultValues = {
 const additionalBulkButtons = [
     <BulkEditButton key="bulkEdit">
         <DateInput source="reportDate" />
-        <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} />
-        <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} />
+        <CommonReferenceInput source="klassReferenceId" reference="klass" dynamicFilter={filterByUserIdAndYear} filter={defaultYearFilter} />
+        <CommonReferenceInput source="lessonReferenceId" reference="lesson" dynamicFilter={filterByUserIdAndYear} filter={defaultYearFilter} />
         <NumberInput source="absnceCount" />
         <NumberInput source="absnceCode" />
         <AbsenceReasonInput validate={maxLength(500)} />
