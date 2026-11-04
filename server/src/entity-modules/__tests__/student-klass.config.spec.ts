@@ -169,7 +169,14 @@ describe('StudentKlassConfig', () => {
       const Service = config.service;
       service = new Service(mockRepository as Repository<StudentKlass>, mockMailService);
       service.dataSource = mockDataSource as DataSource;
-      service.getManyByIds = jest.fn().mockImplementation((req, ids) => Promise.resolve(ids.map((id) => ({ id }))));
+      service.getSelectedIds = jest.fn().mockImplementation((req) =>
+        Promise.resolve(
+          String(req.parsed.extra.ids ?? '')
+            .split(',')
+            .filter(Boolean)
+            .map(Number),
+        ),
+      );
     });
 
     describe('getReportData', () => {
@@ -228,7 +235,7 @@ describe('StudentKlassConfig', () => {
 
       it('should only fix references of ids the caller can access', async () => {
         const req = createMockCrudRequest({ action: 'fixReferences', ids: '1,99' });
-        service.getManyByIds.mockResolvedValueOnce([{ id: 1 }]);
+        service.getSelectedIds.mockResolvedValueOnce([1]);
         mockRepository.findBy.mockResolvedValueOnce([createMockStudentKlass({ id: 1, studentTz: '123', klassId: 1 })]);
 
         await service.doAction(req, {});

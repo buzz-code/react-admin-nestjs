@@ -8,7 +8,6 @@ import { Klass } from 'src/db/entities/Klass.entity';
 import klassAttendanceReportGenerator from 'src/reports/klassAttendanceReport';
 import { getAsBoolean, getAsDate, getAsNumberArray } from '@shared/utils/queryParam.util';
 import { fixReferences } from '@shared/utils/entity/fixReference.util';
-import { getSelectedIds } from 'src/utils/selectedIds.util';
 
 class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
   reportsDict = {
@@ -27,7 +26,7 @@ class KlassService<T extends Entity | Klass> extends BaseEntityService<T> {
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'fixReferences': {
-        const ids = await getSelectedIds(this, req);
+        const ids = await this.getSelectedIds(req);
         if (!ids.length) return 'לא נבחרו רשומות';
         const referenceFields = {
           klassTypeId: 'klassTypeReferenceId',
