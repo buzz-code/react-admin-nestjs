@@ -66,9 +66,7 @@ class StudentKlassService<T extends Entity | StudentKlass> extends BaseEntitySer
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
     switch (req.parsed.extra.action) {
       case 'fixReferences': {
-        const ids = (await this.getManyByIds(req, getAsNumberArray(req.parsed.extra.ids))).map(
-          (entity: any) => entity.id,
-        );
+        const ids = await this.getSelectedIds(req);
         if (!ids.length) return 'לא נבחרו רשומות';
         const referenceFields = {
           studentTz: 'studentReferenceId',

@@ -89,7 +89,14 @@ describe('att-report-with-report-month.config', () => {
       // Mock getOne on the service instance itself since it calls this.getOne()
       service.getOne = jest.fn().mockResolvedValue({ id: 1, reportDate: '2022-01-01' });
       // By default every selected id is accessible to the caller
-      service.getManyByIds = jest.fn().mockImplementation((req, ids) => Promise.resolve(ids.map((id) => ({ id }))));
+      service.getSelectedIds = jest.fn().mockImplementation((req) =>
+        Promise.resolve(
+          String(req.parsed.extra.ids ?? '')
+            .split(',')
+            .filter(Boolean)
+            .map(Number),
+        ),
+      );
 
       mockBaseCreateOne.mockClear();
       mockBaseCreateMany.mockClear();
@@ -155,19 +162,19 @@ describe('att-report-with-report-month.config', () => {
     });
 
     it('bulkKnownAbsences should only use ids the caller can access', async () => {
-      service.getManyByIds.mockResolvedValueOnce([{ id: 1 }]);
+      service.getSelectedIds.mockResolvedValueOnce([1]);
       mockRepo.findBy.mockResolvedValueOnce([]);
       const req = { parsed: { extra: { action: 'bulkKnownAbsences', ids: '1,99' } } } as any;
 
       // An empty insert fails validation; only the lookup matters here
       await service.doAction(req, {}).catch(() => undefined);
 
-      expect(service.getManyByIds).toHaveBeenCalledWith(req, [1, 99]);
+      expect(service.getSelectedIds).toHaveBeenCalledWith(req);
       expect(mockRepo.findBy.mock.calls[0][0].id.value).toEqual([1]);
     });
 
     it('bulkKnownAbsences should do nothing when no selected id is accessible', async () => {
-      service.getManyByIds.mockResolvedValueOnce([]);
+      service.getSelectedIds.mockResolvedValueOnce([]);
       const req = { parsed: { extra: { action: 'bulkKnownAbsences', ids: '99' } } } as any;
 
       const result = await service.doAction(req, {});
