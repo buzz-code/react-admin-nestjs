@@ -18,6 +18,7 @@ import ViewListIcon from '@mui/icons-material/ViewListOutlined';
 import GridOnIcon from '@mui/icons-material/GridOnOutlined';
 import ContactMailIcon from '@mui/icons-material/ContactMailOutlined';
 import TrackChangesIcon from '@mui/icons-material/TrackChangesOutlined';
+import TableViewIcon from '@mui/icons-material/TableViewOutlined';
 
 import BaseLayout from '@shared/components/layout/Layout';
 import BaseDashboard from '@shared/components/views/Dashboard';
@@ -29,6 +30,7 @@ import {
     isTeacherView,
     isStudentView,
     isStudentAttendanceByKlass,
+    isAttendanceSheetImport,
 } from './utils/appPermissions';
 import { useDashboardItems } from './settings/settingsUtil';
 
@@ -78,7 +80,8 @@ const customMenuItems = [
             />
         ),
     ({ permissions }) =>
-        shouldShowLessonReports(permissions) && (
+        shouldShowLessonReports(permissions) &&
+        !isTeacherView(permissions) && (
             <MenuItemLink
                 key="in-lesson-report-grade"
                 to="/in-lesson-report-grade"
@@ -121,6 +124,15 @@ const menuGroups = [
                     primaryText="העלאת חיסורים מאושרים"
                     leftIcon={<FileUploadIcon />}
                 />,
+                ({ permissions }) =>
+                    isAttendanceSheetImport(permissions) && (
+                        <MenuItemLink
+                            key="attendance-sheet-import"
+                            to="/attendance-sheet-import"
+                            primaryText="קליטת קובץ נוכחות מגמה"
+                            leftIcon={<TableViewIcon />}
+                        />
+                    ),
             ],
         },
     ({ permissions }) =>

@@ -14,6 +14,7 @@ import { ReportGroupSession } from './db/entities/ReportGroupSession.entity';
 import { LessonSchedule } from './db/entities/LessonSchedule.entity';
 import { Lesson } from './db/entities/Lesson.entity';
 import { Between, In, Like } from 'typeorm';
+import { HangupError } from 'yemot-router2';
 
 const SCHEDULE_MATCH_TOLERANCE_MINUTES = 90;
 /**
@@ -24,9 +25,11 @@ const SCHEDULE_MATCH_TOLERANCE_MINUTES = 90;
 
 @Injectable()
 export class YemotHandlerService extends BaseYemotHandlerService {
-  // Stateless replay (see shared yemot-replay.ts): time-based branches read
-  // callStartedAt instead of new Date(), and DB writes only follow the last prompt.
-  static stateless = true;
+  // Stateless replay (see shared yemot-replay.ts) is off for now: calls are kept in
+  // memory between Yemot requests (single server node). The flow stays replay-safe -
+  // time-based branches read callStartedAt and DB writes only follow the last prompt -
+  // so it can be turned back on with `static stateless = true`.
+  static stateless = false;
 
   override async processCall(): Promise<void> {
     await this.getUserByDidPhone();
@@ -139,7 +142,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       return;
     }
 
-    const absentStudentReferenceIds = await this.collectAbsentStudentIds();
+    const absentStudentReferenceIds = await this.collectAbsentStudentIds(teacher, klass);
     await this.saveSeminarAttendance(teacher, klass, roster, absentStudentReferenceIds, lessonReferenceId, shouldDeletePreviousLesson);
     if (shouldDeletePreviousLesson) {
       await this.sendMessageByKey('SEMINAR.DUPLICATE_LESSON_DELETED');
@@ -268,25 +271,38 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     });
   }
 
-  private async collectAbsentStudentIds(): Promise<Set<number>> {
+  private async collectAbsentStudentIds(teacher: Teacher, klass: Klass): Promise<Set<number>> {
     const absentStudentReferenceIds = new Set<number>();
-    let input = await this.askForInputByKey('SEMINAR.ABSENT_STUDENT_PROMPT');
-    while (input !== '0') {
-      const student = await this.dataSource.getRepository(Student).findOneBy({
-        userId: this.user.id,
-        studentNumber: input,
-      });
-      if (!student) {
-        await this.sendMessageByKey('SEMINAR.INVALID_STUDENT_NUM');
-      } else {
-        const nameConfirmed = await this.askConfirmation('SEMINAR.CONFIRM_STUDENT_NAME', { studentName: student.name });
-        if (nameConfirmed) {
-          absentStudentReferenceIds.add(student.id);
+    try {
+      let input = await this.askForInputByKey('SEMINAR.ABSENT_STUDENT_PROMPT');
+      while (input !== '0') {
+        const student = await this.dataSource.getRepository(Student).findOneBy({
+          userId: this.user.id,
+          studentNumber: input,
+        });
+        if (!student) {
+          await this.sendMessageByKey('SEMINAR.INVALID_STUDENT_NUM');
         } else {
-          await this.sendMessageByKey('SEMINAR.STUDENT_NAME_REJECTED');
+          const nameConfirmed = await this.askConfirmation('SEMINAR.CONFIRM_STUDENT_NAME', { studentName: student.name });
+          if (nameConfirmed) {
+            absentStudentReferenceIds.add(student.id);
+          } else {
+            await this.sendMessageByKey('SEMINAR.STUDENT_NAME_REJECTED');
+          }
         }
+        input = await this.askForInputByKey('SEMINAR.ABSENT_STUDENT_PROMPT');
       }
-      input = await this.askForInputByKey('SEMINAR.ABSENT_STUDENT_PROMPT');
+    } catch (e) {
+      // Nothing is saved when the caller hangs up before finishing; log what was already
+      // confirmed so the lost report can be traced. warn, not log: info logs are muted
+      // while a stateless call replays its earlier steps.
+      if (e instanceof HangupError) {
+        this.logger.warn(
+          `Call ${this.call.callId} hung up before finishing - not saved: klass ${klass.id}, teacher ${teacher.id}, ` +
+          `${absentStudentReferenceIds.size} confirmed absent student(s) [${[...absentStudentReferenceIds].join(', ')}]`,
+        );
+      }
+      throw e;
     }
     return absentStudentReferenceIds;
   }

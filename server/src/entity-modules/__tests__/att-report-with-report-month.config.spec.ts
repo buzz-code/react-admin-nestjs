@@ -7,6 +7,8 @@ import { AttReport } from 'src/db/entities/AttReport.entity';
 const mockBaseCreateOne = jest.fn().mockResolvedValue({ id: 1 });
 const mockBaseCreateMany = jest.fn().mockResolvedValue([{ id: 1 }]);
 const mockBaseConstructor = jest.fn();
+const mockGetRelationMetadata = jest.fn();
+const mockBaseCreateBuilder = jest.fn().mockResolvedValue('builder');
 
 jest.mock('@shared/base-entity/base-entity.service', () => {
   class MockBaseEntityService {
@@ -31,6 +33,12 @@ jest.mock('@shared/base-entity/base-entity.service', () => {
     }
     async doAction(req: any, body: any) {
       return 'success';
+    }
+    getRelationMetadata(field: string, options: any) {
+      return mockGetRelationMetadata(field, options);
+    }
+    async createBuilder(parsed: any, options: any, many: boolean, withDeleted: boolean) {
+      return mockBaseCreateBuilder(parsed, options, many, withDeleted);
     }
   }
   return {
@@ -87,6 +95,19 @@ describe('att-report-with-report-month.config', () => {
       mockBaseCreateMany.mockClear();
       mockBaseConstructor.mockClear();
       (BaseEntityService as unknown as jest.Mock).mockClear?.();
+    });
+
+    it('createBuilder should resolve the klass relation before the nested klass.klassType filter', async () => {
+      const options = { query: { join: config.query.join } };
+      const parsed = { filter: [{ field: 'klass.klassType.teacherReferenceId', operator: '$eq', value: 1 }] };
+
+      await expect(service.createBuilder(parsed, options)).resolves.toBe('builder');
+
+      expect(mockGetRelationMetadata).toHaveBeenCalledWith('klass', { eager: false });
+      expect(mockGetRelationMetadata.mock.invocationCallOrder[0]).toBeLessThan(
+        mockBaseCreateBuilder.mock.invocationCallOrder[0],
+      );
+      expect(mockBaseCreateBuilder).toHaveBeenCalledWith(parsed, options, true, false);
     });
 
     it('createOne should delegate to AttReport service', async () => {

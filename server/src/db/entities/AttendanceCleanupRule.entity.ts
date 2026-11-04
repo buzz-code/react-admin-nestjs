@@ -10,7 +10,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IHasUserId } from '@shared/base-entity/interface';
-import { BooleanIntColumn } from '@shared/utils/entity/column-types.util';
 import { findOneAndAssignKey, getDataSource } from '@shared/utils/entity/foreignKey.util';
 import { IsOptional } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
@@ -115,7 +114,7 @@ export class AttendanceCleanupRule implements IHasUserId {
   @Column('int', { name: 'weeks_back', default: 2 })
   weeksBack: number;
 
-  @BooleanIntColumn({ default: true })
+  @Column('boolean', { name: 'active', default: true })
   active: boolean;
 
   @CreatedAtColumn()

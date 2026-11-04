@@ -18,7 +18,7 @@ class AttendanceCleanupRuleService<T extends Entity | AttendanceCleanupRule> ext
   }
 
   async doAction(req: CrudRequest<any, any>, body: any): Promise<any> {
-    const extra = req.parsed.extra as any;
+    const extra = req.parsed.extra;
     switch (extra.action) {
       case 'runNow': {
         const ruleIds = getAsNumberArray(extra.ids) ?? [];

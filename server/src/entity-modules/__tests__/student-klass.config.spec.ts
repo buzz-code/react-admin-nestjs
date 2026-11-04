@@ -1,5 +1,5 @@
 import { CrudRequest } from '@dataui/crud';
-import { DataSource, In, Repository, DeepPartial } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { StudentKlass } from 'src/db/entities/StudentKlass.entity';
 import { BulkToPdfReportGenerator } from '@shared/utils/report/bulk-to-pdf.generator';
 import { MailerService } from '@nestjs-modules/mailer';

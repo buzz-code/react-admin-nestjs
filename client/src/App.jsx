@@ -66,11 +66,13 @@ import {
     isStudentView,
     isSeminarAttendanceYemot,
     isAttendanceCleanupRules,
+    isAttendanceSheetImport,
 } from 'src/utils/appPermissions';
 import ScannerUpload from '@shared/components/views/ScannerUpload';
 import InLessonReport from 'src/reports/InLessonReport';
 import MichlolFileHelper from '@shared/components/views/MichlolFileHelper';
 import ApprovedAbsencesUpload from 'src/components/ApprovedAbsencesUpload';
+import AttendanceSheetImport from 'src/components/AttendanceSheetImport';
 
 import BadgeIcon from '@mui/icons-material/BadgeOutlined';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircleOutlined';
@@ -137,15 +139,6 @@ const App = () => (
                                     <TeacherGuard>
                                         {' '}
                                         <InLessonReport />{' '}
-                                    </TeacherGuard>
-                                }
-                            />
-                            <Route
-                                path="/in-lesson-report-grade/*"
-                                element={
-                                    <TeacherGuard>
-                                        {' '}
-                                        <InLessonReport gradeMode />{' '}
                                     </TeacherGuard>
                                 }
                             />
@@ -345,6 +338,9 @@ const App = () => (
                         <Route path="/in-lesson-report-grade/*" element={<InLessonReport gradeMode />} />
                         <Route path="/michlol-file-helper" element={<MichlolFileHelper />} />
                         <Route path="/approved-absences-upload" element={<ApprovedAbsencesUpload />} />
+                        {isAttendanceSheetImport(permissions) && (
+                            <Route path="/attendance-sheet-import" element={<AttendanceSheetImport />} />
+                        )}
                     </CustomRoutes>
                     {CommonRoutes({ permissions, roadmapFeatures, settingsPage: <Settings /> })}
                 </>

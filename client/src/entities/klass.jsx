@@ -64,6 +64,7 @@ const additionalBulkButtons = [
             reference="lesson"
             label="שיעורים"
             dynamicFilter={filterByUserIdAndYear}
+            filter={defaultYearFilter}
         />
         <BooleanInput source="groupByDate" label="קיבוץ לפי תאריך" defaultValue={true} />
     </BulkReportButton>,

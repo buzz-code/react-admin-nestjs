@@ -78,10 +78,11 @@ export const BulkApproveAbsences = ({ label, name }) => {
                             <CommonReferenceInput
                                 source="klassReferenceId"
                                 reference="klass"
+                                filter={defaultYearFilter}
                                 validate={required()}
                                 label="כיתה"
                             />
-                            <CommonReferenceInput source="lessonReferenceId" reference="lesson" label="שיעור" />
+                            <CommonReferenceInput source="lessonReferenceId" reference="lesson" filter={defaultYearFilter} label="שיעור" />
                             <NumberInput source="absnceCount" validate={required()} label="מספר חיסורים" />
                         </SimpleFormIterator>
                     </ArrayInput>

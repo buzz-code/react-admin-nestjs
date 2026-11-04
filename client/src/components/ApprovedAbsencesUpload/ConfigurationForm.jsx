@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { AbsenceReasonAutocomplete } from 'src/components/AbsenceReasonInput';
 
 const ConfigurationForm = ({ configValues, onChange }) => {
     const handleChange = (event) => {
@@ -14,7 +15,12 @@ const ConfigurationForm = ({ configValues, onChange }) => {
                 שלב 2: הגדרות
             </Typography>
             <Stack spacing={2} sx={{ maxWidth: 600 }}>
-                <TextField name="reason" label="סיבה" value={configValues.reason} onChange={handleChange} fullWidth />
+                <AbsenceReasonAutocomplete
+                    label="סיבה"
+                    value={configValues.reason}
+                    onChange={(reason) => onChange({ ...configValues, reason })}
+                    fullWidth
+                />
                 <TextField
                     name="senderName"
                     label="שם השולח"
