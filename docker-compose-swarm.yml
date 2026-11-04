@@ -28,8 +28,8 @@ services:
                 delay: 5s
             restart_policy:
                 condition: on-failure
-                delay: 5s
-                max_attempts: 3
+                delay: 60s
+                max_attempts: 5
                 window: 120s
         healthcheck:
             test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
@@ -72,8 +72,8 @@ services:
                 delay: 5s
             restart_policy:
                 condition: on-failure
-                delay: 5s
-                max_attempts: 3
+                delay: 60s
+                max_attempts: 5
                 window: 120s
         healthcheck:
             test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
