@@ -1,9 +1,7 @@
-import { Test } from '@nestjs/testing';
 import { jest, describe, expect, it, beforeEach } from '@jest/globals';
 import { TeacherReportStatus } from 'src/db/view-entities/TeacherReportStatus.entity';
 import { DataSource } from 'typeorm';
 import { MailSendService } from '@shared/utils/mail/mail-send.service';
-import teacherReportFile from 'src/reports/teacherReportFile';
 import * as reportGenerator from 'src/reports/reportGenerator';
 import config from '../teacher-report-status.config';
 import { CrudRequest } from '@dataui/crud';

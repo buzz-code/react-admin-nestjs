@@ -162,7 +162,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
       label: 'אחוז חיסורים כולל',
     };
 
-    (data[0] as any).headers = Object.values(headers);
+    Object.assign(data[0], { headers: Object.values(headers) });
   }
 
   private async populateStudentAttendanceByKlass(
@@ -276,7 +276,7 @@ class StudentByYearService<T extends Entity | StudentByYear> extends BaseEntityS
       { value: 'totalAbsenceRatio', label: 'אחוז חיסורים כולל', numFmt: '0.00%', thresholds: ABSENCE_THRESHOLDS },
     ];
 
-    (data[0] as any).headers = [...Object.values(headers), ...summaryHeaders];
+    Object.assign(data[0], { headers: [...Object.values(headers), ...summaryHeaders] });
   }
 
   private buildBaseWhere(

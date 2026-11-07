@@ -185,7 +185,7 @@ class StudentPercentReportService<T extends Entity | StudentPercentReport> exten
         headers['estimation'] = { value: 'estimation', label: 'הערכה' };
         headers['comments'] = { value: 'comments', label: 'הערה' };
         headers['estimatedAbsPercents'] = { value: 'estimatedAbsPercents', label: 'אחוז חיסור משוער' };
-        (data[0] as any).headers = Object.values(headers);
+        Object.assign(data[0], { headers: Object.values(headers) });
       }
     }
   }
