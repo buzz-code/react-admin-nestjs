@@ -1,8 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EntitiesModule } from '../entities.module';
-import { BaseEntityModule } from '@shared/base-entity/base-entity.module';
-import { getMetadataArgsStorage, DataSource } from 'typeorm';
-import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
+import { getMetadataArgsStorage } from 'typeorm';
 
 // Mock BaseEntityModule
 jest.mock('@shared/base-entity/base-entity.module', () => {
@@ -18,16 +16,10 @@ jest.mock('@shared/base-entity/base-entity.module', () => {
     }),
   };
 
-  // Export the mock for tests to use
-  global.MockBaseEntityModule = MockBaseEntityModule;
-
   return {
     BaseEntityModule: MockBaseEntityModule,
   };
 });
-
-// Get the mock from global for test assertions
-const MockBaseEntityModule = global.MockBaseEntityModule;
 
 // Import all configs and entities
 import userConfig from '../../shared/entities/configs/user.config';
