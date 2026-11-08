@@ -1,6 +1,6 @@
 import config, { Utils } from '../student-by-year.config';
 import { StudentByYear } from 'src/db/view-entities/StudentByYear.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { ReportMonthSemester } from 'src/db/entities/ReportMonth.entity';
@@ -28,7 +28,6 @@ describe('StudentByYear Config', () => {
   let service: BaseEntityService<any>;
   let module: TestingModule;
   let mockDataSource: Partial<DataSource>;
-  let mockRepository: Repository<any>;
   let mockMailService: Partial<MailSendService>;
 
   beforeEach(async () => {
