@@ -114,9 +114,9 @@ const Datagrid = ({ isAdmin, children, ...props }) => {
             <NumberField source="attGradeEffect" sortable={false} />
             <NumberField source="finalGrade" sortable={false} />
             <NumberField source="finalAttendance" sortable={false} />
-            <TextField source="estimation" />
-            <TextField source="comments" />
-            <NumberField source="estimatedAbsPercents" options={{ style: 'percent', maximumFractionDigits: 2 }} />
+            <TextField source="estimation" sortable={false} />
+            <TextField source="comments" sortable={false} />
+            <NumberField source="estimatedAbsPercents" sortable={false} options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <ShowMatchingAttReportsButton />
         </CommonDatagrid>
     );
