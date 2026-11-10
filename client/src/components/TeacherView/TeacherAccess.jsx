@@ -57,7 +57,7 @@ export const TeacherGuard = ({ children }) => {
         if (teacher) {
             setTeacher(teacher);
         } else {
-            notify('Teacher not found', { type: 'warning' });
+            notify('לא נמצאה מורה עם ת.ז. זו. יש לבדוק שהמספר נכון (כולל אפס בתחילתו), ואם הבעיה נמשכת לפנות להנהלת המוסד.', { type: 'warning' });
         }
     };
 
