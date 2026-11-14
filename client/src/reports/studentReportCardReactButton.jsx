@@ -1,4 +1,4 @@
-import { TextInput, DateInput, NumberInput, BooleanInput } from 'react-admin';
+import { TextInput, DateInput, NumberInput, BooleanInput, useGetIdentity } from 'react-admin';
 import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { CommonYearInput } from '@shared/components/fields/CommonYear';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
@@ -14,6 +14,8 @@ const defaultValues = {
 
 export default ({ defaultRequestValues }) => {
     const reportCardSettings = useReportCardSettings();
+    const { identity } = useGetIdentity();
+    const hasTikufConnection = Boolean(identity?.additionalData?.studentReportApiKey);
 
     return (
         <BulkReportButton
@@ -54,6 +56,7 @@ export default ({ defaultRequestValues }) => {
                 source="limitFilterUseOr"
                 label="כאשר שני הסינונים הקודמים מלאים, הצג שורה כשמתקיים לפחות אחד מהם (במקום שניהם יחד)"
             />
+            {hasTikufConnection && <BooleanInput source="showTikuf" label="הוסף סיכום תיקופי נוכחות (מאתר התיקוף)" />}
         </BulkReportButton>
     );
 };
