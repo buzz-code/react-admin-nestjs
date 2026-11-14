@@ -35,6 +35,7 @@ export function generateStudentReportCard(userId: any, reqExtra: any, generator:
     attendanceLessThan: getPercentLessThanParam(reqExtra.attendanceLessThan),
     gradesLessThan: getPercentLessThanParam(reqExtra.gradesLessThan),
     limitFilterUseOr: getAsBoolean(reqExtra.limitFilterUseOr),
+    showTikuf: getAsBoolean(reqExtra.showTikuf),
   };
   console.log('student report card extra params: ', extraParams);
   const params = getAsArray(reqExtra.ids)?.map((id) => ({

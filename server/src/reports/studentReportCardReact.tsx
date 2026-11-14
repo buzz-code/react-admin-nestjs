@@ -22,6 +22,7 @@ import { formatHebrewDate, formatDisplayName } from '@shared/utils/formatting/fo
 import { groupDataByKeysAndCalc, calcSum, groupDataByKeys, getItemById } from '@shared/utils/reportData.util';
 import { getDisplayGrade, getDisplayAttendance, getAttPercents, getUnknownAbsCount, calcReportsData, getReportsFilterForReportCard, getGradeEffect, getRelevantGrade } from 'src/utils/studentReportData.util';
 import { getReportDateFilter, dateFromString } from '@shared/utils/entity/filters.util';
+import { TikufSummary, buildTikufSummaryQuery, getStudentTikufSummary } from 'src/utils/tikuf-summary.util';
 import { StudentSpeciality } from 'src/db/view-entities/StudentSpeciality.entity';
 
 enum ReportElementType {
@@ -94,6 +95,7 @@ interface AppProps {
     att_grade_effect: AttGradeEffect[];
     grade_names: GradeName[];
     attendance_names: AttendanceName[];
+    tikufSummary?: TikufSummary;
 };
 const useAppStyles = () => {
     const appStyle: React.CSSProperties = {
@@ -122,6 +124,7 @@ const App: React.FunctionComponent<AppProps> = (props) => {
                         reports={props.reports} reportParams={props.reportParams}
                         knownAbsMap={props.knownAbsMap}
                         att_grade_effect={props.att_grade_effect} grade_names={props.grade_names} attendance_names={props.attendance_names} />
+                    <TikufSummaryNote summary={props.tikufSummary} />
                     <PersonalNote note={props.reportParams.personalNote} />
                     <YomanetNotice />
                 </td></tr></tbody>
@@ -170,6 +173,10 @@ const Footer = ({ image }: { image: Image }) => <RepeatingPageImage image={image
 
 const PersonalNote = ({ note }: { note: string }) => note && (
     <h4>{note}</h4>
+);
+
+const TikufSummaryNote = ({ summary }: { summary?: TikufSummary }) => summary && (
+    <h4>תיקופי נוכחות: {summary.count} ימים</h4>
 );
 
 const yomanetNoticeStyle: React.CSSProperties = {
@@ -500,6 +507,7 @@ export interface IReportParams {
     attendanceLessThan?: number;
     gradesLessThan?: number;
     limitFilterUseOr?: boolean;
+    showTikuf?: boolean;
 }
 export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = async (params, dataSource) => {
     const reportDate = getReportDateFilter(dateFromString(params.startDate), dateFromString(params.endDate));
@@ -534,6 +542,9 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
 
     const knownAbsMap = groupDataByKeysAndCalc(knownAbsences, ['klassReferenceId'], (arr) => groupDataByKeysAndCalc(arr, ['lessonReferenceId'], (arr) => calcSum(arr, item => item.absnceCount)));
     const reports = getReports(params, studentReports, knownAbsMap, studentBaseKlass, klasses, lessons, teachers);
+    const tikufSummary = params.showTikuf
+        ? await getStudentTikufSummary(user, student.tz, buildTikufSummaryQuery(params))
+        : undefined;
 
     return {
         userStyles: user?.additionalData?.reportStyles,
@@ -547,6 +558,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         att_grade_effect,
         grade_names,
         attendance_names,
+        tikufSummary,
     };
 }
 

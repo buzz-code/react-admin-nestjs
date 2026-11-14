@@ -81,6 +81,16 @@ describe('reportGenerator', () => {
       });
     });
 
+    it('should pass the tikuf summary flag as a boolean', () => {
+      const generator: BaseReportGenerator = {} as any;
+
+      const on = generateStudentReportCard('123', { ids: '1', showTikuf: 'true' }, generator);
+      const off = generateStudentReportCard('123', { ids: '1' }, generator);
+
+      expect(on.params[0].showTikuf).toBe(true);
+      expect(off.params[0].showTikuf).toBeFalsy();
+    });
+
     it('should use provided year instead of current year', () => {
       const userId = '123';
       const reqExtra = {
