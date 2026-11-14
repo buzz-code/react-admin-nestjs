@@ -51,7 +51,7 @@ describe('AttendanceCleanupRuleConfig', () => {
       return { service, jobService };
     }
 
-    function makeReq(ids: string, rules: Partial<AttendanceCleanupRule>[]) {
+    function makeReq(ids: string) {
       // getManyByIds is what actually applies crudAuth's filter (via createBuilder) - it's
       // mocked here rather than re-testing that plumbing, which base-entity.service.spec.ts
       // already covers directly.
@@ -69,7 +69,7 @@ describe('AttendanceCleanupRuleConfig', () => {
         { id: 1, userId: 38 },
         { id: 2, userId: 38 },
       ] as any);
-      const req = makeReq('1,2', []);
+      const req = makeReq('1,2');
 
       const message = await service.doAction(req, {});
 
@@ -82,7 +82,7 @@ describe('AttendanceCleanupRuleConfig', () => {
     it('enqueues nothing when none of the selected ids resolve for this caller', async () => {
       const { service, jobService } = makeService();
       jest.spyOn(service, 'getManyByIds').mockResolvedValue([]);
-      const req = makeReq('99', []); // e.g. owned by someone else, filtered out by crudAuth
+      const req = makeReq('99'); // e.g. owned by someone else, filtered out by crudAuth
 
       const message = await service.doAction(req, {});
 
@@ -96,7 +96,7 @@ describe('AttendanceCleanupRuleConfig', () => {
         { id: 1, userId: 38 },
         { id: 2, userId: 39 },
       ] as any);
-      const req = makeReq('1,2', []);
+      const req = makeReq('1,2');
 
       await service.doAction(req, {});
 
