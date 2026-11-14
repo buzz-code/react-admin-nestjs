@@ -82,7 +82,7 @@ class KnownAbsenceService<T extends Entity | KnownAbsence> extends BaseEntitySer
   }
 }
 
-function getRows(body: any): StudentDatesRow[] {
+function getRows(body: { rows?: StudentDatesRow[] } | undefined): StudentDatesRow[] {
   return Array.isArray(body?.rows) ? body.rows : [];
 }
 
