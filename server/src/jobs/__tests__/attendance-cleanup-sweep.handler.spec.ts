@@ -1,5 +1,5 @@
 import { In, Not } from 'typeorm';
-import { AttendanceCleanupSweepHandler, getIsraelToday, getTargetDates } from '../attendance-cleanup-sweep.handler';
+import { AttendanceCleanupSweepHandler, getIsraelToday, getTargetDates, runCleanupRules } from '../attendance-cleanup-sweep.handler';
 import { Job } from '@shared/entities/Job.entity';
 
 describe('getIsraelToday', () => {
@@ -43,11 +43,11 @@ describe('getTargetDates', () => {
 describe('AttendanceCleanupSweepHandler', () => {
   function makeDataSource(overrides: Partial<Record<string, any>> = {}) {
     const repos: Record<string, any> = {
-      AttendanceCleanupRule: { find: jest.fn().mockResolvedValue([]) },
+      AttendanceCleanupRule: { find: jest.fn().mockResolvedValue([]), update: jest.fn() },
       Lesson: { findOne: jest.fn() },
       Klass: { findOne: jest.fn() },
       StudentKlass: { find: jest.fn().mockResolvedValue([]) },
-      AttReport: { delete: jest.fn().mockResolvedValue({ affected: 0 }) },
+      AttReport: { delete: jest.fn().mockResolvedValue({ affected: 0 }), find: jest.fn().mockResolvedValue([]) },
       ...overrides,
     };
     return {
@@ -76,6 +76,7 @@ describe('AttendanceCleanupSweepHandler', () => {
   it('deletes att_reports for students NOT recorded as members of the preserved klass', async () => {
     const dataSource = makeDataSource({
       AttendanceCleanupRule: {
+        update: jest.fn(),
         find: jest.fn().mockResolvedValue([
           { id: 1, userId: 1, name: 'תפילה', lessonId: 5, klassId: 3, dayOfWeek: 4, weeksBack: 2, active: true },
         ]),
@@ -100,11 +101,38 @@ describe('AttendanceCleanupSweepHandler', () => {
     expect(firstCallArgs.studentReferenceId).toEqual(Not(In([201, 202])));
     expect(result.totalDeleted).toBe(14); // 7 + 7
     expect(result.rulesProcessed).toBe(1);
+    expect(dataSource.repos.AttendanceCleanupRule.update).toHaveBeenCalledWith(1, {
+      lastRunAt: expect.any(Date),
+      lastRunSummary: 'נמחקו 14',
+    });
+  });
+
+  it('dry run lists the students that would be deleted, without deleting or saving a last run', async () => {
+    const rule = { id: 1, userId: 1, name: 'תפילה', lessonId: 5, klassId: 3, dayOfWeek: 4, weeksBack: 1, active: true };
+    const dataSource = makeDataSource({
+      Lesson: { findOne: jest.fn().mockResolvedValue({ id: 105 }) },
+      Klass: { findOne: jest.fn().mockResolvedValue({ id: 103 }) },
+      StudentKlass: { find: jest.fn().mockResolvedValue([{ studentReferenceId: 201 }]) },
+      AttReport: {
+        delete: jest.fn(),
+        find: jest.fn().mockResolvedValue([{ student: { name: 'רחל' } }, { student: null, studentTz: '123' }]),
+      },
+    });
+
+    const result = await runCleanupRules(dataSource, 1, [rule as any], true);
+
+    expect(dataSource.repos.AttReport.delete).not.toHaveBeenCalled();
+    expect(dataSource.repos.AttendanceCleanupRule.update).not.toHaveBeenCalled();
+    expect(dataSource.repos.AttReport.find.mock.calls[0][0].where.studentReferenceId).toEqual(Not(In([201])));
+    expect(result.totalDeleted).toBe(2);
+    expect(result.perRule[0]).toContain('יימחקו 2');
+    expect(result.perRule[0]).toContain('רחל, 123');
   });
 
   it('skips a date when the lesson or klass cannot be resolved for that year, without deleting', async () => {
     const dataSource = makeDataSource({
       AttendanceCleanupRule: {
+        update: jest.fn(),
         find: jest.fn().mockResolvedValue([
           { id: 2, userId: 1, name: null, lessonId: 5, klassId: 3, dayOfWeek: 4, weeksBack: 1, active: true },
         ]),
@@ -124,6 +152,7 @@ describe('AttendanceCleanupSweepHandler', () => {
   it('skips a date when no student is recorded as a member of the preserved klass, rather than deleting for everyone', async () => {
     const dataSource = makeDataSource({
       AttendanceCleanupRule: {
+        update: jest.fn(),
         find: jest.fn().mockResolvedValue([
           { id: 3, userId: 1, name: 'x', lessonId: 5, klassId: 3, dayOfWeek: 4, weeksBack: 1, active: true },
         ]),
