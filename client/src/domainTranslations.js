@@ -45,6 +45,7 @@ export default {
         settings: {
             name: 'הגדרות',
             fields: {
+                ...sharedEntityTranslations.settings.fields,
                 defaultPageSize: 'מספר שורות בטבלה',
                 lateValue: 'שווי איחור',
                 lessonTimes: 'זמני שיעורים',
