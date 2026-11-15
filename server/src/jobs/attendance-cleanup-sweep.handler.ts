@@ -44,53 +44,7 @@ export class AttendanceCleanupSweepHandler implements JobHandler {
         : { userId: job.userId, active: true },
     });
 
-    let totalDeleted = 0;
-    const perRule: string[] = [];
-
-    for (const rule of rules) {
-      const targetDates = getTargetDates(rule.dayOfWeek, rule.weeksBack);
-      let ruleDeleted = 0;
-      const skipped: string[] = [];
-
-      for (const date of targetDates) {
-        const year = getHebrewYearByGregorianDate(date);
-        const lesson = await this.dataSource
-          .getRepository(Lesson)
-          .findOne({ where: { userId: job.userId, key: rule.lessonId, year } });
-        const preserveKlass = await this.dataSource
-          .getRepository(Klass)
-          .findOne({ where: { userId: job.userId, key: rule.klassId, year } });
-
-        if (!lesson || !preserveKlass) {
-          skipped.push(`${date.toISOString().slice(0, 10)} (שיעור/כיתה לא נמצאו לאותה שנה)`);
-          continue;
-        }
-
-        const preservedMemberships = await this.dataSource
-          .getRepository(StudentKlass)
-          .find({ where: { userId: job.userId, klassReferenceId: preserveKlass.id, year } });
-        const preservedStudentIds = preservedMemberships.map((m) => m.studentReferenceId);
-
-        if (preservedStudentIds.length === 0) {
-          // No one is recorded as belonging to the preserved klass for this year - safer to
-          // skip than to delete for everyone, which is what an empty exclusion set would do.
-          skipped.push(`${date.toISOString().slice(0, 10)} (אין תלמידות משויכות לכיתה הנשמרת לאותה שנה)`);
-          continue;
-        }
-
-        const result = await this.dataSource.getRepository(AttReport).delete({
-          userId: job.userId,
-          lessonReferenceId: lesson.id,
-          reportDate: date,
-          studentReferenceId: Not(In(preservedStudentIds)),
-        });
-        ruleDeleted += result.affected ?? 0;
-      }
-
-      totalDeleted += ruleDeleted;
-      const label = rule.name || `כלל ${rule.id}`;
-      perRule.push(skipped.length ? `${label}: נמחקו ${ruleDeleted} (דולג על ${skipped.join(', ')})` : `${label}: נמחקו ${ruleDeleted}`);
-    }
+    const { totalDeleted, perRule } = await runCleanupRules(this.dataSource, job.userId, rules);
 
     this.logger.log(`attendance-cleanup-sweep: ${rules.length} rules, ${totalDeleted} att_reports deleted`);
 
@@ -101,6 +55,100 @@ export class AttendanceCleanupSweepHandler implements JobHandler {
       perRule,
     };
   }
+}
+
+/**
+ * Runs the given rules (all owned by `userId`). With `dryRun`, deletes nothing and
+ * instead lists the students whose att_reports would be deleted on each date.
+ * A real run also stores its outcome on each rule (lastRunAt/lastRunSummary), so the
+ * client can see what the last run did.
+ */
+export async function runCleanupRules(
+  dataSource: DataSource,
+  userId: number,
+  rules: AttendanceCleanupRule[],
+  dryRun = false,
+): Promise<{ totalDeleted: number; perRule: string[] }> {
+  let totalDeleted = 0;
+  const perRule: string[] = [];
+
+  for (const rule of rules) {
+    const targetDates = getTargetDates(rule.dayOfWeek, rule.weeksBack);
+    let ruleDeleted = 0;
+    const skipped: string[] = [];
+    const preview: string[] = [];
+
+    for (const date of targetDates) {
+      const dateLabel = formatDate(date);
+      const year = getHebrewYearByGregorianDate(date);
+      const lesson = await dataSource
+        .getRepository(Lesson)
+        .findOne({ where: { userId, key: rule.lessonId, year } });
+      const preserveKlass = await dataSource
+        .getRepository(Klass)
+        .findOne({ where: { userId, key: rule.klassId, year } });
+
+      if (!lesson || !preserveKlass) {
+        skipped.push(`${dateLabel} (שיעור/כיתה לא נמצאו לאותה שנה)`);
+        continue;
+      }
+
+      const preservedMemberships = await dataSource
+        .getRepository(StudentKlass)
+        .find({ where: { userId, klassReferenceId: preserveKlass.id, year } });
+      const preservedStudentIds = preservedMemberships.map((m) => m.studentReferenceId);
+
+      if (preservedStudentIds.length === 0) {
+        // No one is recorded as belonging to the preserved klass for this year - safer to
+        // skip than to delete for everyone, which is what an empty exclusion set would do.
+        skipped.push(`${dateLabel} (אין תלמידות משויכות לכיתה הנשמרת לאותה שנה)`);
+        continue;
+      }
+
+      const where = {
+        userId,
+        lessonReferenceId: lesson.id,
+        reportDate: date,
+        studentReferenceId: Not(In(preservedStudentIds)),
+      };
+
+      if (dryRun) {
+        const reports = await dataSource.getRepository(AttReport).find({ where, relations: { student: true } });
+        ruleDeleted += reports.length;
+        if (reports.length) {
+          preview.push(`${dateLabel}: ${reports.map((r) => r.student?.name ?? r.studentTz).join(', ')}`);
+        }
+        continue;
+      }
+
+      const result = await dataSource.getRepository(AttReport).delete(where);
+      ruleDeleted += result.affected ?? 0;
+    }
+
+    totalDeleted += ruleDeleted;
+    const label = rule.name || `כלל ${rule.id}`;
+    const skippedText = skipped.length ? ` (דולג על ${skipped.join(', ')})` : '';
+
+    if (dryRun) {
+      const details = preview.length ? `: ${preview.join('; ')}` : '';
+      perRule.push(`${label}: יימחקו ${ruleDeleted}${details}${skippedText}`);
+      continue;
+    }
+
+    const summary = `נמחקו ${ruleDeleted}${skippedText}`;
+    perRule.push(`${label}: ${summary}`);
+    // update() (not save()) so the entity's @BeforeUpdate key resolution doesn't run.
+    await dataSource.getRepository(AttendanceCleanupRule).update(rule.id, {
+      lastRunAt: new Date(),
+      lastRunSummary: summary,
+    });
+  }
+
+  return { totalDeleted, perRule };
+}
+
+function formatDate(date: Date): string {
+  return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
 }
 
 /**

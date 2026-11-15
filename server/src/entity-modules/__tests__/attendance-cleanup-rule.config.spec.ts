@@ -3,6 +3,11 @@ import { ADMIN_FILTER, CrudAuthFilter } from '@shared/auth/crud-auth.filter';
 import { AttendanceCleanupRule } from 'src/db/entities/AttendanceCleanupRule.entity';
 import attendanceCleanupRuleConfig from '../attendance-cleanup-rule.config';
 
+const mockRunCleanupRules = jest.fn();
+jest.mock('src/jobs/attendance-cleanup-sweep.handler', () => ({
+  runCleanupRules: (...args: any[]) => mockRunCleanupRules(...args),
+}));
+
 describe('AttendanceCleanupRuleConfig', () => {
   it('should have correct base configuration', () => {
     expect(attendanceCleanupRuleConfig.entity).toBe(AttendanceCleanupRule);
@@ -34,7 +39,7 @@ describe('AttendanceCleanupRuleConfig', () => {
     });
   });
 
-  describe('doAction: runNow', () => {
+  describe('doAction: runNow / preview', () => {
     function makeService() {
       const ServiceClass = attendanceCleanupRuleConfig.service as any;
       const mockRepository = {
@@ -46,63 +51,83 @@ describe('AttendanceCleanupRuleConfig', () => {
           targetName: 'AttendanceCleanupRule',
         },
       } as any;
-      const jobService = { enqueue: jest.fn().mockResolvedValue({ id: 42 }) };
-      const service = new ServiceClass(mockRepository, {} as any, jobService);
-      return { service, jobService };
+      const service = new ServiceClass(mockRepository, {} as any);
+      service.dataSource = { name: 'ds' };
+      return { service };
     }
 
-    function makeReq(ids: string) {
+    function makeReq(ids: string, action = 'runNow') {
       // getManyByIds is what actually applies crudAuth's filter (via createBuilder) - it's
       // mocked here rather than re-testing that plumbing, which base-entity.service.spec.ts
       // already covers directly.
       const req = {
         auth: { id: -1, permissions: { admin: true } },
-        parsed: { extra: { action: 'runNow', ids } },
+        parsed: { extra: { action, ids } },
         options: {},
       } as unknown as CrudRequest;
       return req;
     }
 
-    it("enqueues a job scoped to the resolved rules' own userId", async () => {
-      const { service, jobService } = makeService();
-      jest.spyOn(service, 'getManyByIds').mockResolvedValue([
+    beforeEach(() => {
+      mockRunCleanupRules.mockReset();
+      mockRunCleanupRules.mockImplementation(async (_ds, _userId, rules) => ({
+        totalDeleted: rules.length,
+        perRule: rules.map((rule) => `כלל ${rule.id}: נמחקו 1`),
+      }));
+    });
+
+    it("runs the resolved rules under their own userId and returns the summary", async () => {
+      const { service } = makeService();
+      const rules = [
         { id: 1, userId: 38 },
         { id: 2, userId: 38 },
-      ] as any);
+      ];
+      jest.spyOn(service, 'getManyByIds').mockResolvedValue(rules as any);
       const req = makeReq('1,2');
 
       const message = await service.doAction(req, {});
 
       expect(service.getManyByIds).toHaveBeenCalledWith(req, [1, 2]);
-      expect(jobService.enqueue).toHaveBeenCalledTimes(1);
-      expect(jobService.enqueue).toHaveBeenCalledWith(38, 'attendance-cleanup-sweep', { ruleIds: [1, 2] });
-      expect(message).toContain('42');
+      expect(mockRunCleanupRules).toHaveBeenCalledTimes(1);
+      expect(mockRunCleanupRules).toHaveBeenCalledWith(service.dataSource, 38, rules, false);
+      expect(message).toContain('נמחקו 2');
+      expect(message).toContain('כלל 1: נמחקו 1');
     });
 
-    it('enqueues nothing when none of the selected ids resolve for this caller', async () => {
-      const { service, jobService } = makeService();
+    it('runs nothing when none of the selected ids resolve for this caller', async () => {
+      const { service } = makeService();
       jest.spyOn(service, 'getManyByIds').mockResolvedValue([]);
       const req = makeReq('99'); // e.g. owned by someone else, filtered out by crudAuth
 
       const message = await service.doAction(req, {});
 
-      expect(jobService.enqueue).not.toHaveBeenCalled();
+      expect(mockRunCleanupRules).not.toHaveBeenCalled();
       expect(message).toContain('0');
     });
 
-    it('enqueues one job per distinct owner when the resolved rules span multiple users', async () => {
-      const { service, jobService } = makeService();
+    it('runs once per distinct owner when the resolved rules span multiple users', async () => {
+      const { service } = makeService();
       jest.spyOn(service, 'getManyByIds').mockResolvedValue([
         { id: 1, userId: 38 },
         { id: 2, userId: 39 },
       ] as any);
-      const req = makeReq('1,2');
 
-      await service.doAction(req, {});
+      await service.doAction(makeReq('1,2'), {});
 
-      expect(jobService.enqueue).toHaveBeenCalledTimes(2);
-      expect(jobService.enqueue).toHaveBeenCalledWith(38, 'attendance-cleanup-sweep', { ruleIds: [1] });
-      expect(jobService.enqueue).toHaveBeenCalledWith(39, 'attendance-cleanup-sweep', { ruleIds: [2] });
+      expect(mockRunCleanupRules).toHaveBeenCalledTimes(2);
+      expect(mockRunCleanupRules).toHaveBeenCalledWith(service.dataSource, 38, [{ id: 1, userId: 38 }], false);
+      expect(mockRunCleanupRules).toHaveBeenCalledWith(service.dataSource, 39, [{ id: 2, userId: 39 }], false);
+    });
+
+    it('preview runs as a dry run and says nothing was deleted', async () => {
+      const { service } = makeService();
+      const rules = [{ id: 1, userId: 38 }];
+      jest.spyOn(service, 'getManyByIds').mockResolvedValue(rules as any);
+
+      const message = await service.doAction(makeReq('1', 'preview'), {});
+
+      expect(mockRunCleanupRules).toHaveBeenCalledWith(service.dataSource, 38, rules, true);
+      expect(message).toContain('לא נמחק כלום');
     });
 
     it('falls through to the base doAction for unknown actions', async () => {

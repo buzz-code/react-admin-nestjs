@@ -452,9 +452,12 @@ export default {
                 dayOfWeek: 'יום בשבוע',
                 weeksBack: 'שבועות אחורה',
                 active: 'פעיל?',
+                lastRunAt: 'הרצה אחרונה',
+                lastRunSummary: 'תוצאת הרצה אחרונה',
             },
             actions: {
                 runNow: 'הרץ עכשיו',
+                preview: 'מי תימחק? (תצוגה מקדימה)',
             },
         },
         grade_effect_by_user: {

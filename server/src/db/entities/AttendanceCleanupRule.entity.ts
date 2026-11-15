@@ -117,6 +117,16 @@ export class AttendanceCleanupRule implements IHasUserId {
   @Column('boolean', { name: 'active', default: true })
   active: boolean;
 
+  /** Set by the sweep after each real run - read-only for the client. */
+  @IsOptional({ always: true })
+  @Column('datetime', { name: 'last_run_at', nullable: true })
+  lastRunAt: Date | null;
+
+  /** What the last run did: how many att_reports it deleted and which dates it skipped, and why. */
+  @IsOptional({ always: true })
+  @Column('text', { name: 'last_run_summary', nullable: true })
+  lastRunSummary: string | null;
+
   @CreatedAtColumn()
   createdAt: Date;
 
