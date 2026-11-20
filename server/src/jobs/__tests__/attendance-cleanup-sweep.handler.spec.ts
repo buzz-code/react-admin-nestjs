@@ -64,7 +64,7 @@ describe('AttendanceCleanupSweepHandler', () => {
     expect(result.totalDeleted).toBe(0);
   });
 
-  it('scopes to payload.ruleIds when provided (run-now path)', async () => {
+  it('scopes to payload.ruleIds when provided', async () => {
     const dataSource = makeDataSource();
     const handler = new AttendanceCleanupSweepHandler(dataSource);
     await handler.handle({ userId: 1, payload: { ruleIds: [5, 6] } } as unknown as Job);

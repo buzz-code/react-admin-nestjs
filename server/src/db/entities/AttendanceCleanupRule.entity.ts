@@ -117,7 +117,7 @@ export class AttendanceCleanupRule implements IHasUserId {
   @Column('boolean', { name: 'active', default: true })
   active: boolean;
 
-  /** Set by the sweep after each real run - read-only for the client. */
+  /** Set after each real run (weekly sweep or "run now") - read-only for the client. */
   @IsOptional({ always: true })
   @Column('datetime', { name: 'last_run_at', nullable: true })
   lastRunAt: Date | null;

@@ -12,7 +12,7 @@ import { AttReport } from 'src/db/entities/AttReport.entity';
 
 /**
  * For each active AttendanceCleanupRule owned by the job's user (or a
- * specific subset via payload.ruleIds, for the "run now" button), and for
+ * specific subset via payload.ruleIds), and for
  * each of the last `weeksBack` occurrences of `dayOfWeek`, deletes
  * att_reports for that lesson+date belonging to any student who is NOT a
  * member of the klass being preserved.
