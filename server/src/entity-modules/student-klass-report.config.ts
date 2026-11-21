@@ -50,7 +50,9 @@ class StudentKlassReportService<T extends Entity | StudentKlassReport> extends B
     if (req.parsed.extra.report in this.reportsDict) {
       const userId = getUserIdFromUser(req.auth);
       const generator = this.reportsDict[req.parsed.extra.report];
-      return generateStudentReportCard(userId, req.parsed.extra, generator);
+      const studentIds = await this.getSelectedIds(req);
+      if (!studentIds.length) return { generator, params: [] };
+      return generateStudentReportCard(userId, { ...req.parsed.extra, ids: studentIds.join(',') }, generator);
     }
     return super.getReportData(req);
   }

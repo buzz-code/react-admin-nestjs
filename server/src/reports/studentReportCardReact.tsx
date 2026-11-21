@@ -507,7 +507,7 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
     const klassIds = await getKlassIdsFromKlassType(dataSource, params.klassTypeReferenceId, params.userId);
     const [user, student, studentReports, studentBaseKlass, studentSpeciality, reportLogo, reportBottomLogo, knownAbsences] = await Promise.all([
         dataSource.getRepository(User).findOneBy({ id: params.userId }),
-        dataSource.getRepository(Student).findOneBy({ id: params.studentId }),
+        dataSource.getRepository(Student).findOneBy({ id: params.studentId, userId: params.userId }),
         dataSource.getRepository(AttReportAndGrade).find({ where: getReportsFilterForReportCard(params.studentId, params.year, reportDate, params.globalLessonReferenceIds, params.denyLessonReferenceIds, klassIds, params.denyKlassReferenceIds), order: { reportDate: 'ASC' } }),
         dataSource.getRepository(StudentBaseKlass).findOneBy({ id: params.studentId, year: params.year }),
         dataSource.getRepository(StudentSpeciality).findOneBy({ id: params.studentId, year: params.year }),
@@ -515,6 +515,11 @@ export const getReportData: IGetReportDataFunction<IReportParams, AppProps> = as
         dataSource.getRepository(Image).findOneBy({ userId: params.userId, imageTarget: ImageTargetEnum.reportBottomLogo }),
         dataSource.getRepository(KnownAbsence).findBy({ studentReferenceId: params.studentId, year: params.year, isApproved: true, reportDate }),
     ])
+
+    if (!student) {
+        console.log('student report card: student not found', params.studentId);
+        return null;
+    }
 
     const [klasses, lessons, teachers, att_grade_effect, grade_names, attendance_names] = await Promise.all([
         dataSource.getRepository(Klass).find({ where: { id: In(studentReports.map(item => item.klassReferenceId)) }, relations: { klassType: true } }),
