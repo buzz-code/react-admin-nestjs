@@ -151,7 +151,8 @@ class AttReportWithReportMonthService<T extends Entity | AttReportWithReportMont
       studentReferenceId: report.studentReferenceId,
       klassReferenceId: report.klassReferenceId,
       lessonReferenceId: report.lessonReferenceId,
-      reportDate: getAsDate(extra.reportDate) ?? report.reportDate,
+      // empty DateInput arrives as 'null' (query string) - keep each report's own date
+      reportDate: extra.reportDate && extra.reportDate !== 'null' ? getAsDate(extra.reportDate) : report.reportDate,
       absnceCount: getAsNumber(extra.absnceCount) ?? Math.round(report.absCount),
       absnceCode: getAsNumber(extra.absnceCode),
       senderName: getAsString(extra.senderName),
