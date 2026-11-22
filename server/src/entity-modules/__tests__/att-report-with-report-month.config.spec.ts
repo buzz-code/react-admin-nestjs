@@ -173,6 +173,17 @@ describe('att-report-with-report-month.config', () => {
       expect(mockRepo.findBy.mock.calls[0][0].id.value).toEqual([1]);
     });
 
+    it.each(['null', null, '', undefined])('bulkKnownAbsences should keep report date when reportDate is %p', async (reportDate) => {
+      const ownDate = new Date('2026-11-10');
+      service.getSelectedIds.mockResolvedValueOnce([1]);
+      mockRepo.findBy.mockResolvedValueOnce([{ id: 1, userId: 1, studentReferenceId: 2, reportDate: ownDate, absCount: 1, year: 5787 }]);
+      const req = { parsed: { extra: { action: 'bulkKnownAbsences', ids: '1', reportDate } } } as any;
+
+      await service.doAction(req, {}).catch(() => undefined);
+
+      expect(mockRepo.insert.mock.calls[0]?.[0]?.[0]?.reportDate ?? null).toBe(ownDate);
+    });
+
     it('bulkKnownAbsences should do nothing when no selected id is accessible', async () => {
       service.getSelectedIds.mockResolvedValueOnce([]);
       const req = { parsed: { extra: { action: 'bulkKnownAbsences', ids: '99' } } } as any;
