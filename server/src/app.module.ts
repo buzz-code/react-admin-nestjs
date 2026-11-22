@@ -10,4 +10,5 @@ export const AppModule = BaseNraAppModule.forRoot({
   userInitModule: UserInitModule,
   throttlerLimit: 200,
   jobHandlers: [AttendanceCleanupSweepHandler],
+  mcpSupport: true,
 });
