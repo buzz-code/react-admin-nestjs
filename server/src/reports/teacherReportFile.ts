@@ -90,7 +90,9 @@ const getReportData: IGetReportDataFunction = async (
           },
         },
       });
-      lessonStudents[lesson.id] = students;
+      // Students marked as not studying this lesson are left out
+      const excludedIds = new Set((lesson.excludedStudentReferenceIds ?? []).map(String));
+      lessonStudents[lesson.id] = students.filter((sk) => !excludedIds.has(String(sk.studentReferenceId)));
     } else {
       lessonStudents[lesson.id] = [];
     }

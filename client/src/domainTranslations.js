@@ -196,6 +196,8 @@ export default {
                 howManyLessons: 'מספר שיעורים',
                 displayName: 'שם לתעודה',
                 order: 'סדר',
+                excludedStudents: 'תלמידות שלא לומדות בשיעור (ת.ז.)',
+                excludedStudentReferenceIds: 'תלמידות שלא לומדות בשיעור',
             },
         },
         lesson_schedule: {

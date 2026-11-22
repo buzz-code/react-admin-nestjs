@@ -136,7 +136,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       ? await this.askDuplicateLessonChoice(teacher, klass, lessonReferenceId)
       : false;
 
-    const roster = await this.getKlassRoster(klass.id);
+    const roster = await this.getKlassRoster(klass.id, lessonReferenceId);
     if (roster.length === 0) {
       await this.hangupWithMessageByKey('SEMINAR.NO_STUDENTS_IN_KLASS');
       return;
@@ -260,8 +260,8 @@ export class YemotHandlerService extends BaseYemotHandlerService {
     return date.toLocaleDateString('en-CA', { timeZone: 'Asia/Jerusalem' });
   }
 
-  private async getKlassRoster(klassReferenceId: number): Promise<StudentKlass[]> {
-    return this.dataSource.getRepository(StudentKlass).find({
+  private async getKlassRoster(klassReferenceId: number, lessonReferenceId?: number): Promise<StudentKlass[]> {
+    const roster = await this.dataSource.getRepository(StudentKlass).find({
       where: {
         userId: this.user.id,
         klassReferenceId,
@@ -269,6 +269,11 @@ export class YemotHandlerService extends BaseYemotHandlerService {
         student: { isActive: true },
       },
     });
+    if (!lessonReferenceId) return roster;
+    // Students marked as not studying this lesson are left out
+    const lesson = await this.dataSource.getRepository(Lesson).findOneBy({ id: lessonReferenceId, userId: this.user.id });
+    const excludedIds = new Set((lesson?.excludedStudentReferenceIds ?? []).map(String));
+    return roster.filter((sk) => !excludedIds.has(String(sk.studentReferenceId)));
   }
 
   private async collectAbsentStudentIds(teacher: Teacher, klass: Klass): Promise<Set<number>> {

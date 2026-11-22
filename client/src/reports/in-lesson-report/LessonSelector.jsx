@@ -54,11 +54,13 @@ export const LessonSelector = ({ onLessonFound, selectedTeacher }) => {
                 }),
             );
 
+            // Students marked as not studying this lesson are left out
+            const excludedIds = new Set((lesson.excludedStudentReferenceIds ?? []).map(String));
             const students = [],
                 studentIds = new Set();
             allStudents
                 .flat()
-                .filter((student) => student.student)
+                .filter((student) => student.student && !excludedIds.has(String(student.student.id)))
                 .forEach((student) => {
                     if (!studentIds.has(student.student.id)) {
                         students.push(student);

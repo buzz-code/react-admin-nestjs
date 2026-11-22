@@ -109,6 +109,11 @@ const Inputs = ({ isCreate, isAdmin }) => {
                 dynamicFilter={filterByUserIdAndYear}
             />
             <CommonReferenceInput source="teacherReferenceId" reference="teacher" dynamicFilter={filterByUserId} />
+            <CommonReferenceArrayInput
+                source="excludedStudentReferenceIds"
+                reference="student"
+                dynamicFilter={filterByUserId}
+            />
             <DateInput source="startDate" />
             <DateInput source="endDate" />
             <CommonYearInput />
@@ -136,6 +141,7 @@ const importer = {
         'howManyLessons',
         'displayName',
         'order',
+        'excludedStudents',
     ],
 };
 

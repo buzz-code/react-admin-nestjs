@@ -13,6 +13,7 @@ import {
 import { IHasUserId } from '@shared/base-entity/interface';
 import { Teacher } from './Teacher.entity';
 import { Klass } from './Klass.entity';
+import { Student } from './Student.entity';
 import { KlassType } from './KlassType.entity';
 import { User } from './User.entity';
 import {
@@ -52,7 +53,7 @@ export class Lesson implements IHasUserId {
 
     let dataSource: DataSource;
     try {
-      dataSource = await getDataSource([Teacher, Klass, KlassType, User, LessonKlassName]);
+      dataSource = await getDataSource([Teacher, Klass, KlassType, User, LessonKlassName, Student]);
 
       const klassesArray =
         typeof this.klasses === 'string' && this.klasses.includes(',') ? this.klasses.split(',') : [this.klasses];
@@ -63,6 +64,21 @@ export class Lesson implements IHasUserId {
         this.userId,
         this.klassReferenceIds,
         this.klasses,
+      );
+
+      const excludedTzs = this.excludedStudents
+        ? String(this.excludedStudents)
+            .split(',')
+            .map((tz) => tz.trim())
+            .filter(Boolean)
+        : [];
+      this.excludedStudentReferenceIds = await findManyAndAssignReferenceIds(
+        dataSource,
+        Student,
+        { tz: In(excludedTzs) },
+        this.userId,
+        this.excludedStudentReferenceIds,
+        excludedTzs.length ? this.excludedStudents : null,
       );
 
       this.teacherReferenceId = await findOneAndAssignReferenceId(
@@ -128,6 +144,16 @@ export class Lesson implements IHasUserId {
     generatedType: 'STORED',
   })
   klassReferenceIdsJson: string;
+
+  // Students of the lesson's klasses who don't study this lesson (comma separated tz, for import)
+  @IsOptional({ always: true })
+  @StringType
+  @MaxLength(5000, { always: true })
+  @Column('varchar', { name: 'excluded_students', nullable: true, length: 5000 })
+  excludedStudents: string | null;
+
+  @Column('simple-array', { nullable: true })
+  excludedStudentReferenceIds: number[];
 
   @IsDigitsOnly(10, { always: true })
   @Column('varchar', { name: 'teacher_id', length: 10, nullable: true })

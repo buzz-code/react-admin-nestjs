@@ -141,13 +141,10 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
     const { Lesson: lessons = [], ...rest } = seed;
     await seedData(ds, rest);
     for (const lesson of lessons) {
-      await ds.query('INSERT INTO `lessons` (`id`, `user_id`, `key`, `name`, `year`) VALUES (?, ?, ?, ?, ?)', [
-        lesson.id,
-        lesson.userId,
-        lesson.key,
-        lesson.name,
-        lesson.year,
-      ]);
+      await ds.query(
+        'INSERT INTO `lessons` (`id`, `user_id`, `key`, `name`, `year`, `excludedStudentReferenceIds`) VALUES (?, ?, ?, ?, ?, ?)',
+        [lesson.id, lesson.userId, lesson.key, lesson.name, lesson.year, lesson.excludedStudentReferenceIds ?? null],
+      );
     }
   };
 
@@ -490,6 +487,33 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
       for (const report of result.saved['AttReport']) {
         expect(report.reportGroupSessionId).toBeFalsy();
       }
+    });
+
+    it('student marked as not studying the lesson — left out of the saved reports', async () => {
+      jest.setSystemTime(israelTimeAt(7, 0));
+      const year = getCurrentHebrewYear();
+      const klass = { id: 211, userId: 1, key: 9, name: 'Klass Nine', year };
+
+      const builder = teacherSetup('Seminar lesson excluded student', {
+        permissions: { seminarAttendanceYemot: true },
+        extraSeeds: {
+          Klass: [klass],
+          Student: roster(),
+          StudentKlass: studentKlasses(klass.id, klass.year),
+          Lesson: [{ id: 800, userId: 1, key: 5, name: 'Lesson Five', year, excludedStudentReferenceIds: '103' }],
+        },
+      }).seed('AttReport', []);
+      startsSeminarCall(builder, '9', '1');
+      entersLesson(builder, '5');
+      confirmsStudentName(builder, '11', true);
+      finishAbsentStudentEntry(builder);
+      const scenario = builder.systemHangsUp(/success/i).build();
+
+      const result = await runner.run(scenario);
+      expect(result.passed).toBe(true);
+
+      const studentIds = result.saved['AttReport'].map((r: any) => r.studentReferenceId).sort();
+      expect(studentIds).toEqual([101, 102]);
     });
 
     it('klass phone recognized — resolves klass automatically, skips manual klass prompt', async () => {
