@@ -126,7 +126,7 @@ describe('StudentConfig', () => {
 
     describe('getReportData', () => {
       const mockUserId = '123';
-      const mockExtra = { report: 'studentReportCardReact', someOption: 'value' };
+      const mockExtra = { report: 'studentReportCardReact', someOption: 'value', ids: '1,2,99' };
       const mockReq = {
         auth: { someAuth: true },
         parsed: {
@@ -146,6 +146,7 @@ describe('StudentConfig', () => {
 
       beforeEach(() => {
         (getUserIdFromUser as jest.Mock).mockReturnValue(mockUserId);
+        service.getSelectedIds = jest.fn().mockResolvedValue([1, 2]);
       });
 
       it('should handle supported report types', async () => {
@@ -159,12 +160,22 @@ describe('StudentConfig', () => {
         const result = await service.getReportData(mockReq as any);
 
         expect(getUserIdFromUser).toHaveBeenCalledWith(mockReq.auth);
+        expect(service.getSelectedIds).toHaveBeenCalledWith(mockReq);
         expect(generateStudentReportCard).toHaveBeenCalledWith(
           mockUserId,
-          mockExtra,
+          { ...mockExtra, ids: '1,2' },
           expect.any(BulkToPdfReportGenerator),
         );
         expect(result).toBe(mockReportData);
+      });
+
+      it('should return empty params when no accessible students are selected', async () => {
+        (service.getSelectedIds as jest.Mock).mockResolvedValueOnce([]);
+
+        const result = await service.getReportData(mockReq as any);
+
+        expect(result.params).toEqual([]);
+        expect(generateStudentReportCard).not.toHaveBeenCalled();
       });
 
       it('should fallback to parent getReportData for unsupported report types', async () => {

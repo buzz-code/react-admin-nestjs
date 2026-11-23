@@ -89,15 +89,16 @@ const getReportData: IGetReportDataFunction<ReportGroupSessionsSummaryParams, Re
       console.log('report group sessions summary: no sessions found');
       return null;
     }
+    const foundSessionIds = sessions.map(session => session.id);
 
     // Get attendance reports for these sessions to calculate lesson counts
     const attReports = await dataSource.getRepository(AttReport).find({
-      where: { reportGroupSessionId: In(sessionIds) }
+      where: { reportGroupSessionId: In(foundSessionIds) }
     });
 
     // Get grades for these sessions (in case no att reports)
     const grades = await dataSource.getRepository(Grade).find({
-      where: { reportGroupSessionId: In(sessionIds) }
+      where: { reportGroupSessionId: In(foundSessionIds) }
     });
 
     // Group by session to calculate lesson counts

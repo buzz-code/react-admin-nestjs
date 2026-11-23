@@ -6,6 +6,7 @@ import { MailSendService } from '@shared/utils/mail/mail-send.service';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { CommonReportData } from '@shared/utils/report/types';
 import { ParamsToJsonReportGenerator } from '@shared/utils/report/params-to-json.generator';
+import { generateStudentReportCard } from 'src/reports/reportGenerator';
 import config from '../student-klass.config';
 
 jest.mock('@shared/utils/report/bulk-to-pdf.generator');
@@ -115,6 +116,7 @@ describe('StudentKlassConfig', () => {
     let mockBaseEntityDoAction: jest.SpyInstance;
 
     beforeEach(() => {
+      jest.clearAllMocks();
       mockRepository = {
         find: jest.fn(),
         findOne: jest.fn(),
@@ -188,17 +190,49 @@ describe('StudentKlassConfig', () => {
           auth: { id: 1 },
         };
 
-        mockRepository.find.mockResolvedValueOnce([
+        service.getManyByIds = jest.fn().mockResolvedValueOnce([
           createMockStudentKlass({ studentReferenceId: 101 }),
           createMockStudentKlass({ studentReferenceId: 102 }),
         ]);
 
         await service.getReportData(req);
 
-        expect(mockRepository.find).toHaveBeenCalledWith({
-          where: { id: In([1, 2]) },
-          select: { studentReferenceId: true },
-        });
+        expect(service.getManyByIds).toHaveBeenCalledWith(req, [1, 2]);
+        expect(generateStudentReportCard).toHaveBeenCalledWith(
+          1,
+          expect.objectContaining({ ids: '101,102' }),
+          expect.anything(),
+        );
+      });
+
+      it('should only include students of rows the caller can access', async () => {
+        const req = {
+          ...createMockCrudRequest({ report: 'studentReportCardReact', ids: '1,99' }),
+          auth: { id: 1 },
+        };
+        service.getManyByIds = jest.fn().mockResolvedValueOnce([createMockStudentKlass({ id: 1, studentReferenceId: 101 })]);
+
+        await service.getReportData(req);
+
+        expect(mockRepository.find).not.toHaveBeenCalled();
+        expect(generateStudentReportCard).toHaveBeenCalledWith(
+          1,
+          expect.objectContaining({ ids: '101' }),
+          expect.anything(),
+        );
+      });
+
+      it('should return empty params when no accessible rows are selected', async () => {
+        const req = {
+          ...createMockCrudRequest({ report: 'studentReportCardReact', ids: '99' }),
+          auth: { id: 1 },
+        };
+        service.getManyByIds = jest.fn().mockResolvedValueOnce([]);
+
+        const result = await service.getReportData(req);
+
+        expect(result.params).toEqual([]);
+        expect(generateStudentReportCard).not.toHaveBeenCalled();
       });
 
       it('should call super.getReportData for unknown report type', async () => {

@@ -1,5 +1,4 @@
 import { CrudRequest } from '@dataui/crud';
-import { In } from 'typeorm';
 import { getUserIdFromUser } from '@shared/auth/auth.util';
 import { BaseEntityService } from '@shared/base-entity/base-entity.service';
 import { BaseEntityModuleOptions, Entity } from '@shared/base-entity/interface';
@@ -52,12 +51,10 @@ class StudentKlassService<T extends Entity | StudentKlass> extends BaseEntitySer
       const userId = getUserIdFromUser(req.auth);
       const generator = this.reportsDict[req.parsed.extra.report];
       const ids = getAsNumberArray(req.parsed.extra.ids);
-      if (!ids) return { generator, params: [] };
-      const studentIds = await this.dataSource
-        .getRepository(StudentKlass)
-        .find({ where: { id: In(ids) }, select: { studentReferenceId: true } })
-        .then((res) => res.map((item) => item.studentReferenceId));
-      const extraParams = { ...req.parsed.extra, ids: studentIds };
+      const studentKlasses = (await this.getManyByIds(req, ids)) as unknown as StudentKlass[];
+      const studentIds = [...new Set(studentKlasses.map((item) => item.studentReferenceId))];
+      if (!studentIds.length) return { generator, params: [] };
+      const extraParams = { ...req.parsed.extra, ids: studentIds.join(',') };
       return generateStudentReportCard(userId, extraParams, generator);
     }
     return super.getReportData(req);
