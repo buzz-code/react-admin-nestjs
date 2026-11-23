@@ -1,7 +1,7 @@
 import { CrudValidationGroups } from '@dataui/crud';
 import { IsOptional } from 'class-validator';
 import { BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-import { IsDate, IsNotEmpty, IsNumber, IsUniqueDateRange, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsDate, IsNotEmpty, IsNumber, IsUniqueDateRange, MaxLength, IsHebrewYear } from '@shared/utils/validation/class-validator-he';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, DateColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
@@ -64,6 +64,7 @@ export class ReportMonth {
   @IsOptional({ always: true })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @IsHebrewYear({ always: true })
   @Column({ nullable: true })
   year: number;
 

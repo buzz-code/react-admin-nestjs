@@ -18,7 +18,7 @@ import { Klass } from './Klass.entity';
 import { ReportGroupSession } from './ReportGroupSession.entity';
 import { IsOptional } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, MaxLength } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, MaxLength, IsHebrewYear } from '@shared/utils/validation/class-validator-he';
 import { StringType, NumberType } from '@shared/utils/entity/class-transformer';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { LongTextColumn } from '@shared/utils/entity/column-types.util';
@@ -78,6 +78,7 @@ export class ReportGroup implements IHasUserId {
   @IsOptional({ always: true })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @IsHebrewYear({ always: true })
   @Column({ nullable: true })
   year: number;
 

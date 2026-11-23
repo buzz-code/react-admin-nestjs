@@ -3,7 +3,7 @@ import { IHasUserId } from '@shared/base-entity/interface';
 import { User } from 'src/db/entities/User.entity';
 import { IsOptional, Min } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, MaxLength, IsNumber } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, MaxLength, IsNumber, IsHebrewYear } from '@shared/utils/validation/class-validator-he';
 import { StringType, NumberType } from '@shared/utils/entity/class-transformer';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
@@ -27,6 +27,7 @@ export class AbsenceType implements IHasUserId {
   @IsOptional({ always: true })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @IsHebrewYear({ always: true })
   @Column({ nullable: true })
   year: number;
 
