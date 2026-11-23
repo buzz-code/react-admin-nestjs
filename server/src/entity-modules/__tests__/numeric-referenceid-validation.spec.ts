@@ -34,7 +34,7 @@ const errorsOnField = (errors: ValidationError[], field: string): boolean =>
  * string through class-validator and crash at the MySQL INT column
  * (extension of PR #186 / PR #188 to the remaining entities).
  */
-const numericFields: Array<{ entity: any; field: string }> = [
+const numericFields: Array<{ entity: any; field: string; valid?: number }> = [
   { entity: Grade, field: 'studentReferenceId' },
   { entity: Grade, field: 'teacherReferenceId' },
   { entity: Grade, field: 'klassReferenceId' },
@@ -51,7 +51,7 @@ const numericFields: Array<{ entity: any; field: string }> = [
   { entity: LessonSchedule, field: 'teacherReferenceId' },
   { entity: Klass, field: 'teacherReferenceId' },
   { entity: KlassType, field: 'teacherReferenceId' },
-  { entity: Student, field: 'year' },
+  { entity: Student, field: 'year', valid: 5787 },
   { entity: KnownAbsence, field: 'klassReferenceId' },
   { entity: LessonSchedule, field: 'klassReferenceId' },
   { entity: LessonSchedule, field: 'lessonReferenceId' },
@@ -60,7 +60,7 @@ const numericFields: Array<{ entity: any; field: string }> = [
 ];
 
 describe('numeric validation on ReferenceId/int columns', () => {
-  describe.each(numericFields)('$entity.name.$field', ({ entity, field }) => {
+  describe.each(numericFields)('$entity.name.$field', ({ entity, field, valid = 42 }) => {
     it('rejects a non-numeric string on create', async () => {
       const errors = await validateAs(entity, { [field]: 'not-a-number' }, CrudValidationGroups.CREATE);
       expect(errorsOnField(errors, field)).toBe(true);
@@ -72,14 +72,14 @@ describe('numeric validation on ReferenceId/int columns', () => {
     });
 
     it('accepts a valid integer on create and update', async () => {
-      const createErrors = await validateAs(entity, { [field]: 42 }, CrudValidationGroups.CREATE);
+      const createErrors = await validateAs(entity, { [field]: valid }, CrudValidationGroups.CREATE);
       expect(errorsOnField(createErrors, field)).toBe(false);
-      const updateErrors = await validateAs(entity, { [field]: 42 }, CrudValidationGroups.UPDATE);
+      const updateErrors = await validateAs(entity, { [field]: valid }, CrudValidationGroups.UPDATE);
       expect(errorsOnField(updateErrors, field)).toBe(false);
     });
 
     it('accepts a numeric string (coerced by NumberType) on create', async () => {
-      const errors = await validateAs(entity, { [field]: '42' }, CrudValidationGroups.CREATE);
+      const errors = await validateAs(entity, { [field]: String(valid) }, CrudValidationGroups.CREATE);
       expect(errorsOnField(errors, field)).toBe(false);
     });
 
@@ -114,9 +114,15 @@ describe('numeric validation on ReferenceId/int columns', () => {
     });
 
     it('passes with a valid year integer', async () => {
-      const body = { userId: 1, tz: '1234567890', name: 'test', year: 2026 };
+      const body = { userId: 1, tz: '1234567890', name: 'test', year: 5787 };
       const errors = await validateAs(Student, body, CrudValidationGroups.CREATE);
       expect(errorProps(errors)).toEqual([]);
+    });
+
+    it('rejects a year outside the Hebrew year range (misaligned import column)', async () => {
+      const body = { userId: 1, tz: '1234567890', name: 'test', year: 300899044 };
+      const errors = await validateAs(Student, body, CrudValidationGroups.CREATE);
+      expect(errorProps(errors)).toEqual(['year']);
     });
 
     it('rejects a non-numeric year', async () => {

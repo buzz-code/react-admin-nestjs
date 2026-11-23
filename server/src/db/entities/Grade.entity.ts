@@ -20,7 +20,7 @@ import { KlassType } from './KlassType.entity';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { fillDefaultReportDateValue } from '@shared/utils/entity/deafultValues.util';
 import { IsOptional, ValidateIf } from 'class-validator';
-import { IsDate, IsNotEmpty, IsNumber, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
+import { IsDate, IsNotEmpty, IsNumber, MaxLength, IsDigitsOnly, IsHebrewYear } from '@shared/utils/validation/class-validator-he';
 import { CrudValidationGroups } from '@dataui/crud';
 import { StudentBaseKlass } from '../view-entities/StudentBaseKlass.entity';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
@@ -94,6 +94,7 @@ export class Grade implements IHasUserId {
   @IsOptional({ always: true })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @IsHebrewYear({ always: true })
   @Column({ nullable: true })
   year: number;
 

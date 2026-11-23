@@ -3,7 +3,7 @@ import { IHasUserId } from '@shared/base-entity/interface';
 import { User } from 'src/db/entities/User.entity';
 import { IsOptional } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsUniqueCombination, MaxLength, IsBoolean, IsDigitsOnly, IsNumber } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsUniqueCombination, MaxLength, IsBoolean, IsDigitsOnly, IsNumber, IsHebrewYear } from '@shared/utils/validation/class-validator-he';
 import { StringType, BooleanType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 
@@ -20,6 +20,7 @@ export class Student implements IHasUserId {
 
   @IsOptional({ always: true })
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @IsHebrewYear({ always: true })
   @Column({ nullable: true })
   year: number;
 

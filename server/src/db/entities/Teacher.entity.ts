@@ -4,7 +4,7 @@ import { User } from 'src/db/entities/User.entity';
 import { IsArray, IsEmail, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, IsUniqueCombination, MaxLength, IsDigitsOnly, IsHebrewYear } from '@shared/utils/validation/class-validator-he';
 import { NumberType, StringType } from '@shared/utils/entity/class-transformer';
 import { CreatedAtColumn, UpdatedAtColumn } from '@shared/utils/entity/column-types.util';
 
@@ -32,6 +32,7 @@ export class Teacher implements IHasUserId {
   @IsOptional({ always: true })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @IsHebrewYear({ always: true })
   @Column({ nullable: true })
   year: number;
 

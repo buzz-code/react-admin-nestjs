@@ -20,7 +20,7 @@ import { User } from './User.entity';
 import { KlassType } from './KlassType.entity';
 import { IsOptional, ValidateIf } from 'class-validator';
 import { CrudValidationGroups } from '@dataui/crud';
-import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsPositive, IsDigitsOnly } from '@shared/utils/validation/class-validator-he';
+import { IsNotEmpty, IsNumber, MaxLength, IsDate, IsPositive, IsDigitsOnly, IsHebrewYear } from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { fillDefaultReportDateValue } from '@shared/utils/entity/deafultValues.util';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
@@ -103,6 +103,7 @@ export class AttReport implements IHasUserId {
   @IsOptional({ always: true })
   @NumberType
   @IsNumber({ maxDecimalPlaces: 0 }, { always: true })
+  @IsHebrewYear({ always: true })
   @Column({ nullable: true })
   year: number;
 
