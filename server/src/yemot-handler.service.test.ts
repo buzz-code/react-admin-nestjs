@@ -307,6 +307,37 @@ describe('YemotHandlerService — react-admin-nestjs', () => {
     expect(result.saved['KnownAbsence'][0].klassReferenceId).toBe(201);
   });
 
+  it('transport lateness gets the absence code from settings', async () => {
+    jest.setSystemTime(israelTimeAt(7, 0));
+
+    const builder = transportSetup('Transport absence code', {
+      extraSeeds: { KnownAbsence: [] },
+    });
+    builder.seed('User', [{ ...baseUser, additionalData: { transportAbsenceCode: 2 } }]);
+    respondToTz(builder, '123456789');
+    respondToTransport(builder, '5');
+    confirmDeparture(builder, true);
+    const scenario = builder.systemHangsUp(/success/i).build();
+
+    const result = await runner.run(scenario);
+    expect(result.passed).toBe(true);
+    expect(result.saved['KnownAbsence'][0].absnceCode).toBe(2);
+  });
+
+  it('transport lateness without absence code setting saves no code', async () => {
+    jest.setSystemTime(israelTimeAt(7, 0));
+
+    const builder = transportSetup('Transport no absence code', { extraSeeds: { KnownAbsence: [] } });
+    respondToTz(builder, '123456789');
+    respondToTransport(builder, '5');
+    confirmDeparture(builder, true);
+    const scenario = builder.systemHangsUp(/success/i).build();
+
+    const result = await runner.run(scenario);
+    expect(result.passed).toBe(true);
+    expect(result.saved['KnownAbsence'][0].absnceCode ?? null).toBeNull();
+  });
+
   it('no morning klass — transport lateness falls back to the student klass', async () => {
     jest.setSystemTime(israelTimeAt(7, 0));
     const year = getCurrentHebrewYear();

@@ -472,6 +472,7 @@ export class YemotHandlerService extends BaseYemotHandlerService {
       isApproved: true,
       comment: `איחור של הסעה  ${transportation.key}`,
       klassReferenceId: morningKlass?.id ?? studentKlasses[0].klassReferenceId,
+      absnceCode: Number(this.user.additionalData?.transportAbsenceCode) || null,
     });
     await absenceRepo.save(newAbsence);
   }
