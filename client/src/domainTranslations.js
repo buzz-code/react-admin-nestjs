@@ -59,6 +59,7 @@ export default {
                 mailAddressAlias: 'כתובת השולח',
                 yemotApiKey: 'מפתח API של Yemot',
                 managerPhone: 'טלפון מנהלת',
+                transportAbsenceCode: 'קוד חיסור לאיחורי הסעות',
                 dashboardItems: 'הגדרות תמונת מצב',
                 reportStyles: 'הגדרות עיצוב תעודה',
                 reportCardSettings: 'הגדרות ברירת מחדל לתעודה',

@@ -22,6 +22,7 @@ import { ReportCardSettingsInput } from './ReportCardSettingsInput';
 import { YemotSettingsInput } from '@shared/components/phone/YemotSettingsInput';
 import { PhoneSettingsInput } from '@shared/components/phone/PhoneSettingsInput';
 import { ManagerPhoneSettingsInput } from './ManagerPhoneSettingsInput';
+import { TransportSettingsInput } from './TransportSettingsInput';
 
 const SettingsToolbar = () => (
     <Toolbar>
@@ -81,11 +82,12 @@ export default function Settings() {
                         <CommonSettingsAccordion
                             id="phone-settings-group"
                             title="הגדרות טלפון"
-                            subtitle="מספר טלפון, חיבור Yemot וטלפון מנהלת"
+                            subtitle="מספר טלפון, חיבור Yemot, טלפון מנהלת ואיחורי הסעות"
                         >
                             <PhoneSettingsInput />
                             <YemotSettingsInput />
                             <ManagerPhoneSettingsInput />
+                            <TransportSettingsInput />
                         </CommonSettingsAccordion>
                         <CommonSettingsAccordion
                             id="advanced-settings"

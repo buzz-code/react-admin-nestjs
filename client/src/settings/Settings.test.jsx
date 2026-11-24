@@ -6,6 +6,7 @@ jest.mock('./GeneralSettingsInput', () => ({ GeneralSettingsInput: () => null })
 jest.mock('./ReportStylesInput', () => ({ ReportStylesInput: () => null }));
 jest.mock('./ReportCardSettingsInput', () => ({ ReportCardSettingsInput: () => null }));
 jest.mock('./ManagerPhoneSettingsInput', () => ({ ManagerPhoneSettingsInput: () => null }));
+jest.mock('./TransportSettingsInput', () => ({ TransportSettingsInput: () => null }));
 jest.mock('@shared/components/phone/YemotSettingsInput', () => ({ YemotSettingsInput: () => null }));
 jest.mock('@shared/components/phone/PhoneSettingsInput', () => ({ PhoneSettingsInput: () => null }));
 jest.mock('@shared/components/settings/DashboardItemsInput', () => ({ DashboardItemsInput: () => null }));
