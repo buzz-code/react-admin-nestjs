@@ -26,6 +26,7 @@ import { defaultYearFilter } from '@shared/utils/yearFilter';
 import { filterArrayByParams } from '@shared/utils/filtersUtil';
 import { useIsAdmin } from '@shared/utils/permissionsUtil';
 import { MAX_PAGE_SIZE } from '@shared/config/settings';
+import { convertDateToHebrew } from '@shared/components/fields/CommonHebrewDateField';
 import {
     DEFAULT_THRESHOLD_PERCENT,
     NEAR_THRESHOLD_ABSENCES,
@@ -257,7 +258,7 @@ const SubjectChips = ({ subjects }) => {
     );
 };
 
-const formatDate = (value) => (value ? new Date(value).toLocaleDateString('he-IL') : '');
+const formatDate = (value) => (value ? `${convertDateToHebrew(value)} (${new Date(value).toLocaleDateString('he-IL')})` : '');
 
 const StudentDetail = ({ student, lessonHeaders }) => {
     const dataProvider = useDataProvider();
