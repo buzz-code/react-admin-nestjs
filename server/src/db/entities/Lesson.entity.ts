@@ -29,7 +29,9 @@ import {
   IsUniqueCombination,
   MaxLength,
   Min,
-  IsDigitsOnly, IsHebrewYear } from '@shared/utils/validation/class-validator-he';
+  IsDigitsOnly,
+  IsHebrewYear,
+} from '@shared/utils/validation/class-validator-he';
 import { fillDefaultYearValue } from '@shared/utils/entity/year.util';
 import { cleanDateFields } from '@shared/utils/entity/deafultValues.util';
 import { DateType, NumberType, StringType } from '@shared/utils/entity/class-transformer';
